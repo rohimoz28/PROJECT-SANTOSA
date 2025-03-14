@@ -1,0 +1,60 @@
+<odoo>
+    <data>
+
+        <record id="santosa_finance_accounting_setup_details_form" model="ir.ui.view">
+            <field name="name">Accounting Setup Details</field>
+            <field name="model">santosa_finance.accounting_setup_details</field>
+            <field name="arch" type="xml">
+                <form multi_edit="1">
+                   
+                    <sheet>
+                        <group>
+                           
+                            <field name="current_acc_period_no" />
+                            <field name="current_acc_month" />
+                            <field name="current_acc_year" />
+                            <field name="current_fiscal_period_no" />
+                            <field name="current_fiscal_month" />
+                            <field name="current_fiscal_year" />
+                            <field name="status" />
+                            <field name="setup_id" />
+                        </group>
+                       
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="santosa_finance_accounting_setup_details_tree" model="ir.ui.view">
+            <field name="name">Accounting Setup Details</field>
+            <field name="model">santosa_finance.accounting_setup_details</field>
+            <field name="arch" type="xml">
+
+                <tree limit="20">
+                    <field name="current_acc_period_no" />
+                            <field name="current_acc_month" />
+                            <field name="current_acc_year" />
+                            <field name="current_fiscal_period_no" />
+                            <field name="current_fiscal_month" />
+                            <field name="current_fiscal_year" />
+                            <field name="status" />
+                            <field name="setup_id" />
+                            
+                </tree>
+            </field>
+        </record>
+
+        <record id="santosa_finance_accounting_setup_details_action" model="ir.actions.act_window">
+            <field name="name">Accounting Setup Details</field>
+            <field name="res_model">santosa_finance.accounting_setup_details</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
+
+            <field name="domain"></field>
+
+        </record>
+       
+        <menuitem id="accounting_setup_details_data" name="Accounting Setup Details" sequence='15' parent="account.account_account_menu" action="santosa_finance_accounting_setup_details_action"/>
+
+    </data>
+</odoo>

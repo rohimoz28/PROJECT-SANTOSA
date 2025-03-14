@@ -1,0 +1,96 @@
+<odoo>
+    <data>
+
+        <record id="santosa_finance_matrix_posting_key_details_form" model="ir.ui.view">
+            <field name="name">Matrix Posting Key Details</field>
+            <field name="model">santosa_finance.matrix_posting_key_details</field>
+            <field name="arch" type="xml">
+                <form multi_edit="1">
+                   
+                    <sheet>
+                        <group>
+                            <field name="matrix_posting_id" />
+                            <field name="odoo_transaction_no" />
+                            <field name="posting_key" />
+                            <field name="posting_key_type" />
+                            <field name="account_type" />
+                            <field name="seq_item" />
+                            <field name="trx_class" />
+                            <field name="flag_subledger" />
+                            <field name="reversal_posting_key" />
+                            <field name="description" />
+                        </group>
+                       
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="santosa_finance_matrix_posting_key_details_tree" model="ir.ui.view">
+            <field name="name">Matrix Posting Key Details</field>
+            <field name="model">santosa_finance.matrix_posting_key_details</field>
+            <field name="arch" type="xml">
+
+                <tree limit="20">
+                    <field name="matrix_posting_id" />
+                            <field name="odoo_transaction_no" />
+                            <field name="posting_key" />
+                            <field name="posting_key_type" />
+                            <field name="account_type" />
+                            <field name="seq_item" />
+                            <field name="trx_class" />
+                            <field name="flag_subledger" />
+                            <field name="reversal_posting_key" />
+                            <field name="description" />
+                            
+                </tree>
+            </field>
+        </record>
+
+        <record id="santosa_finance_matrix_posting_key_details_action" model="ir.actions.act_window">
+            <field name="name">Matrix Posting Key Details</field>
+            <field name="res_model">santosa_finance.matrix_posting_key_details</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
+
+            <field name="domain"></field>
+
+        </record>
+
+        <record id="ir_cron_delete_ar_bawaan" model="ir.cron">
+            <field name="name">Penyesuaian AR Pertama</field>
+            <field name="model_id" ref="model_account_move"/>
+            <field name="state">code</field>
+            <field name="code">model.delete_ar_bawaan()</field>
+            <field name="active" eval="True"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall" eval="-1"/>
+        </record>
+
+        <record id="ir_cron_create_invoice_lines" model="ir.cron">
+            <field name="name">Pembentukan AR Harian</field>
+            <field name="model_id" ref="model_account_move"/>
+            <field name="state">code</field>
+            <field name="code">model.button_create_invoice_lines()</field>
+            <field name="active" eval="True"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall" eval="-1"/>
+        </record>
+
+        <record id="ir_cron_penyesuaian_kembali_jurnal" model="ir.cron">
+            <field name="name">Penyesuaian Kembali AR</field>
+            <field name="model_id" ref="model_account_move"/>
+            <field name="state">code</field>
+            <field name="code">model.penyesuaian_kembali()</field>
+            <field name="active" eval="True"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall" eval="-1"/>
+        </record>
+        
+        <menuitem id="matrix_posting_key_details_data" name="Matrix Posting Key Details" sequence='15' parent="santosa_finance.matrix_posting_root" action="santosa_finance_matrix_posting_key_details_action"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,5 @@
+<odoo>
+    <data>
+        <menuitem id="stg_invoice_root" name="STG - Invoice" sequence="99" groups="santosa_finance.group_admin_sanfi"/>
+    </data>
+</odoo>

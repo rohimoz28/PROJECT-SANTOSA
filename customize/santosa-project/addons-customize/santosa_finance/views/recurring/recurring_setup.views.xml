@@ -1,0 +1,60 @@
+<odoo>
+    <data>
+
+        <record id="santosa_finance_recurring_setup_form" model="ir.ui.view">
+            <field name="name">Recurring Setup</field>
+            <field name="model">santosa_finance.recurring_setup</field>
+            <field name="arch" type="xml">
+                <form multi_edit="1">
+                   
+                    <sheet>
+                        <group>
+                           
+                            <field name="recurring_id" />
+                            <field name="recurring_transaction_date" />
+                            <field name="interval" />
+                            <field name="time_of_recurring" />
+                            <field name="start_date_from" />
+                            <field name="description" />
+                            <field name="flag_in_active" />
+                            <field name="status" />
+                        </group>
+                       
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="santosa_finance_recurring_setup_tree" model="ir.ui.view">
+            <field name="name">Recurring Setup</field>
+            <field name="model">santosa_finance.recurring_setup</field>
+            <field name="arch" type="xml">
+
+                <tree limit="20">
+                    <field name="recurring_id" />
+                            <field name="recurring_transaction_date" />
+                            <field name="interval" />
+                            <field name="time_of_recurring" />
+                            <field name="start_date_from" />
+                            <field name="description" />
+                            <field name="flag_in_active" />
+                            <field name="status" />
+                            
+                </tree>
+            </field>
+        </record>
+
+        <record id="santosa_finance_recurring_setup_action" model="ir.actions.act_window">
+            <field name="name">Recurring Setup</field>
+            <field name="res_model">santosa_finance.recurring_setup</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
+
+            <field name="domain"></field>
+
+        </record>
+       
+        <menuitem id="recurring_setup_data" name="Recurring Setup" sequence='15' parent="santosa_finance.recurring_root" action="santosa_finance_recurring_setup_action"/>
+
+    </data>
+</odoo>

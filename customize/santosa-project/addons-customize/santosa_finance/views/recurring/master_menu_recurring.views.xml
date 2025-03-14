@@ -1,0 +1,5 @@
+<odoo>
+    <data>
+        <menuitem id="recurring_root" name="Recurring" sequence="99" parent="account.menu_finance_configuration"/>
+    </data>
+</odoo>

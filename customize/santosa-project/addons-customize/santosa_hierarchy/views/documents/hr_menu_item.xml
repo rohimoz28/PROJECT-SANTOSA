@@ -1,0 +1,64 @@
+<odoo>
+    <data>
+
+        <record id="hr.hr_menu_hr_reports" model="ir.ui.menu">
+            <field name="name">Documents</field>
+        </record>
+
+        <record id="hr.menu_hr_work_location_tree" model="ir.ui.menu">
+            <field name="sequence">100</field>
+        </record>
+
+        <record id="hr.menu_hr_department_tree" model="ir.ui.menu">
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="hr.menu_hr_department_kanban" model="ir.ui.menu">
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="hr_gamification.gamification_challenge_menu_hr" model="ir.ui.menu">
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="hr_gamification.gamification_goal_menu_hr" model="ir.ui.menu">
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="hr_gamification.gamification_badge_menu_hr" model="ir.ui.menu">
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="hr_gamification.menu_hr_gamification" model="ir.ui.menu">
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="base_territory.menu_res_territory" model="ir.ui.menu">
+            <field name="parent_id" ref="santosa_hierarchy.hierarchy_id"/>
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="base_territory.menu_res_branch" model="ir.ui.menu">
+            <field name="parent_id" ref="santosa_hierarchy.hierarchy_id"/>
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="hr_payroll_community.menu_hr_payroll_community_root" model="ir.ui.menu">
+            <field name="name">Penggajian</field>
+        </record>
+
+        <record id="hr.menu_hr_root" model="ir.ui.menu">
+            <field name="name">Administrasi Karyawan</field>
+        </record>
+
+        <record id="hr_skills_survey.hr_employee_certication_report_menu" model="ir.ui.menu">
+            <field name="name">Employee Certifications</field>
+            <field name="sequence">9</field>
+        </record>
+
+        <record id="hr_skills.hr_employee_skill_report_menu" model="ir.ui.menu">
+            <field name="name">Employee Skills</field>
+        </record>
+
+    </data>
+</odoo>

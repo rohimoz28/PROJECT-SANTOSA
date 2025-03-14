@@ -1,0 +1,5 @@
+<odoo>
+    <data>
+        <menuitem id="offset_root" name="Offset" sequence="99" parent="santosa_finance.santosa_finance_root"/>
+    </data>
+</odoo>

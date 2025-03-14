@@ -1,0 +1,88 @@
+<odoo>
+    <data>
+
+        <record id="santosa_finance_akun_kategori_form" model="ir.ui.view">
+            <field name="name">Akun Kategori</field>
+            <field name="model">santosa_finance.akun_kategori</field>
+            <field name="arch" type="xml">
+                <form multi_edit="1">
+                   
+                    <sheet>
+                        <group>
+                           
+                            <field name="kategori" required='1'/>
+                            <field name="name" />
+                            <!-- <field name="journal_id" /> -->
+                            <!-- <field name="account_code" /> -->
+                            <!-- <field name="account_name" /> -->
+                            <field name="akun_kategori_account_expense_categ_id" string='Income Account'/>
+                            <field name="akun_kategori_account_income_categ_id" string='Expense Account'/>
+                            <field name="SalesPoint" />
+                            <field name="tipe" />
+                            <field name="penjamin_id" />
+                            <!-- <field name="child_coa" /> -->
+                            
+                        </group>
+                       
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+         <!-- Search View -->
+<!-- Search View -->
+        <record id="akun_kategori_search" model="ir.ui.view">
+            <field name="name">Akun Kategori Search</field>
+            <field name="model">santosa_finance.akun_kategori</field>
+            <field name="arch" type="xml">
+                <search>
+                    <!-- Add search fields -->
+                    <field name="name"/>
+                    <field name="kategori"/>
+                    <field name="account_name"/>
+                    <field name="account_code"/>
+                    <field name="SalesPoint"/>
+                    <field name="tipe"/>
+                    
+                    <!-- Define filter with proper domain -->
+                    <filter string="Akun Kategori" name="filter_akunkategori" domain="['|', ('name', 'ilike', 'self'), ('kategori', 'ilike', 'self'), ('tipe', 'ilike', 'self'), ('SalesPoint', 'ilike', 'self'), ('account_code', 'ilike', 'self'), ('account_name', 'ilike', 'self')]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="santosa_finance_akun_kategori_tree" model="ir.ui.view">
+            <field name="name">Akun Kategori</field>
+            <field name="model">santosa_finance.akun_kategori</field>
+            <field name="arch" type="xml">
+
+                <tree limit="20">
+                    <field name="kategori" required='1'/>
+                    <field name="name" />
+                    <!-- <field name="journal_id" /> -->
+                    <!-- <field name="account_code" /> -->
+                    <!-- <field name="account_name" /> -->
+                    <field name="akun_kategori_account_expense_categ_id" string='Income Account'/>
+                    <field name="akun_kategori_account_income_categ_id" string='Expense Account'/>
+                    <field name="SalesPoint" />
+                    <field name="tipe" />
+                    <field name="penjamin_id" />
+                    <!-- <field name="child_coa" optional='hide' /> -->
+                            
+                </tree>
+            </field>
+        </record>
+        
+
+        <record id="santosa_finance_akun_kategori_action" model="ir.actions.act_window">
+            <field name="name">Akun Kategori</field>
+            <field name="res_model">santosa_finance.akun_kategori</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
+            <field name="search_view_id" ref="akun_kategori_search"/>
+            <field name="domain"></field>
+
+        </record>
+       
+        <menuitem id="akun_kategori_data" name="Akun Kategori" sequence='15' parent="masterdata_sanfi_root" action="santosa_finance_akun_kategori_action"/>
+
+    </data>
+</odoo>

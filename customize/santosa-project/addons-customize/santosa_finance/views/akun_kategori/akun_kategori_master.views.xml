@@ -1,0 +1,5 @@
+<odoo>
+    <data>
+        <menuitem id="akun_kategori_root" name="Akun Kategori" sequence="100" parent="santosa_finance.santosa_finance_root"/>
+    </data>
+</odoo>

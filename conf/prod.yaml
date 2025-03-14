@@ -1,0 +1,7 @@
+version: "3.8"
+services:
+  odoo-santosa:
+    restart: unless-stopped
+    ports:
+      - "8234:8069"
+    env_file: santosa/env/prod.env

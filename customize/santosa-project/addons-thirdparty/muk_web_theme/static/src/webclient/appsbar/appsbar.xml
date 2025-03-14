@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<templates xml:space="preserve">
+
+	<t t-name="muk_web_theme.AppsBar" owl="1">
+		<div class="mk_apps_sidebar_panel">
+			<div class="mk_apps_sidebar">
+				<ul class="mk_apps_sidebar_menu">
+				    <t t-foreach="props.apps" t-as="app" t-key="app.id">
+			            <li t-attf-class="nav-item {{ app.active ? 'active' : '' }}">
+			            	<a 
+			            		t-att-href="app.href"
+		            			t-att-data-menu-id="app.id" 
+		            			t-att-data-menu-xmlid="app.xmlid" 
+		            			t-att-data-action-id="app.actionID"
+								t-on-click.prevent="() => app.action()"
+		            			class="nav-link" 
+		            			role="menuitem"
+		            		>
+			                	<img 
+			                		t-if="app.webIcon"
+			                		class="mk_apps_sidebar_icon" 
+			                		t-attf-src="{{app.webIcon}}"
+			                	/>
+			                	<img  
+			                		t-else="" 
+			                		class="mk_apps_sidebar_icon" 
+			                		src="/muk_web_theme/static/img/default_icon.png"
+			                	/>
+						        <span class="mk_apps_sidebar_name">
+						            <t t-out="app.name"/>
+						        </span>
+			            	 </a>
+			            </li>
+			    	</t>
+				</ul>
+			</div>
+		</div>
+	</t>
+	
+</templates>

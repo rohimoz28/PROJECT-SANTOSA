@@ -1,0 +1,52 @@
+<odoo>
+    <data>
+
+        <record id="san_hrms_directorate_form" model="ir.ui.view">
+            <field name="name">Directorate</field>
+            <field name="model">sanhrms.directorate</field>
+            <field name="arch" type="xml">
+                <form multi_edit="1">
+                   
+                    <sheet>
+                        <group>
+                           
+                            <field name="directorate_code" required='1'/>
+                            <field name="name" />
+                            <field name="branch_id"/>
+                            <field name="department_ids" widget='many2many_tags'/>
+                            
+                        </group>
+                       
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="san_hrms_directorate_tree" model="ir.ui.view">
+            <field name="name">Directorate</field>
+            <field name="model">sanhrms.directorate</field>
+            <field name="arch" type="xml">
+
+                <tree limit="20">
+                    <field name="directorate_code" required='1'/>
+                    <field name="name" />
+                    <field name="branch_id"/>
+                </tree>
+            </field>
+        </record>
+        
+
+        <record id="san_hrms_directorate_action" model="ir.actions.act_window">
+            <field name="name">Directorate</field>
+            <field name="res_model">sanhrms.directorate</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
+
+            <field name="domain"></field>
+
+        </record>
+       
+        <menuitem id="directorate_date" name="Directorate" sequence='3' parent="santosa_hierarchy.hierarchy_id" action="san_hrms_directorate_action"/>
+
+    </data>
+</odoo>

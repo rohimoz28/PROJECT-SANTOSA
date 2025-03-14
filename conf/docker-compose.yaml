@@ -1,0 +1,23 @@
+version: "3.8"
+services:
+  odoo-santosa:
+    image: custom-odoo:17.0
+    build:
+      context: .  # Build from the current directory
+      dockerfile: Dockerfile  # Specify the Dockerfile name
+    container_name: odoo-santosa
+    volumes:
+      - odoo-santosa:/var/lib/odoo
+      - ./santosa-project/odoo:/etc/odoo
+      - ../customize/santosa-project/addons-customize:/mnt/addons-customize
+      - ../customize/santosa-project/addons-thirdparty:/mnt/addons-thirdparty
+    networks:
+      - santosa_project_network
+
+volumes:
+  odoo-santosa:
+
+networks:
+  santosa_project_network:
+    name: santosa_project_network
+    driver: bridge

@@ -1,0 +1,48 @@
+<odoo>
+    <data>
+        <record id="santosa_finance_penjamin_form" model="ir.ui.view">
+            <field name="name">Penjamin</field>
+            <field name="model">santosa_finance.penjamin</field>
+            <field name="arch" type="xml">
+                <form multi_edit="1">
+                    <sheet>
+                            <group>
+                                <field name="name"/>
+                                <field name="id_penjamin"/>
+                                
+                            </group>
+                           
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="santosa_finance_penjamin_tree" model="ir.ui.view">
+            <field name="name">Penjamin</field>
+            <field name="model">santosa_finance.penjamin</field>
+            <field name="arch" type="xml">
+
+                <tree limit="20">
+                    <field name="name" />
+                           
+                            <field name="id_penjamin" />
+                            
+                            
+                </tree>
+            </field>
+        </record>
+
+        <record id="santosa_finance_penjamin_action" model="ir.actions.act_window">
+            <field name="name">Penjamin</field>
+            <field name="res_model">santosa_finance.penjamin</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
+
+            <field name="domain"></field>
+
+        </record>
+
+        <menuitem id="penjamin" name="Penjamin" parent="stg_invoice_root" action="santosa_finance_penjamin_action"/>
+    </data>
+</odoo>
+

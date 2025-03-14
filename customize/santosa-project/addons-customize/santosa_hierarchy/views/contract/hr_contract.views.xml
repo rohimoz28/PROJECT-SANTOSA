@@ -1,0 +1,208 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <record id="sanbe_hr_contracts_form_attachment" model="ir.ui.view">
+            <field name="name">sanbe.hr.contract.form.attachment</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_start']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='date_end']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                
+                <xpath expr="//field[@name='job_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='date_start']" position="before">
+                    <!-- <field name="no_pkwt"/> -->
+                </xpath>
+                <xpath expr="//group[@name='notes_group']" position="replace"/>
+                <xpath expr="//page[@name='information']" position="attributes">
+                    <Attribute name="invisible">1</Attribute>
+                </xpath>
+                <xpath expr="//div[@id='resource_calendar_warning']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                
+                <xpath expr="//field[@name='department_id']" position="before">
+                        
+                        <field name="branch_ids" invisible="1"/>
+                        <field name="alldepartment" invisible="1"/>
+                </xpath>
+
+                <xpath expr="//field[@name='structure_type_id']" position="replace">
+                    <field name="no_pkwt" invisible="0"/>
+                </xpath>
+
+                <xpath expr="//field[@name='structure_type_id']" position="replace">
+                    <field name="date_start" invisible="0"/>
+                </xpath>
+
+                <xpath expr="//field[@name='contract_type_id']" position="before">
+                        <field name="date_end"/>
+                        <label for="ws_day" string="Contract Length"
+                             />
+                        <div class="o_row" >
+                            <label for="ws_year" string="Year" />
+                            <div class="o_row">
+                                <field name="ws_year" readonly="1" force_save="1" />
+                            </div>
+                            <label for="ws_month" string="Month" />
+                            <div class="o_row">
+                                <field name="ws_month" readonly="1" force_save="1" />
+                            </div>
+                            <label for="ws_day" string="Day" />
+                            <div class="o_row">
+                                <field name="ws_day" readonly="1" force_save="1" />
+                            </div>
+                        </div>
+                </xpath>
+
+                <xpath expr="//field[@name='contract_type_id']" position="replace">
+                    <field name="sallary_amount" invisible='1'/>
+                </xpath>
+
+                <xpath expr="//field[@name='contract_type_id']" position="after">
+                        <field name="contracts_count"/>
+                        <label for="attachment_contract"/>
+                        <field name="attachment_contract" widget="many2many_binary" nolabel="1"/>
+                        <field name="notice_days" readonly="state in ['open','close']"/>
+                        <field name="nilai_pa" force_save='1' string="PA Value"/>
+                        <field name="structure_type_id"/>
+                </xpath>
+
+                <xpath expr="//field[@name='structure_type_id']" position="after">
+                        <field name="sallary_amount"/>
+                </xpath>
+
+                
+
+                <xpath expr="//group[@name='top_info_right']" position="after">
+                    <group name="notes_groups" string="Notes">
+                        <field name="notes" nolabel="1" colspan="2" placeholder="Type in notes about this contract..."/>
+                    </group>
+                </xpath>
+
+                <xpath expr="//div[hasclass('oe_title')]" position="replace">
+                        <div class="oe_title pe-0 w-100 mw-100" name="title">
+                            <h1 class="d-flex flex-row justify-content-between">
+                                <field name="name" class="text-truncate" placeholder="Contract Reference"/>
+
+                                <field name="kanban_state"
+                                    class="d-flex align-items-center"
+                                    groups="!hr_contract.group_hr_contract_manager"
+                                    widget="state_selection" readonly="1"/>
+                                <field name="kanban_state"
+                                    class="d-flex align-items-center"
+                                    groups="hr_contract.group_hr_contract_manager"
+                                    widget="state_selection" readonly="0"/>
+                            </h1>
+
+                        </div>
+                        <br/>
+                </xpath>
+                <xpath expr="//field[@name='department_id']" position="replace">
+                    <field name="depart_id" readonly="state in ['open','close']"/>
+                </xpath>
+                <xpath expr="//field[@name='department_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='job_id']" position="replace">
+                    <field name="depart_id" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='job_id']" position="replace">
+                    <field name="job_id" readonly="state in ['open','close']"/>
+                </xpath>
+                <xpath expr="//field[@name='depart_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='job_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                
+                <xpath expr="//page[@name='other']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="santosa_hierarchy_form_attachments" model="ir.ui.view">
+            <field name="name">santosa.hierarchy.form.attachments</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+
+             
+              
+                <xpath expr="//field[@name='date_start']" position="before">
+                    <field name="nik" string="NIK"/>
+                    <field name="nik_lama" string="Previous NIK"/>
+                    <field name="area" options="{'no_create': True,'no_create_edit': True}"/>
+                    <field name="branch_id" string="Business Unit" options="{'no_create': True,'no_create_edit': True}"/>
+                    <field name="depart_id"/>
+                    <field name="job_id"/>
+                </xpath>
+                <xpath expr="//field[@name='employee_id']" position="replace">
+                    <field name="employee_id" options="{'no_create': True,'no_create_edit': True}" context="{'search_by': 'No','search_by_name': False}" />
+                </xpath>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="readonly">state in ['open','close']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='contract_type_id']" position="attributes">
+                    <attribute name="invisible">state in ['open','close']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='contract_type_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='employee_id']" position="attributes">
+                    <attribute name="readonly">state in ['open','close']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='nik']" position="attributes">
+                    <attribute name="readonly">state in ['open','close']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='nik_lama']" position="attributes">
+                    <attribute name="readonly">state in ['open','close']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='date_start']" position="attributes">
+                    <attribute name="readonly">state in ['open','close']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='date_end']" position="attributes">
+                    <attribute name="readonly">state in ['open','close']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='sallary_amount']" position="attributes">
+                    <attribute name="readonly">state in ['open','close']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='nilai_pa']" position="attributes">
+                    <attribute name="readonly">state in ['open','close']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='area']" position="attributes">
+                    <attribute name="readonly">state in ['open','close']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='branch_id']" position="attributes">
+                    <attribute name="readonly">state in ['open','close']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='attachment_contract']" position="attributes">
+                    <attribute name="readonly">state in ['open','close']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='employee_id']" position="after">
+                    <field name="emp_name"/>
+                </xpath>
+                
+            </field>
+        </record>
+
+        <record id="santosa_hierarchy_tree" model="ir.ui.view">
+            <field name="name">santosa.hierarchy.tree</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='employee_id']" position="after">
+                    <field name="emp_id"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

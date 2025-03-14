@@ -1,0 +1,63 @@
+<odoo>
+    <data>
+
+        <record id="santosa_finance_alokasi_beban_form" model="ir.ui.view">
+            <field name="name">Alokasi Beban</field>
+            <field name="model">santosa_finance.alokasi_beban</field>
+            <field name="arch" type="xml">
+                <form multi_edit="1">
+                   
+                    <sheet>
+                        <group>
+                            <field name="odoo_transaction_no" />
+                            <field name="registration_no" />
+                            <field name="invoice_no" />
+                            <field name="med_rec_number" />
+                            <field name="no_sep" />
+                            <field name="penjamin_code" />
+                            <field name="penjamin_name" />
+                            <field name="piutang_name" />
+                            <field name="amount_penjamin" />
+                            <field name="revision_count" />
+                        </group>
+                       
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="santosa_finance_alokasi_beban_tree" model="ir.ui.view">
+            <field name="name">Alokasi Beban</field>
+            <field name="model">santosa_finance.alokasi_beban</field>
+            <field name="arch" type="xml">
+
+                <tree limit="20">
+                    <field name="odoo_transaction_no" />
+                    <field name="registration_no" />
+                            <field name="invoice_no" />
+                            <field name="med_rec_number" />
+                            <field name="no_sep" />
+                            <field name="penjamin_code" />
+                            <field name="penjamin_name" />
+                            <field name="piutang_name" />
+                            <field name="amount_penjamin" />
+                            <field name="revision_count"/>
+                            
+                </tree>
+            </field>
+        </record>
+
+        <record id="santosa_finance_alokasi_beban_action" model="ir.actions.act_window">
+            <field name="name">Alokasi Beban</field>
+            <field name="res_model">santosa_finance.alokasi_beban</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
+
+            <field name="domain"></field>
+
+        </record>
+       
+        <menuitem id="alokasi_beban_data" name="Alokasi Beban" sequence='99' parent="account.menu_finance_receivables" action="santosa_finance_alokasi_beban_action"/>
+
+    </data>
+</odoo>

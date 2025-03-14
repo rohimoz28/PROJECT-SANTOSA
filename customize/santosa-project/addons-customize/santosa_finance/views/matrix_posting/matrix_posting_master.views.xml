@@ -1,0 +1,5 @@
+<odoo>
+    <data>
+        <menuitem id="matrix_posting_root" name="Matrix Posting" sequence="99" parent="santosa_finance.santosa_finance_root"/>
+    </data>
+</odoo>

@@ -1,0 +1,54 @@
+<odoo>
+    <data>
+
+        <record id="santosa_finance_sales_point_coa_config_form" model="ir.ui.view">
+            <field name="name">Sales Point COA Config</field>
+            <field name="model">santosa_finance.sales_point_coa_config</field>
+            <field name="arch" type="xml">
+                <form multi_edit="1">
+                   
+                    <sheet>
+                        <group>
+                           
+                            <field name="sales_point" />
+                            <field name="item_group" />
+                            <field name="income_account" />
+                            <field name="expense_account" />
+                            
+                            
+                        </group>
+                       
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="santosa_finance_sales_point_coa_config_tree" model="ir.ui.view">
+            <field name="name">Sales Point COA Config</field>
+            <field name="model">santosa_finance.sales_point_coa_config</field>
+            <field name="arch" type="xml">
+
+                <tree limit="20">
+                    <field name="sales_point" />
+                            <field name="item_group" />
+                            <field name="income_account" />
+                            <field name="expense_account" />
+                            
+                </tree>
+            </field>
+        </record>
+
+        <record id="santosa_finance_sales_point_coa_config_action" model="ir.actions.act_window">
+            <field name="name">Sales Point COA Config</field>
+            <field name="res_model">santosa_finance.sales_point_coa_config</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
+
+            <field name="domain"></field>
+
+        </record>
+       
+        <menuitem id="sales_point_coa_config_data" name="Sales Point COA Config" sequence='15' parent="spcc_root" action="santosa_finance_sales_point_coa_config_action"/>
+
+    </data>
+</odoo>

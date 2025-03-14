@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+
+        <!-- TMS Menu -->
+        <menuitem id="menu_sanbe_hr_payroll_root" name="Penggajian" sequence="45"
+              web_icon="sanbe_hr_payroll,static/description/icon.png"
+              groups="hr.group_hr_manager"
+        />
+
+    </data>
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Employees Menuitems -->
+        <record id="hr.menu_hr_employee_user" model="ir.ui.menu">
+            <!-- <field name="name">Karyawan</field> -->
+            <field name="sequence">1</field>
+        </record>
+        <record id="hr_contract.hr_menu_contract" model="ir.ui.menu">
+            <field name="name">Employee Contracts</field>
+            <field name="sequence">3</field>
+        </record>
+        <record id="hr_org_chart.menu_hr_employee_org_chart" model="ir.ui.menu">
+            <field name="sequence">8</field>
+        </record>
+    </data>
+</odoo>

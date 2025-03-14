@@ -1,0 +1,74 @@
+<odoo>
+    <data>
+
+        <record id="santosa_finance_offset_transaction_form" model="ir.ui.view">
+            <field name="name">Offset Transaction</field>
+            <field name="model">santosa_finance.offset_transaction</field>
+            <field name="arch" type="xml">
+                <form multi_edit="1">
+                   
+                    <sheet>
+                        <group>
+                           
+                            <field name="odoo_transaction_no" />
+                            <field name="transaction_date" />
+                            <field name="offset_no" />
+                            <field name="offset_date" />
+                            <field name="offset_type" />
+                            <field name="offset_description" />
+                            <field name="document_ref_number" />
+                            <field name="attachment_document_ref" />
+                            <field name="total_amount_offset" />
+                            <field name="remarks" />
+                            <field name="status_transaksi" />
+                            <field name="periode_number" />
+                            <field name="periode_closing_date" />
+                            
+                            
+                            
+                        </group>
+                       
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="santosa_finance_offset_transaction_tree" model="ir.ui.view">
+            <field name="name">Offset Transaction</field>
+            <field name="model">santosa_finance.offset_transaction</field>
+            <field name="arch" type="xml">
+
+                <!-- default_order='tahun desc' -->
+                <tree limit="20">
+                    <field name="odoo_transaction_no" />
+                            <field name="transaction_date" />
+                            <field name="offset_no" />
+                            <field name="offset_date" />
+                            <field name="offset_type" />
+                            <field name="offset_description" />
+                            <field name="document_ref_number" />
+                            <field name="attachment_document_ref" />
+                            <field name="total_amount_offset" />
+                            <field name="remarks" />
+                            <field name="status_transaksi" />
+                            <field name="periode_number" />
+                            <field name="periode_closing_date" />
+                            
+                </tree>
+            </field>
+        </record>
+
+        <record id="santosa_finance_offset_transaction_action" model="ir.actions.act_window">
+            <field name="name">Offset Transaction</field>
+            <field name="res_model">santosa_finance.offset_transaction</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
+
+            <field name="domain"></field>
+
+        </record>
+       
+        <menuitem id="offset_transaction_data" name="Offset Transaction" sequence='15' parent="santosa_finance.offset_root" action="santosa_finance_offset_transaction_action"/>
+
+    </data>
+</odoo>

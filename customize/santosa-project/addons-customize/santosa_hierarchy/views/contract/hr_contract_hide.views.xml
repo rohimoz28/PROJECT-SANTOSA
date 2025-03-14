@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        
+
+        <record id="santosa_hierarchy_form_hide" model="ir.ui.view">
+            <field name="name">santosa.hierarchy.form.hide</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="santosa_hierarchy.sanbe_hr_contracts_form_attachment"/>
+            <field name="arch" type="xml">
+
+             
+              
+                <xpath expr="//field[@name='structure_type_id']" position="replace">
+                    <field name="depart_id" invisible="0"/>
+                </xpath>
+                
+               
+                
+            </field>
+        </record>
+    </data>
+</odoo>

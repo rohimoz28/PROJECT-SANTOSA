@@ -1,0 +1,70 @@
+<odoo>
+    <data>
+        <record id="santosa_finance_stg_invoice_alloc_form" model="ir.ui.view">
+            <field name="name">STG - Invoice Alloc</field>
+            <field name="model">santosa_finance.stg_invoice_alloc</field>
+            <field name="arch" type="xml">
+                <form multi_edit="1">
+                    <sheet>
+                            <group>
+                                <field name="TransactionNo"/>
+                                <field name="PiutangNumber"/>
+                                <field name="PiutangID"/>
+                                <field name="DocType"/>
+                                <field name="TransactionDate"/>
+                                <field name="Amount"/>
+                                <field name="PenjaminKey"/>
+                                <field name="PenjaminCode"/>
+                                <field name="PenjaminName"/>
+                                <field name="PatientName"/>
+                                <field name="EnteredDate"/>
+                                <field name="PopulatedTime"/>
+                                <field name="account_odoo"/>
+                            <field name="AllocType" />
+
+                            </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="santosa_finance_stg_invoice_alloc_tree" model="ir.ui.view">
+            <field name="name">STG - Invoice Alloc</field>
+            <field name="model">santosa_finance.stg_invoice_alloc</field>
+            <field name="arch" type="xml">
+
+                <tree limit="20">
+                                <field name="TransactionNo" optional='show'/>
+                                <field name="PiutangNumber" optional='show'/>
+                                <field name="PiutangID" optional='show'/>
+                                <field name="DocType" optional='show'/>
+                                <field name="TransactionDate" optional='show'/>
+                                <field name="Amount" optional='show'/>
+                                <field name="PenjaminKey" optional='show'/>
+                                <field name="PenjaminCode" optional='show'/>
+                                <field name="PenjaminName" optional='show'/>
+                                <field name="PatientName" optional='show'/>
+                                <field name="EnteredDate" optional='show'/>
+                                <field name="PopulatedTime" optional='show'/>
+
+                                <field name="account_odoo" optional='show'/>
+                                <field name="AllocType" optional='hide'/>
+                            
+                </tree>
+            </field>
+        </record>
+
+        <record id="santosa_finance_stg_invoice_alloc_action" model="ir.actions.act_window">
+            <field name="name">STG - Invoice Alloc</field>
+            <field name="res_model">santosa_finance.stg_invoice_alloc</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
+
+            <field name="domain"></field>
+
+        </record>
+
+        <menuitem id="stg_invoice_alloc" name="STG - Invoice Alloc" parent="stg_invoice_root" action="santosa_finance_stg_invoice_alloc_action"/>
+    </data>
+</odoo>
+

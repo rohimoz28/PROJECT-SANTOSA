@@ -1,0 +1,61 @@
+<odoo>
+    <data>
+
+        <record id="santosa_finance_tagihan_line_form" model="ir.ui.view">
+            <field name="name">Tagihan Line</field>
+            <field name="model">santosa_finance.tagihan_line</field>
+            <field name="arch" type="xml">
+                <form multi_edit="1">
+                   
+                    <sheet>
+                        <group>
+                           
+                            <field name="tagihan_id" />
+                            <field name="invoice_no" />
+                            <field name="invoice_date" />
+                            <field name="sep_ref_no" />
+                            <field name="med_rec_number" />
+                            <field name="patient_name" />
+                            <field name="invoice_amount_claim" />
+                            <field name="status_invoice" />
+                        </group>
+                       
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="santosa_finance_tagihan_line_tree" model="ir.ui.view">
+            <field name="name">Tagihan Line</field>
+            <field name="model">santosa_finance.tagihan_line</field>
+            <field name="arch" type="xml">
+
+                <!-- default_order='tahun desc' -->
+                <tree limit="20">
+                    <field name="tagihan_id" />
+                            <field name="invoice_no" />
+                            <field name="invoice_date" />
+                            <field name="sep_ref_no" />
+                            <field name="med_rec_number" />
+                            <field name="patient_name" />
+                            <field name="invoice_amount_claim" />
+                            <field name="status_invoice" />
+                            
+                </tree>
+            </field>
+        </record>
+
+        <record id="santosa_finance_tagihan_line_action" model="ir.actions.act_window">
+            <field name="name">Tagihan Line</field>
+            <field name="res_model">santosa_finance.tagihan_line</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
+
+            <field name="domain"></field>
+
+        </record>
+       
+        <menuitem id="tagihan_line_data" name="Tagihan Line" sequence='15' parent="santosa_finance.tagihan_root" action="santosa_finance_tagihan_line_action"/>
+
+    </data>
+</odoo>

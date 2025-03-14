@@ -1,0 +1,5 @@
+<odoo>
+    <data>
+        <menuitem id="spcc_root" name="Sales Point COA Config" sequence="99" parent="santosa_finance.santosa_finance_root"/>
+    </data>
+</odoo>

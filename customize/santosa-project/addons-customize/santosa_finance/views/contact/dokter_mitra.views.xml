@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Action for Dokter Mitra -->
+    <record id="action_dokter_mitra" model="ir.actions.act_window">
+        <field name="name">Dokter</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <!-- <field name="domain">[('is_dokter_mitra', '=', True)]</field> -->
+        <field name="context">{'default_is_dokter_mitra': 1, 'search_default_filter_dokter_mitra': 1}</field>
+    </record>
+
+    <record id="action_dokter_mitra" model="ir.actions.act_window">
+        <field name="name">Dokter</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <!-- <field name="domain">[('is_dokter_mitra', '=', True)]</field> -->
+        <field name="context">{'default_is_dokter_mitra': 1, 'search_default_filter_dokter_mitra': 1}</field>
+    </record>
+
+    <!-- Menu item for Dokter Mitra -->
+    <menuitem id="menu_dokter_mitra" name="Dokter" parent="" sequence='99' action="action_dokter_mitra"/>
+</odoo>

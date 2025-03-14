@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_hr_mutation_tree" model="ir.ui.view">
+            <field name="name">hr.mutation.tree</field>
+            <field name="model">hr.employee.mutations</field>
+            <field name="priority">1000</field>
+            <field name="arch" type="xml">
+                <tree string="HR Mutation ">
+                    <field name="name"/>
+                    <field name="letter_no"/>
+                    <field name="emp_nos_ids" invisible="1"/>
+                    <field name="emp_nos" options="{'no_create': True,'no_create_edit': True}"
+                                        context="{'search_by': 'No','search_by_name': False}" />
+                    <field name="nik" />
+                    <field name="nik_lama" />
+                    <field name="employee_name" />
+                    <field name="service_type" />
+                    <field name="service_date" />
+                    <field name="service_status" />
+                    <field name="service_nik" />
+                    <field name="service_nik_lama" />
+                    <field name="service_area" />
+                    <field name="service_bisnisunit" />
+                    <field name="service_departmentid" />
+                    <field name="service_jobstatus" />
+                    <field name="service_employementstatus" />
+                    <field name="service_employee_levels" />
+                    <field name="job_status" />
+                    <!--field name="employee_group1" invisible="job_status !='permanent'"
+                           force_save="1" /-->
+                    <field name="employee_group1" force_save="1" />
+                    <field name="service_jobtitle" />
+                    <field name="service_empgroup1" invisible="service_jobstatus !='permanent'"
+                        readonly="1" force_save="1" />
+                    <field name="service_start" required="1" />
+                    <field name="service_end" />
+                    <field name="remarks" />
+                    <field name="image" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_hr_mutation_form" model="ir.ui.view">
+            <field name="name">hr.mutation.form</field>
+            <field name="model">hr.employee.mutations</field>
+            <field name="type">form</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="HR Mutation Type">
+                    <header>
+                        <button string="Approve" name="button_approve" type="object"
+                            class="oe_highlight"
+                            invisible="service_type == 'muta' and state != 'accept' or service_type != 'muta' and state != 'draft'" />
+                        <button string="In Transfer" name="button_intransfer" type="object"
+                            invisible="service_type != 'muta' or state != 'draft'" />
+                        <button string="Accept" name="button_accept" type="object"
+                            invisible="service_type != 'muta' or state != 'intransfer'" />
+                        <field name="state" widget="statusbar"
+                            statusbar_visible="draft,approved" invisible="service_type == 'muta'" />
+                        <field name="state" widget="statusbar"
+                            statusbar_visible="draft,intransfer,accept,approved"
+                            invisible="service_type != 'muta'" />
+                    </header>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h2>
+                            <field name="name" readonly="1" placeholder="Transaction Number"/>
+                        </h2>
+                         <label for="letter_no"/>
+                        <h1>
+                            <field name="letter_no" placeholder="Refference Number"/>
+                        </h1>
+                    </div>
+                    <group name="emp_det" string="Employee Details">
+                        <div class="input-group mb-1">
+                            <label for="emp_nos" />
+                            <div class="row">
+                                <div class="col-9">
+                                    <field name="emp_nos"
+                                        options="{'no_create': True,'no_create_edit': True}"
+                                        context="{'search_by': 'No','search_by_name': False}" />
+                                </div>
+                            </div>
+                        </div>
+                        <group>
+                            <field name="emp_nos_ids" invisible="1"/>
+                            <field name="employee_id" invisible="1" />
+                            <field name="employee_name" readonly="1" force_save="1" />
+                            <field name="nik" readonly="1" force_save="1" />
+                            <field name="nik_lama" readonly="1" force_save="1" />
+                            <field name="employee_levels" readonly="1" force_save="1" />
+                            <field name="area" readonly="1" force_save="1" />
+                            <field name="bisnis_unit" readonly="1" force_save="1" />
+                            <field name="departmentid" readonly="1" force_save="1" />
+
+                        </group>
+                        <group>
+                            <field name="job_status" readonly="1" force_save="1" />
+                            <field name="emp_status"
+                                readonly="service_type != 'conf'" force_save="1" />
+                            <field name="job_title" readonly="1" force_save="1" />
+                            <field name="employee_group1" readonly="1" force_save="1" />
+                        </group>
+                    </group>
+                    <group name="emp_service_det" string="Mutation Details" readonly="state in ['approved']">
+                        <group>
+                            <field name="service_type" readonly="state in ['approved']"/>
+                            <field name="service_employee_levels" readonly="state in ['approved']" 
+                            invisible="service_type != 'prom'" required="service_type == 'prom'"
+                            options="{'no_create': True,'no_quick_create': True}" />
+                            <!--field name="employee_level" readonly="state in ['approved']" invisible="service_type != 'prom'" required="service_type == 'prom'"/-->
+                            <field name="service_identification" readonly="state in ['approved']"/>
+                            <field name="service_nik" readonly="state in ['approved']" force_save="1" />
+                            <field name="service_nik_lama" readonly="state in ['approved']" force_save="1" />
+                            <field name="service_no_npwp" readonly="state in ['approved']" force_save="1" />
+                            <field name="service_no_ktp" readonly="state in ['approved']" force_save="1" />
+                            <field name="service_area" readonly="state in ['approved']" force_save="1" />
+                            <field name="branch_ids" invisible="1"/>
+                            <field name="service_bisnisunit" readonly="state in ['approved']" force_save="1" />
+                            <field name="service_departmentid" readonly="state in ['approved']" force_save="1" />
+                        </group>
+                        <group>
+                            <field name="service_date" readonly="state in ['approved']" force_save="1" />
+                            <field name="service_status" readonly="state in ['approved']" force_save="1" />
+                            <field name="service_jobstatus" readonly="state in ['approved']" force_save="1" />
+                            <field name="service_employementstatus" readonly="state in ['approved']" 
+                                invisible="job_status !='permanent'" force_save="1" />
+                            <field name="service_jobtitle" readonly="state in ['approved']" />
+                            <field name="service_empgroup1" readonly="state in ['approved']" force_save="1" />
+                            <field name="company_id" invisible="1"/>
+                            <field name="join_date" invisible="service_type not in [('corr','actv')]" />
+                            <field name="contract_no" invisible="service_type not in [('corr','actv')]" required="job_status =='Permanent'"/>
+                            <field name="contract_from" invisible="service_type not in [('corr','actv')]" required="job_status =='Contract'"/>
+                            <field name="contract_to" invisible="service_type not in [('corr','actv')]" required="job_status =='Contract'"/>
+                        </group>
+                        <group>
+                            <field name="service_start" readonly="state in ['approved']" required="True"/>
+                            <field name="service_end" readonly="state in ['approved']" />
+                            <field name="remarks" readonly="state in ['approved']" />
+                            <field name="image" readonly="state in ['approved']" widget="many2many_binary" />
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_employee_mutation_search" model="ir.ui.view">
+            <field name="name">employee.mutation.search</field>
+            <field name="model">hr.employee.mutations</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <search string="Employee Certification">
+                    <field name="emp_no" />
+                    <field name="employee_name" />
+                    <field name="nik" />
+                    <field name="nik_lama" />
+                </search>
+            </field>
+        </record>
+
+        <record id="open_view_employee_mutation_tree" model="ir.actions.act_window">
+            <field name="name">Employees Mutation</field>
+            <field name="res_model">hr.employee.mutations</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_hr_mutation_tree" />
+            <field name="domain">[]</field>
+            <field name="search_view_id" ref="view_employee_mutation_search" />
+        </record>
+
+        <record id="open_view_employee_mutation_list" model="ir.actions.act_window">
+            <field name="name">Employees Mutation</field>
+            <field name="res_model">hr.employee.mutations</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" eval="False" />
+            <field name="search_view_id" ref="view_employee_mutation_search" />
+        </record>
+
+        <menuitem
+            id="menu_hr_mutation"
+            name="Employee Mutation"
+            parent="hr.menu_hr_employee_payroll"
+            sequence="5"
+            action="open_view_employee_mutation_tree" />
+
+    </data>
+</odoo>

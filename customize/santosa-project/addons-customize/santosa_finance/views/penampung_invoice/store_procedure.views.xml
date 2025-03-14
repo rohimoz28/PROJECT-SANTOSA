@@ -1,0 +1,56 @@
+<odoo>
+    <data>
+        <record id="santosa_finance_store_procedure_form" model="ir.ui.view">
+            <field name="name">Processing</field>
+            <field name="model">santosa_finance.store_procedure</field>
+            <field name="arch" type="xml">
+                <form multi_edit="1">
+                    <sheet>
+                    <header>
+                    <button name="panggil_store_procedure"
+                                        string="Insert AM AML"
+                                        type="object"
+                                        class="btn-primary"/>
+                    </header>
+                            <group>
+                                <field name="name"/>
+                                <field name="tanggal_terakhir_dijalankan"/>
+                                <field name="populate_date"/>
+                                
+                            </group>
+                          
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="santosa_finance_store_procedure_tree" model="ir.ui.view">
+            <field name="name">Processing</field>
+            <field name="model">santosa_finance.store_procedure</field>
+            <field name="arch" type="xml">
+
+                <tree limit="20">
+                    <field name="name" />
+                           
+                                <field name="tanggal_terakhir_dijalankan"/>
+                                <field name="populate_date"/>
+                            
+                            
+                </tree>
+            </field>
+        </record>
+
+        <record id="santosa_finance_store_procedure_action" model="ir.actions.act_window">
+            <field name="name">Processing</field>
+            <field name="res_model">santosa_finance.store_procedure</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
+
+            <field name="domain"></field>
+
+        </record>
+
+        <menuitem id="store_procedure" name="Processing" sequence="99" parent="account.menu_finance" action="santosa_finance_store_procedure_action"/>
+    </data>
+</odoo>
+

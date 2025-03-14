@@ -1,0 +1,11 @@
+<odoo>
+    <data>
+        <menuitem id="santosa_hrms_root" name="HRMS" sequence="99" />
+
+        <!-- Inherit the existing menu item -->
+        <record id="hr.hr_menu_hr_reports" model="ir.ui.menu">
+            <field name="name">Updated Reporting</field>
+        </record>
+
+    </data>
+</odoo>

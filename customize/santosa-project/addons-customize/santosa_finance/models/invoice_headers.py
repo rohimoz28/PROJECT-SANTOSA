@@ -1,0 +1,249 @@
+from odoo import models, fields, api
+from datetime import date, datetime, timedelta
+from contextlib import ExitStack, contextmanager
+from collections import defaultdict
+from itertools import groupby
+from operator import itemgetter
+
+
+class AccountMove(models.Model):
+    _inherit = 'account.move'
+
+    transaction_no = fields.Char(string="Transaction No")
+    odoo_transaction_no = fields.Char()
+    no_trx_base = fields.Char()
+    transaction_date = fields.Date()
+    invoice_no = fields.Char()
+    tanggal_invoice = fields.Datetime()
+    registration_date = fields.Datetime()
+    registration_no = fields.Char()
+    sales_point = fields.Char()
+    periode_perawatan_from = fields.Datetime()
+    periode_perawatan_to = fields.Datetime()
+
+    med_rec_number = fields.Char()
+    patient_name = fields.Char()
+    no_sep_ref_no = fields.Char()
+    total_invoice = fields.Monetary()
+    total_diskon = fields.Monetary()
+    unit_code = fields.Char()
+    unit_name = fields.Char()
+    penjamin_utama_code = fields.Char()
+    penjamin_key = fields.Many2one('santosa_finance.penjamin')
+    penjamin_utama_name = fields.Char()
+    amount_utama = fields.Float()
+    status_invoice = fields.Char()
+    status_staging = fields.Char()
+    status_transaksi = fields.Char()
+    periode_number = fields.Char()
+    periode_closing_date = fields.Date()
+
+    #AR
+    tgl_klaim = fields.Date()
+    amount_tagihan = fields.Monetary()
+    status_ar_klaim = fields.Char()
+    no_fpk_ref_doc = fields.Char()
+    no_tag_klaim = fields.Char()
+    is_revisi = fields.Boolean()
+    revision_count = fields.Char()
+
+    # Fields from Invoice Alloc Beban
+    penjamin_code = fields.Char(string="Penjamin Code")
+    penjamin_name = fields.Char(string="Penjamin Name")
+    penjamin_name_id = fields.Many2one('res.partner')
+    amount_penjamin = fields.Monetary(string="Amount Penjamin", currency_field='currency_id')
+
+
+    #tambahan terakhir
+    rowkey = fields.Char()
+    admission_date = fields.Datetime()
+    discharge_date = fields.Datetime()
+    line_of_sales = fields.Char()
+    sales_group = fields.Selection([ 
+        ('Biling', 'Biling'),
+        ('KemoJKN', 'KemoJKN'),
+        ('ProlanisJKN', 'ProlanisJKN'),
+        ('RefVarBB', 'RefVarBB')
+    ])
+    corp_group = fields.Selection([ 
+        ('Corp Asuransi', 'Corp Asuransi'),
+        ('JKN', 'JKN'),
+        ('KemoJKN', 'KemoJKN'),
+        ('ProlanisJKN', 'ProlanisJKN'),
+        ('UMUM', 'UMUM')
+    ])
+    doc_type = fields.Char()
+    dpp = fields.Monetary()
+    ppn = fields.Monetary()
+    dpp_ppn = fields.Monetary()
+    non_ppn = fields.Monetary()
+    omzet = fields.Monetary()
+    revenue = fields.Monetary()
+    status_record = fields.Char()
+    populated_time = fields.Datetime()
+    binary_checksum = fields.Char()
+    location = fields.Char()
+    last_update = fields.Datetime()
+    status_sinkronisasi = fields.Selection([ 
+        ('Proses Pembentukan AR Harian', 'Proses Pembentukan AR Harian'),
+        ('Proses Penyesuaian AR', 'Proses Penyesuaian AR'),
+        ('Selesai', 'Selesai')
+    ], default='Proses Pembentukan AR Harian')
+    is_not_first_calculate = fields.Boolean()
+
+    temp_invoice_no = fields.Char(compute='_compute_temp_invoice_no')
+    los = fields.Integer()
+    cobname = fields.Char()
+
+    @api.depends('status_invoice', 'sales_point', 'penjamin_name')
+    def _compute_temp_invoice_no(self):
+        for record in self:
+            if record.status_invoice == 'Closed':
+                record.temp_invoice_no = record.invoice_no
+            else:
+                record.temp_invoice_no = ''
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        # Panggil metode bawaan terlebih dahulu
+        moves = super(AccountMove, self).create(vals_list)
+
+        # Fungsionalitas tambahan untuk nomor transaksi
+        for move, vals in zip(moves, vals_list):
+            if 'odoo_transaction_no' not in vals or not vals['odoo_transaction_no']:
+                prefix = 'INV'
+                today = datetime.today()
+                year = today.strftime('%Y')
+                month = today.strftime('%m')
+                day = today.strftime('%d')
+
+                # Generate the sequence code for the current year and month
+                sequence_code = f'account.move.transaction.no.{year}.{month}'
+
+                # Check if the sequence exists
+                sequence = self.env['ir.sequence'].sudo().search([('code', '=', sequence_code)], limit=1)
+                if not sequence:
+                    # Create the sequence if it doesn't exist
+                    self.env['ir.sequence'].sudo().create({
+                        'name': f'Transaction Number {year}/{month}',
+                        'code': sequence_code,
+                        'implementation': 'no_gap',
+                        'prefix': f'{prefix}/{year}/{month}/',
+                        'padding': 5,
+                        'number_increment': 1,
+                        'number_next_actual': 1,
+                    })
+
+                move.odoo_transaction_no = self.env['ir.sequence'].next_by_code(sequence_code) or '/'
+
+        return moves
+
+    def button_create_invoice_lines(self):
+        am = self.env['account.move'].search([('status_sinkronisasi', '=', 'Proses Pembentukan AR Harian')])
+        print(am, "ini yang mau dieksekusi")
+        for record in am:
+            nilai = self.env['account.move.line'].search([('move_id', '=', record.id)])
+            codenya = None
+            for nilai_baru in nilai:
+                codenya = nilai_baru.account_id.code
+
+            myacc = self.env['account.account'].sudo().search([('name', '=', 'Account Receivable')])
+
+            # Buat query untuk mengelompokkan dan menghitung total unit_price berdasarkan populate_date
+            record.env.cr.execute("""
+                SELECT populate_date, SUM(price_subtotal) as total_unit_price
+                FROM account_move_line
+                WHERE move_id = %s
+                GROUP BY populate_date
+            """, (record.id,))
+            query_result = record.env.cr.fetchall()
+
+            tambahan = []
+            seen_dates = set()
+            for row in query_result:
+                populate_date = row[0]
+                total_unit_price = row[1]
+
+                if populate_date not in seen_dates:
+                    tambahan.append({
+                        'product_id': False,
+                        'debit': total_unit_price,
+                        'move_id': record.id,
+                        'account_id': myacc.id,
+                        'populate_date': populate_date,
+                        'name': None,
+                        'credit': 0.0,
+                    })
+                    seen_dates.add(populate_date)
+            tambahan = [item for item in tambahan if item['populate_date'] is not None]
+            print(tambahan, "ini nilai yang disisipkan")
+            mbaru = self.env['account.move.line'].create(tambahan)
+            record.line_ids += mbaru
+            if record.is_not_first_calculate == False:
+                record.status_sinkronisasi = 'Proses Penyesuaian AR'
+            else:
+                record.status_sinkronisasi = 'Selesai'
+
+    def penyesuaian_kembali(self):
+        print("jalan awal")
+        am = self.env['account.move'].search([('status_sinkronisasi', '=', 'Selesai')])
+        print(am, "ini record am untuk penyesuaian kembali")
+        for record in am:
+            print("fungsi penyesuaian kembali berjalan")
+       
+            move_lines = self.env['account.move.line'].search([('need_to_calculate', '=', True)])
+            print(move_lines, "ini yang akan harus disesuaikan lagi")
+            print(move_lines.move_id, "in move_id yang akan harus disesuaikan lagi")
+            if move_lines:
+                hapus_ar = self.env['account.move.line'].search([('move_id', '=', move_lines.move_id.id),('product_id', '=', False)])
+                print(hapus_ar, "ini ar yang harus dihapus")
+                print("ini ada yang harus disesuaikan")
+                deleted_rows = hapus_ar.sudo().unlink()
+                print(f"Jumlah baris yang dihapus: {deleted_rows}")
+                move_lines.need_to_calculate = False
+                move_lines.move_id.is_not_first_calculate = True
+                move_lines.move_id.status_sinkronisasi = 'Proses Pembentukan AR Harian'
+            else:
+                print("ga ada yang harus disesuaikan")
+
+    def delete_ar_bawaan(self):
+        print("jalan awal")
+        am = self.env['account.move'].search([('status_sinkronisasi', '=', 'Proses Penyesuaian AR')])
+        for record in am:
+            print("fungsi delete AR bawaan jalan")
+       
+            move_lines = self.env['account.move.line'].search([('populate_date', '=', False),('debit', '!=', 0),('move_id', '=', record.id)])
+            print(move_lines, "ini yang akan dihapus")
+            
+            deleted_rows = move_lines.sudo().unlink()
+            
+            print(f"Jumlah baris yang dihapus: {deleted_rows}")
+            record.status_sinkronisasi = 'Selesai'
+
+    @contextmanager
+    def _check_balanced(self, container):
+        ''' Assert the move is fully balanced debit = credit.
+        An error is raised if it's not the case.
+        '''
+        with self._disable_recursion(container, 'check_move_validity', default=True, target=False) as disabled:
+            yield
+            if disabled:
+                return
+
+        unbalanced_moves = self._get_unbalanced_moves(container)
+        # if unbalanced_moves:
+        #     error_msg = _("An error has occurred.")
+        #     for move_id, sum_debit, sum_credit in unbalanced_moves:
+        #         move = self.browse(move_id)
+        #         error_msg += _(
+        #             "\n\n"
+        #             "The move (%s) is not balanced.\n"
+        #             "The total of debits equals %s and the total of credits equals %s.\n"
+        #             "You might want to specify a default account on journal \"%s\" to automatically balance each move.",
+        #             move.display_name,
+        #             format_amount(self.env, sum_debit, move.company_id.currency_id),
+        #             format_amount(self.env, sum_credit, move.company_id.currency_id),
+        #             move.journal_id.name)
+        #     raise UserError(error_msg)
+
+    

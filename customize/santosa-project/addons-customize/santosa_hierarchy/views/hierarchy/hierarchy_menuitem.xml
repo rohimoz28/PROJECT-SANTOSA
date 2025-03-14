@@ -1,0 +1,7 @@
+<odoo>
+    <data>
+
+        <menuitem id="hierarchy_id" name="Hierarchy" sequence='11' parent="hr.menu_human_resources_configuration"/>
+    
+    </data>
+</odoo>

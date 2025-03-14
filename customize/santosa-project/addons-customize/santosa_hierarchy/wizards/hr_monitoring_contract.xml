@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_hr_monitoring_contract" model="ir.ui.view">
+        <field name="name">Monitoring Contract</field>
+        <field name="model">hr.monitoring.contract</field>
+        <field name="arch" type="xml">
+            <form string="HR Monitoring Contract" js_class="hr_monitoring_contract">
+                <div>
+                    <group>
+                        <field name="branch_ids" invisible="1"/>
+                        <field name="alldepartment" invisible="1"/>
+
+                        <field name="area"/>
+                        <field name="bisnis_unit"/>
+                        <field name="directorate_id"/>
+                        <field name="department_id"/>
+                        <field name="division_id"/>
+                        <field name="job_status"/>
+                        <field name="emp_status"/>
+                    </group>
+                    <group invisible="job_status !='contract'">
+                        <group>
+                            <field name="contractend_start" required="job_status == 'contract'" string="End Of Contract From"/>
+                        </group>
+                        <group>
+                            <field name="contractend_end" required="job_status == 'contract'"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="bsdate_from" string="Based Certification Data Date From"/>
+                        </group>
+                        <group>
+                            <field name="bsdate_to" string="To"/>
+                        </group>
+                    </group>
+                    <group invisible="job_status !='permanent'">
+                        <group>
+                            <field name="pension_start" required="job_status == 'permanent'" string="Pension Date From"/>
+                        </group>
+                        <group>
+                            <field name="pension_end" required="job_status == 'permanent'" string="To"/>
+                        </group>
+                    </group>
+                    <group invisible="job_status !='permanent'">
+                        <group>
+                            <field name="confirmed_start" string="Confirmed Date From"/>
+                        </group>
+                        <group>
+                            <field name="confirmed_to"  string="To"/>
+                        </group>
+                    </group>
+                    <div class="o_row">
+                        <div style="float: right; position: absolute;right: 180px;border: 1px solid;">
+                            <div>
+                            <button name="pencarian_data" type="object"
+                                id="pencarian_data"
+                                string="Search"
+                                class="btn-primary" data-hotkey="q"/>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+                    <notebook>
+                        <page name="hasil_pencarian" string="Search Result">
+                            <field name="result_ids">
+                                <tree create="False" edit="False" delete="False">
+                                    <field name="result_id" column_invisible="1"/>
+                                    <field name="employeid"/>
+                                    <field name="employee_id"/>
+                                    <field name="nik"/>
+                                    <field name="department"/>
+                                    <field name="job_title"/>
+                                    <field name="job_status"/>
+                                    <field name="employe_status"/>
+                                    <field name="end_contract"/>
+                                    <field name="end_bsdate"/>
+                                    <field name="pension_date"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                <footer>
+                    <button name="print_hasil" type="object"
+                        id="print_hasil"
+                        string="Print Result"
+                        class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_view_hr_monitoring_contract" model="ir.actions.act_window">
+        <field name="name">Monitoring Contract - Pension and Certification</field>
+        <field name="res_model">hr.monitoring.contract</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+        <menuitem
+            id="hr_menu_hr_monitoring_contract"
+            name="Monitoring Contract - Pension and Certification"
+                  parent="hr.menu_hr_employee_payroll"
+                  sequence="9"
+            action="action_view_hr_monitoring_contract"/>
+</odoo>

@@ -1,0 +1,112 @@
+<odoo>
+    <data>
+        <record id="santosa_finance_stg_invoice_headers_form" model="ir.ui.view">
+            <field name="name">STG - Invoice Headers</field>
+            <field name="model">santosa_finance.stg_invoice_headers</field>
+            <field name="arch" type="xml">
+                <form multi_edit="1">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="PopulatedTime" string="Populated Time"/>
+                                <field name="TransactionNo"/>
+                                <field name="StatusRecord"/>
+                                <field name="RegistrationNo"/>
+                                <field name="RegistrationDate" string="RegistrationDate"/>
+                                <field name="InvoiceNo"/>
+                                <field name="InvoiceDate" string="InvoiceDate"/>
+                                <field name="Invoice_ClosedDate" optional='hide' string="Invoice_ClosedDate"/>
+                                <field name="StatusInvoice"/>
+                                <field name="Medrec"/>
+                                <field name="PatientName"/>
+                                <field name="AdmissionDate" optional='hide' string="AdmissionDate"/>
+                                <field name="DischargeDate" optional='hide' string="DischargeDate"/>
+                                <field name="LOS"/>
+                                <field name="SalesGroup"/>
+                                <field name="CorpGroup"/>
+                                <field name="DocType"/>
+                            </group>
+                            <group>
+                                <field name="SalesPoint"/>
+                                <field name="LocationName"/>
+                                <field name="TotalInvoice"/>
+                                <field name="TotalAmount"/>
+                                <field name="TotalDiscount"/>
+                                <field name="DPP"/>
+                                <field name="PPN"/>
+                                <field name="DPP_PPN"/>
+                                <field name="NonPPN"/>
+                                <field name="Omzet"/>
+                                <field name="Revenue"/>
+                                <field name="PenjaminKey"/>
+                                <field name="PenjaminCode"/>
+                                <field name="PenjaminName"/>
+                                <field name="COBName"/>
+                                <field name="EnteredDate" optional='hide' string="EnteredDate"/>
+
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="santosa_finance_stg_invoice_headers_tree" model="ir.ui.view">
+            <field name="name">STG - Invoice Headers</field>
+            <field name="model">santosa_finance.stg_invoice_headers</field>
+            <field name="arch" type="xml">
+
+                <tree limit="20">
+                            <field name="TransactionNo" optional='show'/>
+                            <field name="StatusRecord" optional='show'/>
+                            <field name="RegistrationNo" optional='show'/>
+                            <field name="RegistrationDate" string="RegistrationDate" optional='show'/>
+                            <field name="InvoiceNo" optional='show'/>
+                            <field name="InvoiceDate" string="InvoiceDate" optional='show'/>
+                            <field name="Invoice_ClosedDate" optional='hide' string="Invoice_ClosedDate"/>
+                            <field name="StatusInvoice" optional='hide'/>
+                            <field name="Medrec" optional='hide'/>
+                            <field name="PatientName" optional='hide'/>
+                            <field name="SEPNo" optional='hide'/>
+                            <field name="AdmissionDate" optional='hide' string="AdmissionDate"/>
+                            <field name="DischargeDate" optional='hide' string="DischargeDate"/>
+                            <field name="LOS" optional='hide'/>
+                            <field name="SalesGroup" optional='hide'/>
+                            <field name="CorpGroup" optional='hide'/>
+                            <field name="DocType" optional='hide'/>
+                            <field name="SalesPoint" optional='hide'/>
+                            <field name="LocationName" optional='hide'/>
+                            <field name="TotalInvoice" optional='hide'/>
+                            <field name="TotalDiscount" optional='hide'/>
+                            <field name="TotalAmount" optional='hide'/>
+                            <field name="DPP" optional='hide'/>
+                            <field name="PPN" optional='hide'/>
+                            <field name="DPP_PPN" optional='hide'/>
+                            <field name="NonPPN" optional='hide'/>
+                            <field name="Omzet" optional='hide'/>
+                            <field name="Revenue" optional='hide'/>
+                            <field name="PenjaminKey" optional='hide'/>
+                            <field name="PenjaminCode" optional='hide'/>
+                            <field name="PenjaminName" optional='hide'/>
+                            <field name="COBName" optional='hide'/>
+                            <field name="EnteredDate" optional='hide' string="EnteredDate"/>
+                            <field name="PopulatedTime" string="Populated Time" optional='show'/>
+
+                </tree>
+            </field>
+        </record>
+
+        <record id="santosa_finance_stg_invoice_headers_action" model="ir.actions.act_window">
+            <field name="name">STG - Invoice Headers</field>
+            <field name="res_model">santosa_finance.stg_invoice_headers</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
+
+            <field name="domain"></field>
+
+        </record>
+
+        <menuitem id="stg_invoice_headers" name="STG - Invoice Headers" parent="stg_invoice_root" action="santosa_finance_stg_invoice_headers_action"/>
+    </data>
+</odoo>
+

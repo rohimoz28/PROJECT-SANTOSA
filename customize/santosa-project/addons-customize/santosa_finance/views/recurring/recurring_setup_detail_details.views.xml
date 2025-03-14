@@ -1,0 +1,52 @@
+<odoo>
+    <data>
+
+        <record id="santosa_finance_recurring_setup_detail_details_form" model="ir.ui.view">
+            <field name="name">Recurring Setup Details 2</field>
+            <field name="model">santosa_finance.recurring_setup_detail_details</field>
+            <field name="arch" type="xml">
+                <form multi_edit="1">
+                   
+                    <sheet>
+                        <group>
+                           
+                            <field name="recurring_id" />
+                            <field name="subsidiary_type" />
+                            <field name="subsidiary_name" />
+                            <field name="amount" />
+                        </group>
+                       
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="santosa_finance_recurring_setup_detail_details_tree" model="ir.ui.view">
+            <field name="name">Recurring Setup Details 2</field>
+            <field name="model">santosa_finance.recurring_setup_detail_details</field>
+            <field name="arch" type="xml">
+
+                <tree limit="20">
+                    <field name="recurring_id" />
+                            <field name="subsidiary_type" />
+                            <field name="subsidiary_name" />
+                            <field name="amount" />
+                            
+                </tree>
+            </field>
+        </record>
+
+        <record id="santosa_finance_recurring_setup_detail_details_action" model="ir.actions.act_window">
+            <field name="name">Recurring Setup Details 2</field>
+            <field name="res_model">santosa_finance.recurring_setup_detail_details</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
+
+            <field name="domain"></field>
+
+        </record>
+       
+        <menuitem id="recurring_setup_detail_details_data" name="Recurring Setup Details 2" sequence='15' parent="santosa_finance.recurring_root" action="santosa_finance_recurring_setup_detail_details_action"/>
+
+    </data>
+</odoo>

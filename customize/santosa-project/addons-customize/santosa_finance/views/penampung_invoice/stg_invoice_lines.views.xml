@@ -1,0 +1,129 @@
+<odoo>
+    <data>
+
+        <record id="santosa_finance_stg_invoice_lines_form" model="ir.ui.view">
+            <field name="name">STG - Invoice Details</field>
+            <field name="model">santosa_finance.stg_invoice_lines</field>
+            <field name="arch" type="xml">
+                <form multi_edit="1">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="PopulatedTime" />
+                                <field name="flag_line" />
+                                <field name="flag_line_dua" />
+                                <field name="product_id_odoo" />
+
+                            
+                                <field name="TransactionNo" />
+                                <field name="StatusRecord" />
+                                <field name="idTrx" />
+                                <field name="NoTrxKlaim" />
+                                <field name="TransactionDate" />
+                                <field name="SalesPoint" />
+                                <field name="ElementDetailKey" />
+                                <field name="ElementDetailName" />
+                                <field name="ElementTypeKey" />
+                                <field name="ElementTypeName" />
+                                <field name="ItemGroupKey" />
+                                <field name="ItemGroupName" />
+                                <field name="TrxClass" />
+                                <field name="TrxName" />
+                                <field name="DocRefNo" />
+                                <field name="DokterCode" />
+                            </group>
+                            <group>
+                                <field name="DokterName" />
+                                <field name="CostPrice_JasaMedik" />
+                                <field name="IsPPN" />
+                                <field name="Qty" />
+                                <field name="Price" />
+                                <field name="Total" />
+                                <field name="CostPrice_AVG" />
+                                <field name="DiscountItem" />
+                                <field name="DiscountDokter" />
+                                <field name="DiscountSubtotal" />
+                                <field name="Amount" />
+                                <field name="DPP" />
+                                <field name="PPN" />
+                                <field name="DPP_PPN" />
+                                <field name="NonPPN" />
+                                <field name="Omzet" />
+
+                                <field name="Revenue" />
+                                <field name="COA_patient_Key" />
+                                <field name="COA_patient_Name" />
+                                <field name="StatusRecordDD" />
+                                <field name="EnteredDate" />
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="santosa_finance_stg_invoice_lines_tree" model="ir.ui.view">
+            <field name="name">STG - Invoice Details</field>
+            <field name="model">santosa_finance.stg_invoice_lines</field>
+            <field name="arch" type="xml">
+
+                <tree limit="20">
+                            <field name="TransactionNo" optional='show'/>
+                            <field name="SalesPoint" optional='hide'/>
+                            <field name="ElementDetailKey" optional='hide'/>
+                            <field name="ElementDetailName" optional='hide'/>
+                            <field name="ElementTypeKey" optional='hide'/>
+                            <field name="ElementTypeName" optional='hide'/>
+                            <field name="ItemGroupKey" optional='hide'/>
+                            <field name="ItemGroupName" optional='hide'/>
+                            <field name="DokterCode" optional='hide'/>
+                            <field name="DokterName" optional='hide'/>
+                            <field name="CostPrice_JasaMedik" optional='hide'/>
+                            <field name="IsPPN" optional='hide'/>
+                            <field name="Qty" optional='hide'/>
+                            <field name="Price" optional='hide'/>
+                            <field name="CostPrice_AVG" optional='hide'/>
+
+                            <field name="DiscountItem" optional='hide' string='Discount Item'/>
+                            <field name="DiscountDokter" optional='hide'/>
+                            <field name="DiscountSubtotal" optional='hide'/>
+                            <field name="Total" optional='hide'/>
+                            <field name="Amount" optional='hide'/>
+
+                            <field name="DPP" optional='hide'/>
+                            <field name="PPN" optional='hide'/>
+                            <field name="DPP_PPN" optional='hide'/>
+                            <field name="NonPPN" optional='hide'/>
+                            <field name="Omzet" optional='hide'/>
+                            <field name="Revenue" optional='hide'/>
+                            <field name="COA_patient_Key" optional='hide'/>
+                            <field name="COA_patient_Name" optional='hide'/>
+                            <field name="StatusRecordDD" optional='hide'/>
+                            <field name="EnteredDate" optional='hide'/>
+                            <field name="flag_line" optional='hide'/>
+                            <field name="DocRefNo" optional='hide'/>
+                            <field name="idTrx" optional='hide'/>
+                            <field name="NoTrxKlaim" optional='hide'/>
+                            <field name="PopulatedTime" optional='hide'/>
+                            <field name="StatusRecord" optional='hide'/>
+                            <field name="TransactionDate" optional='hide'/>
+                            <field name="TrxClass" optional='hide'/>
+                            <field name="TrxName" optional='hide'/>    
+                </tree>
+            </field>
+        </record>
+
+        <record id="santosa_finance_stg_invoice_lines_action" model="ir.actions.act_window">
+            <field name="name">STG - Invoice Details</field>
+            <field name="res_model">santosa_finance.stg_invoice_lines</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
+
+            <field name="domain"></field>
+
+        </record>
+       
+        <menuitem id="stg_invoice_lines" name="STG - Invoice Details" sequence='15' parent="stg_invoice_root" action="santosa_finance_stg_invoice_lines_action"/>
+
+    </data>
+</odoo>

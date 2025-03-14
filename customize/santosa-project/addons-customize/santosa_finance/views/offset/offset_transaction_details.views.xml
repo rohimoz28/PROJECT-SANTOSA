@@ -1,0 +1,53 @@
+<odoo>
+    <data>
+
+        <record id="santosa_finance_offset_transaction_details_form" model="ir.ui.view">
+            <field name="name">Offset Transaction Details</field>
+            <field name="model">santosa_finance.offset_transaction_details</field>
+            <field name="arch" type="xml">
+                <form multi_edit="1">
+                   
+                    <sheet>
+                        <group>
+                           
+                            <field name="offset_number" />
+                            <field name="doc_date" />
+                            <field name="doc_amount" />
+                            <field name="remarks" />
+                        </group>
+                       
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="santosa_finance_offset_transaction_details_tree" model="ir.ui.view">
+            <field name="name">Offset Transaction Details</field>
+            <field name="model">santosa_finance.offset_transaction_details</field>
+            <field name="arch" type="xml">
+
+                <!-- default_order='tahun desc' -->
+                <tree limit="20">
+                    <field name="offset_number" />
+                            <field name="doc_date" />
+                            <field name="doc_amount" />
+                            <field name="remarks" />
+                            
+                </tree>
+            </field>
+        </record>
+
+        <record id="santosa_finance_offset_transaction_details_action" model="ir.actions.act_window">
+            <field name="name">Offset Transaction Details</field>
+            <field name="res_model">santosa_finance.offset_transaction_details</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
+
+            <field name="domain"></field>
+
+        </record>
+       
+        <menuitem id="offset_transaction_details_data" name="Offset Transaction Details" sequence='15' parent="santosa_finance.offset_root" action="santosa_finance_offset_transaction_details_action"/>
+
+    </data>
+</odoo>

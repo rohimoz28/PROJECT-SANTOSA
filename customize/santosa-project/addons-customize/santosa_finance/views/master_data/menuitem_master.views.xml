@@ -1,0 +1,6 @@
+<odoo>
+    <data>
+        <menuitem id="masterdata_sanfi_root" name="Master Data" sequence="98" parent="account.menu_finance"/>
+        
+    </data>
+</odoo>

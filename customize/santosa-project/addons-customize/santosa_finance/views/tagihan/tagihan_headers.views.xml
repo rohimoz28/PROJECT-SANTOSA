@@ -1,0 +1,70 @@
+<odoo>
+    <data>
+
+        <record id="santosa_finance_tagihan_headers_form" model="ir.ui.view">
+            <field name="name">Tagihan Headers</field>
+            <field name="model">santosa_finance.tagihan_headers</field>
+            <field name="arch" type="xml">
+                <form multi_edit="1">
+                   
+                    <sheet>
+                        <group>
+                           
+                            <field name="odoo_transaction_no" />
+                            <field name="transaction_date" />
+                            <field name="penjamin_code" />
+                            <field name="penjamin_name" />
+                            <field name="tgl_klaim" />
+                            <field name="no_tag_klaim" />
+                            <field name="no_fpk_ref_doc" />
+                            <field name="amount_tagihan" />
+
+                            <field name="status_ar_klaim" />
+                            <field name="status_transaksi" />
+                            <field name="periode_number" />
+                            <field name="periode_closing_date" />
+                        </group>
+                       
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="santosa_finance_tagihan_headers_tree" model="ir.ui.view">
+            <field name="name">Tagihan Headers</field>
+            <field name="model">santosa_finance.tagihan_headers</field>
+            <field name="arch" type="xml">
+
+                <tree limit="20">
+                    <field name="odoo_transaction_no" />
+                            <field name="transaction_date" />
+                            <field name="penjamin_code" />
+                            <field name="penjamin_name" />
+                            <field name="tgl_klaim" />
+                            <field name="no_tag_klaim" />
+                            <field name="no_fpk_ref_doc" />
+                            <field name="amount_tagihan" />
+
+                            <field name="status_ar_klaim" />
+                            <field name="status_transaksi" />
+                            <field name="periode_number" />
+                            <field name="periode_closing_date" />
+                            
+                </tree>
+            </field>
+        </record>
+
+        <record id="santosa_finance_tagihan_headers_action" model="ir.actions.act_window">
+            <field name="name">Tagihan Headers</field>
+            <field name="res_model">santosa_finance.tagihan_headers</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
+
+            <field name="domain"></field>
+
+        </record>
+       
+        <menuitem id="tagihan_headers_data" name="Tagihan Headers" sequence='15' parent="santosa_finance.tagihan_root" action="santosa_finance_tagihan_headers_action"/>
+
+    </data>
+</odoo>

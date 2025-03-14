@@ -1,0 +1,6 @@
+<odoo>
+    <data>
+        <menuitem id="transaction_sanfi_root" name="Transaction" sequence="98" parent="account.menu_finance"/>
+        
+    </data>
+</odoo>

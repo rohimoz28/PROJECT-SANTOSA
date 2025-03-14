@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Inherit form view dari account.move -->
+    <record id="view_product_template_custom" model="ir.ui.view">
+        <field name="name">product.template.form.custom</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='general_information']/group/group" position="inside">
+                    <field name="transaction_class"/>
+                    <field name="is_jasa_medis"/>
+                    <field name="amount_jasa_medis" invisible="is_jasa_medis != True"/>
+                    <field name="avg_price"/>
+                    <field name="kode_element_santosa" string="Element Key"/>
+                </xpath>  
+        </field>
+    </record>
+
+    <record id="view_product_form_custom" model="ir.ui.view">
+        <field name="name">product.template.form.custom</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='general_information']" position="after">
+                <page name="product_detail" string="Product Detail">
+                <!-- Content di dalam tab baru -->
+                    <!-- <group> -->
+                        <field name="product_detail_ids" string=' '>
+                            <tree create='0'>
+                                <field name="transaction_date" string="Tanggal"/>
+                                <field name="item_code" string="Kode Item"/>
+                                <field name="name" string="Nama"/>
+                                <field name="unit_price" string="Harga Satuan"/>
+                                <field name="quantity" string="QTY"/>
+                                <field name="total_price" string="Harga Total"/>
+                            </tree>
+                        </field>
+                    <!-- </group> -->
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_product_template_tree_inherit" model="ir.ui.view">
+            <field name="name">product.template.tree.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_tree_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree/field[@name='name']" position="after">
+                    <field name="kode_element_santosa" string="Element Key"/>
+                </xpath>
+                
+            </field>
+        </record>
+
+    <record id="view_product_template_tree_inherit_product" model="ir.ui.view">
+            <field name="name">product.template.tree.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="account.product_template_view_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree/field[@name='name']" position="after">
+                    <field name="categ_id" string="Kategori"/>
+                </xpath>
+                
+            </field>
+        </record>
+</odoo>
