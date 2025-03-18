@@ -1,0 +1,173 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <!--        View Form    -->
+        <record id="hr_empgroup_setting_form" model="ir.ui.view">
+            <field name="name">hr.empgroup.setting.form</field>
+            <field name="model">hr.empgroup</field>
+            <field name="arch" type="xml">
+                <form string="Employee Group">
+                    <header>
+                        <button name="btn_approved" type="object" data-hotkey="shift+g"
+                           string="Approved" class="oe_highlight" invisible="state != 'draft'"/>
+                        <button name="btn_close" type="object" data-hotkey="shift+g"
+                           string="Close" class="oe_highlight" invisible="state != 'approved' or uid != 2"/>
+                        <button name="btn_draft" type="object" data-hotkey="shift+g"
+                           string="Draft" class="oe_highlight" invisible="state != 'approved'"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,approved,close"/>
+                   </header>
+                    <sheet>
+                        <group>
+                            <label for="name" string="Employee Group"/>
+                            <div class="mr8 oe_inline">
+                                <field name="name" class="mr8 oe_inline" readonly="1"/>
+                                <!-- <field name="description" class="mr8 oe_inline"/> -->
+                            </div>
+                        </group>
+                        <group col="2">
+                            <group>
+                                <!-- <field name="periode_id" readonly="state == 'approved' or state == 'close'"/> -->
+                                <field name="area_id" readonly="state == 'approved' or state == 'close'"
+                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" required="1" />
+                                <field name="branch_ids" invisible="1" />
+                                <field name="branch_id"
+                                       options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
+                                       readonly="state == 'approved' or state == 'close'"/>
+                                <!--field name="periode_id" required="1"/-->
+                                <field name="alldepartment" invisible="1"/>
+                                <field name="department_id" readonly="state == 'approved' or state == 'close'"
+                                       options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"/>
+                            </group>
+                                <group>
+                                    <label for="islabelstate" string="Status"/>
+                                    <field name="islabelstate" invisible="1"/>
+                                    <div class="mr8 oe_inline">
+                                    <field name="is_active" readonly="state == 'approved' or state == 'close'" class="mr8 oe_inline"/>
+                                    <label for="is_active"/>
+                                    <field name="is_inactive" readonly="state == 'approved' or state == 'close'" class="mr8 oe_inline"/>
+                                    <label for="is_inactive"/>
+                                    </div>
+                                </group>
+                                <group>
+                                    <field name="description" readonly="state == 'approved' or state == 'close'"/>
+                                </group>
+                        </group>
+                        <!--group col="2">
+                            <group>
+                                <field name="valid_from" required="1"/>
+                            </group>
+                            <group>
+                                <field name="valid_to" required="1" />
+                            <group />
+                        </group-->
+                        <group col="2">
+                            <group>
+                                <button name="action_search_employee" string="Search Employee"
+                                    type="object" class="oe_highlight" data-hotkey="q" invisible="state == 'close'"/>
+                                <button name="action_generate_employee_group" string="Generate Emp. Group"
+                                        type="object" class="oe_highlight" data-hotkey="q" invisible="state == 'close'"/>
+                                <!--button name="btn_clear_child" string="Clear Employees List"
+                                    type="object" class="oe_highlight" data-hotkey="q" invisible="state != 'approved'"/-->
+                                <!-- <button name="btn_process" string="Process Employee"
+                                    type="object" class="oe_highlight" data-hotkey="p" invisible="state != 'approved'"/> -->
+                            </group>
+                            <group>
+                            <button name="action_export_excel" string="Export to Excel"
+                                        type="object" class="oe_highlight" data-hotkey="q"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Employee List" name="empgroup_list">
+                                <field name="empgroup_ids" required="1" readonly="state == 'approved' or state == 'close'">
+                                    <tree editable="bottom" widget='one2many_delete' context="{'default_area_id': area_id,'default_branch_id': branch_id,'default_department_id': department_id}">
+                                        <field name="empgroup_id" column_invisible="1" />
+                                        <field name="branch_ids" column_invisible="1" />
+                                        <field name="alldepartment" column_invisible="1"/>
+                                        <field name="state" column_invisible="1"/>
+                                        <field name="wdcode_ids" column_invisible="1"/>
+                                        <!--field name="periode_id"/-->
+                                        <field name="employee_id" />
+                                        <field name="emp_status" />
+                                        <field name="wdcode" options="{'no_create': True}"/>
+                                        <field name="valid_from" required="1"/>
+                                        <field name="valid_to" required="1"/>
+                                        <field name="area_id" />
+                                        <field name="branch_id" />
+                                        <field name="department_id" />
+                                        <field name="nik" />
+                                        <field name="job_id" />
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" />
+                        <field name="activity_ids" />
+                        <field name="message_ids" />
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_employeegroup_setting_tree" model="ir.ui.view">
+            <field name="name">hr.employeegroup.setting.tree</field>
+            <field name="model">hr.empgroup</field>
+            <field name="arch" type="xml">
+                <tree string="Emp Group" default_order="id desc">
+                    <field name="name" optional="show" />
+                    <field name="description"/>
+                    <field name="state" string="Status"/>
+                    <!--field name="wdcode"/-->
+                    <field name="area_id" />
+                    <field name="branch_id" />
+                    <!--field name="valid_from"/>
+                    <field name="valid_to"/-->
+                </tree>
+            </field>
+        </record>
+
+        <!--record id="hr_empgroup_details_tree" model="ir.ui.view">
+            <field name="name">hr.empgroup.details.tree</field>
+            <field name="model">hr.empgroup.details</field>
+            <field name="arch" type="xml">
+                <tree string="hr empgroup details">
+                    <field name="empgroup_id" column_invisible="1" />
+                    <field name="employee_id" />
+                    <field name="department_id" />
+                    <field name="nik" />
+                    <field name="job_id" />
+                </tree>
+            </field>
+        </record-->
+        
+        <!--record id="hr_empgroup_details_list" model="ir.ui.view">
+            <field name="name">hr.empgroup.details.list</field>
+            <field name="model">hr.empgroup.details</field>
+            <field name="inherit_id" ref="sanbe_hr_tms.hr_empgroup_details_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="inside">
+                    <header>
+                       <button name="btn_clear" string="clear Employee" type="object" class="oe_highlight" data-hotkey="x" />
+                    </header>
+                </xpath>
+            </field>
+        </record-->
+        <!--    Action Windows    -->
+        <record id="action_hr_employeegroup" model="ir.actions.act_window">
+            <field name="name">Emp Group</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.empgroup</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Report HR Employee Group
+                </p>
+                <p>
+                    Create new Employee Group
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

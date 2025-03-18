@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_employee_level,access_employee_level,model_employee_level,base.group_user,1,1,1,1
+access_ir_config_parameter_user,access_ir_config_parameter_user,model_ir_config_parameter,base.group_user,1,1,1,1
+access_hr_department_user,access_hr_department_user,model_hr_department,base.group_user,1,1,1,1
+access_hr_res_user,access_hr_res_user,model_res_users,base.group_user,1,1,1,1
+access_hr_res_partner,access_hr_partner_user,model_res_partner,base.group_user,1,1,1,1
+access_hr_employee_branches_users,access.hr.employee.branches.users,model_hr_employee,base_territory.group_branch_user,1,1,1,1
+access_hr_departmentss,access_hr_departmentss_user,model_hr_department,base.group_user,1,1,1,1
+access_hr_employee_branches_manager,access.hr.employee.branches.manager,model_hr_employee,base_territory.group_branch_user_manager,1,1,1,1

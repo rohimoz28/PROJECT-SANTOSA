@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="sb_adjusment_requests_form_view" model="ir.ui.view">
+            <field name="name">sb.adjustment.requests.form.view</field>
+            <field name="model">sb.adjustment.requests</field>
+            <field name="arch" type="xml">
+                <form string="Adjusment Requests">
+                <sheet>
+                    <header>
+                        <button name="btn_approve" type="object" data-hotkey="shift+g"
+                                string="Approved" class="oe_highlight" invisible="state not in ('draft')"/>
+                        <button name="btn_reject" type="object" data-hotkey="shift+g"
+                                string="Reject" class="oe_highlight" invisible="state not in ('draft')"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <group string="ADJUSTMENT REQUEST" name="adjustment_request">
+                        <group>
+                            <field name="area_id"/>
+                            <field name="branch_ids" invisible="1"/>
+                            <field name="branch_id"/>
+                            <field name="alldepartment" invisible="1"/>
+                            <field name="department_id"/>
+                            <field name="employee_id"/>
+                            <field name="aplicant" widget="radio"/>
+                        </group>
+                        <group>
+                            <!-- <field name="state"/> -->
+                            <field name="request_no"/>
+                            <field name="request_date"/>
+                            <field name="revision_period_from"/>
+                            <field name="revision_period_to"/>
+                            <field name="name" readonly="1"/>
+                            <field name="trx_date" readonly="1"/>
+                        </group>
+                        <!-- <group style="float: left; width: 33%;">
+                            <field name="chronology"/>
+                        </group> -->
+                        <div style="clear: both;"></div>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="chronology"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page name="sb_adjument_request_id" string="Detail of Adjusment Requests">
+                            <!-- override by view sb_adjusment_requests -->
+                        </page>
+                    </notebook>
+
+                    <row>
+                        <group name="note_group" col="12" style="margin-top:30px">
+                            <div class="clearfix"/>
+                            <group colspan="4">
+                                <group style="width:80%">
+                                    <label for="manager_approved" string="Approve by Mgr"/>
+                                    <div class="o_row">
+                                        <field name="manager_approved" colspan="1"  />
+                                    </div>
+                                </group>
+                            </group>
+                            <group colspan="4">
+                                <group style="width:70%">
+                                    <label for="plant_manager_approved" string="Approve by Plant Mgr"/>
+                                    <div class="o_row">
+                                        <field name="plant_manager_approved" colspan="1"/>
+                                    </div>
+                                </group>
+                            </group>
+                            <group colspan="4">
+                                <group style="width:90%">
+                                    <label for="hrd_approved" string="Approve by HRD"/>
+                                    <div class="o_row">
+                                        <field name="hrd_approved" colspan="1"/>
+                                    </div>
+                                </group>
+                            </group>
+                            <group style="width:100%" class="oe_right">
+                                <button string="Send to Finn" name="btn_send_to_fin" type="object"
+                                        invisible="state not in ('approved')"/>
+                            </group>
+                            <div class="clearfix"/>
+
+                        </group>
+
+                        <!-- <button string="Send to Finn" name="btn_send_to_fin" type="object"/> -->
+
+                    </row>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="sb_adjusment_requests_tree_view" model="ir.ui.view">
+            <field name="name">sb.adjustment.requests.tree.view</field>
+            <field name="model">sb.adjustment.requests</field>
+            <field name="arch" type="xml">
+                <tree string="Adjusment Requests" default_order="id desc">
+                    <field name="name" readonly="1" optional="show"/>
+                    <field name="area_id" optional="show"/>
+                    <field name="branch_id" optional="show"/>
+                    <field name="request_no" optional="show"/>
+                    <field name="request_date" optional="show"/>
+                    <field name="department_id" optional="show"/>
+                    <field name="employee_id" optional="show"/>
+                    <field name="aplicant" optional="show"/>
+                    <field name="revision_period_from" optional="show"/>
+                    <field name="revision_period_to" optional="show"/>
+                    <field name="trx_date" readonly="1" optional="show"/>
+                    <field name="state" optional="show"/>
+                </tree>
+            </field>
+        </record>
+
+      <record id="action_sb_adjustment_requests" model="ir.actions.act_window">
+            <field name="name">Adjusment Requests</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sb.adjustment.requests</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Report Adjusment Requests
+                </p>
+                <p>
+                    Create New Adjusment Requests
+                </p>
+            </field>
+        </record>
+
+        <!-- <menuitem name="ModelTitle" id="ModelName_menu" parent="your_root_menu" action="ModelName_act_window"/> -->
+
+    </data>
+</odoo>

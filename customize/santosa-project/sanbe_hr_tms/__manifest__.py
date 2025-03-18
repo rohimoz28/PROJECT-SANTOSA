@@ -1,0 +1,107 @@
+# -*- coding : utf-8 -*-
+#################################################################################
+# Author    => Albertus Restiyanto Pramayudha
+# email     => xabre0010@gmail.com
+# linkedin  => https://www.linkedin.com/in/albertus-restiyanto-pramayudha-470261a8/
+# youtube   => https://www.youtube.com/channel/UCCtgLDIfqehJ1R8cohMeTXA
+#################################################################################
+{
+    'name': "Sanbe HR TMS",
+    'summary': "Sanbe HR TMS",
+    'description': """
+            Sanbe HR TMS
+    """,
+    'author': "Albertus Restiyanto Pramayudha",
+    'website': "http://www.yourcompany.com",
+    "support": "xabre0010@gmail.com",
+    'category': 'Human Resource',
+    'version': '0.1',
+    'license': 'LGPL-3',
+    'price': 0,
+    'currency': 'USD',
+    # any module necessary for this one to work correctly
+    'depends': [
+        'base', 'hr_holidays', 'sanbe_hr_employee_mutation', 'hr_attendance', 'hr_holidays_attendance',
+        'base_territory', 'project', 'sale', 'purchase', 'stock', 'account', 'event', 'field_timepicker',
+        'report_xlsx', 'sanbe_hr_dashboard'
+    ],
+    'data': [
+        'data/ir_cron_data.xml',
+        'views/hr_disable_others.xml',
+        'views/sb_employee_attendance.xml',
+        'views/sb_overtime_attendance.xml',
+        'views/sb_overtime_bundling.xml',
+        'views/sb_adjusment_requests.xml',
+        'views/sb_adjusment_request_details.xml',
+        'views/sb_incomplete_attendances.xml',
+        'views/sb_incomplete_attendance_details.xml',
+        'views/sb_attendance_corrections.xml',
+        'views/sb_attendance_correction_details.xml',
+        'views/sb_allowances.xml',
+        'views/sb_allowance_details.xml',
+        'views/sb_leave_allocation.xml',
+        'views/stg_transform_absent.xml',
+        'views/hr_public_holiday.xml',
+        'views/hr_workingday_setting.xml',
+        'views/hr_empgroup_settings.xml',
+        'views/hr_permission_entry.xml',
+        'views/hr_tmsentry_summary.xml',
+        # 'views/hr_tms_recapitulation.xml',
+        'views/hr_tms_sync_machine.xml',
+        'views/hr_tms_processing.xml',
+        'views/hr_overtime_request_planning.xml',
+        'report/hr_overtime_request_report_pdf.xml',
+        'views/tms_entry.xml',
+        'views/hr_tms_open_close.xml',
+        'views/hr_tms_machine_setting.xml',
+        'views/hr_machine_details.xml',
+        'report/report_kehadiran_templates.xml',
+        'report/report_kehadiran_html.xml',
+        'report/report_ot_attendance_html.xml',
+        'report/report_ot_attendance_excel.xml',
+        'report/report_ot_bundling_html.xml',
+        'report/report_ot_bundling_excel.xml',
+        'wizards/export_excel_tms.xml',
+        'wizards/export_excel_ot_attendance.xml',
+        'wizards/export_excel_ot_bundling_wizard.xml',
+        'wizards/cari_employee_department.xml',
+        'wizards/hr_tmsimport_data_entry.xml',
+        # 'wizards/hr_list_employee_scheduled.xml',
+        # 'views/hr_transfer_to_payroll.xml',
+        'views/hr_employee.xml',
+        'views/data_upload_attendance.xml',
+        'security/tms_branch_security.xml',
+        'security/tms_groups.xml',
+        'views/hr_tms_overtime_Setting.xml',
+        'views/tms_menu.xml',
+        'data/tms_seq_number.xml',
+        'db/calculate_tms.sql',
+        'db/function_calculate_leave_alloc.sql',
+        'db/procedure_leave_alloc.sql',
+        'db/generate_empgroup.sql',
+        'db/generate_ot_request.sql',
+        'db/temporary_table.sql',
+        'db/functions.sql',
+        'views/tmsentry_details.xml',
+        'security/ir.model.access.csv',
+    ],
+    'assets': {
+            'web.assets_backend': [
+                'hr_holidays/static/src/**/*',
+                'sanbe_hr_tms/static/src/xml/export_button.xml',
+                'sanbe_hr_tms/static/src/xml/export_button_ot_attendance.xml',
+                'sanbe_hr_tms/static/src/xml/export_button_ot_bundling.xml',
+                'sanbe_hr_tms/static/src/js/export_button.js',
+                'sanbe_hr_tms/static/src/js/export_button_ot_attendance.js',
+                'sanbe_hr_tms/static/src/js/export_button_ot_bundling.js',
+                'sanbe_hr_tms/static/src/js/report_esm.js',
+                'sanbe_hr_tms/static/src/js/report_action.js'
+                
+            ],
+    },
+    # only loaded in demonstration mode
+    'demo': [
+        'demo/demo.xml',
+    ],
+    "images": ["static/description/banner.png"],
+}

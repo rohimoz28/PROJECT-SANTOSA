@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inherit_sb_payroll_entry_form_view" model="ir.ui.view">
+        <field name="name">inherit.sb.payroll.entry.form.view</field>
+        <field name="model">sb.payroll.entry</field>
+        <field name="inherit_id" ref="sanbe_hr_payroll.sb_payroll_entry_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='sb_payroll_entry_id']" position="inside">
+                <field name="detail_ids">
+                    <tree editable="bottom" widget="one2many_list" create="true" delete="true">
+                        <field name="pay_code"/>
+                        <field name="desc"/>
+                        <field name="type"/>
+                        <field name="qty"/>
+                        <field name="amount"/>
+                        <field name="amount_total" width="25%"/>
+                    </tree>
+                </field>
+                <group name="note_group" col="12" class="mt-4 md-0">
+                    <div class="clearfix"/>
+                    <group colspan="6">
+                        <group style="width:50%">
+                            <label for="total_allowance" string="Total Allowance"/>
+                            <div class="o_row">
+                                <field name="total_allowance" colspan="1"/>
+                            </div>
+                            <label for="total_overtime" string="Total Overtime"/>
+                            <div class="o_row">
+                                <field name="total_overtime" colspan="1"/>
+                            </div>
+                            <label for="total_deduction" string="Total Deduction"/>
+                            <div class="o_row">
+                                <field name="total_deduction" colspan="1"/>
+                            </div>
+                        </group>
+                    </group>
+                    <group colspan="6">
+                        <group style="width:50%">
+                            <label for="total_net_salary" string="Total Net Salary"/>
+                            <div class="o_row">
+                                <field name="total_net_salary"/>
+                            </div>
+                        </group>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

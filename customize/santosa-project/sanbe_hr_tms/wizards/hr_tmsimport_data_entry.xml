@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hr_tmsimport_wizard_view_form" model="ir.ui.view">
+            <field name="name">hr.tmsimport.wizard.view.form</field>
+            <field name="model">hr.tmsimport.wiz</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group id="info">
+                            <field name="file_import" filename="file_name"/>
+                            <field name="file_name" invisible="1"/>
+                            <field name="tms_sync" invisible="1"/>
+                        </group>
+
+                    </sheet>
+                    <footer>
+                        <a role="button" href="/sanbe_hr_tms/static/sample_template/Template_TMSEntry.xlsx" class="btn-primary" style="font-size: 12px; line-height: 1.5; border-radius: 3px; padding: 8px 10px; color: #ffffff;">
+                        <i class="fa fa-download"/>
+                        Download Template
+                        </a>
+                        <button name="action_import_data" string="Import Data" type="object" class="oe_highlight" data-hotkey="q"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_tmsimport_data_wizard_action" model="ir.actions.act_window">
+            <field name="name">Import Data TMS Entry</field>
+            <field name="res_model">hr.tmsimport.wiz</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

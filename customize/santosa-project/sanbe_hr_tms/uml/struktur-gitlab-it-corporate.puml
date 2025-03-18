@@ -1,0 +1,15 @@
+@startfiles
+/Sanbe IT Corporate/
+/Sanbe IT Corporate/Development/
+/Sanbe IT Corporate/Development/Odoo/
+/Sanbe IT Corporate/Development/Odoo/HRMS
+/Sanbe IT Corporate/Development/Odoo/SKP
+/Sanbe IT Corporate/Development/Odoo/BSP
+/Sanbe IT Corporate/Development/Odoo/BSP_CORE_DEV2
+/Sanbe IT Corporate/Development/Docker/
+/Sanbe IT Corporate/Development/Docker/docker-odoo
+/Sanbe IT Corporate/Development/Backend/
+/Sanbe IT Corporate/Development/Backend/project-api
+/Sanbe IT Corporate/Development/Frontend/
+/Sanbe IT Corporate/Development/Frontend/project-client-side
+@endfiles

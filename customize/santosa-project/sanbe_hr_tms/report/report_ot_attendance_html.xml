@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- QWeb Report Template -->
+    <template id="sanbe_hr_tms.report_ot_attendance_html" name="OT Attendance Report">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2 class="text-center mb-4">
+                        Rekap Overtime Attendance - HRMS
+                    </h2>
+                    
+                    <table class="table table-bordered table-striped" style="table-layout: auto; word-wrap: break-word;">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center; white-space: nowrap;">No</th>
+                                <th style="text-align: center; white-space: nowrap;">Business Unit</th>
+                                <th style="text-align: center; white-space: nowrap;">Sub Department</th>
+                                <th style="text-align: center; white-space: nowrap;">Request Number</th>
+                                <th style="text-align: center; white-space: nowrap;">Request Date</th>
+                                <th style="text-align: center; white-space: nowrap;">Employee Name</th>
+                                <th style="text-align: center; white-space: nowrap;">NIK</th>
+                                <th style="text-align: center; white-space: nowrap;">Req Time Fr</th>
+                                <th style="text-align: center; white-space: nowrap;">Req Time To</th>
+                                <th style="text-align: center; white-space: nowrap;">App Time Fr</th>
+                                <th style="text-align: center; white-space: nowrap;">App Time To</th>
+                                <th style="text-align: center; white-space: nowrap;">Rel Time Fr</th>
+                                <th style="text-align: center; white-space: nowrap;">Rel Time To</th>
+                                <th style="text-align: center; white-space: nowrap;">State</th>
+                                <th style="text-align: center; white-space: nowrap;">Period</th>
+                                <!-- <th>Total Delay</th>
+                                <th>Times Delayed</th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="report_lines" t-as="line">
+                                <tr>
+                                    <td><span t-esc="line['no']"/></td>
+                                    <td class="text-wrap"><span t-esc="line['branch_id']"/></td>
+                                    <td><span t-esc="line['department']"/></td>
+                                    <td class="text-wrap"><span t-esc="line['no_request']"/></td>
+                                    <td><span t-esc="line['req_date']"/></td>
+                                    <td><span t-esc="line['employee_id']"/></td>
+                                    <td><span t-esc="line['nik']"/></td>
+                                    <td><span t-esc="line['req_time_fr']" widget="float_time"/></td>
+                                    <td><span t-esc="line['req_time_to']" widget="float_time"/></td>
+                                    <td><span t-esc="line['approve_time_from']" widget="float_time"/></td>
+                                    <td><span t-esc="line['approve_time_to']" widget="float_time"/></td>
+                                    <td><span t-esc="line['rlz_time_fr']" widget="float_time"/></td>
+                                    <td><span t-esc="line['rlz_time_to']" widget="float_time"/></td>
+                                    <td><span t-esc="line['state']"/></td>
+                                    <td><span t-esc="line['periode_id']"/></td>
+                                    <!-- <td><span t-esc="line['delay_total']"/></td>
+                                    <td><span t-esc="line['delay_count']"/></td> -->
+                                </tr>
+                            </t>
+                            <t t-if="not report_lines">
+                                <tr>
+                                    <td colspan="16" class="text-center">
+                                        No Data Available
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <record id="paperformat_overtime_attendance_report" model="report.paperformat">
+        <field name="name">Print Out PDF Overtime Attendance</field>
+        <field name="default" eval="True" />
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">15</field>
+        <field name="margin_bottom">15</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="True"/>
+        <field name="header_spacing">35</field>
+        <field name="dpi">90</field>
+    </record> 
+    
+    <!-- Report Action -->
+    <record id="action_report_ot_attendance" model="ir.actions.report">
+        <field name="name">OT Attendance Report (HTML)</field>
+        <field name="type">ir.actions.report</field>
+        <field name="model">sb.overtime.attendance</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">sanbe_hr_tms.report_ot_attendance_html</field>
+         <field name="report_file">sanbe_hr_tms.report_ot_attendance_html</field>
+        <field name="binding_model_id" ref="model_sb_overtime_attendance"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" 
+             ref="sanbe_hr_tms.paperformat_overtime_attendance_report" />
+    </record>
+</odoo>

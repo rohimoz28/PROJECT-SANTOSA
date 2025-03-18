@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- View hr.employee.contract.monitoring View Tree -->
+    <record id="view_hr_employee_contract_monitoring_tree" model="ir.ui.view">
+        <field name="name">view.hr.employee.contract.monitoring.tree</field>
+        <field name="model">hr.employee.contract.monitoring</field>
+        <field name="arch" type="xml">
+            <tree default_order="territory_id,branch_id,time_limit,department_id,employee_id">
+                <field name="territory_id" string="Area"/>
+                <field name="branch_id" string="Business Units"/>
+                <field name="department_id" string="Sub Department"/>
+                <field name="employee_id" string="Employee"/>
+                <field name="nik_employee" string="NIK"/>
+                <field name="mobile_phone" string="Phone"/>
+                <field name="employee_address" string="Address"/>
+                <field name="notice_days" string="Notice"/>
+                <field name="date_end" string="End Date"/>
+                <field name="rehire"/>
+                <field name="time_limit"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_hr_employee_contract_monitoring_filter" model="ir.ui.view">
+        <field name="name">hr.employee.contract.monitoring.select</field>
+        <field name="model">hr.employee.contract.monitoring</field>
+        <field name="arch" type="xml">
+            <search string="Search Employee">
+                <filter string="To Check" name="tocheck" domain="[('time_limit','&lt;',14),('rehire','=',True)]" help="Plese Check Employee Contract."/>
+                <field name="employee_name" string="Name" filter_domain="['|','|','|','|',('employee_name','ilike',self),('nik_employee','ilike',self),('territory_name','ilike',self),('department_name','ilike',self),('branch_name','ilike',self)]"/>
+                <field name="branch_id" string="Business Units"/>
+                <field name="territory_id" string="Area"/>
+                <field name="department_id" string="Sub Department"/>
+                <separator/>
+                <filter string="Rehire" name="rehire" domain="[('rehire','=',True)]"/>
+                <filter string="Late" domain="[('time_limit','&lt;',0)]" name="late" help="Late Re-Newal Contract"/>
+                <separator/>
+            </search>
+        </field>
+    </record>
+
+
+    <!-- Action hr.employee.contract.monitoring -->
+    <record id="action_hr_employee_contract_monitoring" model="ir.actions.act_window">
+        <field name="name">Monitoring Expired Contract</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.employee.contract.monitoring</field>
+        <field name="view_mode">tree</field>
+        <field name="context">{'search_default_tocheck': True}</field>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                There is no examples click here to add new Hr Employee Contract Monitoring.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="hr_employee_contract_monitoring" name="Monitoring Expired Contracts" action="action_hr_employee_contract_monitoring" parent="hr.hr_menu_hr_reports" sequence="25"/>
+
+
+
+
+    <record id="view_hr_contract_monitoring_form" model="ir.ui.view">
+        <field name="name">hr.contract.monitoring.form</field>
+        <field name="model">hr.contract.monitoring</field>
+        <field name="arch" type="xml">
+            <form string="Employee Information" class="o_purchase_order">
+                <header>
+                    <button name="generate_data" type="object" string="Generate Data" invisible="1" />
+                    <button name="mail_send_hr" type="object" string="Check Branch" invisible="1" />
+                    <button name="mail_send_mentor" type="object" string="Check Mentor" invisible="1" />
+                    <field name="is_done" widget="statusbar" statusbar_visible="waiting,done" readonly="1"/>
+                </header>
+                <sheet>
+                    <div class="row justify-content-between position-relative w-100 m-0 mb-5">
+                        <div class="oe_title mw-75 ps-0 pe-2">
+                            <h1 class="d-flex flex-row align-items-center">
+                                <field name="employee_id" string="Employee" placeholder="Employee" style="font-size: min(4vw, 2.6rem);"/>
+                            </h1>
+                            <h2>
+                                <field name="nik_employee" placeholder="NIK" nolabel="1"/>
+                            </h2>
+                            <field name="superior_id" string="Immediate Superior"/>
+                        </div>
+                        <div class="o_employee_avatar m-0 p-0">
+
+                        </div>
+                    </div>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <group>
+                        <group name="job_info">
+                            <field name="territory_id"/>
+                            <field name="branch_id"/>
+                            <field name="department_id"/>
+                            <field name="job_id"/>
+                            <label for="contract_id" string="Contract"/>
+                            <div class="o_row">
+                                <field name="contract_id"/>
+[                                <field name="status_employee"/>
+]
+                            </div>
+                            <label for="contract_id" string="Periode"/>
+                            <div class="o_row">
+                                <field name="date_start"/>
+-                                <field name="date_end"/>
+]
+                            </div>
+                        </group>
+                        <group  name="contract_result">
+                            <field name="result" 
+                            readonly="1" invisible="[('is_done','=','waiting')]"
+                            />
+                            <field name="new_contract_id" 
+                            readonly="1" invisible="[('result','=','eof')]"
+                            />
+                            <field name="employee_exit_id"
+                            readonly="1" invisible="[('result','in',['re-new','promotion'])]"
+                            />
+                        </group>
+                    </group>
+                    <group class="oe_subtotal_footer oe_right o_row">
+                        <button name="act_re_contract" type="object" string="Re Contract" />
+                        <button name="act_emp_finished" type="object" string="Employee Exit" />
+                        <button name="act_promotion" type="object" string="Promotion" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- View hr.employee.contract.monitoring View Tree -->
+    <record id="view_hr_contract_monitoring_tree" model="ir.ui.view">
+        <field name="name">view.contract.monitoring.tree</field>
+        <field name="model">hr.contract.monitoring</field>
+        <field name="arch" type="xml">
+            <tree default_order="territory_id,branch_id,time_limit,department_id,employee_id" decoration-danger="date_end &lt; current_date and is_done == 'waiting'">
+                <header>
+                    <button name="generate_data" string="Generate Data" type="object" class="oe_highlight" invisible="1" />
+                    <button name="mail_send_hr" type="object" string="Check Branch" invisible="1" />
+                    <button name="mail_send_mentor" type="object" string="Check Mentor" invisible="1" />
+                </header>
+                <field name="territory_id" string="Area"/>
+                <field name="branch_id" string="Business Units"/>
+                <field name="department_id" string="Sub Department"/>
+                <field name="employee_id" string="Employee"/>
+                <field name="nik_employee" string="NIK"/>
+                <field name="superior_id" string="Immediate Superior"/>
+                <field name="mobile_phone" string="Phone"/>
+                <field name="notice_days" string="Notice"/>
+                <field name="date_end" string="End Date"/>
+                <field name="rehire"/>
+                <field name="is_done"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="view_hr_employee_contract_monitoring_filter" model="ir.ui.view">
+        <field name="name">hr.contract.monitoring.select</field>
+        <field name="model">hr.contract.monitoring</field>
+        <field name="arch" type="xml">
+            <search string="Search Employee">
+                <filter string="To Check" name="tocheck" domain="[('is_done','=','waiting')]" help="Plese Check Employee Contract."/>
+                <field name="employee_name" string="Name" filter_domain="['|','|','|','|',('employee_name','ilike',self),('nik_employee','ilike',self),('territory_name','ilike',self),('department_name','ilike',self),('branch_name','ilike',self)]"/>
+                <field name="territory_id" string="Area"/>
+                <field name="branch_id" string="Business Units"/>
+                <field name="department_id" string="Sub Department"/>
+                <separator/>
+                <filter string="Rehire" name="rehire" domain="[('rehire','=',True)]"/>
+                <filter string="Late" domain="[('date_end','&lt;',current_date),('is_done','=','waiting')]" name="late" help="Late Re-Newal Contract"/>
+                <filter string="Done" domain="[('is_done','!=','waiting')]" name="late" help="Contract was Porccess"/>
+                <separator/>
+            </search>
+        </field>
+    </record>
+
+
+    <!-- Action hr.employee.contract.monitoring -->
+    <record id="action_hr_contract_monitoring" model="ir.actions.act_window">
+        <field name="name">Monitoring Contracts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.contract.monitoring</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_tocheck': True}</field>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                There is no examples click here to add new Hr Employee Contract Monitoring.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="hr_contract_monitoring" name="Monitoring Contract" action="action_hr_contract_monitoring" parent="hr.hr_menu_hr_reports" sequence="21"/>
+
+</odoo>

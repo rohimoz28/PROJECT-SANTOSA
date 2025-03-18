@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.cron" id="hr_contract_monitoring_cron">
+        <field name="name">Contract Monitoring Reminder</field>
+        <field name="active">True</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">months</field>
+        <field name="numbercall">-1</field>
+        <field name="doall">True</field>
+        <field name="nextcall">2025-03-19 18:00:00</field>
+        <field name="model_id" ref="model_hr_contract_monitoring"/>
+        <field name="state">code</field>
+        <field name="code">model.generate_data()</field>
+    </record>
+        <record model="ir.cron" id="hr_contract_remainder_hr_cron">
+        <field name="name">Contract Monitoring Reminder HR</field>
+        <field name="active">True</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">months</field>
+        <field name="numbercall">-1</field>
+        <field name="doall">True</field>
+        <field name="nextcall">2025-03-19 18:09:00</field>
+        <field name="model_id" ref="model_hr_contract_monitoring"/>
+        <field name="state">code</field>
+        <field name="code">model.mail_send_hr()</field>
+    </record>
+    <record model="ir.cron" id="hr_contract_remainder_mentor_cron">
+        <field name="name">Contract Monitoring Reminder Mentor</field>
+        <field name="active">True</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">months</field>
+        <field name="numbercall">-1</field>
+        <field name="doall">True</field>
+        <field name="nextcall">2025-03-19 18:15:00</field>
+        <field name="model_id" ref="model_hr_contract_monitoring"/>
+        <field name="state">code</field>
+        <field name="code">model.mail_send_mentor()</field>
+    </record>
+</odoo>

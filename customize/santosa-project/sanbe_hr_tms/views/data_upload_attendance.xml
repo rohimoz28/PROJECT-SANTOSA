@@ -1,0 +1,140 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+         <!--        View Form    -->
+        <record id="data_upload_attendance_form" model="ir.ui.view">
+            <field name="name">data.upload.attendance.form</field>
+            <field name="model">data.upload.attendance</field>
+            <field name="arch" type="xml">
+                <form string="Data Upload Attendance" create="0" edit="0" delete="0">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,synch" readonly="1"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="employee_id" options="{'no_create': True,'no_create_edit': True}" readonly="1"/>
+                                <field name="tgl" widget="date" readonly="1"/>
+                                <!--field name="periode_id" readonly="1"/>
+                                <field name="date_from" readonly="1"/>
+                                <field name="date_to" readonly="1"/-->
+                                <field name="area_id" options="{'no_create': True,'no_create_edit': True}" readonly="1"/>
+                                <field name="branch_id" options="{'no_create': True,'no_create_edit': True}" readonly="1"/>
+                                <field name="department_id" readonly="1"/>
+                                <field name="nik" readonly="1"/>
+                                <!--field name="user_id" options="{'no_create': True,'no_create_edit': True}" readonly="1"/-->
+                            </group>
+                        </group>
+                        <group col="2">
+                            <group>
+                                <field name="tgl_masuk" widget="date" readonly="1"/>
+                                <field name="time_in" widget="easy_timepicker" readonly="1"/>
+                                <field name="tgl_keluar" widget="date" readonly="1"/>
+                                <field name="time_out" widget="easy_timepicker" readonly="1"/>
+                                <field name="attendence_status" readonly="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!--   List View    -->
+        <record id="data_upload_attendance_tree" model="ir.ui.view">
+            <field name="name">data.upload.attendance.tree</field>
+            <field name="model">data.upload.attendance</field>
+            <field name="arch" type="xml">
+                <tree string="Data Upload Attendance" create="0" edit="0" delete="0" decoration-danger="state == 'unregister'">
+                    <!--field name="periode_id" readonly="1"/>
+                    <field name="date_from" readonly="1"/>
+                    <field name="date_to" readonly="1"/-->
+                    <field name="employee_id" options="{'no_create': True,'no_create_edit': True}" readonly="1"/>
+                    <field name="tgl" widget="date" readonly="1"/>
+                    <field name="area_id" options="{'no_create': True,'no_create_edit': True}" readonly="1"/>
+                    <field name="branch_id" options="{'no_create': True,'no_create_edit': True}" readonly="1"/>
+                    <field name="department_id" readonly="1"/>
+                    <field name="nik" readonly="1"/>
+                    <!--field name="user_id" options="{'no_create': True,'no_create_edit': True}" readonly="1"/-->
+                    <field name="tgl_masuk" readonly="1"/>
+                    <field name="time_in" widget="easy_timepicker" readonly="1"/>
+                    <field name="tgl_keluar" widget="date" readonly="1"/>
+                    <field name="time_out" widget="easy_timepicker" readonly="1"/>
+                    <field name="attendence_status" readonly="1"/>
+                    <field name="state" readonly="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- <record id="data_upload_attendance_tree_ext" model="ir.ui.view"> -->
+        <!--     <field name="name">data.upload.attendance.tree.ext</field> -->
+        <!--     <field name="model">data.upload.attendance</field> -->
+        <!--     <field name="inherit_id" ref="sanbe_hr_tms.data_upload_attendance_tree"/> -->
+        <!--     <field name="arch" type="xml"> -->
+        <!--         <xpath expr="//tree" position="inside"> -->
+        <!--             <header> -->
+        <!--                 <button name="sync_data" type="object" string="Synch Data"/> -->
+        <!--                 <button name="resync_data" type="object" string="Re-Synch Data"/> -->
+        <!--             </header> -->
+        <!--         </xpath> -->
+        <!--     </field> -->
+        <!-- </record> -->
+
+        <record id="data_upload_attendance_view_search" model="ir.ui.view">
+            <field name="name">data.upload.attendance.view.search</field>
+            <field name="model">data.upload.attendance</field>
+            <field name="arch" type="xml">
+                <search string="TMS Entry">
+                    <field name="employee_id"/>
+                    <field name="tgl"/>
+                    <field name="area_id"/>
+                    <field name="branch_id"/>
+                    <field name="department_id"/>
+                    <field name="nik"/>
+                    <field name="tgl_masuk"/>
+                    <field name="time_in"/>
+                    <field name="tgl_keluar"/>
+                    <field name="time_out"/>
+                    <field name="attendence_status"/>
+                    <field name="state"/>
+                    <!-- <field name="branch_id" filter_domain="[('area_id', 'child_of', area_id)]"/> -->
+                    <!-- <field name="nik" string="NIK"/> -->
+                    <!-- <filter string="Branch" name="branch_id" -->
+                    <!--         context="{'group_by':'branch_id'}"/> -->
+                    <!-- <filter string="State" name="state" -->
+                    <!--         context="{'group_by':'state'}"/> -->
+                    <!--filter string="Periode" name="periode_id"
+                            context="{'group_by':'periode_id'}"/-->
+                    <!-- <filter string="Employee" name="employee_id" -->
+                    <!--         context="{'group_by':'employee_id'}"/> -->
+                    <group expand="0" string="Group By">
+                        <filter string="Business Unit" name="group_by_branch" context="{'group_by':'branch_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!--  Action Windows    -->
+        <record id="action_data_upload_attendance" model="ir.actions.act_window">
+            <field name="name">Data Upload Attendance</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">data.upload.attendance</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_group_by_branch':1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Report HR Opening And Closing Periode
+                </p>
+                <p>
+                    Create new HR Opening And Closing Periode
+                </p>
+            </field>
+        </record>
+        <menuitem
+            id="menu_data_upload_attendance"
+            name="Data Absen"
+            sequence="10"
+            parent="sanbe_hr_tms.hr_menu_tms_processing"
+            action="action_data_upload_attendance"
+            groups="module_sub_category_result_upload_data_absen_manager,module_sub_category_result_upload_data_absen_supervisor"
+        />
+    </data>
+</odoo>

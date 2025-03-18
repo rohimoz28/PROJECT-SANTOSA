@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- QWeb Report Template -->
+    <template id="sanbe_hr_tms.report_attendance_html" name="Attendance Report">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2 class="text-center mb-4">
+                        Rekap Perhitungan Kehadiran dan Overtime - HRMS
+                    </h2>
+                    
+                    <table class="table table-bordered table-striped" style="table-layout: auto; word-wrap: break-word;">
+                        <thead>
+                            <tr>
+                                <th style="width: 5%;">No</th>
+                                <th>Employee</th>
+                                <th>Employee NIK</th>
+                                <th>Job Title</th>
+                                <th>Working Day</th>
+                                <th>Attendee</th>
+                                <th>Absent</th>
+                                <th>Total Leave</th>
+                                <th>Total Sick</th>
+                                <th>Total OT1</th>
+                                <th>Total OT2</th>
+                                <th>Night Shift 1</th>
+                                <th>Night Shift 2</th>
+                                <th>Status</th>
+                                <th>Deduction</th>
+                                <th>Total Delay</th>
+                                <th>Times Delayed</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="report_lines" t-as="line">
+                                <tr>
+                                    <td><span t-esc="line['no']"/></td>
+                                    <td class="text-wrap"><span t-esc="line['employee_name']"/></td>
+                                    <td><span t-esc="line['employee_nik']"/></td>
+                                    <td class="text-wrap"><span t-esc="line['job_title']"/></td>
+                                    <td><span t-esc="line['attendee_total']"/></td>
+                                    <td><span t-esc="line['attendee_count']"/></td>
+                                    <td><span t-esc="line['absent_count']"/></td>
+                                    <td><span t-esc="line['leave_count']"/></td>
+                                    <td><span t-esc="line['sick_count']"/></td>
+                                    <td><span t-esc="line['ot1_total']"/></td>
+                                    <td><span t-esc="line['ot2_total']"/></td>
+                                    <td><span t-esc="line['nightshift1_count']"/></td>
+                                    <td><span t-esc="line['nightshift2_count']"/></td>
+                                    <td><span t-esc="line['state']"/></td>
+                                    <td><span t-esc="line['deduction']"/></td>
+                                    <td><span t-esc="line['delay_total']"/></td>
+                                    <td><span t-esc="line['delay_count']"/></td>
+                                </tr>
+                            </t>
+                            <t t-if="not report_lines">
+                                <tr>
+                                    <td colspan="16" class="text-center">
+                                        No Data Available
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- Report Action -->
+    <record id="action_report_attendance" model="ir.actions.report">
+        <field name="name">Attendance Report (HTML)</field>
+        <field name="type">ir.actions.report</field>
+        <field name="model">hr.tmsentry.summary</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">sanbe_hr_tms.report_attendance_html</field>
+         <field name="report_file">sanbe_hr_tms.report_attendance_html</field>
+        <field name="binding_model_id" ref="model_hr_tmsentry_summary"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

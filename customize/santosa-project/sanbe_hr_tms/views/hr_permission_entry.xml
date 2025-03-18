@@ -1,0 +1,121 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+
+        <record id="hr_permission_entry_form" model="ir.ui.view">
+            <field name="name">hr.permission.entry.form</field>
+            <field name="model">hr.permission.entry</field>
+            <field name="arch" type="xml">
+                <form string="Permission">
+                    <sheet>
+                        <header>
+                            <button name="btn_approve" type="object" data-hotkey="shift+g" string="Approved" class="oe_highlight" invisible="permission_status != 'draft'"/>
+                            <button name="btn_draft" type="object" data-hotkey="shift+g" string="Draft" class="oe_highlight" invisible="permission_status != 'approved'"/>
+                            <field name="permission_status" widget="statusbar" statusbar_visible="draft,approved,close,cancel" force_save="1"/>
+                        </header>
+                        <group string="PERMISSION ENTRY" name="permission_entry">
+                            <group>
+                                <field name="employee_id" readonly="permission_status != 'draft'" options="{'no_edit': True, 'no_create': True, 'no_open': True}" required="True"/>
+                                <field name="area_id" readonly="permission_status != 'draft'" options="{'no_edit': True, 'no_create': True, 'no_open': True}" required="True"/>
+                                <field name="branch_ids" invisible="1" />
+                                <field name="branch_id" readonly="permission_status != 'draft'" options="{'no_edit': True, 'no_create': True, 'no_open': True}" required="True" />
+                                <field name="alldepartment" invisible="1"/>
+                                <field name="department_id" readonly="1" force_save="1" options="{'no_edit': True, 'no_create': True, 'no_open': True}" required="employee_id !=False"/>
+                                <field name="job_id" readonly="1" force_save="1" options="{'no_edit': True, 'no_create': True, 'no_open': True}" required="employee_id != False"/>
+                                <field name="handled_temp_to" readonly="permission_status != 'draft'" />
+                                <field name="remarks" readonly="permission_status != 'draft'" />
+                                <field name="leave_allocation" invisible="holiday_status_id not in [6,7]"/>
+                            </group>
+                            <group>
+                                <field name="trans_number" readonly="permission_status != 'draft'"/>
+                                <field name="doc_number" readonly="permission_status != 'draft'"/>
+                                <field name="periode_id" readonly="1" force_save="True"/>
+                                <field name="employee_company_id" invisible="1"/>
+                                <field name="holiday_status_id" readonly="permission_status != 'draft'" options="{'no_edit': True, 'no_create': True, 'no_open': True}" />
+                                <field name="permission_date_from" readonly="permission_status != 'draft'" required="True"/>
+                                <field name="permission_date_To" readonly="permission_status != 'draft'" required="True"/>
+                                <field name="permission_time_from" readonly="permission_status != 'draft'" widget="float_time" required="True"/>
+                                <field name="permission_time_to" readonly="permission_status != 'draft'" widget="float_time" required="True"/>
+                                <label for="time_days" readonly="permission_status != 'draft'" />
+                                <div class="o_row">
+                                    <div class="column">
+                                        <field name="time_days" readonly="permission_status != 'draft'" />
+                                    </div>
+                                    <div class="column">
+                                        <field name="time_hour" readonly="permission_status != 'draft'" />
+                                    </div>
+                                </div>
+                                <field name="back_to_office" readonly="permission_status != 'draft'" widget="easy_timepicker"/>
+                            </group>
+                        </group>
+                        <br></br>
+                        <group>
+                            <group>
+                                <label for="approve1_by" string="Approval 1 By"/>
+                                <div class="mr8 oe_inline">
+                                    <field name="approved1" readonly="id==False or permission_status != 'draft'" class="mr8 oe_inline"/>
+                                    <field name="approve1_by" readonly="approved1==True or permission_status != 'draft'" class="mr8 oe_inline"/>
+                                </div>
+                                <label for="approve2_by" string="Approval 2 By"/>
+                                <div class="mr8 oe_inline">
+                                    <field name="approved2" readonly="id==False or permission_status != 'draft'" class="mr8 oe_inline"/>
+                                    <field name="approve2_by" readonly="approved2==True or permission_status != 'draft'" class="mr8 oe_inline"/>
+                                </div>
+                                <label for="approve3_by" string="Approval 3 By "/>
+                                <div class="mr8 oe_inline">
+                                    <field name="approved3" readonly="id==False or permission_status != 'draft'" class="mr8 oe_inline"/>
+                                    <field name="approve3_by" readonly="approved3==True or permission_status != 'draft'" class="mr8 oe_inline"/>
+                                </div>
+                            </group>
+                            <group>
+                                <field name="is_approved" invisible="1"/>
+                                <field name="approve1_job_title" readonly="approved1==True or permission_status != 'draft'" />
+                                <field name="approve2_job_title" readonly="approved2==True or permission_status != 'draft'"/>
+                                <field name="approve3_job_title" readonly="approved3==True or permission_status != 'draft'"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_permission_entry_tree" model="ir.ui.view">
+            <field name="name">hr.permission.entry.tree</field>
+            <field name="model">hr.permission.entry</field>
+            <field name="arch" type="xml">
+                <tree string="HR Permission" default_order="id desc">
+                    <field name="trans_number" optional="show"/>
+                    <field name="area_id" optional="show" />
+                    <field name="employee_id" optional="show" />
+                    <field name="nik" string="NIK" optional="show" />
+                    <field name="holiday_status_id" optional="show" />
+                    <field name="permission_date_from" optional="show" />
+                    <field name="permission_date_To" optional="show" />
+                    <field name="periode_id" optional="show" />
+                    <field name="permission_status" string="Status" optional="show" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_hr_permission_entry" model="ir.actions.act_window">
+            <field name="name">Permission Entry</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.permission.entry</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Report HR Permission Entry
+                </p>
+                <p>
+                    Create a New Permission Entry
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

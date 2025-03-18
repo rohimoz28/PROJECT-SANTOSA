@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- <record id="days1" model="hr.contract.notif">
+            <field name="days_notif">1</field>
+            <field name="interval_notif">days</field>
+        </record>
+
+        <record id="days2" model="hr.contract.notif">
+            <field name="days_notif">2</field>
+            <field name="interval_notif">days</field>
+        </record>
+
+        <record id="days3" model="hr.contract.notif">
+            <field name="days_notif">3</field>
+            <field name="interval_notif">days</field>
+        </record>
+
+        <record id="days4" model="hr.contract.notif">
+            <field name="days_notif">4</field>
+            <field name="interval_notif">days</field>
+        </record>
+
+        <record id="days5" model="hr.contract.notif">
+            <field name="days_notif">5</field>
+            <field name="interval_notif">days</field>
+        </record>
+
+        <record id="days6" model="hr.contract.notif">
+            <field name="days_notif">6</field>
+            <field name="interval_notif">days</field>
+        </record>
+
+        <record id="days7" model="hr.contract.notif">
+            <field name="days_notif">7</field>
+            <field name="interval_notif">days</field>
+        </record>
+
+        <record id="days14" model="hr.contract.notif">
+            <field name="days_notif">14</field>
+            <field name="interval_notif">days</field>
+        </record>
+
+        <record id="days30" model="hr.contract.notif">
+            <field name="days_notif">30</field>
+            <field name="interval_notif">days</field>
+        </record> -->
+    </data>
+</odoo>

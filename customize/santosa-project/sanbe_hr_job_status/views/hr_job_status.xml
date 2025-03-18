@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <record id="hr_job_status_form" model="ir.ui.view">
+            <field name="name">hr.job.status.form</field>
+            <field name="model">hr.job.status</field>
+            <field name="arch" type="xml">
+                <form string="HR Job Status Name">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field id="name" options="{'line_breaks': False}" widget="text"
+                                    class="text-break" name="name" default_focus="1"
+                                    placeholder="e.g. Months Name" />
+                            </h1>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_job_status_tree" model="ir.ui.view">
+            <field name="name">hr.job.status.tree</field>
+            <field name="model">hr.job.status</field>
+            <field name="arch" type="xml">
+                <tree string="HR Services Types Name">
+                    <field name="name" optional="show" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_hr_job_Status" model="ir.actions.act_window">
+            <field name="name">Job Status</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.job.status</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Report Job Status
+                </p>
+                <p>
+                    Create new Job Status
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

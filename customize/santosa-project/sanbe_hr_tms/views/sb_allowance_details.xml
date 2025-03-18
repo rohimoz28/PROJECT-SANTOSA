@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inherit_sb_allowances_form_view" model="ir.ui.view">
+        <field name="name">inherit.sb.allowances.form.view</field>
+        <field name="model">sb.allowances</field>
+        <field name="inherit_id" ref="sanbe_hr_tms.sb_allowances_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='sb_allowance_id']" position="inside">
+                <field name="allowance_detail_ids">
+                    <tree editable="bottom" widget='one2many_delete'>
+                        <field name="code"/>
+                        <field name="time_from" widget="easy_timepicker" />
+                        <field name="time_to" widget="easy_timepicker" />
+                        <field name="qty"/>
+                    </tree>
+                </field>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,178 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <menuitem
+            id="hr.menu_config_employee"
+            active="False"
+        />
+        <menuitem
+            id="hr_contract.menu_human_resources_configuration_contract"
+            active="False"
+        />
+        <menuitem
+            id="hr.menu_config_recruitment"
+            active="False"
+        />
+        <menuitem
+            id="hr_recruitment.menu_hr_recruitment_config_activities"
+            active="False"
+        />
+        <menuitem
+            id="hr.menu_config_plan"
+            active="False"
+        />
+        <menuitem
+            id="hr_gamification.menu_hr_gamification"
+            active="False"
+        />
+        <menuitem
+            id="hr_skills.menu_human_resources_configuration_resume"
+            active="False"
+        />
+        <menuitem
+            id="hr.menu_hr_department_kanban"
+            active="False"
+        />
+        <menuitem
+            id="ohrms_loan.hr_loan_menu_root"
+            active="False"
+        />
+        <menuitem
+            id="spreadsheet_dashboard.spreadsheet_dashboard_menu_root"
+            groups="spreadsheet_dashboard.group_dashboard_manager"
+            name="Dashboards"
+        />
+        <menuitem
+            id="project_todo.menu_todo_todos"
+            groups="hr.group_hr_manager"
+            name="To-do"
+        />
+        <menuitem
+            id="hr_recruitment.menu_hr_recruitment_root"
+            groups="hr_recruitment.group_hr_recruitment_manager"
+            name="Recruitment"
+        />
+        <menuitem
+            id="mail.menu_root_discuss"
+            name="Discuss"
+            groups="hr.group_hr_manager"
+        />
+        <menuitem
+            id="hr_payroll_community.menu_hr_payroll_community_root"
+            groups="hr.group_hr_manager"
+            name="Payroll"
+            active="False"
+        />
+        <menuitem
+            id="base.menu_management"
+            name="Apps"
+            groups="hr.group_hr_manager"
+        />
+        <menuitem
+            id="hr_expense.menu_hr_expense_root"
+            name="Expenses"
+            groups="hr_expense.group_hr_expense_manager"
+        />
+
+        <!-- Configuration Menu -->
+        <menuitem
+            id="menu_hr_pasal_pelanggaran"
+            name="Article Violation"
+            action="sanbe_hr_warning_letter.action_hr_pasal_pelanggaran"
+            parent="hr.menu_human_resources_configuration"
+            sequence="2"
+        />
+        <menuitem
+            id="menu_certificate_type"
+            name="Certificate Type"
+            action="sanbe_hr_certification.act_open_certificated_type_view"
+            parent="hr.menu_human_resources_configuration"
+            sequence="3"
+        />
+        <menuitem
+            id="hr.menu_hr_department_tree"
+            name="Department"
+            parent="hr.menu_human_resources_configuration"
+            sequence="4"
+        />
+        <menuitem
+            id="document_type_menu"
+            name="Employee Document Type"
+            action="oh_employee_documents_expiry.document_type_action"
+            parent="hr.menu_human_resources_configuration"
+            sequence="5"
+        />
+        <menuitem
+            id="menu_employee_level_type"
+            name="Employee Level"
+            action="sanbe_hr_extended.action_employee_level"
+            parent="hr.menu_human_resources_configuration"
+            sequence="6"
+        />
+        <!-- (di hide) -->
+        <!-- <menuitem
+            id="menu_hr_employement_status"
+            action="sanbe_hr_employement_status.action_hr_employement_status"
+            name="Employment Status"
+            parent="hr.menu_human_resources_configuration"
+            sequence="7"
+        /> -->
+        <menuitem
+            id="menu_hr_emp_status"
+            name="Employee Status"
+            action="sanbe_hr_pam.action_hr_emp_status"
+            parent="hr.menu_human_resources_configuration"
+            sequence="7"
+        />
+        <menuitem
+            id="menu_view_hr_contract_type"
+            name="Employment Type"
+            action="hr.hr_contract_type_action"
+            parent="hr.menu_human_resources_configuration"
+            sequence="8"
+            groups="hr.group_hr_user"
+        />
+        <menuitem
+            id="hr.menu_view_hr_job"
+            name="Job Position"
+            parent="hr.menu_human_resources_configuration"
+            sequence="9"
+        />
+        <!-- (di hide) -->
+        <!-- <menuitem
+            id="menu_hr_job_status"
+            name="Job Status"
+            action="sanbe_hr_job_status.action_hr_job_Status"
+            parent="hr.menu_human_resources_configuration"
+            sequence="10"
+        /> -->
+        <!-- (di hide) -->
+        <!-- <menuitem
+            id="menu_hr_service_type"
+            action="sanbe_hr_service_type.action_hr_services_types"
+            name="Service Type"
+            parent="hr.menu_human_resources_configuration"
+            sequence="11"
+        /> -->
+        <menuitem
+            id="hr_skills.hr_skill_type_menu"
+            name="Skill Type"
+            parent="hr.menu_human_resources_configuration"
+            sequence="12"
+        />
+        <menuitem
+            id="menu_hr_warning_letter_type"
+            name="Warning Letter Type"
+            action="sanbe_hr_warning_letter.action_hr_warning_letter_type"
+            parent="hr.menu_human_resources_configuration"
+            sequence="13"
+        />
+        <menuitem
+            id="hr.menu_hr_work_location_tree"
+            name="Work Location"
+            parent="hr.menu_human_resources_configuration"
+            sequence="14"
+        />
+
+    </data>
+</odoo>

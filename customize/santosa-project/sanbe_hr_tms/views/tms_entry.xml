@@ -1,0 +1,344 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <record id="hr_tmsentry_form" model="ir.ui.view">
+            <field name="name">hr.tmsentry.form</field>
+            <field name="model">hr.attendance</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <field name="tmsentry_status" invisible="1" />
+                        <!--button name="approved_data" type="object" data-hotkey="shift+g"
+                            string="Approved" class="oe_highlight" invisible="tms_status in ['approved','payroll','done']"/>
+                        <button name="action_calculation" type="object" data-hotkey="shift+g"
+                            string="Calculation" class="oe_highlight"/>
+                        <button name="transfer_payroll" type="object" data-hotkey="shift+g"
+                            string="Transfer To Payroll" class="oe_highlight" invisible="tms_status != 'approved'"/-->
+                         <field name="tms_status" widget="statusbar" statusbar_visible="draft,approved,done"/>
+                    </header>
+                    <sheet>
+                        <field name="sanbe_readytoapprove" invisible="1"/>
+                        <group string="TMS Entry" name="tms_entry">
+                            <group>
+                                <field name="tmsentry_id" invisible="1" />
+                                <field name="tmsentry_status" invisible="1" />
+                                <field name="emp_id" invisible="1" />
+                               <field name="area_id"
+                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"  readonly="1"/>
+                                <field name="department_id"
+                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" readonly="1"/>
+                            </group>
+                            <group>
+                               <field name="branch_ids" invisible="1" />
+                                <field name="branch_id"
+                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" required="1" readonly="1"/>
+                                <field name="job_id"
+                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" required="1" readonly="1"/>
+                            </group>
+                        </group>
+                        <group>
+                                <field name="employee_id"
+                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" required="1" readonly="1"/>
+                                <field name="nik" required="1" readonly="1"/>
+                        </group>
+                        <group string="TMS Details Entry" name="tms_details_entry" col="3">
+                            <group>
+                                 <field name="periode_id"  options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" readonly="1"/>
+                                 <field name="dates" widget="date" required="1"  readonly="1"/>
+                                 <field name="tgl_masuk" widget="date" readonly="1"/>
+                                 <field name="time_in" widget="easy_timepicker" readonly="1"/>
+                                 <field name="time_in_edited" widget="easy_timepicker" readonly="tms_status =='done'"/>
+                                 <field name="att_time" widget="easy_timepicker" readonly="1"/>
+                                 <field name="codes"
+                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" required="1"  readonly="1"/>
+                                 <field name="attendence_status" readonly="1"/>
+                            </group>
+                            <group>
+                                    <field name="tgl_keluar" widget="date" readonly="1"/>
+                                    <field name="time_out" widget="easy_timepicker" readonly="1"/>
+                                    <field name="time_out_edited" widget="easy_timepicker"  readonly="tms_status =='done'" />
+                                    <field name="wd_type" readonly="1"/>
+                                    <field name="delayed" widget="easy_timepicker" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="hour_adv" readonly="1"/>
+                                <field name="permision_code" readonly="1"/>
+                                <field name="tunjagan_meal" readonly="1"/>
+                            </group>
+                        </group>
+                        <group string="OT Details Entry" name="tms_ot_details_entry" col="3">
+                            <group>
+                                <field name="plan_ot_from" widget="easy_timepicker" readonly="1"/>
+                                <field name="plan_ot_to" widget="easy_timepicker" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="approval_ot_from" widget="easy_timepicker" readonly="1"/>
+                                <field name="approval_ot_to" widget="easy_timepicker" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="hour_adv1" readonly="1"/>
+                                <field name="valid_from" widget="date" readonly="1"/>
+                                <field name="valid_to" widget="date" readonly="1"/>
+                            </group>
+                        </group>
+                        <!--group col="3">
+                            <group>
+                                <field name="ot1" readonly="1"/>
+                                <field name="ot1_timex" readonly="tmsentry_status=='transfer_payroll'"/>
+                                <field name="ot2" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="ot2_timex" readonly="tmsentry_status=='transfer_payroll'"/>
+                                <field name="ot3" readonly="1"/>
+                                <field name="ot3_timex" readonly="tmsentry_status=='transfer_payroll'"/>
+                            </group>
+                            <group>
+                                <field name="ot4" readonly="1"/>
+                                <field name="ot4_timex" readonly="tmsentry_status=='transfer_payroll'"/>
+                                <field name="ot_auto" readonly="1"/>
+                                <field name="ot_auto_timex" readonly="tmsentry_status=='transfer_payroll'"/>
+                            </group>    
+                        </group-->
+                        <notebook>
+                            <page string="OT Calculation" name="ot_calculation">
+                                <field name="tms_entry_ot" readonly="tmsentry_status=='transfer_payroll'">
+                                    <tree editable="bottom">
+                                        <field name="tms_entry_id" column_invisible="1"/>
+                                        <field name="tmsentry_status" column_invisible="1" />
+                                        <field name="code_ot" readonly="tmsentry_status=='transfer_payroll'"/>
+                                        <field name="system_calcx" readonly="tmsentry_status=='transfer_payroll'"/>
+                                        <field name="edited" readonly="tmsentry_status=='transfer_payroll'"/>
+                                        <field name="approval" readonly="tmsentry_status=='transfer_payroll'"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="List Of Premi" name="premi_calculation">
+                                <field name="tms_entry_premi" readonly="tmsentry_status=='transfer_payroll'">
+                                    <tree editable="bottom">
+                                        <field name="tms_entry_id" column_invisible="1"/>
+                                        <field name="tmsentry_status" column_invisible="1" />
+                                        <field name="code_premi" readonly="tmsentry_status=='transfer_payroll'"/>
+                                        <field name="approval" readonly="tmsentry_status=='transfer_payroll'"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_tmsentry_form_ext" model="ir.ui.view">
+            <field name="name">hr.tmsentry.form.ext</field>
+            <field name="model">hr.attendance</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                         <field name="tms_status" widget="statusbar" statusbar_visible="draft,approved,done" readonly="1"/>
+                    </header>
+                    <sheet>
+                        <field name="sanbe_readytoapprove" invisible="1"/>
+                        <group string="TMS Entry" name="tms_entry" readonly="1">
+                            <group>
+                                <field name="tmsentry_id" invisible="1" />
+                                <field name="tmsentry_status" invisible="1" />
+                                <field name="emp_id" invisible="1" />
+                               <field name="area_id"
+                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"  readonly="1"/>
+                                <field name="department_id"
+                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" readonly="1"/>
+                            </group>
+                            <group>
+                               <field name="branch_ids" invisible="1" />
+                                <field name="branch_id"
+                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" readonly="1"/>
+                                <field name="job_id"
+                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" required="1" readonly="1"/>
+                            </group>
+                        </group>
+                        <group>
+                                <field name="employee_id"
+                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" required="1" readonly="1"/>
+                                <field name="nik" required="1" readonly="1"/>
+                        </group>
+                        <group string="TMS Details Entry" name="tms_details_entry" col="4">
+                            <group>
+                                <field name="periode_id"  options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" readonly="1"/>
+                                <field name="dates" required="1" readonly="1"/>
+                                <field name="wd_type" readonly="1"/>
+                                <field name="delayed" widget="easy_timepicker" readonly="tmsentry_status=='transfer_payroll'"/>
+                                <field name="attendence_status" readonly="tmsentry_status=='transfer_payroll'"/>
+                            </group>
+                            <group>
+                                <field name="tgl_masuk" widget="date" readonly="tmsentry_status=='transfer_payroll'"/>
+                                 <field name="time_in" widget="easy_timepicker" readonly="1"/>
+                                 <field name="time_in_edited" widget="easy_timepicker" readonly="tmsentry_status=='transfer_payroll'"/>
+                                <field name="tgl_keluar" widget="date" readonly="tmsentry_status=='transfer_payroll'"/>
+                                <field name="time_out" widget="easy_timepicker" readonly="1"/>
+                                <field name="time_out_edited" widget="easy_timepicker" readonly="tmsentry_status=='transfer_payroll'"/>
+                            </group>
+                            <group>
+                                <field name="hour_adv" readonly="1" widget="easy_timepicker"/>
+                                <field name="permision_code" readonly="tmsentry_status=='transfer_payroll'"/>
+                                <field name="att_time" widget="easy_timepicker" readonly="1"/>
+                                <field name="codes"
+                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" required="1" readonly="1"/>
+                                <field name="tunjagan_meal" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="wdcode_ids" widget='many2many_tags' invisible="1"/>
+                                <field name="wdcode"
+                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" readonly="1"/>
+                                <field name="wdcode_edited"
+                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" readonly="tmsentry_status=='transfer_payroll'"/>
+                            </group>
+                        </group>
+                        <group string="OT Details Entry" name="tms_ot_details_entry" col="3">
+                            <group>
+                                <field name="plan_ot_from" widget="easy_timepicker" readonly="1"/>
+                                <field name="plan_ot_to" widget="easy_timepicker" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="approval_ot_from" widget="easy_timepicker" readonly="1"/>
+                                <field name="approval_ot_to" widget="easy_timepicker" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="hour_adv1" widget="easy_timepicker" readonly="1"/>
+                                <field name="valid_from" widget="date" readonly="1"/>
+                                <field name="valid_to" widget="date" readonly="1"/>
+                            </group>
+                        </group>
+                        <!--group col="3">
+                            <group>
+                                <field name="ot1" readonly="tmsentry_status=='transfer_payroll'"/>
+                                <field name="ot1_time" widget="easy_timepicker" invisible="1" readonly="1"/>
+                                <field name="ot1_timex" readonly="tmsentry_status=='transfer_payroll'"/>
+                                <field name="ot2" readonly="tmsentry_status=='transfer_payroll'"/>
+                            </group>
+                            <group>
+                                <field name="ot2_time" widget="easy_timepicker" invisible="1" readonly="1"/>
+                                <field name="ot2_timex" readonly="tmsentry_status=='transfer_payroll'"/>
+                                <field name="ot3" readonly="tmsentry_status=='transfer_payroll'"/>
+                                <field name="ot3_time" widget="easy_timepicker" invisible="1" readonly="1"/>
+                                <field name="ot3_timex" readonly="tmsentry_status=='transfer_payroll'"/>
+                            </group>
+                            <group>
+                                <field name="ot4" readonly="tmsentry_status=='transfer_payroll'"/>
+                                <field name="ot4_time" widget="easy_timepicker" invisible="1" readonly="1"/>
+                                <field name="ot4_timex" readonly="tmsentry_status=='transfer_payroll'"/>
+                                <field name="ot_auto" readonly="tmsentry_status=='transfer_payroll'"/>
+                                <field name="ot_auto_time" widget="easy_timepicker" invisible="1" readonly="1"/>
+                                <field name="ot_auto_timex" readonly="tmsentry_status=='transfer_payroll'"/>
+                            </group>    
+                        </group-->
+                        <notebook>
+                            <page string="OT Calculation" name="ot_calculation">
+                                <field name="tms_entry_ot" readonly="tmsentry_status=='transfer_payroll'">
+                                    <tree editable="bottom">
+                                        <field name="tms_entry_id" column_invisible="1"/>
+                                        <field name="tmsentry_status" column_invisible="1" />
+                                        <field name="code_ot" readonly="1"/>
+                                        <field name="system_calch" widget="easy_timepicker" column_invisible="1" readonly="1"/>
+                                        <field name="system_calcx" readonly="tmsentry_status=='transfer_payroll'"/>
+                                        <field name="edited" readonly="tmsentry_status=='transfer_payroll'"/>
+                                        <field name="approval" readonly="tmsentry_status=='transfer_payroll'"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="List Of Premi" name="premi_calculation">
+                                <field name="tms_entry_premi" readonly="tmsentry_status=='transfer_payroll'">
+                                    <tree editable="bottom">
+                                        <field name="tms_entry_id" column_invisible="1"/>
+                                        <field name="tmsentry_status" column_invisible="1" />
+                                        <field name="code_premi" readonly="tmsentry_status=='transfer_payroll'"/>
+                                        <field name="approval" readonly="tmsentry_status=='transfer_payroll'"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_tmsentry_tree" model="ir.ui.view">
+            <field name="name">hr.tmsentry.tree</field>
+            <field name="model">hr.attendance</field>
+            <field name="arch" type="xml">
+                <tree string="HR TMS Entry Tree" create="0" edit="0" delete="1">
+                    <field name="tmsentry_id" column_invisible="1" />
+                    <field name="branch_ids" column_invisible="1" />
+                    <field name="tmsentry_status" invisible="1" />
+                    <field name="branch_id" options="{'no_open': True}"/>
+                    <field name="employee_id" options="{'no_open': True}"/>
+                    <field name="nik" options="{'no_open': True}"/>
+                    <field name="department_id" options="{'no_open': True}"/>
+                    <field name="area_id" options="{'no_open': True}"/>
+                    <field name="job_id" options="{'no_open': True}"/>
+                    <field name="wdcode" options="{'no_open': True}"/>
+                    <field name="dates" options="{'no_open': True}"/>
+                    <field name="department_id" options="{'no_open': True}"/>
+                    <field name="tgl_masuk" options="{'no_open': True}"/>
+                    <field name="time_in" options="{'no_open': True}"/>
+                    <field name="tgl_keluar" options="{'no_open': True}"/>
+                    <field name="time_out" options="{'no_open': True}"/>
+                    <field name="att_time" options="{'no_open': True}"/>
+                    <field name="attendence_status" options="{'no_open': True}"/>
+                    <field name="ot1" options="{'no_open': True}"/>
+                    <field name="ot1_time" options="{'no_open': True}"/>
+                    <field name="ot2" options="{'no_open': True}"/>
+                    <field name="ot2_time" options="{'no_open': True}"/>
+                    <field name="ot3" options="{'no_open': True}"/>
+                    <field name="ot3_time" options="{'no_open': True}"/>
+                    <field name="ot4" options="{'no_open': True}"/>
+                    <field name="ot4_time" options="{'no_open': True}"/>
+                    <field name="ot_auto" options="{'no_open': True}"/>
+                    <field name="ot_auto_time" options="{'no_open': True}"/>
+                    <field name="tms_status" readonly="1"/>
+                    <field name="approved" column_invisible="1"/>
+                    <field name="ot_approve" column_invisible="1"/>
+                    <field name="ot_reject" column_invisible="1"/>
+                    <button name="approved_data" type="object" string="Approved" class="fa fa-check"/>
+                    <button name="btn_reject" type="object" string="Reject" class="fa fa-ban"/>
+                </tree>
+            </field>
+        </record>
+    
+    <record id="hr_tms_tree_view_search" model="ir.ui.view">
+        <field name="name">hr.tms.tree.view.search</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <search string="TMS Entry">
+                <field name="employee_id" filter_domain="[('employee_id', 'child_of', self)]"/>
+                <field name="nik" string="NIK"/>
+                <filter string="Department" name="department_id"
+                        context="{'group_by':'department_id'}"/>
+                <filter string="Employee" name="employee_id"
+                        context="{'group_by':'employee_id'}"/>
+            </search>
+        </field>
+    </record>
+        <record id="action_hr_tmsentry" model="ir.actions.act_window">
+            <field name="name">TMS Entry</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.attendance</field>
+            <field name="search_view_id" ref="hr_tms_tree_view_search"/>
+            <field name="view_mode">tree,form</field>
+            <field name="target">current</field>
+            <!--field name="context">{'search_default_periode_id':1}</field-->
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('sanbe_hr_tms.hr_tmsentry_tree')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('sanbe_hr_tms.hr_tmsentry_form_ext')}),
+                ]"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Report HR TMS Entry
+                </p>
+                <p>
+                    Create new HR TMS Entry
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

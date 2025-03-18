@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_hr_checking_id_form" model="ir.ui.view">
+            <field name="name">hr.checking.id.form</field>
+            <field name="model">hr.checking.id</field>
+            <field name="type">form</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="HR Mutation Type" js_class="hr_checking_id">
+                    <group name="emp_det" string="Employee Details">
+                        <group>
+                            <field name="noktp"  id="no_ktp" force_save="1"/>
+                            <field name="nonpwp" id="no_npwp" force_save="1"/>
+                            <field name="nonik" id="nonik" force_save="1"/>
+                            <field name="nonik_lama" id="nonik_lama" force_save="1"/>
+                        </group>
+                        <group>
+                            <!--button name="pencarian_data" type="object"
+                                id="pencarian_data"
+                                string="Search"
+                                class="btn-primary" data-hotkey="q"/-->
+                            <button name="aktivasi_data" type="object"
+                                string="Aktifasi"
+                                class="btn-primary" data-hotkey="A"/>
+                        </group>
+                            <group >
+                                <field name="employee_id" invisible="1"/>
+                                <field name="employee_name" readonly="1" force_save="1"/>
+                                <field name="nik" readonly="1" force_save="1"/>
+                                <field name="nik_lama" readonly="1" force_save="1"/>
+                                <field name="area" readonly="1" force_save="1"/>
+                                <field name="bisnis_unit" readonly="1" force_save="1"/>
+                                <field name="departmentid" readonly="1" force_save="1"/>
+                             </group>
+                            <group>
+                                <field name="jobstatus" readonly="1" force_save="1"/>
+                                <field name="employementstatus" readonly="1" force_save="1"/>
+                                <field name="jobtitle" readonly="1" force_save="1"/>
+                                <field name="empgroup" readonly="1" force_save="1"/>
+                                <field name="blacklist"/>
+                                <field name="end_of_contract" readonly="1"/>
+                            </group>
+                    </group>
+                <footer>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+                </form>
+            </field>
+        </record>
+        <record id="action_view_hr_checking_id" model="ir.actions.act_window">
+            <field name="name">Checking ID</field>
+            <field name="res_model">hr.checking.id</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        
+        <menuitem id="menu_hr_checking_id"
+                  name="Checking ID"
+                  parent="hr.menu_hr_employee_payroll"
+                  sequence="7"
+                  action="action_view_hr_checking_id"/>
+
+    </data>
+</openerp>

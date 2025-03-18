@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <record id="hr_warning_letter_form" model="ir.ui.view">
+            <field name="name">hr.warning.letter.form</field>
+            <field name="model">hr.warning.letter</field>
+            <field name="arch" type="xml">
+                <form string="HR Warning Letter">
+                   <header>
+                        <button string="Approve" name="button_approve" type="object" class="oe_highlight" invisible="state in ['approved']"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,approved"/>
+                   </header>
+                    <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h2>
+                            <field name="name" readonly="1" placeholder="Transaction Number"/>
+                        </h2>
+                        <label for="reff_no"/>
+                        <h2>
+                            <field name="reff_no"  placeholder="Transaction Number"/>
+                        </h2>
+                    </div>
+                        <group name="employee_details" string="Employee Details">
+                                <group>
+                                    <field name="emp_no" options="{'no_create': True,'no_create_edit': True}" context="{'search_by': 'No'}"/>
+                                </group>
+<!--                                <group>-->
+<!--                                    <button name="pencarian_data" type="object"-->
+<!--                                        id="pencarian_data"-->
+<!--                                        string="Search"-->
+<!--                                        class="btn-primary" data-hotkey="q"/>-->
+<!--                                </group>-->
+                                <group>
+                                    <field name="employee_id" invisible="1"/>
+                                    <field name="employee_name" readonly="1" force_save="1"/>
+                                    <field name="nik" readonly="1" force_save="1"/>
+                                     <field name="departmentid" readonly="1" force_save="1"/>
+                                </group>
+
+                            <group>
+                                    <field name="area" readonly="1" force_save="1"/>
+                                    <field name="bisnis_unit" readonly="1" force_save="1"/>
+                                </group>
+                            </group>
+                        <group name="'warning_details" string="Details Warning">
+                            <group>
+                                    <field name="warning_type" widget="selection"/>
+                                    <field name="warning_date"/>
+                                    <field name="pasal_pelanggaran" widget="selection"/>
+                            </group>
+                            <group>
+                                    <field name="transaction_date"/>
+                                    <field name="transaction_status"/>
+                            </group>
+                            <group>
+                                <field name="effective_datefrom"/>
+                            </group>
+                            <group>
+                                <field name="effective_dateto"/>
+                            </group>
+                            <group>
+                                 <field name="remarks"/>
+                                <field name="image" widget="many2many_binary"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_warning_letter_tree" model="ir.ui.view">
+            <field name="name">hr.warning.letter.tree</field>
+            <field name="model">hr.warning.letter</field>
+            <field name="arch" type="xml">
+                <tree string="HR Warning Letter Type" >
+                        <field name="emp_no"/>
+                        <field name="employee_id"/>
+                        <field name="employee_name"/>
+                        <field name="nik"/>
+                        <field name="departmentid" />
+                        <field name="area"/>
+                        <field name="bisnis_unit"/>
+                        <field name="warning_type"/>
+                        <field name="warning_date"/>
+                        <field name="pasal_pelanggaran"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="action_hr_warning_letter" model="ir.actions.act_window">
+            <field name="name">Warning Letter</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.warning.letter</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Report Warning Letter
+                </p>
+                <p>
+                    Create new Warning Letter
+                </p>
+            </field>
+        </record>
+        <menuitem id="menu_hr_warning_letter"
+                  name="Warning Letter"
+                  parent="hr.menu_hr_employee_payroll"
+                  sequence="9"
+                  action="action_hr_warning_letter"/>
+    </data>
+
+</odoo>

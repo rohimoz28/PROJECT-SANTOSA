@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inherit_sb_employee_profile_form_view" model="ir.ui.view">
+        <field name="name">inherit.sb.employee.profile.form.view</field>
+        <field name="model">sb.employee.profile</field>
+        <field name="inherit_id" ref="sanbe_hr_payroll.sb_employee_profile_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='sb_compensation_id']" position="inside">
+                <field name="compensation_ids">
+                    <tree editable="bottom" widget="one2many_list" create="true">
+                        <field name="pay_code"/>
+                        <field name="type"/>
+                        <field name="amount"/>
+                        <field name="is_tax" widget="checkbox"/>
+                        <field name="formula"/>
+                        <field name="remarks"/>
+                    </tree>
+                </field>
+            </xpath>
+        </field>
+    </record>
+</odoo>

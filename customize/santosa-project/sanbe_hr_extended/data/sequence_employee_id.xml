@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Author   => Albertus Restiyanto Pramayudha
+     email    => xabre0010@gmail.com
+     linkedin => https://www.linkedin.com/in/albertus-restiyanto-pramayudha-470261a8/
+     youtube  => https://www.youtube.com/channel/UCCtgLDIfqehJ1R8cohMeTXA
+-->
+<odoo>
+<!--    <data noupdate="1">-->
+        <record id="seq_hr_employee_id_sequence" model="ir.sequence">
+            <field name="name">HR Employee ID</field>
+            <field name="code">hr.employee.sequence</field>
+            <field name="prefix">EMP/ID.</field>
+            <field name="padding">7</field>
+            <field name="implementation">no_gap</field>
+            <field name="company_id" eval="False"/>
+        </record>
+<!--    </data>-->
+</odoo>

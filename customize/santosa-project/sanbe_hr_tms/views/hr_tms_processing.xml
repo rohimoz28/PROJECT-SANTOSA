@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <!--        View Form    -->
+        <record id="hr_tms_processing_form" model="ir.ui.view">
+            <field name="name">hr.tms.processing.form</field>
+            <field name="model">hr.tms.processing</field>
+            <field name="arch" type="xml">
+                <form string="TMS Processing">
+                    <header>
+                        <!-- button to process data -->
+                        <button name="process_data" type="object" data-hotkey="shift+g"
+                            string="Process" class="oe_highlight" />
+                        <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+                    </header>
+                    <sheet>
+                         <field name="tmsentry_ids" invisible="1"/>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_tmsentry"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-pencil-square-o"
+                                invisible="tmsentry_count == 0">
+                                <field name="tmsentry_count" widget="statinfo" string="TMS Entry"/>
+                            </button>
+                        </div>
+                        <!--group col="2">
+                            <group>
+                                <field name="date_from" required="True" readonly="state=='done'"/>
+                            </group>
+                            <group>
+                                <field name="date_to" required="True"  readonly="state=='done'"/>
+                            </group>
+                        </group-->
+                        <group>
+                            <group>
+                                <!-- area_id is mandatory -->
+                                <!--field name="periode_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" required="True"/-->
+                                <field name="area_id" readonly="state=='done'"
+                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" required="True"/>
+                                <!-- branch id to filter branch from area id -->
+                                <field name="alldepartment" invisible="1" />
+                                <field name="branch_ids" invisible="1" />
+                                <!-- branch id is mandatory and only show data that have id in branch_ids(filtered from area_id) -->
+                                <field name="branch_id" readonly="state=='done'"
+                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"/>
+                                <!-- department id is mandatory if employee_id == False -->
+                                <field name="department_id" readonly="state=='done'"
+                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"/>
+                                <!-- employee id is mandatory if department_id == False -->
+                                <field name="employee_id" readonly="state=='done'"
+                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!--        View Form    -->
+        <record id="hr_tms_processing_tree" model="ir.ui.view">
+            <field name="name">hr.tms.processing.tree</field>
+            <field name="model">hr.tms.processing</field>
+            <field name="arch" type="xml">
+                <tree string="HR TMS Processing Tree">
+                    <!--field name="periode_id"/-->
+                    <field name="branch_id" />
+                    <!--field name="date_from" />
+                    <field name="date_to" /-->
+                    <field name="department_id" />
+                    <field name="employee_id" />
+                </tree>
+            </field>
+        </record>
+        <!--       Action Windows    -->
+        <record id="action_hr_tms_processing" model="ir.actions.act_window">
+            <field name="name">TMS Processing</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.tms.processing</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Report HR TMS Processing
+                </p>
+                <p>
+                    Create new HR TMS Processing
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

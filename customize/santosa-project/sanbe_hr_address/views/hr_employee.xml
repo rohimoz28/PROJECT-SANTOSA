@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        
+        <record id="inherit_view_employee_form" model="ir.ui.view">
+            <field name="name">inherit.hr.employee.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='personal_information']" position="attributes">
+                    <attribute name="string">
+                        Job Information
+                    </attribute>
+                    <!-- <attribute name="readonly">states not in ['draft']</attribute> -->
+                </xpath>
+                <xpath expr="//page[@name='public']" position="attributes">
+                    <attribute name="string">
+                        Address Information
+                    </attribute>
+                </xpath>
+                <!-- <xpath expr="//page[@name='personal_information']" position="before">
+                    <field name="states" invisible="1"/>
+                </xpath> -->
+                <xpath expr="//div[@id='o_work_employee_main']/group[4]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//div[@id='o_work_employee_main']/group[4]" position="after">
+                    <notebook>
+                        <page name="list_address" string="Employee Address">
+                            <field name="address_ids">
+                                <tree editable="bottom">
+                                    <field name="employee_id" column_invisible="True"/>
+                                    <field name="address_type"/>
+                                    <field name="address"/>
+                                    <field name="rt"/>
+                                    <field name="rw"/>
+                                    <field name="subdistrict"/>
+                                    <field name="district"/>
+                                    <field name="city"/>
+                                    <field name="default"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="inherit_view_employee_form_inherit_hr_attendance" model="ir.ui.view">
+            <field name="name">inherit.view.employee.form.inherit.hr.attendance</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr_attendance.view_employee_form_inherit_hr_attendance"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//group[@name='managers']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

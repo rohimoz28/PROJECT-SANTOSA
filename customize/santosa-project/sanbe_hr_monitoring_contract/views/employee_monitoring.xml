@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Change the name of the 'Reporting' submenu to 'Monitoring' -->
+        <menuitem id="hr.hr_menu_hr_reports" parent="hr.menu_hr_root" name="Monitoring" sequence="95"/>
+        <record id="hr_skills_survey.hr_employee_certication_report_menu" model="ir.ui.menu">
+            <field name="sequence">10</field> <!-- Change sequence value here -->
+            <field name="name">Employee Certifications</field>
+        </record>
+        <record id="hr_skills.hr_employee_skill_report_menu" model="ir.ui.menu">
+            <field name="sequence">11</field> <!-- Change sequence value here -->
+            <field name="name">Employee Skills</field>
+        </record>
+        <record id="hr_presence.menu_hr_presence_view" model="ir.ui.menu">
+            <field name="sequence">90</field> <!-- Change sequence value here -->
+            <field name="active">False</field> <!-- Change sequence value here -->
+            <field name="name">Presence</field>
+        </record>
+    </data>
+</odoo>
+
+

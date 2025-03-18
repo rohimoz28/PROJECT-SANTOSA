@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sb_payroll_entry,access.sb.payroll.entry.users,model_sb_payroll_entry,base.group_user,1,1,1,1
+access_sb_payroll_entry_detail,access.sb.payroll.entry.detail.users,model_sb_payroll_entry_detail,base.group_user,1,1,1,1
+access_hr_payroll_users,access.hr.payroll.users,model_hr_payroll_entry,base.group_user,1,1,1,1
+access_hr_payroll_details_users,access.hr.payroll.details.users,model_hr_payroll_details,base.group_user,1,1,1,1
+access_sb_bank_transfer_summary,access.sb.bank.transfer.summary.users,model_sb_bank_transfer_summary,base.group_user,1,1,1,1
+access_sb_monthly_tax_summary,access.sb.monthly.tax.summary.users,model_sb_monthly_tax_summary,base.group_user,1,1,1,1
+access_sb_payroll_summary,access.sb.payroll.summary.users,model_sb_payroll_summary,base.group_user,1,1,1,1
+access_sb_payroll_summary_detail,access.sb.payroll.summary.detail,model_sb_payroll_summary_detail,base.group_user,1,1,1,1
+access_sb_employee_profile,access.sb.employee.profile.users,model_sb_employee_profile,base.group_user,1,1,1,1
+access_sb_compensation,access.sb.compensation.users,model_sb_compensation,base.group_user,1,1,1,1
+access_sb_insurance_setting,access.sb.insurance.setting.users,model_sb_insurance_setting,base.group_user,1,1,1,1

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- account.asset.asset inherit form view -->
+        <record id="sanbe_hr_address_hr_employee_address_form" model="ir.ui.view">
+            <field name="name">sanbe.hr.address.hr.employee.address.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//notebook/page[2]" position="after">
+                    <page name="list_address" string="Employee Address">
+                        <field name="address_ids">
+                            <tree editable="bottom">
+                                <field name="employee_id" column_invisible="True"/>
+                                <field name="address_type"/>
+                                <field name="address"/>
+                                <field name="city"/>
+                                <field name="district"/>
+                                <field name="rt"/>
+                                <field name="rw"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>

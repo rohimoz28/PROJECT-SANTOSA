@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Author => Albertus Restiyanto Pramayudha
+     email  => xabre0010@gmail.com
+     linkedin => https://www.linkedin.com/in/albertus-restiyanto-pramayudha-470261a8/
+     youtube => https://www.youtube.com/channel/UCCtgLDIfqehJ1R8cohMeTXA
+-->
+<templates id="template" xml:space="preserve">
+  <t t-name="YudhaFaceDialogVideo" owl="1">
+     <Dialog title="props.tittle" size="'xl'">
+            <div class="container-fluid">
+                <div class="col-md-12">
+                    <div id="live_webcam" class="col-md-12"/>
+                </div>
+            </div>
+          <button class="btn btn-primary" t-on-click="() => props.close()">Close</button>
+    </Dialog>
+  </t>
+</templates>

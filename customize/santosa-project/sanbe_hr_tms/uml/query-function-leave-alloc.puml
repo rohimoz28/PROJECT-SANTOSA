@@ -1,0 +1,32 @@
+@startuml
+|User|
+:Call calculate_leave_alloc Function;
+|PostgreSQL|
+start
+:Initialize leave_alloc to 0;
+:Initialize current_month to join_date;
+repeat
+    :Check if current_month <= curr_date;
+    if (current_month <= curr_date) then (yes)
+        if (job_status = 'permanent') then (yes)
+            :Set permanent_date to 20th of current_month;
+            if (curr_date >= permanent_date) then (yes)
+                :Increment leave_alloc;
+            endif
+        else (no)
+            if (curr_date >= current_month) then (yes)
+                :Increment leave_alloc;
+            endif
+        endif
+        if (leave_alloc = 16) then (yes)
+            :EXIT LOOP;
+            break
+        endif
+        :Move current_month to first day of next month;
+    else (no)
+        break
+    endif
+repeat while (current_month <= curr_date)
+:Return leave_alloc;
+stop
+@enduml

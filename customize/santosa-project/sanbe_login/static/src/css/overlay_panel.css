@@ -1,0 +1,44 @@
+
+.overlay-panel {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	padding: 0 40px;
+	text-align: center;
+	top: 200px;
+	height: 100%;
+	width: 59%;
+	transform: translateX(0);
+	transition: transform 0.6s ease-in-out;
+}
+
+
+.overlay-left{
+    top: 5000px;
+	left: 0;
+	float: left;
+	transform: translateX(0);
+}
+
+.container.left-panel-active .overlay-left {
+	transform: translateX(20%);
+}
+.overlay-right {
+    top: 0px;
+	right: 0;
+	float: right;
+	transform: translateX(0);
+}
+
+.container.right-panel-active .overlay-right {
+	transform: translateX(20%);
+}
+
+.login100-pic {
+  width: 316px;
+}
+
+.login100-pic img {
+  max-width: 100%;
+}

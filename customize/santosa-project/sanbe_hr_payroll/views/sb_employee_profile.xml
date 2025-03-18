@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="sb_employee_profile_form_view" model="ir.ui.view">
+            <field name="name">sb.employee.profile.form</field>
+            <field name="model">sb.employee.profile</field>
+            <field name="arch" type="xml">
+                <form string="Employee Profile">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="employee_group1"/>
+                                <field name="employee_id"/>
+                                <field name="nik_new" readonly="1"/>
+                                <field name="department_id" readonly="1"/>
+                                <field name="job_id" readonly="1" invisible="1"/>
+                                <field name="area_id" readonly="1" invisible="1"/>
+                                <field name="branch_id" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="state" widget="radio" options="{'horizontal': true}"/>
+                                <field name="npwp" readonly="1"/>
+                                <field name="employement_status" readonly="1"/>
+                                <field name="job_status" readonly="1"/>
+                                <field name="gender" readonly="1"/>
+                                <field name="nik_old" readonly="1"/>
+                            </group>
+                            <notebook>
+                                <page name="sb_employee_profile_details_id" string="Employee Profile Details">
+                                    <group>
+                                        <group>
+                                            <field name="pay_type"/>
+                                            <field name="pay_period"/>
+                                            <field name="effective_date"/>
+                                            <field name="bank_account"/>
+                                            <field name="basic_salary"/>
+                                        </group>
+                                        <group>
+                                            <field name="status_ptkp"/>
+                                            <field name="type_ter"/>
+                                            <field name="bpjs_no"/>
+                                            <field name="jamsostek_no"/>
+                                        </group>
+                                    </group>
+                                </page>
+                                <page name="sb_compensation_id" string="Allowance n Deduction">
+                                    <!-- override by view sb_bank_transfer_summary_detail -->
+                                </page>
+                            </notebook>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="sb_employee_profile_tree_view" model="ir.ui.view">
+            <field name="name">sb.employee.profile.tree</field>
+            <field name="model">sb.employee.profile</field>
+            <field name="arch" type="xml">
+                <tree string="Employee Profile">
+                    <field name="employee_group1"/>
+                    <field name="area_id" string="Area"/>
+                    <field name="branch_id" string="BU"/>
+                    <field name="department_id" string="Dept"/>
+                    <field name="employee_id" string="Employee Name"/>
+                    <field name="job_status" string="Job Status"/>
+                    <field name="employement_status"/>
+                    <field name="state"/>
+                    <button name="action_view_employee_profile_details" type="object" string="View"
+                            class="fa fa-check"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="sb_employee_profile_search" model="ir.ui.view">
+            <field name="name">sb.employee.profile.search</field>
+            <field name="model">sb.employee.profile</field>
+            <field name="arch" type="xml">
+                <search string="Employee Profile">
+                    <filter string="Employee P Group" name="employee_group1"
+                            context="{'group_by':'employee_group1'}"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_payroll_employee_profile" model="ir.actions.act_window">
+            <field name="name">Employee Profile</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sb.employee.profile</field>
+            <!-- <field name="view_type">form</field> -->
+            <field name="context">
+                {'search_default_employee_group1':1}
+            </field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Employee Profile Records
+                </p>
+                <p>
+                    Create New Employee Profile Records
+                </p>
+            </field>
+        </record>
+
+        <!-- <menuitem name="ModelTitle" id="action_payroll_sb_payroll_summary" parent="menu_hr_payroll_sb_payroll_summary" action="action_payroll_bank_transfer_summary"/> -->
+
+    </data>
+</odoo>

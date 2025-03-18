@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <!--        View Form    -->
+        <record id="hr_tms_recapitulation_form" model="ir.ui.view">
+            <field name="name">hr.tms.recap.form</field>
+            <field name="model">hr.tms.recap</field>
+            <field name="arch" type="xml">
+                <form string="TMS Recapitulation">
+                    <sheet>
+                        <group string="Recapitulation TMS Entry" name="recap_entry_summary" col="3">
+                            <group>
+                                <field name="tms_from" />
+                                <field name="area_id" />
+                                <field name="branch_ids" invisible="1" />
+                                <field name="branch_id" />
+                                <field name="employee_id" />
+                            </group>
+                            <group>
+                                <field name="tms_to" />
+                                <field name="department_id" />
+                                <field name="job_id" />
+                            </group>
+                            <group>
+                                <field name="tms_status" />
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="tms_recap_details" string="List Of TMS Entry">
+                                <field name="recap_ids">
+                                    <tree>
+                                        <field name="recap_id" column_invisible="1" />
+                                        <field name="employee_name" />
+                                        <field name="date_from" />
+                                        <field name="date_to" />
+                                        <field name="wo_code" />
+                                        <field name="attendee" />
+                                        <field name="sick" />
+                                        <field name="absent" />
+                                        <field name="leaves" />
+                                        <field name="permission" />
+                                        <field name="ot1" />
+                                        <field name="ot2" />
+                                        <field name="ot3" />
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!--        List View    -->
+        <record id="hr_tmsentry_recap_tree" model="ir.ui.view">
+            <field name="name">hr.tmsentry.recap.tree</field>
+            <field name="model">hr.tms.recap</field>
+            <field name="arch" type="xml">
+                <tree string="HR TMS Recapitulation Tree">
+                    <field name="tms_from" />
+                    <field name="tms_to" />
+                    <field name="tms_status" />
+                    <field name="area_id" />
+                    <field name="branch_ids" invisible="1" />
+                    <field name="branch_id" />
+                    <field name="department_id" />
+                    <field name="employee_id" />
+                    <field name="job_id" />
+                </tree>
+            </field>
+        </record>
+        <!--        Action Window   -->
+        <record id="action_hr_tmsentry_recap" model="ir.actions.act_window">
+            <field name="name">Recapitulation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.tms.recap</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Report HR TMS Entry Summary
+                </p>
+                <p>
+                    Create new HR TMS Entry Summary
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

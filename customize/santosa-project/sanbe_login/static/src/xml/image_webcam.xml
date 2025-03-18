@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+     Author => Albertus Restiyanto Pramayudha
+     email  => xabre0010@gmail.com
+     linkedin => https://www.linkedin.com/in/albertus-restiyanto-pramayudha-470261a8/
+     youtube => https://www.youtube.com/channel/UCCtgLDIfqehJ1R8cohMeTXA
+-->
+<templates id="template" xml:space="preserve">
+
+    <t t-name="yudha_face_login.image_webcam" t-inherit="web.ImageField"
+       t-inherit-mode="extension" owl="1">
+        <xpath expr="//button[hasclass('o_select_file_button')]" t-operation="after">
+                <button t-on-click="_tampilWebcam" class="btn btn-light border-0 rounded-circle m-1 p-1" data-tooltip="WebCam" aria-label="WebCam">
+                <i class="fa fa-camera fa-fw"/>
+            </button>
+
+        </xpath>
+    </t>
+
+   <t t-name="WebCamDialog" owl="1">
+       <Dialog title="props.tittle" size="'xl'">
+            <div style="display: flex; justify-content: center; align-content: space-between;  align-items: center;flex-direction: column;">
+                <div>
+                    <select t-ref="selectCamera" t-on-change="(ev) => this.onChangeDevice(ev)">
+                        <option value="">Select camera</option>
+                    </select>
+                </div>
+                <div id="live_webcam" class="col-md-12"/>
+                <div class="col-md-5 webcam_result_outer_div">
+                    <img t-attf-src="{{state.snapshot}}"/>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="_onWebcamSnapshot">
+                    <i class="fa fa-camera mr8"/>
+                    <t>Take Snapshot</t>
+                </button>
+                <button t-ref="saveButton" class="btn btn-primary" t-on-click="_onWebcamSave" t-att-disabled="!state.snapshot ? 'disabled' : ''">
+                    <i class="fa fa-save mr8"/>
+                    <t>Save and Close</t>
+                </button>
+                <button class="btn btn-secondary save_close_btn" t-on-click="_onClickCancel">
+                    <t>Cancel</t>
+                </button>
+            </t>
+       </Dialog>
+   </t>
+
+</templates>

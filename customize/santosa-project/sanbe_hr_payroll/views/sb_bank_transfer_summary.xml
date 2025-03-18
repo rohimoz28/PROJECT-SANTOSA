@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="bank_transfer_summary_form_view" model="ir.ui.view">
+            <field name="name">bank.transfer.summary.form</field>
+            <field name="model">sb.bank.transfer.summary</field>
+            <field name="arch" type="xml">
+                <form string="Bank Transfer Summary">
+                    <header>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="employee_group1"/>
+                                <field name="employee_id"/>
+                                <field name="bank_name"/>
+                                <field name="bank_account"/>
+                            </group>
+                            <group>
+                                <field name="is_approved" widget="checkbox"/>
+                                <field name="amount"/>
+                            </group>
+                            <!-- <notebook> -->
+                            <!--     <page name="sb_bank_transfer_summary_id" string="Bank Transfer Summary Detail"> -->
+                            <!--         &lt;!&ndash; override by view sb_bank_transfer_summary_detail &ndash;&gt; -->
+                            <!--     </page> -->
+                            <!-- </notebook> -->
+                            <!-- test -->
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="bank_transfer_summary_tree_view" model="ir.ui.view">
+            <field name="name">bank.transfer.summary.tree</field>
+            <field name="model">sb.bank.transfer.summary</field>
+            <field name="arch" type="xml">
+                <tree string="Bank Transfer Summary">
+                    <field name="employee_group1"/>
+                    <field name="employee_id"/>
+                    <field name="bank_name"/>
+                    <field name="bank_account"/>
+                    <field name="amount" width="25%"/>
+                    <field name="is_approved" widget="checkbox"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="sb_bank_transfer_summary_search" model="ir.ui.view">
+            <field name="name">sb.bank.transfer.summary.search</field>
+            <field name="model">sb.bank.transfer.summary</field>
+            <field name="arch" type="xml">
+                <search string="Bank Transfer Summary">
+                    <filter string="Employee P Group" name="employee_group1"
+                            context="{'group_by':'employee_group1'}"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_payroll_bank_transfer_summary" model="ir.actions.act_window">
+            <field name="name">Transfer Bank Summary</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sb.bank.transfer.summary</field>
+            <field name="context">
+                {'search_default_employee_group1':1}
+            </field>
+            <!-- <field name="view_type">form</field> -->
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Bank Transfer Summary Records
+                </p>
+                <p>
+                    Create New Bank Transfer Summary Records
+                </p>
+            </field>
+        </record>
+
+        <!-- <menuitem name="ModelTitle" id="action_payroll_bank_transfer_summary" parent="menu_hr_payroll_bank_transfer_summary" action="action_payroll_bank_transfer_summary"/> -->
+
+    </data>
+</odoo>

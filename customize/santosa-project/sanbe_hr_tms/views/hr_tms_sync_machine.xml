@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <!--        View Form    -->
+        <record id="hr_tms_sync_form" model="ir.ui.view">
+            <field name="name">hr.tms.sync.form</field>
+            <field name="model">hr.tms.syncmachine</field>
+            <field name="arch" type="xml">
+                <form string="TMS Sync Machine">
+                    <header>
+                             <field name="state" widget="statusbar" invisible="1"/>
+                    </header>
+                    <sheet>
+                         <field name="tmsummary_ids" invisible="1"/>
+                        <group col="2">
+                            <group>
+                                <field name="transfer_from" widget="radio" required="True" readonly="state == 'done'"/>
+                            </group>
+                            <group invisible="transfer_from !='import_file'">
+                                <field name="file_type" invisible="transfer_from !='import_file'"/>
+                                <field name="file_import_mdb"  invisible="file_type !='mdb'" filename="file_name_mdb"/>
+                                <field name="file_import_xls"  invisible="file_type !='xls'" filename="file_name_xls"/>
+                                <field name="file_name_xls" invisible="1"/>
+                                <field name="file_name_mdb" invisible="1"/>
+                            </group>
+                        </group>
+                        <group col="2">
+                            <group>
+                                <field name="machine_froms" invisible="transfer_from != 'absent_machine'" readonly="state == 'done'"
+                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" required="transfer_from == 'absent_machine'" />
+                            </group>
+                            <group>
+                                <field name="machine_tos" invisible="transfer_from != 'absent_machine'" readonly="state == 'done'"
+                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" required="transfer_from == 'absent_machine'"/>
+                            </group>
+                        </group>
+                        <!--group>
+                             <field name="periode_id"  options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"/>
+                        </group-->
+                        <group col="2">
+                            <group>
+                                <field name="date_from" readonly="False" required="True"/>
+                            </group>
+                            <group>
+                                <field name="date_to" readonly="False" required="True"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="area_id" readonly="state == 'done'" required="transfer_from != 'import_file'" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" invisible="transfer_from == 'import_file'"/>
+                                <field name="branch_ids" invisible="1" />
+                                <field name="branch_id" required="transfer_from != 'import_file'" readonly="state == 'done'" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" invisible="transfer_from == 'import_file'"/>
+                                <field name="department_id"
+                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" required="employee_id == False and transfer_from != 'import_file'" invisible="transfer_from == 'import_file'" readonly="state == 'done'"/>
+                                <field name="employee_id"
+                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" requried="department_id == False and transfer_from != 'import_file'" invisible="transfer_from == 'import_file'" readonly="state == 'done'"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="process_data" type="object" data-hotkey="shift+g"
+                            string="Process" class="oe_highlight" invisible="transfer_from == 'import_file' or state !='draft'"/>
+                        <!-- button to import_data, invisible if tranfer_from !='import_file -->
+                        <button name="import_data" type="object" data-hotkey="shift+g"
+                            string="Import File" class="oe_highlight" invisible="transfer_from != 'import_file' or state !='draft'"/>
+                        <a role="button" invisible="transfer_from != 'import_file' or state !='draft'" href="/sanbe_hr_tms/static/sample_template/Template_TMSEntry.xlsx" class="btn-primary" style="font-size: 12px; line-height: 1.5; border-radius: 3px; padding: 8px 10px; color: #ffffff;">
+                        <i class="fa fa-download"/>
+                        Download Template
+                        </a>
+
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+         <!--        List view    -->
+        <record id="hr_tmsentry_sync_tree" model="ir.ui.view">
+            <field name="name">hr.tmsentry.sync.tree</field>
+            <field name="model">hr.tms.syncmachine</field>
+            <field name="arch" type="xml">
+                <tree string="HR TMS Sinc Machine Tree">
+                    <field name="branch_id" />
+                    <field name="transfer_from" widget="radio" />
+                    <field name="machine_froms" />
+                    <field name="machine_tos" />
+                    <field name="date_from" />
+                    <field name="date_to" />
+                    <field name="department_id" />
+                    <field name="employee_id" />
+                </tree>
+            </field>
+        </record>
+        <!--        Action    -->
+        <record id="action_hr_tmsentry_sync" model="ir.actions.act_window">
+            <field name="name">Penarikan Data Absensi</field>
+            <field name="res_model">hr.tms.syncmachine</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

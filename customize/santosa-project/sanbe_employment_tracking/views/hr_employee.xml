@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <record id="hr_service_logs_form" model="ir.ui.view">
+            <field name="name">hr.servicelog.details.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='hr_settings']" position="after">
+                     <page name="service_logs_details" string="Employment Tracking">
+                        <field name="servicelog_ids"  context="{'tree_view_ref': 'sanbe_employment_tracking.view_hr_employment_log_tree'}" edit ="0" readonly="1" force_save="1"/>
+                        <!--field name="servicelog_ids" context="{'tree_view_ref': 'sanbe_employment_tracking.view_hr_employment_log_tree', 'form_view_ref': 'sanbe_employment_tracking.view_hr_employment_log_form'}" readonly="1" force_save="1"/-->
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

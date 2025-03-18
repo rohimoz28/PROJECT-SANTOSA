@@ -1,0 +1,461 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <record id="view_employee_form" model="ir.ui.view">
+            <field name="name">hr.employee.view.form.inherit.hr.resignation</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//form/header" position="inside">
+                    <!-- <button name="request_for_approval" type="object" data-hotkey="shift+g"
+                            string="Request For Approval" class="oe_highlight"
+                            invisible="state !='draft'"/>
+                    <button name="action_reject" type="object" data-hotkey="shift+g"
+                            string="Reject" class="oe_highlight"
+                            invisible="state !='req_approval'"/>
+                    <button name="action_approval" type="object" data-hotkey="shift+g"
+                            string="Approve" class="oe_highlight"
+                            invisible="state !='req_approval'"/>
+                    <button name="action_hold" type="object" data-hotkey="shift+g"
+                            string="Hold" class="oe_highlight"
+                            invisible="state in ['draft','req_approval','hold']"
+                    />
+                    <button name="action_set_approved" type="object" data-hotkey="shift+g"
+                            string="Set Approved" class="oe_highlight"
+                            invisible="state !='hold'"/>
+
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,req_approval,rejected,approved,hold"
+                           invisible="state == 'inactive'"/> -->
+
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,req_approval,approved,inactive,hold"
+                           invisible="state != 'inactive'"/>
+
+                </xpath>
+
+                <xpath expr="//field[@name='department_id']" position="before">
+                    <field name="area" required='1'/>
+                    <field name="branch_id" required='1'/>
+                    <field name="branch_ids" invisible="1" />
+                    <field name="alldepartment" invisible="1" />
+                    <field name="directorate_id" required='1'/>
+                    <!-- <field name="division_id"/> -->
+                </xpath>
+
+                <xpath expr="//field[@name='department_id']" position="after">
+                    <field name="hrms_department_id" required='1'/>
+                    <field name="division_id" required='1'/>
+                </xpath>
+
+                <!-- <xpath expr="//field[@name='department_id']" position="replace">
+                    <field name="hrms_department_id" required='1'/>
+                </xpath> -->
+
+                <xpath expr="//field[@name='parent_id']" position="after">
+                    <field name="work_unit"/>
+                    <field name="position_in_work_unit"/>
+                </xpath>
+
+                <xpath expr="//field[@name='job_id']" position="attributes">
+                    <attribute name="required">1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='department_id']" position="attributes">
+                    <attribute name="required">0</attribute>
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//page[@name='personal_information']" position="attributes">
+                    <attribute name="string">
+                        Info Pekerjaan
+                    </attribute>
+                </xpath>
+
+                <xpath expr="//page[@name='public']" position="attributes">
+                    <attribute name="string">
+                        Alamat
+                    </attribute>
+                </xpath>
+
+                <xpath expr="//page[@name='personal_information']" position="after">
+                    <page name="benefit_allowance" string="Tunjangan dan asset">
+                        <group name="salary_info">
+                            <group string="Allowance">
+                                <field name="attende_premie"/>
+                                <field name="allowance_jemputan" />
+                                <field name="allowance_ot" />
+                                <field name="allowance_transport" />
+                                <field name="allowance_meal" />
+                                <field name="allowance_night_shift"/>
+                                <field name="allowance_nightshift_amount" invisible="allowance_night_shift == False"/>
+                                <field name="workingday"/>
+                            </group>
+                            <group string="Remarks">
+                                <field name="attende_premie_amount" invisible="attende_premie == False" required="attende_premie == True"/>
+                                <field name="jemputan_remarks" />
+                                <field name="ot_remarks" />
+                                <field name="transport_remarks" />
+                                <field name="meal_remarks" />
+                                <field name="allowance_nightshift_remarks"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+
+                <xpath expr="//page[@name='personal_information']" position="after">
+                    <page name="certification" string="Sertifikasi">
+                        <group>
+                            <field name="certificate_ids" string="">
+                                <tree editable="bottom">
+                                    <field name="name" string="Nama Sertifikasi"/>
+                                    <field name="number" string="Nomor Sertifikat"/>
+                                    <field name="certification_types" string="Tipe Sertifikat"/>
+                                    <field name="must" string="Wajib ?"/>
+                                    <field name="issuing_institution" string="Instusi Penerbit Sertifikat"/>
+                                    <field name="valid_from" string="Berlaku mulai"/>
+                                    <field name="valid_to" string="Hingga"/>
+                                    <field name="certificate_attachmentids" string="Lampiran"/>
+                                    <field name="remarks" string="Keterangan"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
+                </xpath>
+
+                <xpath expr="//page[@name='personal_information']" position="after">
+                    <page name="education" string="Pendidikan Detail">
+                        <group>
+                            <field name="education_ids" string="">
+                                <tree editable="bottom">
+                                    <field name="school_level"/>
+                                    <field name="name"/>
+                                    <field name="year_graduated"/>
+                                    <field name="majoring"/>
+                                    <field name="level_certificated"/>
+                                    <field name="gpa"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
+                </xpath>
+
+                <xpath expr="//page[@name='personal_information']" position="after">
+                    <page name="employment_details" string="Info Detil Kekaryawanan">
+                        <group>
+                            <group>
+                                <field name="periode_probation"/>
+                                <field name="retire_age"/>
+                                <field name="bond_service"/>
+                                <field name="is_pinalty"/>
+                                <field name="resign_notice"/>
+                                <field name="pinalty_bs"/>
+                            </group>
+                            <group>
+                                <field name="ext_probation"/>
+                                <field name="confirm_probation"/>
+                                <field name="pension_date"/>
+                                <field name="service_from"/>
+                                <field name="service_to"/>
+                                <field name="pinalty_amount"/>
+                            </group>
+                        </group>
+                        <notebook>
+                             <page name="employee_asset" string="Asset / Benefit">
+                                 <field name="asset_ids">
+                                     <tree editable="bottom">
+                                         <field name="employee_id" column_invisible="True"/>
+                                        <field name="asset_name"/>
+                                        <field name="asset_number"/>
+                                        <field name="uom"/>
+                                        <field name="asset_qty"/>
+                                        <field name="keterangan"/>
+                                     </tree>
+                                 </field>
+                             </page>
+                         </notebook>
+                    </page>
+                </xpath>
+
+                <xpath expr="//page[@name='hr_settings']" position="after">
+                    <page name="employment_tracking" string="Riwayat Kekaryawanan">
+                        <group>
+                            <field name="servicelog_ids"  context="{'tree_view_ref': 'sanbe_employment_tracking.view_hr_employment_log_tree'}" edit ="0" readonly="1" force_save="1" string=""/>
+                        </group>
+                    </page>
+                </xpath>
+
+                <xpath expr="//page[@name='hr_settings']//field[@name='employee_type']" position="after">
+                    <field name="joining_date"/>
+                </xpath>
+
+                <xpath expr="//field[@name='mobile_phone']" position="attributes">
+                    <attribute name="string">No Ponsel</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='work_email']" position="attributes">
+                    <attribute name="string">Email</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='parent_id']" position="attributes">
+                    <attribute name="string">Atasan Langsung</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='coach_id']" position="attributes">
+                    <attribute name="string">Atasan Unit Kerja</attribute>
+                </xpath>
+
+                <xpath expr="//page[@name='public']" position="inside">
+                    <notebook>
+                        <page name="list_address" string="Employee Address">
+                        <field name="address_ids">
+                                <tree editable="bottom">
+                                    <field name="employee_id" column_invisible="True"/>
+                                    <field name="address_type"/>
+                                    <field name="address"/>
+                                    <field name="rt"/>
+                                    <field name="rw"/>
+                                    <field name="subdistrict"/>
+                                    <field name="district"/>
+                                    <field name="city"/>
+                                    <field name="default"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </xpath>
+
+                <xpath expr="//page[@name='public']/div/div/group[last()]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//page[@name='personal_information']/group/group[1]"
+                    position="attributes">
+                    <attribute name="string">Personal</attribute>
+                </xpath>
+
+                <xpath expr="//label[@for='private_street']" position="attributes">
+                    <attribute name="string">Alamat</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='private_phone']" position="attributes">
+                    <attribute name="string">Telepon</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='bank_account_id']" position="attributes">
+                    <attribute name="string">Nomor Rekening Bank</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='lang']" position="attributes">
+                    <attribute name="string">Bahasa</attribute>
+                </xpath>
+
+                <xpath expr="//label[@for='km_home_work']" position="attributes">
+                    <attribute name="string">Jarak Rumah ke Kantor</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='private_car_plate']" position="attributes">
+                    <attribute name="string">Nomor Kendaraan (Mobil/Motor)</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='private_email']" position="after">
+                    <field name="berat_badan" />
+                    <field name="tinggi_badan" />
+                </xpath>
+
+                <xpath expr="//field[@name='parent_id']" position="attributes">
+                    <attribute name="option">{'no_create': True}</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='gender']" position="replace" />
+
+                <xpath expr="//field[@name='private_phone']" position="before">
+                    <field name="gender" />
+                </xpath>
+
+                <xpath expr="//field[@name='identification_id']" position="attributes">
+                    <attribute name="required" invisible="1">0</attribute>
+                </xpath>
+
+                <xpath expr="//page[@name='personal_information']/group/group[1]" position="after">
+                    <group string="DATA PEKERJAAN">
+                        <field name="nomor_kk"/>
+                        <field name="nik" required="1" force_save="1"/>
+                        <field name="nik_lama" readonly="1" force_save="1"/>
+                        <field name="no_ktp" required="1" />
+                        <field name="doc_ktp" widget="many2many_binary" />
+                        <field name="no_npwp" required="1" />
+                        <field name="doc_npwp" widget="many2many_binary" />
+                        <field name="nama_pekerjaans" invisible="1" />
+                        <field name="no_sim" required="nama_pekerjaans =='Driver' " />
+                        <field name="religion" readonly="state =='approved' " />
+                        <field name="insurance" string="BPJS No"/>
+                        <field name="jamsostek"/>
+                        <field name="ptkp"/>
+                    </group>
+                </xpath>
+
+                <xpath expr="//page[@name='personal_information']/group/group[3]" position="after">
+                    <group string="Hubungan Pekerjaan">
+                        <field name="kpi_kategory" invisible="1"/>
+                        <field name="job_status" />
+                        <field name="emp_status" readonly="emp_status not in ['probation','confirmed']"/>
+                        <field name="first_date_join"/>
+                        <field name="join_date" required="job_status =='permanent'" />
+                        <field name="contract_id" invisible="job_status !='contract'"
+                            required="job_status =='contract'"
+                            context="{'is_employee': 1,'employee_name': name,'area': area,'branch': branch_id,'department': department_id,'job_id': job_id}" />
+                        <field name="contract_datefrom" invisible="job_status !='contract'" />
+                        <field name="contract_dateto" string="Akhir Kontrak" invisible="job_status !='contract'" />
+                        <field name="contracts_count" string="Kontrak ke"
+                            invisible="job_status !='contract'" />
+                        <label for="ws_day" string="Working Service"
+                            invisible="job_status !='permanent'" />
+                        <div class="o_row" invisible="job_status !='permanent'">
+                            <label for="ws_year" string="Year" />
+                            <div class="o_row">
+                                <field name="ws_year" readonly="1" force_save="1" />
+                            </div>
+                            <label for="ws_month" string="Month" />
+                            <div class="o_row">
+                                <field name="ws_month" readonly="1" force_save="1" />
+                            </div>
+                            <label for="ws_day" string="Day" />
+                            <div class="o_row">
+                                <field name="ws_day" readonly="1" force_save="1" />
+                            </div>
+                        </div>
+                        <field name="employee_levels"
+                            options="{'no_create': True,'no_quick_create': True}" />
+                        <field name="employee_group1"/>
+                        <field name="apoteker"
+                            invisible="employee_group1 !='group3'" />
+                        <field name="attachment_contract" invisible="1" />
+                    </group>
+                </xpath>
+
+                <xpath expr="//page[@name='personal_information']/group/group[7]" position="attributes">
+                    <attribute name="string">Kewarganegaraan</attribute>
+                </xpath>
+
+                <xpath expr="//page[@name='personal_information']/group/group[4]" position="after">
+                    <group string="Kewarganegaraan">
+                        <field name="country_id"  options='{"no_open": True, "no_create": True}'/>
+                        <field name="ssnid" invisible="1"/>
+                        <field name="birthday"/>
+                        <field name="place_of_birth"/>
+                        <field name="country_of_birth"/>
+                        <!-- <field name="passport_id"/> -->
+                        <!-- <field name="gender"/> -->
+                    </group>
+                </xpath>
+                
+                <xpath expr="//page[@name='personal_information']/group/group[5]"
+                    position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+ 
+                <xpath expr="//field[@name='certificate']" position="before">
+                    <field name="title"/>
+                </xpath>
+
+                <xpath expr="//field[@name='title']" position="after">
+                    <field name="back_title" string="Gelar Belakang" />
+                </xpath>
+
+                <xpath expr="//field[@name='title']" position="attributes">
+                    <attribute name="string">Gelar Depan</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='study_field']" position="attributes">
+                    <attribute name="string">Bidang Pendidikan</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='study_school']" position="attributes">
+                    <attribute name="string">Nama Sekolah</attribute>
+                </xpath>
+
+                <xpath expr="//page[@name='personal_information']/group/group[3]" position="attributes">
+                    <attribute name="string">Data Keluarga</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='marital']" position="attributes">
+                    <attribute name="string">Status Perkawinan</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='spouse_complete_name']" position="attributes">
+                    <attribute name="string">Nama Pasangan (Suami / Istri)</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='spouse_birthdate']" position="attributes">
+                    <attribute name="string">Ulang Tahun Pasangan</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='children']" position="attributes">
+                    <attribute name="string">Jumlah anak Tanggungan</attribute>
+                </xpath>
+
+                <!-- <xpath expr="//page[@name='personal_information']/group/group[7]/field[@name='passport_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath> -->
+
+                <!-- <xpath expr="//page[@name='personal_information']/group/group[5]/field[@name='identification_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath> -->
+
+                <!-- <xpath expr="//page[@name='personal_information']/group/group[7]/field[@name='country_of_birth']" position="after">
+                    <separator string="Emergency"/>
+                    <field name="emergency_contact" />
+                    <field name="emergency_phone" />
+                </xpath> -->
+
+                <!-- <xpath expr="//page[@name='personal_information']/group/group[6]/field[@name='has_work_permit']" position="after">
+                    <separator string="Passport ID"/>
+                    <field name="passport_id" />
+                </xpath> -->
+
+                <xpath expr="//page[@name='personal_information']/group" position="after">
+                    <group name="family_info_ids" colspan="4" string="Dependence Details">
+                        <field name="family_info_ids">
+                            <tree editable="bottom">
+                                <field name="member_name" required="1"/>
+                                <field name="relation_id" required="1"/>
+                                <field name="member_contact"/>
+                                <field name="birth_date"/>
+                                <field name="address"/>
+                                <field name="emergency_contact"/>
+                            </tree>
+                        </field>
+                    </group>
+                </xpath>
+
+                <xpath expr="//page[@name='hr_settings']/group/group[2]" position="after">
+                    <group string="Application Settings">
+                        <field name="hourly_cost" />
+                    </group>
+                </xpath>
+
+                <!-- <xpath expr="//field[@name='emp_status']" position="replace"> -->
+                    <!-- <field name="emp_status" readonly="state in ['approved']"/> -->
+                    <!-- <field name="status" invisible="1"/>
+                    <field name="emp_status_id" readonly="state in ['approved']" domain="[('status', '=', job_status)]" options="{'no_create': True, 'no_open': True}" string="Employment Status"/>
+                </xpath> -->
+
+            </field>
+        </record>
+
+
+        <record id="hr_department_code_tree" model="ir.ui.view">
+            <field name="name">hr.department.code.tree</field>
+            <field name="model">hr.department</field>
+            <field name="inherit_id" ref="hr.view_department_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="before">
+                    <field name="branch_id" options="{'no_create': True, 'no_open': True}"/>
+                    <field name="department_code"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

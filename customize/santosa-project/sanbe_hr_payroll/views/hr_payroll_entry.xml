@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+
+        <record id="employee_payroll_form" model="ir.ui.view">
+            <field name="name">employee.payroll.form</field>
+            <field name="model">hr.payroll.entry</field>
+            <field name="arch" type="xml">
+                <form string="HR Payroll Employee">
+                    <sheet>
+                        <header>
+                              <field name="state" widget="statusbar" statusbar_visible="draft,verify,done,cancel"/>
+                        </header>
+                        <div class="oe_title">
+                            <h1>
+                                <field id="name" options="{'line_breaks': False}" widget="text"
+                                    class="text-break" name="name" default_focus="1"
+                                    placeholder="e.g. Payroll Document Number" />
+                            </h1>
+                        </div>
+                        <group col="2">
+                            <group>
+                                <field name="payroll_group" />
+                                <field name="periode_pay_calc" />
+                                <field name="department_id" />
+                                <field name="employee_id" />
+                                <field name="job_id" />
+                                <field name="job_status" />
+                            </group>
+                            <group>
+                                <field name="calc_date" />
+                                <field name="npwp" />
+                                <field name="emp_status" />
+                                <field name="gender" />
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="payroll_details" string="Payroll Details">
+                                <field name="payroll_ids">
+                                    <tree edit="0" create="0" delete="0">
+                                        <field name="payroll_id" column_invisible="1"/>
+                                        <field name="paycode" />
+                                        <field name="description" />
+                                        <field name="payroll_type" />
+                                        <field name="quantity" />
+                                        <field name="amount" />
+                                        <field name="amount_total" />
+                                    </tree>
+                                </field>
+                                <group name="note_group" col="6" class="mt-2 mt-md-0">
+                                    <group colspan="3"/>
+                                    <group class="oe_subtotal_footer" colspan="2" name="payroll_total">
+                                        <field name="net_sallary" colspan="2" readonly="1"/>
+                                    </group>
+                                     <group colspan="1"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="employee_payrool_tree" model="ir.ui.view">
+            <field name="name">employee.payroll.tree</field>
+            <field name="model">hr.payroll.entry</field>
+            <field name="arch" type="xml">
+                <tree string="Employee Payroll">
+                    <field name="payroll_group" />
+                    <field name="periode_pay_calc" />
+                    <field name="department_id" />
+                    <field name="employee_id" />
+                    <field name="job_id" />
+                    <field name="job_status" />
+                    <field name="calc_date" />
+                    <field name="npwp" />
+                    <field name="emp_status" />
+                    <field name="gender" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_employee_Payroll" model="ir.actions.act_window">
+            <field name="name">Payroll Entry</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.payroll.entry</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Report Payroll Entry
+                </p>
+                <p>
+                    Create new Payroll Entry
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

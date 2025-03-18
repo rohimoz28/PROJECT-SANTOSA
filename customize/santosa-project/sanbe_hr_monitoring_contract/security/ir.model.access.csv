@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_monitoring_users,access.hr.monitoring.users,model_hr_monitoring_contract,base.group_user,1,1,1,1
+access_hr_monitoring_details_users,access.hr.monitoring.details.users,model_hr_monitoring_contractdetails,base.group_user,1,1,1,1
+access_hr_monitoring_contract,access.hr.employee.contract.monitoring.users,model_hr_employee_contract_monitoring,base.group_user,1,1,1,0
+access_hr_contract_monitoring_manager,hr_contract_monitoring_manager,model_hr_contract_monitoring,base.group_user,1,1,1,0
+access_hr_contract_monitoring_users,hr_contract_monitoring_manager.users,model_hr_contract_monitoring,,1,1,1,0
+access_hr_mail_config_manager,hr_mail_config_manager,model_hr_mail_config,base.group_user,1,1,1,0
+access_hr_mail_config,hr_mail_config,model_hr_mail_config,,1,1,1,0

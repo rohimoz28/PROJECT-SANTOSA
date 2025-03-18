@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <record id="branch_code_form" model="ir.ui.view">
+            <field name="name">branch.code.form</field>
+            <field name="model">res.branch</field>
+            <field name="inherit_id" ref="base_territory.res_branch_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('oe_title')]" position="replace">
+                    <div class="oe_title">
+                         <label for="branch_code" class="oe_edit_only" />
+                        <h1>
+                            <field name="branch_code"  class="oe_edit_only" />
+                        </h1>
+                        <label for="name" class="oe_edit_only" />
+                        <h1>
+                            <field name="name" class="oe_edit_only" />
+                        </h1>
+                    </div>
+                </xpath>
+                <xpath expr="//field[@name='district_id']" position="before">
+                    <field name="unit_id" string="ID Unit" class="oe_edit_only" />
+                </xpath>
+                
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <label for="street" string="Business Unit Contact"/>
+                    <div class="o_address_format">
+                        <field name="phone" placeholder="Phone"/>
+                        <field name="fax" placeholder="Fax"/>
+                        <field name="email" placeholder="Email"/>
+                    </div>
+                </xpath>
+                <xpath expr="//field[@name='district_id']" position="after">
+                    <label for="street" string="Business Unit Address"/>
+                    <div class="o_address_format">
+                        <field name="street" placeholder="Street"/>
+                        <field name="street2" placeholder="Street2"/>
+                        <field name="city" placeholder="City"/>
+                        <field name="state_id" placeholder="State"/>
+                        <field name="zip" placeholder="ZIP"/>
+                        <field name="country_id" placeholder="Country"/>
+                    </div>
+                </xpath> 
+            </field>
+        </record>
+        <record id="branch_code_tree" model="ir.ui.view">
+            <field name="name">branch.code.tree</field>
+            <field name="model">res.branch</field>
+            <field name="inherit_id" ref="base_territory.res_branch_tree_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="before">
+                    <field name="branch_code"/>
+                    <field name="unit_id"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

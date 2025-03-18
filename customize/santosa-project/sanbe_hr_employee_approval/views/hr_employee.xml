@@ -1,0 +1,350 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+
+        <record id="hr_employee_approval_form" model="ir.ui.view">
+            <field name="name">hr.employee.approval.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/header" position="inside">
+                    <button name="request_for_approval" type="object" data-hotkey="shift+g"
+                            string="Request For Approval" class="oe_highlight"
+                            invisible="state !='draft'"/>
+                    <button name="action_reject" type="object" data-hotkey="shift+g"
+                            string="Reject" class="oe_highlight"
+                            invisible="state !='req_approval'"/>
+                    <button name="action_approval" type="object" data-hotkey="shift+g"
+                            string="Approve" class="oe_highlight"
+                            invisible="state !='req_approval'"/>
+                    <button name="action_hold" type="object" data-hotkey="shift+g"
+                            string="Hold" class="oe_highlight"
+                            invisible="state in ['draft','req_approval','hold']"
+                    />
+                    <button name="action_set_approved" type="object" data-hotkey="shift+g"
+                            string="Set Approved" class="oe_highlight"
+                            invisible="state !='hold'"/>
+
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,req_approval,rejected,approved,hold"
+                           invisible="state == 'inactive'"/>
+
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,req_approval,approved,inactive,hold"
+                           invisible="state != 'inactive'"/>
+                </xpath>
+                <xpath expr="//page[@name='public']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='personal_information']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='hr_settings']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='list_address']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='skills_resume']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='skills_resume']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='job_id']" position="after">
+                    <field name="state" invisible="1"/>
+                    <field name="status" invisible="1"/>
+                </xpath>
+                <xpath expr="//button[@name='%(hr.plan_wizard_action)d']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+                <xpath expr="//field[@name='department_id']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='job_id']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='public']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='personal_information']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='hr_settings']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='list_address']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='skills_resume']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='skills_resume']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='public']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='personal_information']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='hr_settings']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='list_address']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='skills_resume']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='skills_resume']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+            </field>
+        </record>
+        <record id="hr_employee_approval_extends_form" model="ir.ui.view">
+            <field name="name">hr.employee.approval.extends.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='area']" position="before">
+                    <field name="state" invisible="1"/>
+                    <field name="status" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='area']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='branch_id']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='no_ktp']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='no_npwp']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='area']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='branch_id']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='public']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='personal_information']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='hr_settings']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='list_address']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='skills_resume']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='skills_resume']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='public']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='personal_information']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='hr_settings']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='list_address']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='skills_resume']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='skills_resume']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="hr_employee_approval_details_form" model="ir.ui.view">
+            <field name="name">hr.employee.approval.details.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="sanbe_employement_details.hr_employeement_details_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='ext_probation']" position="before">
+                    <field name="state" invisible="1"/>
+                    <field name="status" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='ext_probation']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='confirm_probation']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='pension_date']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='service_from']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='service_to']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='is_pinalty']" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='pinalty_bs']" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='pinalty_amount']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='resign_notice']" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </xpath>
+                <xpath expr="//page[@name='public']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='personal_information']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='hr_settings']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='list_address']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='skills_resume']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='skills_resume']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+            </field>
+        </record>
+        <record id="hr_employee_approval_extends_form" model="ir.ui.view">
+            <field name="name">hr.employee.approval.extends.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="sanbe_hr_extended.hr_employee_extended_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='join_date']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='emp_status']" position="replace">
+                    <field name="state" invisible="1"/>
+                    <field name="status" invisible="1"/>
+                    <field name="emp_status_id" readonly="state not in ['draft']" domain="[('status', '=', job_status)]" options="{'no_create': True, 'no_open': True}" string="Employment Status"/>
+                </xpath>
+                <xpath expr="//field[@name='employee_group1']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='identification_id']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='nik']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='no_ktp']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='no_npwp']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='marital']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='birthday']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='gender']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='religion']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='job_status']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='department_id']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='job_id']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='employee_levels']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='public']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='personal_information']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='hr_settings']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='list_address']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='skills_resume']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='skills_resume']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='public']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='personal_information']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='hr_settings']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='list_address']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='skills_resume']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//page[@name='skills_resume']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_hr_employee_kanban_inherit" model="ir.ui.view">
+            <field name="name">hr.employee.kanban.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
+            <field name="arch" type="xml">
+                <xpath expr="//li[contains(@class, 'o_force_ltr')]" position="after">
+                    <li>
+                        <span>
+                            <field name="state"/>
+                        </span>
+                    </li>
+                    <li>
+                        <span>
+                            <field name="emp_status"/>
+                        </span>
+                    </li>
+                </xpath>
+            </field>
+        </record>
+        <record id="hr_employee_approval_tree" model="ir.ui.view">
+            <field name="name">hr.employee.extended.tree</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="state" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <!--        View Form    -->
+        <record id="hr_machine_setting_form" model="ir.ui.view">
+            <field name="name">hr.machine.setting.form</field>
+            <field name="model">hr.machine.setting</field>
+            <field name="arch" type="xml">
+                <form string="Machine Setting">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" />
+                                <field name="area_id" />
+                                <field name="branch_ids" invisible="1" />
+                                <field name="branch_id" />
+                                <field name="id_fingerprint" />
+                                <field name="ip_fingerprint" />
+                                <field name="port_fingerprint" />
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+         <!--     List View   -->
+        <record id="hr_machine_setting_tree" model="ir.ui.view">
+            <field name="name">hr.machine.setting.tree</field>
+            <field name="model">hr.machine.setting</field>
+            <field name="arch" type="xml">
+                <tree string="Machine Name">
+                    <field name="name" optional="show" />
+                    <field name="area_id" optional="show" />
+                    <field name="branch_ids" invisible="1" optional="hide" />
+                    <field name="branch_id" optional="show" />
+                    <field name="id_fingerprint" optional="show" />
+                    <field name="ip_fingerprint" optional="show" />
+                    <field name="port_fingerprint" optional="show" />
+                </tree>
+            </field>
+        </record>
+        <!--        Action Windows    -->
+        <record id="action_hr_machine_setting" model="ir.actions.act_window">
+            <field name="name">Fingerprint Settings</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.machine.setting</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Report HR Machine Setting
+                </p>
+                <p>
+                    Create new Machine Setting
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

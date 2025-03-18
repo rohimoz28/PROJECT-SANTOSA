@@ -1,0 +1,297 @@
+<odoo>
+    <data>
+        <record id="paperformat_parklaring_report" model="report.paperformat">
+            <field name="name">Print Out Paklaring</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">5</field>
+            <field name="margin_bottom">17.5</field>
+            <field name="margin_left">25.4</field>
+            <field name="margin_right">25.4</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">7</field>
+            <field name="dpi">90</field>
+        </record>
+        <record id="action_report_paklaring_order" model="ir.actions.report">
+            <field name="name">Surat Paklaring</field>
+            <field name="model">hr.resignation</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">sanbe_hr_resignation.paklaring_report</field>
+            <field name="report_file">sanbe_hr_resignation.paklaring_report</field>
+            <field name="print_report_name">('Paklaring - %s' % (object.emp_nos.name))</field>
+            <field name="binding_model_id" ref="model_hr_resignation" />
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="sanbe_hr_resignation.paperformat_parklaring_report" />
+        </record>
+        <template id="paklaring_report">
+            <t t-call="web.html_container">
+                <style>
+                    .header {
+                        display: block;
+                    }
+
+                    thead {
+                        display: table-header-group;
+                    }
+
+                    .text-center {
+                        text-align: center;
+                    }
+
+                    .text-left {
+                        text-align: left;
+                    }
+
+                    .text-right {
+                        text-align: right;
+                    }
+
+                    .rblue {
+                        color: royalblue;
+                    }
+
+                    .border2px {
+                        border: 2px solid black;
+                    }
+
+                    .border2top {
+                        border-top: 2px solid black;
+                    }
+
+                    .border2left {
+                        border-left: 2px solid black;
+                    }
+
+                    .border2right {
+                        border-right: 2px solid black;
+                    }
+
+                    .bw {
+                        background-color: white;
+                    }
+
+                    table,
+                    tr,
+                    th,
+                    td {
+                        font-family: Arial, Helvetica, sans-serif;
+                        border: 0px solid transparent;
+                        /* border: 1px solid black; */
+                    }
+
+                    th,
+                    td {
+                        padding: 1px;
+                    }
+                </style>
+                <t t-foreach="docs" t-as="doc">
+                    <!-- <t t-call="web.external_layout"> -->
+                    <t t-call="web.basic_layout">
+                        <div class="header">
+                            <t t-set="company" t-value="res_company" />
+                            <table style="width=100%; margin-right: auto; border: 0px solid transparent;">
+                                <tr>
+                                    <td>
+                                        <img
+                                            t-if="company.logo"
+                                            t-att-src="image_data_uri(company.logo)"
+                                            style="max-height: 100px; width: 200px;" alt="Logo"
+                                        />
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div style="border-bottom: 1px solid black; margin-bottom: 2px;" />
+                                    <div style="border-bottom: 4px solid black;" />
+                                </div>
+                            </div>
+                            <table style="width=100%; margin-left: auto; border: 0px solid transparent;">
+                                <tr>
+                                    <td class="text-left" style="vertical-align: middle; font-family: 'Bookman Old Style', Georgia, serif;">
+                                        <strong>
+                                            <span style="font-size:17px;" t-field="company.name" />
+                                        </strong> Pharmaceutical Manufacturer
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size:13px; font-family: 'Bookman Old Style', Georgia, serif;" class="text-left">
+                                    <t t-if="doc.branch_id.street">
+                                        <span style="font-size:13px; font-family: 'Bookman Old Style', Georgia, serif;" t-field="doc.branch_id.street" />
+                                    </t>
+                                    <t t-if="doc.branch_id.street2">
+                                        <span style="font-size:13px; font-family: 'Bookman Old Style', Georgia, serif;" t-field="doc.branch_id.street2" />
+                                    </t>
+                                    <t t-if="doc.branch_id.city">
+                                        <span style="font-size:13px; font-family: 'Bookman Old Style', Georgia, serif;" t-field="doc.branch_id.city" />
+                                    </t>
+                                        <br /> Telp: <t t-if="doc.branch_id.phone"><span style="font-size:13px; font-family: 'Bookman Old Style', Georgia, serif;" t-field="doc.branch_id.phone" /></t>
+                                        <br /> Fax: <t t-if="doc.branch_id.fax"><span style="font-size:13px; font-family: 'Bookman Old Style', Georgia, serif;" t-field="doc.branch_id.fax" /></t>
+                                        <br />
+                                        <t t-if="doc.branch_id.city"><span style="font-size:13px; font-family: 'Bookman Old Style', Georgia, serif;" t-field="doc.branch_id.city" /></t> <t t-if="doc.branch_id.zip"><span style="font-size:13px; font-family: 'Bookman Old Style', Georgia, serif;" t-field="doc.branch_id.zip" /></t>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="page">
+                            <div class="oe_structure" />
+                            <div class="row" id="hash_header">
+                                <div class="col-12">
+                                    <br />
+                                    <br />
+                                    <h2 style="line-height: 1; font-size:21px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">
+                                        <strong>
+                                            <u>
+                                                <center>SURAT KETERANGAN</center>
+                                            </u>
+                                        </strong>
+                                    </h2>
+                                    <p style="font-size:12px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">
+                                        <center style="line-height: 0.1;">
+                                        <strong><t t-esc="doc.letter_no" /></strong>
+                                        </center>
+                                    </p>
+                                </div>
+                            </div>
+                            <br />
+                            <br />
+                            <div class="row" id="hash_header">
+                                <div class="col-12">
+                                    <p style="line-height: 0.1; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;"> Yang bertanda tangan dibawah ini : </p>
+                                </div>
+                            </div>
+                            <div class="oe_structure" />
+                            <table class="table table-sm o_main_table table-borderless mt-4" style="margin-left: 48px; border-collapse: collapse;">
+                                <tr style="height: 10px;">
+                                    <td style="width: 150px; padding: 0; margin: 0;">
+                                        <p style="line-height: 0.1; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">Nama</p>
+                                    </td>
+                                    <td style="width: 15px; padding: 0; margin: 0; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">:</td>
+                                    <td style="width: 300px; padding: 0; margin: 0; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">
+                                        <t t-if="doc.emp_nos.name">
+                                            <t t-esc="doc.emp_nos.name" />
+                                        </t>
+                                    </td>
+                                </tr>
+                                <tr style="height: 10px;">
+                                    <td style="width: 150px; padding: 0; margin: 0;">
+                                        <p style="line-height: 0.1; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">Jabatan</p>
+                                    </td>
+                                    <td style="width: 15px; padding: 0; margin: 0; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">:</td>
+                                    <td style="width: 300px; padding: 0; margin: 0; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">
+                                        <t t-if="doc.emp_nos.job_id.name">
+                                            <t t-esc="doc.emp_nos.job_id.name" />
+                                        </t>
+                                    </td>
+                                </tr>
+                            </table>
+                            <br />
+                            <div class="row" id="hash_header">
+                                <div class="col-12">
+                                    <p style="line-height: 0.1; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;"> Menerangkan Bahwa : </p>
+                                </div>
+                            </div>
+                            <table class="table table-sm o_main_table table-borderless mt-4" style="margin-left: 48px; border-collapse: collapse;">
+                                <tr style="height: 10px;">
+                                    <td style="width: 150px; padding: 0; margin: 0;">
+                                        <p style="line-height: 0.1; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">Nama</p>
+                                    </td>
+                                    <td style="width: 15px; padding: 0; margin: 0; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">:</td>
+                                    <td style="width: 300px; padding: 0; margin: 0; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">
+                                        <t t-if="doc.emp_nos.name">
+                                            <t t-esc="doc.emp_nos.name" />
+                                        </t>
+                                    </td>
+                                </tr>
+                                <tr style="height: 10px;">
+                                    <td style="width: 150px; padding: 0; margin: 0;">
+                                        <p style="line-height: 0.1; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">Alamat</p>
+                                    </td>
+                                    <td style="width: 15px; padding: 0; margin: 0; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">:</td>
+                                    <td style="width: 300px; padding: 0; margin: 0; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">
+                                        <t t-if="doc.emp_nos.private_street">
+                                            <t t-esc="doc.emp_nos.private_street" />
+                                        </t>
+                                    </td>
+                                </tr>
+                                <tr style="height: 10px;">
+                                    <td style="width: 150px; padding: 0; margin: 0;">
+                                        <p style="line-height: 0.1; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">Jabatan Terakhir</p>
+                                    </td>
+                                    <td style="width: 15px; padding: 0; margin: 0; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">:</td>
+                                    <td style="width: 300px; padding: 0; margin: 0; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">
+                                        <t t-if="doc.emp_nos.job_id.name">
+                                            <t t-esc="doc.emp_nos.job_id.name" />
+                                        </t>
+                                    </td>
+                                </tr>
+                                <tr style="height: 10px;">
+                                    <td style="width: 150px; padding: 0; margin: 0;">
+                                        <p style="line-height: 0.1; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">NIK</p>
+                                    </td>
+                                    <td style="width: 15px; padding: 0; margin: 0; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">:</td>
+                                    <td style="width: 300px; padding: 0; margin: 0; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">
+                                        <t t-if="doc.emp_nos.nik">
+                                            <t t-esc="doc.emp_nos.nik" />
+                                        </t>
+                                    </td>
+                                </tr>
+                            </table>
+                            <br />
+                            <div class="row" id="info_inggris">
+                                <div class="col-12">
+                                    <p style="line-height: 1; margin: 1; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;"> 
+                                        Adalah benar pernah bekerja pada <span t-field="company.name" /> dari tanggal 
+                                        <t t-if="doc.emp_nos.job_status == 'permanent'">
+                                            <t t-if="doc.joined_date">
+                                                <t t-esc="doc.joined_date.strftime('%d-%m-%Y')" /></t>
+                                            <t t-else="">.....</t>
+                                        </t>
+                                        <t t-elif="doc.emp_nos.job_status == 'contract'">
+                                            <t t-if="doc.emp_nos.contract_datefrom">
+                                                <t t-esc="doc.emp_nos.contract_datefrom.strftime('%d-%m-%Y')" /></t>
+                                            <t t-else="">.....</t>
+                                        </t>
+                                        <t t-else="">.....</t> 
+                                        dan <br />terhitung tanggal 
+                                        <t t-if="doc.effective_date">
+                                            <t t-esc="doc.effective_date.strftime('%d-%m-%Y')" /></t>
+                                        <t t-else="">.....</t> telah mengundurkan diri atas permintaannya sendiri. 
+                                    </p>
+                                    <p style="line-height: 1; margin: 1; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;"> Demikian surat keterangan ini kami <br />buat untuk dapat dipergunakan sebagaimana mestinya. </p>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row mt-12 mb-1" id="tandata_tangan">
+                                <div class="col-auto col-3 mw-100 mb-2" name="informations_reference" style="font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">
+                                    <span t-esc="doc.area.name" />, <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')" />
+                                    <br />
+                                    <span>Hormat Kami,</span>
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <p> (...................................................)</p>
+                                    <br/>
+                                    <t t-if="doc.branch_id.id == 1">
+                                        <p>Personnel &amp; General Affairs</p>    
+                                        <p>Asep Rohman</p>
+                                    </t>
+                                    <t t-else="">
+                                        
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

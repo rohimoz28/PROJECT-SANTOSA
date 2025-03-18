@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+<!--        <delete model="ir.ui.view" search="[('id','=', ref('sanbe_hr_extended.hr_employee_extended_form'))]"/>-->
+        <record id="hr_employee_tmss_form" model="ir.ui.view">
+            <field name="name">hr.employee.tmss.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='nik_lama']" position="after">
+                    <field name="badges_nos" widget="many2many_tags" required="1" context="{'employee_nik': nik}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

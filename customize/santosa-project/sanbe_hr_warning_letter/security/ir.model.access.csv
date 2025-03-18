@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_pasal_pelanggaran,access.hr.pasal.pelanggaran,model_hr_pasal_pelanggaran,base.group_user,1,1,1,1
+access_hr_warning_letter_type,access.hr.warning.letter.type,model_hr_warning_lettertype,base.group_user,1,1,1,1
+access_hr_warning_letter,access.hr.warning.letter,model_hr_warning_letter,base.group_user,1,1,1,1

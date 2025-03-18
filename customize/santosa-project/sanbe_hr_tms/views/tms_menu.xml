@@ -1,0 +1,408 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+
+        <!-- MENU ROOT -->
+        <menuitem
+                id="hr_menu_tms_root"
+                name="Time Management System"
+                sequence="10"
+                web_icon="sanbe_hr_tms,static/description/icon.png"
+                groups="hr.group_hr_manager"
+        />
+        <!-- MENU ROOT -->
+
+        <!-- TRANSACTION -->
+        <!-- <menuitem
+                id="hr_menu_tms_transaction"
+                name="Transaction"
+                sequence="2"
+                parent="hr_menu_tms_root"
+                groups="base.group_user"
+        /> -->
+        <menuitem
+                id="hr_menu_tms_transaction"
+                name="Transaction"
+                sequence="2"
+                parent="hr_menu_tms_root"
+                action="action_hr_tmsentry_summary"
+                groups="module_sub_category_tmsentry_summary_manager,module_sub_category_tmsentry_summary_supervisor"
+        />
+
+        <!-- <menuitem id="menu_hr_tms_entry_summary"
+                  name="TMS Entry Summary"
+                  sequence="40"
+                  parent="sanbe_hr_tms.hr_menu_tms_transaction"
+                  action="action_hr_tmsentry_summary"
+        /> -->
+        <!-- END TRANSACTION -->
+
+        <!-- ADMINISTRATION -->
+        <menuitem
+                id="hr_menu_tms_administration"
+                name="Administration"
+                sequence="2"
+                parent="hr_menu_tms_root"
+                groups="base.group_user"
+        />
+
+        <menuitem
+                id="menu_hr_employee_group_settings"
+                name="Emp Group"
+                parent="sanbe_hr_tms.hr_menu_tms_administration"
+                sequence="10"
+                action="action_hr_employeegroup"
+                groups="module_sub_category_employee_group_manager,module_sub_category_employee_group_supervisor,module_sub_category_employee_group_staff"
+        />
+
+        <menuitem
+                id="menu_hr_overtime_request_entry"
+                name="Overtime Request"
+                sequence="20"
+                parent="sanbe_hr_tms.hr_menu_tms_administration"
+                action="action_hr_overtime_planning"
+                groups="module_sub_category_overtime_request_manager,module_sub_category_overtime_request_supervisor,module_sub_category_overtime_request_staff"
+        />
+
+        <menuitem
+                id="menu_hr_permission_entry"
+                name="Permission Entry"
+                sequence="30"
+                parent="sanbe_hr_tms.hr_menu_tms_administration"
+                action="action_hr_permission_entry"
+                groups="module_sub_category_permission_manager,module_sub_category_permission_supervisor,module_sub_category_permission_staff"
+        />
+
+        <menuitem
+                id="menu_sb_adjustment_requests"
+                name="Adjusment Requests"
+                sequence="50"
+                parent="sanbe_hr_tms.hr_menu_tms_administration"
+                action="action_sb_adjustment_requests"
+                groups="module_sub_category_adjusment_request_manager,module_sub_category_adjusment_request_supervisor"
+        />
+        <!-- END ADMINISTRATION -->
+
+        <!-- APPROVAL -->
+        <menuitem
+                id="hr_menu_tms_approval"
+                name="Approval"
+                sequence="3"
+                parent="hr_menu_tms_root"
+                groups="base.group_user"
+        />
+
+        <!-- <menuitem
+                id="menu_hr_overtime_request_entry"
+                name="Overtime Request"
+                sequence="30"
+                parent="sanbe_hr_tms.hr_menu_tms_approval"
+                action="action_hr_overtime_planning"
+        /> -->
+        <!-- END APPROVAL -->
+
+
+        <!-- UPLOAD -->
+        <menuitem
+                id="hr_menu_tms_processing"
+                name="Upload"
+                sequence="4"
+                parent="hr_menu_tms_root"
+                groups="base.group_user"
+        />
+
+        <menuitem
+                id="menu_stg_transform_absent"
+                name="Data Absen Staging"
+                sequence="11"
+                parent="sanbe_hr_tms.hr_menu_tms_processing"
+                action="action_stg_transform_absent"
+        />
+
+        <menuitem
+                id="menu_hr_machine_details"
+                name="Mapping PinCode"
+                sequence="12"
+                parent="sanbe_hr_tms.hr_menu_tms_processing"
+                action="action_hr_machine_details"
+        />
+
+        <menuitem
+                id="menu_hr_tms_entry_sync"
+                name="Upload Data Absen"
+                sequence="13"
+                parent="sanbe_hr_tms.hr_menu_tms_processing"
+                action="action_hr_tmsentry_sync"
+                groups="module_sub_category_upload_data_absen_manager,module_sub_category_upload_data_absen_supervisor"
+        />
+
+        <!-- END UPLOAD -->
+
+        <!-- MONITORING -->
+        <menuitem
+                id="hr_menu_tabel_monitoring"
+                name="Monitoring"
+                sequence="5"
+                parent="hr_menu_tms_root"
+                groups="base.group_user"
+        />
+
+        <menuitem
+                id="menu_sb_incomplete_attendances"
+                name="Data Absen Tidak Lengkap"
+                sequence="10"
+                parent="sanbe_hr_tms.hr_menu_tabel_monitoring"
+                action="action_sb_incomplete_attendances"
+                groups="module_sub_category_data_absen_tidak_lengkap_manager,module_sub_category_data_absen_tidak_lengkap_supervisor"
+        />
+
+        <menuitem
+                id="menu_sb_attendance_corrections"
+                name="Koreksi Absen"
+                sequence="12"
+                parent="sanbe_hr_tms.hr_menu_tabel_monitoring"
+                action="action_sb_attendance_corrections"
+                groups="module_sub_category_koreksi_absen_manager,module_sub_category_koreksi_absen_supervisor"
+        />
+
+        <menuitem
+                id="menu_sb_employee_attendance"
+                name="Monitor Kehadiran"
+                sequence="13"
+                parent="sanbe_hr_tms.hr_menu_tabel_monitoring"
+                action="action_sb_employee_attendance"
+                groups="module_sub_category_monitor_kehadiran_manager,module_sub_category_monitor_kehadiran_supervisor,module_sub_category_monitor_kehadiran_staff"
+        />
+
+        <menuitem
+                id="menu_sb_overtime_attendance"
+                name="Request vs Realization"
+                sequence="14"
+                parent="sanbe_hr_tms.hr_menu_tabel_monitoring"
+                action="action_sb_overtime_attendance"
+                groups="module_sub_category_request_vs_realization_manager,module_sub_category_request_vs_realization_supervisor"
+        />
+
+        <menuitem
+                id="menu_sb_overtime_bundling"
+                name="Overtime Bundling"
+                sequence="15"
+                parent="sanbe_hr_tms.hr_menu_tabel_monitoring"
+                action="action_sb_overtime_bundling"
+                groups="module_sub_category_request_vs_realization_manager,module_sub_category_request_vs_realization_supervisor"
+        />
+        <!-- END UPLOAD -->
+
+        <!-- SETTING -->
+        <menuitem
+                id="hr_menu_tms_setting"
+                name="Setting"
+                sequence="6"
+                parent="hr_menu_tms_root"
+                groups="base.group_user"
+        />
+
+        <!-- <menuitem
+                id="menu_hr_employee_group_settings"
+                name="Emp Group"
+                parent="sanbe_hr_tms.hr_menu_tms_setting"
+                sequence="10"
+                action="action_hr_employeegroup"
+        /> -->
+        <menuitem
+                id="menu_hr_workinghour_setting"
+                name="Working Day"
+                parent="sanbe_hr_tms.hr_menu_tms_setting"
+                sequence="20"
+                action="action_hr_workingdays"
+                groups="module_sub_category_working_day_manager,module_sub_category_working_day_supervisor"
+        />
+        <menuitem
+                id="hr_holidays_public_time_off_menu_configuration"
+                name="Calendar Day"
+                sequence="30"
+                action="sanbe_hr_tms.hr_opens_public_holiday"
+                parent="sanbe_hr_tms.hr_menu_tms_setting"
+                groups="module_sub_category_calendar_day_manager,module_sub_category_calendar_day_supervisor"
+        />
+        <menuitem
+                id="hr_holidays_status_menu_configuration_ext"
+                action="hr_holidays.open_view_holiday_status"
+                name="Permission Code"
+                parent="sanbe_hr_tms.hr_menu_tms_setting"
+                groups="module_sub_category_permission_code_manager,module_sub_category_permission_code_supervisor"
+                sequence="40"
+        />
+        <menuitem id="hr_tms_overtime_setting_menu_configuration"
+                  parent="sanbe_hr_tms.hr_menu_tms_setting"
+                  action="sanbe_hr_tms.action_hr_overtime_setting"
+                  name="Overtime Setting"
+                  sequence="50"
+                  groups="module_sub_category_overtime_setting_supervisor,module_sub_category_overtime_setting_manager"
+        />
+        <menuitem
+                id="menu_sb_allowances"
+                name="Allowance Setting"
+                sequence="55"
+                parent="sanbe_hr_tms.hr_menu_tms_setting"
+                action="action_sb_allowances"
+                groups="module_sub_category_allowance_setting_manager,module_sub_category_allowance_setting_supervisor"
+        />
+
+        <menuitem
+                id="menu_sb_leave_allocation"
+                name="Leave Allocation"
+                sequence="65"
+                parent="sanbe_hr_tms.hr_menu_tms_setting"
+                action="sanbe_hr_tms.action_sb_leave_allocation"
+        />
+        <!-- END SETTING -->
+
+        <!-- CONFIGURATION -->
+        <menuitem
+                id="hr_menu_tms_settings"
+                name="Configuration"
+                sequence="6"
+                parent="hr_menu_tms_root"
+                groups="base.group_user"
+        />
+
+        <!-- <menuitem
+                id="hr_holidays_status_menu_configuration_ext"
+                action="hr_holidays.open_view_holiday_status"
+                name="Permission Code"
+                parent="sanbe_hr_tms.hr_menu_tms_settings"
+                groups="hr_holidays.group_hr_holidays_manager"
+                sequence="6"
+        />
+        <menuitem id="hr_tms_overtime_setting_menu_configuration"
+                  parent="sanbe_hr_tms.hr_menu_tms_settings"
+                  action="sanbe_hr_tms.action_hr_overtime_setting"
+                  name="Overtime Setting"
+                  sequence="20"
+        /> -->
+        <!-- END CONFIGURATION -->
+
+        <!-- PROCESSING AND PERIOD -->
+        <menuitem
+                id="menu_hr_opening_closing_periode"
+                name="Processing and Period"
+                parent="hr_menu_tms_root"
+                sequence="7"
+                action="action_hr_openin_closing"
+                groups="group_processing_period_manager,group_processing_period_supervisor"
+        />
+        <!-- END PROCESSING AND PERIOD -->
+
+        <!-- <menuitem -->
+        <!--     id="menu_hr_employee_group_setting" -->
+        <!--     name="Emp Group" -->
+        <!--     parent="hr_menu_tms_root" -->
+        <!--     sequence="1" -->
+        <!-- /> -->
+
+        <!-- <menuitem -->
+        <!--     id="menu_hr_employee_list_settings" -->
+        <!--     name="List Of Employee Schedule" -->
+        <!--     parent="menu_hr_employee_group_setting" -->
+        <!--     sequence="2" -->
+        <!--     action="hr_employee_list_schedule_action" -->
+        <!-- /> -->
+
+        <!--        <menuitem-->
+        <!--            id="menu_hr_employee_list_schedule"-->
+        <!--            name="List Of Employee Schedule"-->
+        <!--            parent="menu_hr_employee_group_setting"-->
+        <!--            sequence="2"-->
+        <!--            action="hr_employee_list_schedule_action"-->
+        <!--        />-->
+        <!--        <menuitem-->
+        <!--            id="menu_hr_holidays_my_leaves"-->
+        <!--            name="My Time"-->
+        <!--            parent="hr_menu_tms_dashboard"-->
+        <!--            sequence="1" />-->
+
+        <!--        <menuitem-->
+        <!--            id="hr_leave_menu_new_request"-->
+        <!--            parent="hr_menu_tms_dashboard"-->
+        <!--            action="hr_holidays.hr_leave_action_new_request"-->
+        <!--            sequence="1" />-->
+
+        <!--        <menuitem-->
+        <!--            id="hr_leave_menu_my"-->
+        <!--            parent="hr_menu_tms_dashboard"-->
+        <!--            action="hr_holidays.hr_leave_action_my"-->
+        <!--            sequence="2" />-->
+
+        <!--        <menuitem-->
+        <!--            id="menu_open_allocation"-->
+        <!--            name="My Allocations"-->
+        <!--            parent="hr_menu_tms_dashboard"-->
+        <!--            action="hr_holidays.hr_leave_allocation_action_my"-->
+        <!--            sequence="3" />-->
+
+        <!-- TMS Transaction / Processing -->
+
+        <!--        <menuitem-->
+        <!--            id="menu_hr_tms_entry_recap"-->
+        <!--            name="Recapitulation"-->
+        <!--            sequence="40"-->
+        <!--            parent="sanbe_hr_tms.hr_menu_tms_transaction"-->
+        <!--            action="action_hr_tmsentry_recap"-->
+        <!--        />-->
+
+
+        <!-- <menuitem -->
+        <!--     id="menu_hr_tms_entry" -->
+        <!--     name="TMS Entry" -->
+        <!--     sequence="50" -->
+        <!--     parent="sanbe_hr_tms.hr_menu_tms_transaction" -->
+        <!--     action="action_hr_tmsentry" -->
+        <!-- /> -->
+
+        <!-- <menuitem -->
+        <!--         id="menu_hr_tms_processing" -->
+        <!--         name="TMS Calculation" -->
+        <!--         sequence="20" -->
+        <!--         parent="sanbe_hr_tms.hr_menu_tms_processing" -->
+        <!--         action="action_hr_tms_processing" -->
+        <!-- /> -->
+        <!-- <menuitem -->
+        <!--     id="menu_hr_tms_entry_transfer_payroll" -->
+        <!--     name="Transfer To Payroll" -->
+        <!--     sequence="30" -->
+        <!--     parent="sanbe_hr_tms.hr_menu_tms_processing" -->
+        <!--     action="action_view_hr_transfer_payroll" -->
+        <!-- /> -->
+        <!-- Reporting -->
+        <!-- <menuitem -->
+        <!--         id="hr_menu_tms_reporting" -->
+        <!--         name="Reporting" -->
+        <!--         sequence="5" -->
+        <!--         parent="hr_menu_tms_root" -->
+        <!--         groups="base.group_user" -->
+        <!-- /> -->
+
+
+        <!--        <menuitem-->
+        <!--            id="menu_hr_machine_setting"-->
+        <!--            name="Fingerprint Settings"-->
+        <!--            parent="sanbe_hr_tms.hr_menu_tms_config"-->
+        <!--            sequence="2"-->
+        <!--            action="action_hr_machine_setting"-->
+        <!--        />-->
+        <!-- Setting Parameter -->
+
+
+        <!-- <menuitem -->
+        <!--     id="menu_hr_opening_closing_periode" -->
+        <!--     name="Set Opening and CLosing Periode" -->
+        <!--     parent="sanbe_hr_tms.hr_menu_tms_config" -->
+        <!--     sequence="2" -->
+        <!--     action="action_hr_openin_closing" -->
+        <!-- /> -->
+
+        <!-- set opening and closing period -->
+
+    </data>
+</odoo>

@@ -1,0 +1,27 @@
+@startuml
+start
+
+if (get all employee emp_status = confirmed and state = approved) then (true)
+    if (job_status = contract) then (true)
+        :leave_alloc = 0;
+        while(joinDate <= currentDate)
+            :adding 1 to leave_alloc;
+            if (leave_alloc = 16) then (yes)
+            break
+            endif
+        endwhile
+    elseif(job_status = permanent) then (true)
+        :leave_alloc = 0;
+        while(joinDate <= cutOffPayroll)
+            :adding 1 to leave_alloc;
+            if (leave_alloc = 16) then (yes)
+            break
+            endif
+        endwhile
+    else (false)
+    endif
+else (false)
+endif
+
+stop
+@enduml

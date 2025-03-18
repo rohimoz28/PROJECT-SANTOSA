@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+
+        <!-- Search -->
+        <record id="hr_machine_details_search" model="ir.ui.view">
+            <field name="name">hr.machine.details.search</field>
+            <field name="model">hr.machine.details</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <search string="Mapping PinCode">
+                    <field name="name" string="Pincode"/>
+                    <field name="employee_id" />
+                    <field name="nik" />
+                    <field name="branch_id" />
+                    <field name="department_id" />
+                    <field name="job_id" />
+                </search>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="hr_machine_details_form" model="ir.ui.view">
+            <field name="name">hr.machine.details.form</field>
+            <field name="model">hr.machine.details</field>
+            <field name="arch" type="xml">
+                <form string="Mapping PinCode" delete="0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" string="Pincode"/>
+                                <field name="employee_id"/>
+                                <field name="nik"/>
+                            </group>
+                        </group>
+                        <group col="2">
+                            <group>
+                                <field name="branch_id"/>
+                                <field name="department_id"/>
+                                <field name="job_id"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View -->
+        <record id="hr_machine_details_tree" model="ir.ui.view">
+            <field name="name">hr.machine.details.tree</field>
+            <field name="model">hr.machine.details</field>
+            <field name="arch" type="xml">
+                <tree string="Mapping PinCode" delete="0">
+                    <field name="name" string="Pincode" readonly="1"/>
+                    <field name="employee_id" readonly="1"/>
+                    <field name="nik" readonly="1"/>
+                    <field name="branch_id" readonly="1"/>
+                    <field name="department_id" readonly="1"/>
+                    <field name="job_id" readonly="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_hr_machine_details" model="ir.actions.act_window">
+            <field name="name">Mapping PinCode</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.machine.details</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No PinCode
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

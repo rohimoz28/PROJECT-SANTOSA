@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+    <record id="group_ca_hr_employee" model="res.groups">
+        <field name="name">HRD CA</field>
+    </record>
+    <record id="group_hr_no_config_employee" model="res.groups">
+        <field name="name">HRD No Config</field>
+    </record>
+    <record id="group_hr_no_dashboard_employee" model="res.groups">
+        <field name="name">HRD No Dashboard</field>
+    </record>
+        <record id="hr_job_positions_branch_manager_rule" model="ir.rule">
+            <field name="name">HR Jobs Positions Branch Manager</field>
+            <field name="model_id" ref="model_hr_job" />
+            <field name="global" eval="True" />
+            <field name="domain_force">[('branch_id','in',user.branch_ids.ids)]</field>
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user_manager'))]" />
+        </record>
+
+        <record id="hr_job_positions_branch_rule" model="ir.rule">
+            <field name="name">HR Jobs Positions Branch</field>
+            <field name="model_id" ref="model_hr_job" />
+            <field name="global" eval="True" />
+            <field name="domain_force">
+                 ['|',('branch_id','=',False),('branch_id','=',user.branch_id.id)]</field>
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]" />
+        </record>
+
+<!--         HR Department -->
+        <record id="hr_department_branchs_managers_rules" model="ir.rule">
+            <field name="name">HR Departments Branchs Manager</field>
+            <field name="model_id" ref="model_hr_department" />
+            <field name="global" eval="True" />
+            <field name="domain_force">[('branch_id','in',user.branch_ids.ids)]</field>
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user_manager'))]" />
+        </record>
+
+        <record id="hr_department_branchs_rules" model="ir.rule">
+            <field name="name">HR Department Branchs</field>
+            <field name="model_id" ref="model_hr_department" />
+            <field name="global" eval="True" />
+            <field name="domain_force">
+               ['|',('branch_id','=',False),('branch_id','=',user.branch_id.id)]</field>
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]" />
+        </record>
+        <record id="hr_employee_branchs_managers_rule" model="ir.rule">
+            <field name="name">Employee Branchs Managers</field>
+            <field name="model_id" ref="model_hr_employee"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('branch_id','in',user.branch_ids.ids)]</field>
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user_manager'))]"/>
+        </record>
+
+        <record id="hr_employee_branchs_rules" model="ir.rule">
+            <field name="name">Employees Branchs</field>
+            <field name="model_id" ref="model_hr_employee"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('branch_id','=',False),('branch_id','=',user.branch_id.id)]</field>
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]"/>
+        </record>
+        <!-- HR Contract -->
+        <record id="hr_contract_branchs_manager_rule" model="ir.rule">
+            <field name="name">HR Contracts Branch Manager</field>
+            <field name="model_id" ref="model_hr_contract" />
+            <field name="global" eval="True" />
+            <field name="domain_force">[('branch_id','in',user.branch_ids.ids)]</field>
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user_manager'))]" />
+        </record>
+
+        <record id="hr_contracts_branch_rule" model="ir.rule">
+            <field name="name">HR Contracts Branch</field>
+            <field name="model_id" ref="model_hr_contract" />
+            <field name="global" eval="True" />
+            <field name="domain_force">
+                ['|',('branch_id','=',False),('branch_id','=',user.branch_id.id)]</field>
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]" />
+        </record>
+    </data>
+</odoo>

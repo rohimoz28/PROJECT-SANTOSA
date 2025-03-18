@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <record id="hr_employeement_details_form" model="ir.ui.view">
+            <field name="name">hr.employeement.details.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id"  ref="hr.view_employee_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='job_id']" position="attributes">
+                    <attribute name="options">{'no_create': True,'no_quick_create': True}</attribute>
+                </xpath>
+                <xpath expr="//page[@name='personal_information']" position="after">
+                    <page name="employement_details" string="Employment Details">
+
+                                <div class="o_row">
+                                    <label for="periode_probation"/>
+                                    <div class="o_row">
+                                        <field name="periode_probation" readonly="job_status !='permanent'"/>
+                                    </div>
+                                    <label for="ext_probation"/>
+                                    <div class="o_row">
+                                        <field name="ext_probation" readonly="job_status !='permanent'"/>
+                                    </div>
+                                    <label for="confirm_probation"/>
+                                    <div class="o_row">
+                                        <field name="confirm_probation"/>
+                                    </div>
+                                </div>
+                                <div class="o_row">
+                                    <label for="retire_age"/>
+                                    <div class="o_row">
+                                        <field name="job_status" invisible="1"/>
+                                        <field name="retire_age" readonly="job_status =='contract'"/>
+                                    </div>
+                                    <label for="pension_date" string="End Of Pension Date"/>
+                                    <div class="o_row">
+                                        <field name="pension_date" force_save="1"/>
+                                    </div>
+                                </div>
+                                <div class="o_row">
+                                    <label for="bond_service"/>
+                                    <div class="o_row">
+                                        <field name="bond_service"/>
+                                    </div>
+                                    <label for="service_from"/>
+                                    <div class="o_row">
+                                        <field name="service_from" readonly="bond_service == True"/>
+                                    </div>
+                                    <label for="service_to"/>
+                                    <div class="o_row">
+                                        <field name="service_to" readonly="bond_service == True"/>
+                                    </div>
+                                </div>
+
+                                <div class="o_row">
+                                    <label for="is_pinalty"/>
+                                    <div class="o_row">
+                                        <field name="is_pinalty"/>
+                                    </div>
+                                    <label for="pinalty_bs"/>
+                                    <div class="o_row">
+                                        <field name="pinalty_bs"/>
+                                    </div>
+                                    <label for="pinalty_amount"/>
+                                    <div class="o_row">
+                                        <field name="pinalty_amount"/>
+                                    </div>
+                                </div>
+
+                        <div class="o_row">
+                                <div class="col-12">
+                                    <label for="resign_notice"/>
+                                    <div class="o_row">
+                                        <field name="resign_notice"/>
+                                    </div>
+                                 </div>
+                        </div>
+                         <notebook>
+                             <page name="employee_asset" string="Asset / Benefit">
+                                 <field name="asset_ids">
+                                     <tree editable="bottom">
+                                         <field name="employee_id" column_invisible="True"/>
+                                        <field name="asset_name"/>
+                                        <field name="asset_number"/>
+                                         <!-- komentar rohim -->
+                                        <!-- <field name="product_template_id"/> -->
+                                        <!-- <field name="stock_lot_id" domain="[('product_id', '=', product_id)]"/> -->
+                                        <field name="asset_qty"/>
+                                        <field name="uom"/>
+                                        <!-- <field name="received_date"/> -->
+                                        <!-- <field name="no_ref"/> -->
+                                        <!-- <field name="returned_date"/> -->
+                                        <field name="keterangan"/>
+                                        <!-- <field name="product_id" invisible="1"/> -->
+                                        <!-- END komentar rohim -->
+                                     </tree>
+                                 </field>
+                             </page>
+                         </notebook>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <record id="territory_area_code_form" model="ir.ui.view">
+            <field name="name">territory.area.code.form</field>
+            <field name="model">res.territory</field>
+            <field name="inherit_id" ref="base_territory.res_territory_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('oe_title')]" position="replace">
+                    <div class="oe_title">
+                         <label for="area_code" class="oe_edit_only" />
+                        <h1>
+                            <field name="area_code"  class="oe_edit_only" />
+                        </h1>
+                         <label for="name" class="oe_edit_only" />
+                        <h1>
+                            <field name="name"  class="oe_edit_only" />
+                        </h1>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+        <record id="territory_area_code_tree" model="ir.ui.view">
+            <field name="name">territory.area.code.tree</field>
+            <field name="model">res.territory</field>
+            <field name="inherit_id" ref="base_territory.res_territory_tree_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="before">
+                    <field name="area_code"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

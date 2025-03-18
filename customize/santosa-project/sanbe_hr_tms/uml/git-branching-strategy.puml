@@ -1,0 +1,45 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+participant Developer as dev
+autonumber
+box "Local Repository"
+participant Main as localmain
+participant Feature as localfeature
+end box
+
+box "Remote Repository" #LightBlue
+participant Main as remotemain
+participant Feature as remotefeature
+end box
+
+remotemain -> dev : Get the project
+localmain --> localfeature : create feature branch
+localfeature -> remotefeature : push feature
+
+remotefeature --> remotemain : create MR
+alt MR Accepted
+remotemain --> remotefeature !! : delete
+else MR Ignored
+remotemain --> remotefeature : give reason
+end
+
+dev -> remotemain : check MR
+alt MR Accepted
+localmain --> localfeature !! : delete
+localmain -> remotemain : get updated project
+else MR Ignored
+localfeature -> remotefeature : push feature fixed
+end
+'actor User
+'participant "Web Application" as WebApp
+'participant "Database" as DB
+'
+'User -> WebApp: Request data
+'alt Data found
+'    WebApp -> DB: Retrieve data
+'    DB --> WebApp: Return data
+'    WebApp --> User: Display data
+'else Data not found
+'    WebApp --> User: Show error message
+'end
+@enduml

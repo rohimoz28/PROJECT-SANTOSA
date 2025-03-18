@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!--Extends the 'hr.employee' form view to include the 'resign_date' field-->
+    <record id="inherit_view_employee_form" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.hr.pam</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="sanbe_hr_extended.hr_employee_extended_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='address_id']" position="after">
+                <label for="street" string="Work Address"/>
+                    <div class="o_address_format">
+                        <field name="street" nolabel='1' invisible="not street"/>
+                        <field name="street2" nolabel='1' invisible="not street2"/>
+                        <field name="city" nolabel='1' invisible="not city"/>
+                        <field name="state_id" nolabel='1' invisible="not state_id"/>
+                        <field name="zip" nolabel='1' invisible="not zip"/>
+                        <field name="country_id" nolabel='1' options="{'no_create': True, 'no_open': True}" invisible="not country_id"/>
+                    </div>
+            </xpath>
+            <xpath expr="//field[@name='address_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='allowance_nightshift_amount']" position="after">
+                <field name="workingday" />
+             </xpath>
+             <xpath expr="//field[@name='allowance_ot']" position="replace">
+                <field name="allowance_ot" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='allowance_ot']" position="after">
+                <field name="allowance_ot_flat" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='ptkp']" position="replace">
+                <field name="ptkp" widget="radio" options="{'horizontal': true}"/>
+            </xpath>
+            <xpath expr="//field[@name='no_sim']" position="after">
+                <field name="exp_sim_no"/>
+            </xpath>
+            <xpath expr="//field[@name='allowance_ot_flat']" position="after">
+                <field name="allowance_ot1" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='allowance_ot1']" position="after">
+                <field name="overtime" widget="radio" options="{'horizontal': true}"/>
+            </xpath>
+            <xpath expr="//field[@name='overtime']" position="after">
+                <field name="leave_calculation" widget="radio" options="{'horizontal': true}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

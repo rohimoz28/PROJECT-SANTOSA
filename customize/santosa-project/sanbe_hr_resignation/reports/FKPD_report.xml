@@ -1,0 +1,639 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <data>
+
+    <record id="paperformat_fkpd_report" model="report.paperformat">
+      <field name="name">Print Out PDF FKPD</field>
+      <field name="default" eval="True"/>
+      <field name="format">A4</field>
+      <field name="orientation">Portrait</field>
+      <field name="margin_top">10</field>
+      <field name="margin_bottom">15</field>
+      <field name="margin_left">7</field>
+      <field name="margin_right">7</field>
+      <field name="header_line" eval="True"/>
+      <field name="header_spacing">35</field>
+      <field name="dpi">90</field>
+    </record>
+
+    <record id="action_print_fkpd" model="ir.actions.report">
+      <field name="name">FKPD Form Report</field>
+      <field name="model">hr.resignation</field>
+      <field name="report_type">qweb-pdf</field>
+      <field name="report_name">sanbe_hr_resignation.fkpd_template</field>
+      <field name="report_file">sanbe_hr_resignation.fkpd_template</field>
+      <field name="print_report_name">'%s - %s' % (object.employee_name, object.name)</field>
+      <field name="binding_model_id" ref="model_hr_resignation"></field>
+      <field name="binding_type">report</field>
+      <field name="paperformat_id" ref="sanbe_hr_resignation.paperformat_fkpd_report" />
+    </record>
+
+    <template id="fkpd_template">
+      <t t-call="web.html_container">
+        <style>
+          .logo {
+            margin-left: 20px; 
+          }
+          .title {
+            width: 60%; 
+            text-align: 
+            left; padding: 0;
+          }
+          .metadata-table {
+            font-size: 9px;
+            line-height: 1.5;
+            width: 100%;
+            border: none;
+            border-collapse: collapse; 
+            text-align: right;
+            font-family: 'Times New Roman', Times, serif;
+          }
+        </style>
+        <t t-foreach="docs" t-as="doc">
+          <t t-call="web.basic_layout">
+            <t t-set="company" t-value="res_company"/>
+            <header class="table-header">
+
+              <!-- Garis atas -->
+              <!-- <hr style="border: 1px solid black; margin-bottom: 2px;" /> -->
+              <div class="header-line" style="border-top: 1px solid black; margin-bottom: 2px;" />
+              <div class="header-line" style="border-top: 1px solid black; margin-bottom: 10px;" />
+             
+              <table style="width: 100%; table-layout: fixed; margin-bottom: 5px;">
+                <tr>
+                  <!-- Logo Perusahaan -->
+                  <td class="logo" style="width: 25%; text-align: left; padding: 0;">
+                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo" style="max-width: 130px; margin-left: 20px;"/>
+                  </td>
+                  <!-- Judul Tengah -->
+                  <td class="title" style="width: 50%; text-align: center; padding: 0;">
+                    <div style="font-size: 10pt; font-weight: bold; font-family: 'Times New Roman', Times, serif; line-height: 1.3;">
+                      FORM KONFIRMASI PERSETUJUAN<br/>
+                      PENGUNDURAN DIRI KARYAWAN<br/>
+                      KANTOR PUSAT
+                    </div>
+                  </td>
+                  <!-- Metadata -->
+                  <td style="width: 25%; text-align: right; padding: 0;">
+                    <table class="metadata-table" style="font-size: 8px; font-family: 'Times New Roman', Times, serif; line-height: 1; width: 100%; border: 1px solid black;  padding: 5px; text-align: left;">
+                      <tbody>
+                        <tr>
+                          <td class="label-cell" style="padding-right: 5px; text-align: left;">No</td>
+                          <td class="value-cell" style="text-align: left;">: PGA-PR/FOR/HO/002</td>
+                        </tr>
+                        <tr>
+                          <td class="label-cell" style="padding-right: 5px; text-align: left; border: none;">Revision</td>
+                          <td class="value-cell" style="text-align: left;">: 00</td>
+                        </tr>
+                        <tr>
+                          <td class="label-cell" style="padding-right: 5px; text-align: left; border: none;">Effective Date</td>
+                          <td class="value-cell" style="text-align: left;">: 03 October 2024</td>
+                        </tr>
+                        <tr>
+                          <td style="padding-right: 5px; text-align: left; padding: 0; border: none;">Page</td>
+                          <td style="text-align: left; padding: 0; border: none;">: 1 of 1</td>  
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td> 
+                </tr>
+              </table>
+              <div class="header-line" style="border-top: 1px solid black; margin-bottom: 2px;" />
+              <div class="header-line" style="border-top: 1px solid black; margin-bottom: 8px;" />
+            </header>
+
+            <!-- <br /> -->
+
+            <div class="content">
+              <!-- Bagian Kiri: Form Pengunduran Diri -->
+              <div style="width: 55%; float: left;">
+                <div style="font-size: 9px; font-family: 'Times New Roman', Times, serif;">Mohon persetujuan pengunduran diri saya :</div>
+                <table class="table-content-left" style="width: 100%; font-size: 9px; margin-top: 5px; font-family: 'Times New Roman', Times, serif;">
+                  <tbody>
+                    <tr>
+                      <td>Nama</td>
+                      <td>: <span>......................................................</span></td>
+                    </tr>
+                    <tr>
+                      <td>NIK</td>
+                      <td>: <span>......................................................</span></td>
+                    </tr>
+                    <tr>
+                      <td>Alamat rumah saat ini</td>
+                      <td>: <span>......................................................</span></td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td><span>......................................................</span></td>
+                    </tr>
+                    <tr>
+                      <td>Jabatan</td>
+                      <td>: <span>......................................................</span></td>
+                    </tr>
+                    <tr>
+                      <td>Departemen / No. Exit</td>
+                      <td>: <span>......................................................</span></td>
+                    </tr>
+                    <tr>
+                      <td>Alamat email kantor</td>
+                      <td>: <span>......................................................</span></td>
+                    </tr>
+                    <tr>
+                      <td>Tgl Mulai Bekerja</td>
+                      <td>: <span>......................................................</span></td>
+                    </tr>
+                    <tr>
+                      <td>Tgl Rencana Pengunduran Diri</td>
+                      <td>: <span>......................................................</span></td>
+                    </tr>
+                    <tr>
+                      <td>Alasan Pengunduran Diri</td>
+                      <td>: <span>......................................................</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- Bagian Kanan: Keterangan Manager -->
+              <div style="width: 45%; float: right;">
+                <div style="font-size: 9px; font-family: 'Times New Roman', Times, serif;">Keterangan Manager Departemen terkait :</div>
+                <table class="table-content-right" style="width: 100%; border: 1px solid black; font-size: 9px; margin-top: 5px; font-family: 'Times New Roman', Times, serif;">
+                  <tbody>
+                    <tr>
+                      <td>1) penutupan MyGroup, tgl</td>
+                      <td>: <span>......................................................</span></td>
+                    </tr>
+                    <tr>
+                      <td>2) Inventaris</td>
+                      <td>: <span>......................................................</span></td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td><span>......................................................</span></td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td><span>......................................................</span></td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td><span>......................................................</span></td>
+                    </tr>
+                    <tr>
+                      <td>3)	Kewajiban Lain</td>
+                      <td>: <span>......................................................</span></td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td><span>......................................................</span></td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td><span>......................................................</span></td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td><span>......................................................</span></td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td><span>......................................................</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div style="clear: both;"></div>
+            <br />
+
+            <!-- Tanda tangan -->
+            <table class="tanda-tangan1" style="width: 100%; text-align: center; font-size: 9px; font-family: 'Times New Roman', Times, serif;">
+              <tr>  
+                <td style="width: 33.3%;">Hormat saya,</td>
+                <td style="width: 33.3%;">Diterima Atasan Langsung ybs. :</td>
+                <td style="width: 33.3%;">Manager Dept. ybs.</td>
+              </tr>
+              <tr>
+                <td></td>
+                <td style="text-align: centrer;">Tgl. :.......................................</td>
+                <td style="text-align: centrer;">Tgl. :.......................................</td>
+              </tr>
+              <tr>
+                <td style="padding: 25px 0"></td>
+                <td style="padding: 25px 0"></td>
+                <td style="padding: 25px 0"></td>
+              </tr>
+              <tr>
+                <td style="white-space: pre;">(                                             )</td>
+                <td style="white-space: pre;">(                                             )</td>
+                <td style="white-space: pre;">(                                             )</td>
+              </tr>
+            </table>
+
+            <br />
+
+            <!-- Note -->
+            <table style="font-size: 9px; font-family: 'Times New Roman', Times, serif; margin-bottom: 8px;">
+              <tr>
+                <td>Note :</td>
+              </tr>
+              <tr>
+                <td>1) Surat Pengunduran Diri <strong>WAJIB</strong> dilampirkan</td>
+              </tr>
+              <tr>
+                <td>2) Atasan Karyawan Terkait <strong>WAJIB</strong> mengeluarkan Karyawan Terkait dari grup WhatsApp / grup lainnya yang berhubungan dengan urusan Perusahaan</td>
+              </tr>
+            </table>
+
+            <!-- <br /> -->
+
+            <!-- Detail table -->
+            <table class="detail-table" style="width: 100%; border: 1px solid black; border-collapse: collapse; font-size: 9px; font-family: 'Times New Roman', Times, serif; margin-bottom: 8px;">
+              <tr>
+                <td colspan="2" style="border: 1px solid black; padding: 3px; line-height: 1;">
+                  Tidak Disetujui /  Ditunda tanggal : <br/>
+                  Alasan: ....................................................................................................................................................................................................
+                </td>
+              </tr>
+              <!-- Personnel & GA Manager -->
+              <tr>
+                <td style="width: 70%; border: 1px solid black;">
+                  <table style="width: 100%; padding: 3px; vertical-align: top;">
+                    <tr>
+                      <td>Status Karyawan</td>
+                      <td>: <span>TETAP / PKWT (Coret Salah Satu), PKWT s/d tgl : ............................</span></td>
+                    </tr>
+                    <tr>
+                      <td>Ikatan Dinas</td>
+                      <td>: ....... tahun s/d ..............................</td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td>Reward &amp; Penalty : ........................</td>
+                    </tr>
+                    <tr>
+                      <td>Tgl. Serah Terima Inventaris Umum</td>
+                      <td>: ......................................................</td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2">
+                        Karyawan Terkait <strong>BERMASALAH</strong> / <strong>TIDAK BERMASALAH</strong> (Coret Salah Satu)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Note</td>
+                      <td>: ..............................................................................................................</td>
+                    </tr>
+                  </table> 
+                </td>
+                <td style="width: 30%; border: 1px solid black;">
+                  <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                      <td style="text-align: center; border-bottom: 1px solid black; padding: 3px;">
+                        <strong>Personnel &amp; GA Manager</strong>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: left; padding: 5px;">
+                        Tgl :
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: center;">
+                        (..............................................)
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <!-- ASFAM#2 (CCD) -->
+              <tr>
+                <td style="width: 70%; border: 1px solid black;">
+                  <table style="width: 100%; padding: 3px; vertical-align: top;">
+                    <tr>
+                      <td>Untuk Personil Marketing</td>
+                      <td>: Rp ...............................................................</td>
+                    </tr>
+                    <tr>
+                      <td>PUM Tersisa</td>
+                      <td>: Rp ...............................................................</td>
+                    </tr>
+                    <tr>
+                      <td>Penyelesaian PUM</td>
+                      <td>: ..............................................................................................................</td>
+                    </tr>
+                    <tr>
+                      <td><span style="color: red;">(wajib diisi)</span></td>
+                      <td>: ..............................................................................................................</td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2">
+                        Karyawan Terkait <strong>BERMASALAH</strong> / <strong>TIDAK BERMASALAH</strong> (Coret Salah Satu)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Note</td>
+                      <td>: ..............................................................................................................</td>
+                    </tr>
+                  </table> 
+                </td>
+                <td style="width: 30%; border: 1px solid black;">
+                  <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                      <td style="text-align: center; border-bottom: 1px solid black; padding: 3px;">
+                        <strong>ASFAM#2 (CCD)</strong>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: left; padding: 5px;">
+                        Tgl :
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: center;">
+                        (..............................................)
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <!-- PIC Payroll -->
+              <tr>
+                <td style="width: 70%; border: 1px solid black;">
+                  <table style="width: 100%; padding: 3px; vertical-align: top;">
+                    <tr>
+                      <td>Sisa Pinjaman BPR</td>
+                      <td>: Rp ...............................................................</td>
+                    </tr>
+                    <tr>
+                      <td>Penyelesaian</td>
+                      <td>: ..................................................................</td>
+                    </tr>
+                    <tr>
+                      <td><span style="color: red;">(wajib diisi)</span></td>
+                      <td>: ..............................................................................................................</td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td>Sisa BPK</td>
+                      <td>: Rp ...............................................................</td>
+                    </tr>
+                    <tr>
+                      <td>Penyelesaian</td>
+                      <td>: ..................................................................</td>
+                    </tr>
+                    <tr>
+                      <td><span style="color: red;">(wajib diisi)</span></td>
+                      <td>: ..............................................................................................................</td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2">
+                        Karyawan Terkait <strong>BERMASALAH</strong> / <strong>TIDAK BERMASALAH</strong> (Coret Salah Satu)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Note</td>
+                      <td>: ..............................................................................................................</td>
+                    </tr>
+                  </table> 
+                </td>
+                <td style="width: 30%; border: 1px solid black;">
+                  <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                      <td style="text-align: center; border-bottom: 1px solid black; padding: 3px;">
+                        <strong>PIC Payroll</strong>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: left; padding: 5px;">
+                        Tgl :
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: center;">
+                        (..............................................)
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <!-- IT Manager -->
+              <tr>
+                <td style="width: 70%; border: 1px solid black;">
+                  <table style="width: 100%; padding: 3px; vertical-align: top;">
+                    <tr>
+                      <td colspan="2">
+                        <span style="color: red;">(Diisi oleh Atasan yang Bersangkutan)</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2">
+                        &#9744; Laptop (beri checklist jika Karyawan Terkait memiliki pinjaman Aset Perusahaan berupa Laptop)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2">Pilih Salah Satu :</td>
+                    </tr>
+                    <tr colspan="3">
+                      <td>&#9744; Aset diserahterimakan kepada</td>
+                      <td>: ..............................................................................................................</td>
+                      <td>NIK : ..................................</td>
+                    </tr>
+                    <tr>
+                      <td>&#9744; Dikembalikan ke IT, pada tgl</td>
+                      <td>: ..............................................................................................................</td>
+                    </tr>
+                    <tr>
+                      <td colspan="2">
+                        Tanggal IT menonaktifkan sementara email Karyawan Terkait : ........................................
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2">
+                        <i>Jika email kantor Karyawan Terkait akan diaktifkan kembali, silakan hubungi IT</i>
+                      </td>
+                    </tr>
+                  </table> 
+                </td>
+                <td style="width: 30%; border: 1px solid black;">
+                  <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                      <td style="text-align: center; border-bottom: 1px solid black; padding: 3px;">
+                        <strong>IT Manager</strong>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: left; padding: 5px;">
+                        Tgl :
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: center;">
+                        (..............................................)
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <!-- CCU Manager -->
+              <tr>
+                <td style="width: 70%; border: 1px solid black;">
+                  <table style="width: 100%; padding: 3px; vertical-align: top;">
+                    <tr>
+                      <td colspan="2">
+                        Pemeriksaan Akhir
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2">
+                        Karyawan Terkait <strong>BERMASALAH</strong> / <strong>TIDAK BERMASALAH</strong> (Coret Salah Satu)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Note</td>
+                      <td>: ..............................................................................................................</td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td>: ..............................................................................................................</td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td>: ..............................................................................................................</td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2">
+                        <i>Jika telah menandatangani form ini, mohon mengirimkan <strong>FORM ASLI</strong> ke P&amp;GA</i>  
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+                <td style="width: 30%; border: 1px solid black;">
+                  <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                      <td style="text-align: center; border-bottom: 1px solid black; padding: 3px;">
+                        <strong>CCU Manager</strong>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: left; padding: 5px;">
+                        Tgl :
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td style="white-space: pre;"> </td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: center;">
+                        (..............................................)
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+            <div style="color: red; font-size: 9px;">P&amp;GA <u>WAJIB</u> menyerahkan <u>Memo Perhitungan Hari Kerja Terakhir</u> dan <u>FKPD</u> ke PIC Payroll Karyawan Terkait</div>
+          </t>
+        </t>
+      </t>
+    </template>
+  </data>    
+</odoo>

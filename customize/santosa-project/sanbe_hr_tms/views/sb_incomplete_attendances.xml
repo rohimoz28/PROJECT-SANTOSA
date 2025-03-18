@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="sb_incomplete_attendances_form_view" model="ir.ui.view">
+            <field name="name">sb.incomplete.attendances.form</field>
+            <field name="model">sb.incomplete.attendances</field>
+            <field name="arch" type="xml">
+                <form string="Data Absensi Tidak Lengkap" create="0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="period_id" readonly="1"/>
+                                <field name="branch_id" readonly="1"/>
+                                <field name="area_id" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="state" readonly="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="sb_incomplete_attendance_details_id" string="Incomplete Attendance Details">
+                                <!-- override by view sb_incomplete_attendance_details -->
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="sb_incomplete_attendances_tree_view" model="ir.ui.view">
+            <field name="name">sb.incomplete.attendances.tree</field>
+            <field name="model">sb.incomplete.attendances</field>
+            <field name="arch" type="xml">
+                <tree string="Data Absensi Tidak Lengkap" create="0">
+                    <field name="period_id"/>
+                    <field name="area_id"/>
+                    <field name="branch_id"/>
+                    <field name="department_id"/>
+                    <!-- <field name="state"/> -->
+                </tree>
+            </field>
+        </record>
+
+        <record id="sb_incomplete_attendances_view_search" model="ir.ui.view">
+            <field name="name">sb.incomplete.attendances.view.search</field>
+            <field name="model">sb.incomplete.attendances</field>
+            <field name="arch" type="xml">
+                <search string="Incomplete Attendances">
+                    <!-- <field name="employee_id" filter_domain="[('employee_id', 'child_of', self)]"/> -->
+                    <!-- <field name="tmsentry_ids" filter_domain="[('tmsentry_ids', 'child_of', self)]"/> -->
+                    <!-- <field name="nik" string="NIK"/> -->
+                    <!-- <filter string="Department" name="department_id" -->
+                    <!--         context="{'group_by':'department_id'}"/> -->
+                    <filter string="Business Unit" name="branch_id"
+                            context="{'group_by':'branch_id'}"/>
+                    <filter string="Department" name="department_id"
+                            context="{'group_by':'department_id'}"/>
+                    <!-- <filter string="Employee" name="employee_id" -->
+                    <!--         context="{'group_by':'employee_id'}"/> -->
+                </search>
+            </field>
+        </record>
+
+        <record id="action_sb_incomplete_attendances" model="ir.actions.act_window">
+            <field name="name">Incomplete Attendance</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sb.incomplete.attendances</field>
+            <!-- <field name="view_type">form</field> -->
+            <field name="view_mode">tree,form</field>
+            <field name="context">
+                {'search_default_branch_id':1, 'search_default_department_id':1}
+            </field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Report Incomplete Attendance
+                </p>
+                <p>
+                    Create New Incomplete Attendance
+                </p>
+            </field>
+        </record>
+
+        <!-- <menuitem name="ModelTitle" id="ModelName_menu" parent="your_root_menu" action="ModelName_act_window"/> -->
+
+    </data>
+</odoo>

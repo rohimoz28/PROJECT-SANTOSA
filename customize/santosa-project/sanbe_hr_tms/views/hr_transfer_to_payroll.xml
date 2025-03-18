@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_hr_transfer_payroll" model="ir.ui.view">
+        <field name="name">Transfer To Payroll</field>
+        <field name="model">hr.transfer.payroll</field>
+        <field name="arch" type="xml">
+            <form string="HR Transfer To Payroll" >
+                <div>
+                    <group col="2">
+                        <group>
+                            <field name="area_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" />
+                            <field name="branch_ids" invisible="1"/>
+                            <field name="branch_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" />
+                            <field name="department_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" />
+                        </group>
+                        <group col="2">
+                            <group>
+                                <field name="periode_from"/>
+                            </group>
+                            <group>
+                                <field name="periode_to"/>
+                            </group>
+                        </group>
+                    </group>
+                </div>
+                <notebook>
+                        <page name="transfer_payroll_details" string="Details Transfer Payroll">
+                            <field name="transfer_payroll_ids">
+                                <tree create="False" edit="False" delete="False">
+                                    <field name="transfer_id" column_invisible="1"/>
+                                    <field name="nik"/>
+                                    <field name="employee_id"/>
+                                    <field name="department_id"/>
+                                    <field name="attendee_status"/>
+                                    <field name="pg_attendee"/>
+                                    <field name="aot1"/>
+                                    <field name="aot2"/>
+                                    <field name="aot3"/>
+                                    <field name="aot4"/>
+                                    <field name="apat"/>
+                                    <field name="ansh"/>
+                                    <field name="status"/>
+                                    <field name="is_done"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                <footer>
+                    <button name="process_data" type="object"
+                        id="process_data"
+                        string="Process"
+                        class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_view_hr_transfer_payroll" model="ir.actions.act_window">
+        <field name="name">Transfer To Payroll</field>
+        <field name="res_model">hr.transfer.payroll</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,0 +1,48 @@
+<odoo>
+    <!-- Action for Patient -->
+    <record id="account.res_partner_action_customer" model="ir.actions.act_window">
+        <field name="name">Penjamin</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('customer_rank', '>', 0)]</field>
+        <field name="context">{"default_is_customer": 1, "search_default_customer": 1, "res_partner_search_mode": "customer", "default_is_company": True, "default_customer_rank": 1, "group_by": ["tipe_customer"]}</field>
+    </record>
+
+    <!-- Action for Insurance -->
+    <!-- <record id="account.res_partner_action_insurance" model="ir.actions.act_window">
+        <field name="name">Insurance</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('customer_rank', '>', 0), ('tipe_customer', '=', 'Asuransi')]</field>
+        <field name="context">{'default_is_customer': 1, 'search_default_customer': 1, 'res_partner_search_mode': 'customer', 'default_is_company': True, 'default_customer_rank': 1}</field>
+    </record> -->
+
+    <!-- Action for Vendors -->
+    <record id="account.res_partner_action_supplier" model="ir.actions.act_window">
+        <field name="name">Vendors</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('supplier_rank', '>', 0)]</field>
+        <field name="context">{'default_is_supplier': 1, 'search_default_supplier': 1, 'res_partner_search_mode': 'supplier', 'default_is_company': True, 'default_supplier_rank': 1}</field>
+
+    </record>
+
+    <!-- Action for Dokter Mitra -->
+    <record id="action_dokter_mitra" model="ir.actions.act_window">
+        <field name="name">Dokter</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('is_dokter_mitra', '=', True)]</field>
+        <field name="context">{'default_is_dokter_mitra': 1}</field>
+    </record>
+
+    <!-- Menu items -->
+    <!-- komentar rohim -->
+    <!-- <menuitem id="account.menu_account_customer" name="Penjamin" parent="santosa_finance.masterdata_sanfi_root" action="account.res_partner_action_customer"/> -->
+    <!-- END komentar rohim -->
+    <!-- <menuitem id="account.menu_account_customer" name="x" parent="santosa_finance.masterdata_sanfi_root" action="account.res_partner_action_customer"/> -->
+    <!-- komentar rohim -->
+    <!-- <menuitem id="account.menu_account_supplier" name="Vendors" parent="santosa_finance.masterdata_sanfi_root" groups="santosa_finance.group_admin_sanfi" action="account.res_partner_action_supplier"/> -->
+    <!-- <menuitem id="menu_dokter_mitra" name="Dokter" parent="santosa_finance.masterdata_sanfi_root" action="action_dokter_mitra"/> -->
+    <!-- END komentar rohim -->
+</odoo>

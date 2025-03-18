@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_emp_tracking,access.hr.emp.tracking,model_hr_employment_tracking,base.group_user,1,1,1,1
+
+access_hr_emp_log,access.hr.emp.log,model_hr_employment_log,base.group_user,1,1,1,1
+
+
+access_hr_emp_tracking_details,access.hr.emp.tracking.details,model_hr_employment_trackingdetails,base.group_user,1,1,1,1

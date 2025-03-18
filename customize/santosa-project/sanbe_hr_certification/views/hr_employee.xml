@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <record id="hr_employee_certification_form" model="ir.ui.view">
+            <field name="name">hr.employee.certification.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='personal_information']" position="after">
+                    <page name="certificate_details" string="Certification">
+                        <field name="certificate_ids" context="{'tree_view_ref': 'sanbe_hr_certification.view_hr_certificated_tree', 'form_view_ref': 'sanbe_hr_certification.view_hr_certificate_form'}"/>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

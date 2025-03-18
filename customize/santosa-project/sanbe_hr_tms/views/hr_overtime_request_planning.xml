@@ -1,0 +1,171 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <record id="hr_tms_overtime_planning_form" model="ir.ui.view">
+            <field name="name">hr.overtime.planning.form</field>
+            <field name="model">hr.overtime.planning</field>
+            <field name="arch" type="xml">
+                <form string="Overtime Request" create="0">
+                <!-- <sheet> -->
+                    <header>
+                        <button string="Approved By HCM" name="btn_approved" type="object" class="oe_highlight" invisible="state != 'approved_pmr'" groups="sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
+                        <button string="Draft" name="btn_backdraft" type="object" invisible="state in ('draft', 'approved_mgr', 'approved_pmr')" groups="sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
+                        <button string="Approved By Manager" name="btn_approved_mgr" type="object" class="oe_highlight" invisible="state != 'draft'" groups="sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
+                        <button string="Approved By Plan Manager" name="btn_approved_pmr" type="object" class="oe_highlight" invisible="state != 'approved_mgr'" groups="sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
+                        <button string="Reject" name="btn_reject" type="object" class="btn-danger" invisible="state in ('reject', 'approved')" groups="sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
+                        <button name="btn_print_pdf" type="object" class="btn-bf" invisible="state in ('reject')" groups="sanbe_hr_tms.module_sub_category_overtime_request_manager">
+                            <i class="fa fa-print"/> Print PDF
+                        </button>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,done,reject"/>
+                    </header>
+                    <!--<sheet>-->
+                    <group string="TMS Overtime Planning Entry" name="entry_planning">
+                        <group>
+                            <!-- <field name="area_id"
+                                   options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
+                                   required="1"
+                                   readonly="state == 'approved' or state == 'done'"  /> -->
+                            <field name="area_id"
+                                   options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
+                                   required="1"
+                                   readonly="state == 'approved' or state == 'done'"  />
+                            <field name="branch_ids" invisible="1"/>
+                            <field name="alldepartment" invisible="1"/>
+                            <!-- <field name="branch_id"
+                                   options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
+                                   readonly="state == 'approved' or state == 'done'" /> -->
+                            <field name="branch_id"
+                                   options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
+                                   readonly="state == 'approved' or state == 'done'" />
+                            <field name="department_id"
+                                   options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
+                                   readonly="state == 'approved' or state == 'done'"/>
+                            <field name="approve1" readonly="state == 'done'"/>
+                            <field name="approve2" readonly="state == 'done'"/>
+                            <field name="approve3" readonly="state == 'done'"/>
+                        </group>
+                        <group>
+                            <field name="name"/>
+                            <field name="request_date" readonly="state == 'done'"/>
+                            <field name="periode_id" domain="[('state_process', '=', 'running')]"  readonly="state == 'approved' or state == 'done'" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"/>
+                            <!--field name="employee_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"/-->
+                            <field name="periode_from" readonly="state == 'done'"/>
+                            <field name="periode_to" readonly="state == 'done'"/>
+                        </group>
+                        <!-- <group>
+                            <field name="approve1" readonly="state == 'done'"/>
+                            <field name="approve2" readonly="state == 'done'"/>
+                            <field name="approve3" readonly="state == 'done'"/>
+                        </group> -->
+                        <group>
+                            <button name="action_search_employee" string="Search Employee"
+                                    type="object" class="oe_highlight" data-hotkey="q"
+                                    invisible="state == 'approved' or state == 'done'"/>
+                            <button name="action_generate_ot" string="Generate OT Request"
+                                    type="object" class="oe_highlight" data-hotkey="q"
+                                    invisible="state == 'approved' or state == 'done'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Request" name="overtime_request">
+                            <field name="hr_ot_planning_ids" readonly="state == 'approved' or state == 'done'"
+                                   context="{'default_area_id': area_id, 'default_branch_id': branch_id, 'default_department_id': department_id}">
+                                <tree editable="bottom">
+                                    <field name="ot_type" optional="show"/>
+                                    <field name="planning_id" column_invisible="1"/>
+                                    <field name="employee_ids" column_invisible="1"/>
+                                    <field name="employee_id"
+                                           options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" optional="show"/>
+                                    <field name="nik" readonly="1" force_save="1" optional="show"/>
+                                    <field name="plann_date_from" widget="date" optional="show"/>
+                                    <field name="plann_date_to" widget="date" optional="show"/>
+                                    <!-- <field name="ot_plann_from" widget="easy_timepicker"/>
+                                    <field name="ot_plann_to" widget="easy_timepicker"/>
+                                    <field name="approve_time_from" widget="easy_timepicker"/>
+                                    <field name="approve_time_to" widget="easy_timepicker"/> -->
+                                    <field name="ot_plann_from" widget="float_time" optional="show"/>
+                                    <field name="ot_plann_to" widget="float_time" optional="show"/>
+                                    <field name="approve_time_from" widget="float_time" optional="show"/>
+                                    <field name="approve_time_to" widget="float_time" optional="show"/>
+                                    <field name="machine" optional="show"/>
+                                    <field name="work_plann" optional="show"/>
+                                    <field name="output_plann" optional="show"/>
+                                    <field name="area_id"
+                                           options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
+                                           force_save="1" optional="show"/>
+                                    <field name="areah_id"
+                                           options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
+                                           column_invisible="1"/>
+                                    <field name="branch_ids"
+                                           options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
+                                           column_invisible="1"/>
+                                    <field name="branchh_id"
+                                           options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
+                                           column_invisible="1"/>
+                                    <field name="alldepartment"
+                                           options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
+                                           column_invisible="1"/>
+                                    <field name="departmenth_id"
+                                           options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
+                                           column_invisible="1"/>
+                                    <field name="branch_id" context="{'default_branch_id': branch_id}"
+                                           options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
+                                           force_save="1" optional="show"/>
+                                    <field name="department_id" context="{'default_department_id': department_id}"
+                                           options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
+                                           force_save="1" optional="show"/>
+                                    <field name="bundling_ot" optional="show"/>
+                                    <field name="transport" optional="show"/>
+                                    <field name="meals" optional="show"/>
+                                    <field name="meals_cash" optional="show"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <!--</sheet>-->
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                <!-- </sheet> -->
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_overtime_planning_tree" model="ir.ui.view">
+            <field name="name">hr.overtime.planning.tree</field>
+            <field name="model">hr.overtime.planning</field>
+            <field name="arch" type="xml">
+                <tree string="Overtime Request" default_order="periode_id desc">
+                    <field name="area_id" optional="show"/>
+                    <field name="name" optional="show"/>
+                    <field name="request_date" optional="show"/>
+                    <field name="state" string="Status" optional="show"/>
+                    <field name="department_id" optional="show"/>
+                    <field name="branch_id" optional="show"/>
+                    <field name="periode_id" optional="show"/>
+                    <field name="periode_from" optional="show"/>
+                    <field name="periode_to" optional="show"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="action_hr_overtime_planning" model="ir.actions.act_window">
+            <field name="name">Overtime Request</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.overtime.planning</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Overtime Request
+                </p>
+                <p>
+                    Create New Overtime Request
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

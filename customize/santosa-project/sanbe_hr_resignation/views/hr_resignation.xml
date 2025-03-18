@@ -1,0 +1,232 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <record id="action_report_paklaring" model="ir.actions.report">
+            <field name="name">Paklaring</field>
+            <field name="model">hr.resignation</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">sanbe_hr_resignation.paklaring_report</field>
+            <field name="report_file">sanbe_hr_resignation.paklaring_report</field>
+            <field name="print_report_name">('Paklaring - %s' % (object.emp_nos.name))</field>
+            <field name="binding_model_id" eval="False"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="action_report_paklaring_steril" model="ir.actions.report">
+            <field name="name">Paklaring</field>
+            <field name="model">hr.resignation</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">sanbe_hr_resignation.paklaring_report_steril</field>
+            <field name="report_file">sanbe_hr_resignation.paklaring_report_steril</field>
+            <field name="print_report_name">('Paklaring - %s' % (object.emp_nos.name))</field>
+            <field name="binding_model_id" eval="False"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="action_print_fkpd" model="ir.actions.report">
+            <field name="name">FKPD</field>
+            <field name="model">hr.resignation</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">sanbe_hr_resignation.fkpd_template</field>
+            <field name="report_file">sanbe_hr_resignation.fkpd_template</field>
+            <field name="print_report_name">('FKPD - %s' % (object.name))</field>
+            <field name="binding_model_id" eval="False"/>
+            <field name="binding_type">report</field>
+        </record>
+        
+        <record id="hr_resignation_sanbe_form" model="ir.ui.view">
+            <field name="name">hr.resignation.sanbe.form</field>
+            <field name="model">hr.resignation</field>
+            <field name="inherit_id" ref="hr_resignation.hr_resignation_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="attributes">
+                        <attribute name="js_class"></attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_reset_to_draft']" position="attributes">
+                        <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_cancel_resignation']" position="attributes">
+                        <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_reject_resignation']" position="after">
+                        <!-- FKPD button for every branch_id -->
+                        <button name="%(action_print_fkpd)d" string="Print FKPD" type="action" 
+                                groups="base.group_user" class="btn btn-info" icon="fa-print"/>    
+                        <!-- paklaring buttons -->
+                        <button name="%(action_report_paklaring)d" string="Print Paklaring" type="action" icon="fa-print"
+                                invisible="not (state == 'approved' and branch_id == 1)" groups="base.group_user" class="oe_highlight" />
+                        <button name="%(action_report_paklaring_steril)d" string="Print Paklaring" type="action" icon="fa-print"
+                                invisible="not (state == 'approved' and branch_id == 6)" groups="base.group_user" class="oe_highlight" />
+                </xpath>
+                <xpath expr="//div[hasclass('oe_title')]" position="replace">
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h2>
+                            <field name="name" readonly="1" placeholder="Transaction Number"/>
+                        </h2>
+                        <label for="letter_no"/>
+                        <h1>
+                            <field name="letter_no" readonly="state not in ['draft']" placeholder="Reference Number"/>
+                            <field name="emp_nos_ids" invisible="1"/>
+                        </h1>
+                        <label for="resignation_type"/>
+                        <!-- <h1> -->
+                            <field name="resignation_type" string="Type" required="1"
+                                   groups="hr.group_hr_user"
+                                   readonly="state not in ['draft']"/>
+                        <!-- </h1> -->
+                    </div>
+                </xpath>
+                <xpath expr="//field[@name='employee_id']" position="before">
+                    <field name="company_id" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+<!--                    <label for="emp_nos"/>-->
+<!--                    <div class="o_row">-->
+<!--                        <div class="column">-->
+                            <field name="emp_nos" readonly="state not in ['draft']" options="{'no_create': True,'no_create_edit': True}" context="{'search_by': 'No','search_by_name': False}"/>
+<!--                        </div>-->
+<!--                        <div class="column">-->
+<!--                            <button string="Search" name="button_cari_data" type="object" class="oe_highlight" invisible="state in ['posted','inactive']"/>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                </xpath>
+                <xpath expr="//field[@name='employee_id']" position="replace">
+                    <field name="employee_id" readonly="state not in ['draft']" options="{'no_create': True,'no_create_edit': True}" context="{'search_by': False,'search_by_name': 'Name'}" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='employee_id']" position="before">
+                    <field name="employee_name" string="'Employee Name" readonly="1" force_save="1"/>
+                </xpath>
+                <xpath expr="//field[@name='expected_revealing_date']" position="attributes">
+                    <attribute name="required">True</attribute>
+                </xpath>
+                <xpath expr="//field[@name='employee_id']" position="before">
+                    <field name="emp_nik" readonly="state not in ['draft']" />
+                    <field name="alldepartment" invisible="1"/>
+                    <field name="branch_ids" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='department_id']" position="before">
+                    <field name="area" readonly="state not in ['draft']" options="{'no_create': True,'no_create_edit': True}"/>
+                     <field name="branch_id" readonly="state in ['approved']" options="{'no_create': True,'no_create_edit': True}"/>
+                </xpath>
+                <xpath expr="//field[@name='joined_date']" position="before">
+                    <field name="trans_date" readonly="state in ['approved']" />
+                    <field name="trans_status" readonly="1" force_save="1"/>
+                </xpath>
+                <xpath expr="//field[@name='joined_date']" position="attributes">
+                        <attribute name="required">job_status =='permanent'</attribute>
+                        <attribute name="readonly">state in ['approved']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='employee_contract']" position="attributes">
+                    <attribute name="readonly">state in ['approved']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='notice_period']" position="attributes">
+                    <attribute name="readonly">state in ['approved']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='approved_revealing_date']" position="attributes">
+                    <attribute name="readonly">state in ['approved']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='employee_contract']" position="after">
+                    <field name="job_status" readonly="state in ['approved']" />
+                        <label for="ws_day" string="Working Service"
+                            invisible="job_status !='permanent'" />
+                    <div class="o_row" invisible="job_status !='permanent'">
+                        <label for="ws_year" string="Year" />
+                        <div class="o_row">
+                            <field name="ws_year" readonly="1" force_save="1" />
+                        </div>
+                        <label for="ws_month" string="Month" />
+                        <div class="o_row">
+                            <field name="ws_month" readonly="1" force_save="1" />
+                        </div>
+                        <label for="ws_day" string="Day" />
+                        <div class="o_row">
+                            <field name="ws_day" readonly="1" force_save="1" />
+                        </div>
+                    </div>
+                    <field name="contract_id" invisible="1"/>
+                    <field name="contract_datefrom" invisible="job_status !='contract'" readonly="1" force_save="1"/>
+                    <field name="contract_dateto" invisible="job_status !='contract'"  readonly="1" force_save="1"/>
+                        <label for="ws_day" string="Contract Service"
+                            invisible="job_status !='contract'" />
+                    <div class="o_row" invisible="job_status !='contract'">
+                        <label for="cs_year" string="Year" />
+                        <div class="o_row">
+                            <field name="cs_year" readonly="1" force_save="1" />
+                        </div>
+                        <label for="cs_month" string="Month" />
+                        <div class="o_row">
+                            <field name="cs_month" readonly="1" force_save="1" />
+                        </div>
+                        <label for="cs_day" string="Day" />
+                        <div class="o_row">
+                            <field name="cs_day" readonly="1" force_save="1" />
+                        </div>
+                    </div>
+                </xpath>
+                <xpath expr="//field[@name='notice_period']" position="after">
+                    <field name="end_contract" readonly="state in ['approved']" />
+                </xpath>
+                <xpath expr="//group/group[2]" position="after">
+                    <group name="detail_resignation">
+                        <group>
+                            <field name="is_penalty" readonly="state in ['approved']" />
+                        </group>
+                        <group>
+                            <field name="penalty_amount" readonly="state in ['approved']" />
+                        </group>
+                    </group>
+                    <group>
+                        <field name="submitted_date" readonly="state in ['approved']" />
+                        <field name="resignation_date" readonly="state in ['approved']" />
+                    </group>
+                    <group>
+                        <group>
+                             <field name="bondservice_from" readonly="state in ['approved']" />
+                        </group>
+                        <group>
+                            <field name="bondservice_to" readonly="state in ['approved']" />
+                        </group>
+                    </group>
+                    <group>
+                        <field name="effective_date" readonly="state in ['approved']" />
+                        <!--field name="penalty"/-->
+                        <field name="remarks" readonly="state in ['approved']" />
+                        <field name="images" readonly="state in ['approved']" widget="many2many_binary"/>
+                        <field name="is_blacklist" readonly="state in ['approved']" />
+                        <field name="keterangan" readonly="state in ['approved']" />
+                    </group>
+                </xpath>
+                <xpath expr="//form/sheet/group" position="after">
+                 <notebook>
+                     <page name="employee_asset" string="Employee Asset">
+                        <field name="resignation_asset_ids" readonly="state in ['approved']" >
+                            <tree editable="bottom">
+                                <field name="resignation_id" column_invisible="1"/>
+                                <field name="asset_benefit_type"/>
+                                <field name="aset_benefit_number"/>
+                                <field name="product_uom_id"/>
+                                <field name="product_qty"/>
+                                <field name="keterangan"/>
+                                <field name="is_return"/>
+                            </tree>
+                        </field>
+                       </page>
+                    </notebook>
+                </xpath>
+                 <xpath expr="//field[@name='effective_date']" position="attributes">
+                     <attribute name="required">1</attribute>
+                 </xpath>
+            </field>
+        </record>
+        <record id="hr_resignation_sanbe_tree" model="ir.ui.view">
+            <field name="name">hr.resignation.sanbe.tree</field>
+            <field name="model">hr.resignation</field>
+            <field name="inherit_id" ref="hr_resignation.hr_resignation_view_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='employee_id']" position="before">
+                    <field name="name"/>
+                    <field name="letter_no"/>
+                    <field name="emp_nos_ids" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,83 @@
+<odoo>
+    <data>
+
+        <record id="santosa_finance_report_form" model="ir.ui.view">
+            <field name="name">Report Journal</field>
+            <field name="model">santosa_finance.report</field>
+            <field name="arch" type="xml">
+                <form multi_edit="1">
+                   
+                    <sheet>
+                        <group>
+                            <field name="sales_point" />
+                            <field name="ar_in_transit" string="AR In-Patient / AR In-Service"/>
+                            <field name="alloc" string='AR'/>
+                            <field name="other_service" />
+                            <field name="sales_discount" />
+                            <field name="date" />
+                            <field name="guarantor" />
+                        </group>
+                       
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="santosa_finance_report_tree" model="ir.ui.view">
+            <field name="name">Report Journal</field>
+            <field name="model">santosa_finance.report</field>
+            <field name="arch" type="xml">
+
+                <tree create='0' delete='0' limit="20">
+                    <field name="date" optional='hide'/>
+                    <field name="entered_date" optional='show'/>
+                    <field name="sales_point" optional='hide'/>
+                    <field name="no_trx" optional='show' />
+                    <field name="ar_in_transit" optional='show' string="AR In-Patient / AR In-Service" decoration-info = "1"/>
+                    <field name="sales" string="AR" optional='show' decoration-info = "1"/>
+                    <field name="other_service" optional='show' decoration-info = "1"/>
+                    <field name="sales_discount" optional='show' decoration-info = "1"/>
+                    <field name="ppn" optional='show' decoration-info = "1"/>
+                    <field name="medic" optional='show' decoration-danger = "1"/>
+                    <field name="medicine" optional='show' decoration-danger = "1"/>
+                    <field name="balance" optional='hide'/>
+                    <field name="journal_type" optional='hide'/>
+                    <field name="status_invoice" optional='hide'/>
+                    <field name="guarantor" optional='hide'/>
+                    <field name="total_invoice" optional='show' string="Invoice Amount"/>
+                    <button name="ambil_view" type="object" string="Detail" class="fa fa-eye"/>
+
+                            
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_santosa_finance_report_search" model="ir.ui.view">
+            <field name="name">santosa.finance.report.search</field>
+            <field name="model">santosa_finance.report</field>
+            <field name="arch" type="xml">
+                <search string="Search Transaction">
+                    <field name="no_trx" string="No. Transaksi"/>
+                </search>
+            </field>
+        </record>
+
+
+        <record id="santosa_finance_report_action" model="ir.actions.act_window">
+            <field name="name">Report Journal</field>
+            <field name="res_model">santosa_finance.report</field>
+            <field name="view_mode">tree</field>
+            <field name="context">{
+                "group_by": ["sales_point","guarantor","date:day"]
+            }</field>
+            <field name="domain">[
+                ('account_move_id', '!=', False)
+            ]</field>
+
+        </record>
+        <!-- komentar rohim -->
+        <!-- <menuitem id="report_data" name="Report Journal" sequence='0' parent="santosa_finance.transaction_sanfi_root" action="santosa_finance_report_action"/> -->
+        <!-- END komentar rohim -->
+    </data>
+</odoo>

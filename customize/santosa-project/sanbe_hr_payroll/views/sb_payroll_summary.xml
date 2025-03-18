@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="sb_payroll_summary_tree_view" model="ir.ui.view">
+            <field name="name">sb.payroll.summary.tree</field>
+            <field name="model">sb.payroll.summary</field>
+            <field name="arch" type="xml">
+                <tree string="Payroll Summary">
+                    <field name='periode_id' optional='show'/>
+                    <field name='employee_group_id' optional='show'/>
+                    <field name='branch_id' optional='show'/>
+                    <field name='department_id' optional='show'/>
+                    <button name="action_view_payroll_summary" type="object" string="View"
+                            class="fa fa-check"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="sb_payroll_summary_search" model="ir.ui.view">
+            <field name="name">sb.payroll.summary.search</field>
+            <field name="model">sb.payroll.summary</field>
+            <field name="arch" type="xml">
+                <search string="Payroll Summary">
+                    <filter string="Employee P Group" name="employee_group_id"
+                            context="{'group_by':'employee_group_id'}"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_payroll_summary" model="ir.actions.act_window">
+            <field name="name">Payroll Summary</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sb.payroll.summary</field>
+            <field name="context">
+                {'search_default_employee_group_id':1}
+            </field>
+            <!-- <field name="view_type">form</field> -->
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Payroll Summary Records
+                </p>
+                <p>
+                    Create New Payroll Summary Records
+                </p>
+            </field>
+        </record>
+
+        <record id="sb_payroll_summary_kanban_view" model="ir.ui.view">
+           <field name="name">Payroll Summary Kanban</field> 
+           <field name="model">sb.payroll.summary</field> 
+           <field name="arch" type="xml">
+               <kanban class="o_kanban_view">
+                    <field name='periode_id'/>
+                    <field name='employee_group_id'/>
+                    <field name='branch_id'/>
+                    <field name='department_id'/>
+                    <field name="id" />
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                                <div class="oe_kanban_details">
+                                    <div name="periode_id" class="mt-1">
+                                        Period: <field name="periode_id" style="font-weight: bold;" />
+                                    </div>
+                                    <div name="employee_group_id" class="mt-1"> 
+                                        Employee P Group: <field name="employee_group_id" style="font-weight: bold;" />
+                                    </div>
+                                    <div name="branch_id" class="mt-1"> 
+                                        Business Unit: <field name="branch_id" style="font-weight: bold;" />
+                                    </div>
+                                    <div name="department_id" class="mt-1"> 
+                                        Sub Department: <field name="department_id"></field>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+               </kanban> 
+           </field> 
+        </record>
+
+        <record id="sb_payroll_summary_form_view" model="ir.ui.view">
+            <field name="name">sb.payroll.summary.form</field>
+            <field name="model">sb.payroll.summary</field>
+            <field name="arch" type="xml">
+                <form string="Payroll Summary">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="periode_id"/>
+                                <field name="employee_group_id"/>
+                            </group>
+                            <group>
+                                <field name="branch_id"/>
+                                <field name="department_id"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page name='payroll_summary_detail' string='Payroll Summary Detail'>
+                                <field name='payroll_detail_ids'>
+                                    <tree>
+                                        <field name='nik' optional='show'/>
+                                        <field name='employee_id' optional='show'/>
+                                        <field name='job_id' optional='show'/>
+                                        <field name='total_basic_salary' optional='show'/>
+                                        <field name='total_overtime' optional='show'/>
+                                        <field name='total_allowance' optional='show'/>
+                                        <field name='total_deduction' optional='show'/>
+                                        <field name='net_salary' optional='show'/>
+                                        <field name='state' optional='show'/>
+                                        <button name='payrol_summary_detail_button' type='object' string='Detail'/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

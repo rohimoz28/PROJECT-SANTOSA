@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="tmsentry_details_form_view" model="ir.ui.view">
+            <field name="name">sanbe_hr_tms.sb.tms.tmsentry.details.form</field>
+            <field name="model">sb.tms.tmsentry.details</field>
+            <field name="arch" type="xml">
+                <form string="TMS Entry Details">
+                    <sheet>
+                        <!-- <div class="oe_title"> -->
+                        <!--     <label for="details_date"/> -->
+                        <!--     <h1> -->
+                        <!--         <field name="details_date" placeholder="Details Date"/> -->
+                        <!--     </h1> -->
+                        <!-- </div> -->
+                        <group>
+                            <group>
+                                <field name="workingday_id"/>
+                                <field name="type" readonly="1"/>
+                                <field name="date_in"/>
+                                <field name="date_out"/>
+                                <field name="status_attendee" readonly="1"/>
+                                <field name="delay" readonly="1"/>
+                                <field name="status" readonly="1"/>
+                                <field name="emp_id" readonly="1"/>
+                                <field name="approval_ot_from" readonly="1" widget="float_time"/>
+                                <field name="approval_ot_to" readonly="1" widget="float_time"/>
+                                <field name="edited_time_in" widget="float_time"/>
+                                <field name="edited_time_out" widget="float_time"/>
+                                <field name="remark_edit_attn" required="edited_time_in or edited_time_out"/>
+                            </group>
+                            <group>
+                                <field name="details_date" readonly="1"/>
+                                <field name="time_in" widget="easy_timepicker" readonly="1"/>
+                                <field name="time_out" widget="easy_timepicker" readonly="1"/>
+                                <field name="status_attendance" readonly="1"/>
+                                <field name="delay" string="Delay" readonly="1"/>
+                                <field name="empgroup_id" readonly="1"/>
+                                <field name="aot1" readonly="1"/>
+                                <field name="aot2" readonly="1"/>
+                                <field name="aot3" readonly="1"/>
+                                <field name="aot4" readonly="1"/>
+                                <field name="oto" readonly="1"/>
+                                <field name="approved"/>
+                                <field name="approved_by_ca"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- <record id="tmsentry_details_tree_view" model="ir.ui.view"> -->
+        <!--     <field name="name">ProjectName.tmsentry_details.tree</field> -->
+        <!--     <field name="model">ProjectName.tmsentry_details</field> -->
+        <!--     <field name="arch" type="xml"> -->
+        <!--         <tree string="ModelTitle"> -->
+        <!--             <field name="create_date"/> -->
+        <!--             <field name="example_field"/> -->
+        <!--         </tree> -->
+        <!--     </field> -->
+        <!-- </record> -->
+
+        <!-- <record id="tmsentry_details_search_view" model="ir.ui.view"> -->
+        <!--     <field name="name">ProjectName.tmsentry_details.search</field> -->
+        <!--     <field name="model">ProjectName.tmsentry_details</field> -->
+        <!--     <field name="arch" type="xml"> -->
+        <!--         <search string="ModelTitle"> -->
+        <!--             <group expand="1" string="Group By"> -->
+        <!--                 <filter string="Example Field" name="example_field" domain="[]" -->
+        <!--                         context="{'group_by':'example_field'}"/> -->
+        <!--             </group> -->
+        <!--         </search> -->
+        <!--     </field> -->
+        <!-- </record> -->
+
+        <!-- <record id="tmsentry_details_act_window" model="ir.actions.act_window"> -->
+        <!--     <field name="name">ModelTitle</field> -->
+        <!--     <field name="type">ir.actions.act_window</field> -->
+        <!--     <field name="res_model">ProjectName.tmsentry_details</field> -->
+        <!--     <field name="view_type">form</field> -->
+        <!--     <field name="view_mode">tree,form</field> -->
+        <!--     <field name="help" type="html"> -->
+        <!--         <p class="oe_view_nocontent_create"> -->
+        <!--             There is no examples click here to add new ModelTitle. -->
+        <!--         </p> -->
+        <!--     </field> -->
+        <!-- </record> -->
+
+        <!-- <menuitem name="ModelTitle" id="tmsentry_details_menu" parent="your_root_menu" action="tmsentry_details_act_window"/> -->
+
+    </data>
+</odoo>

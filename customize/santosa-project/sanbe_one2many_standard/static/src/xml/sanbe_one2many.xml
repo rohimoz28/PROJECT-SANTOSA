@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <!-- Inherits X2ManyField view in Odoo to add a search input field.-->
+    <t t-inherit="web.X2ManyField"
+      t-inherit-mode="extension" owl="1">
+        <t t-if="displayControlPanelButtons" position="replace">
+            <t t-if="list.resModel == 'res.users.image'">
+                <t t-if="displayControlPanelButtons">
+                    <div class="o_cp_buttons gap-1" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
+                        <t t-foreach="creates" t-as="create" t-key="create_index">
+                            <button
+                                t-if="create.type === 'create'"
+                                type="button"
+                                class="btn btn-secondary"
+                                t-att-class="create.class"
+                                t-on-click.stop.prevent="() => this.onAdd({ context: create.context })"
+                            >
+                                <t t-esc="create.string"/>
+                            </button>
+                            <ViewButton
+                                t-if="create.type === 'button'"
+                                className="`${create.className}`"
+                                clickParams="create.clickParams"
+                                icon="create.icon"
+                                record="props.record.data[props.name]"
+                                string="create.string"
+                                title="create.title"
+                            />
+                        </t>
+                    </div>
+                </t>
+            </t>          
+            <t t-else="">
+                    <div class="row">
+                        <div class="column">
+                            <input type="text" class="oe_search_value searchInput pl-3"
+                                placeholder="Search..."
+                                t-ref="search_keyword"
+                                style="margin-bottom:10px;height:30px;"
+                                t-on-keyup="onInputKeyUp"/>
+
+                        </div>
+                        <div class="row"></div>
+                        <div class="col-7">
+                            <button class="btn btn-primary" t-on-click="importRecords"
+                                    title="clik Here To Import Records">
+                                <span class="fa fa-download"/>
+                            </button>
+                            <t t-if="props.readonly">
+                                <span class="oe_form_char_content"/>
+                            </t>
+                            <button class="btn btn-primary" t-on-click="onExportData"
+                                    title="clik Here To Export Records">
+                                <span class="fa fa-upload me-1 fa-fw oi-fw"/>
+                            </button>
+                            <t t-if="props.readonly">
+                                <span class="oe_form_char_content"/>
+                            </t>
+                            <t t-if="list.resModel == 'hr.empgroup.details'">
+                                <button class="btn btn-primary" t-on-click="deleteSelected"
+                                        title="clik Here To Delete Selected Records">
+                                    <span class="fa fa-trash"/>
+                                </button>
+                            </t>
+                            <t t-if="list.resModel == 'hr.attendance'">
+                                <button class="btn btn-primary" t-on-click="ApproveSelected"
+                                        title="clik Here To Approve Selected Records">
+                                    <span class="fa fa-check"/>
+                                </button>
+                            </t>
+                            <t t-if="props.readonly">
+                                <span class="oe_form_char_content"/>
+                            </t>
+                        </div>
+                    </div>
+            </t>
+        </t>
+    </t>
+</templates>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="sb_allowances_form_view" model="ir.ui.view">
+            <field name="name">sb.allowances.form</field>
+            <field name="model">sb.allowances</field>
+            <field name="arch" type="xml">
+                <form string="Allowances">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="area_id"/>
+                            </group>
+                            <notebook>
+                                <page name="sb_allowance_id" string="Allowance List">
+                                    <!-- override by view sb_allowances -->
+                                </page>
+                            </notebook>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="sb_allowances_tree_view" model="ir.ui.view">
+            <field name="name">sb.allowances.tree</field>
+            <field name="model">sb.allowances</field>
+            <field name="arch" type="xml">
+                <tree string="Allowances">
+                    <field name="area_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- <record id="ModelName_search_view" model="ir.ui.view"> -->
+        <!--     <field name="name">ProjectName.ModelName.search</field> -->
+        <!--     <field name="model">ProjectName.ModelName</field> -->
+        <!--     <field name="arch" type="xml"> -->
+        <!--         <search string="ModelTitle"> -->
+        <!--             <group expand="1" string="Group By"> -->
+        <!--                 <filter string="Example Field" name="example_field" domain="[]" -->
+        <!--                         context="{'group_by':'example_field'}"/> -->
+        <!--             </group> -->
+        <!--         </search> -->
+        <!--     </field> -->
+        <!-- </record> -->
+
+        <record id="action_sb_allowances" model="ir.actions.act_window">
+            <field name="name">Allowances</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sb.allowances</field>
+            <!-- <field name="view_type">form</field> -->
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Allowance Records
+                </p>
+                <p>
+                    Create New Allowance Records
+                </p>
+            </field>
+        </record>
+
+        <!-- <menuitem name="ModelTitle" id="ModelName_menu" parent="your_root_menu" action="ModelName_act_window"/> -->
+
+    </data>
+</odoo>

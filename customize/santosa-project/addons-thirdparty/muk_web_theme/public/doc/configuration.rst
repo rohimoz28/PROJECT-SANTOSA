@@ -1,1 +1,0 @@
-No additional configuration is needed to use this module.

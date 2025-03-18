@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hr_employee_list_schedule_view_form" model="ir.ui.view">
+            <field name="name">hr.employee.listschedule.view.form</field>
+            <field name="model">hr.employeelist.schedule</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group id="info">
+                            <field name="area"/>
+                            <field name="branch_ids" invisible="1"/>
+                            <field name="alldepartment" invisible="1"/>
+                            <field name="branch_id"/>
+                            <field name="department_id"/>
+                            <field name="employee_id"/>
+                        </group>
+                        <notebook>
+                            <page string="Employee Schedulee" name="employee_list">
+                                <field name="employee_list">
+                                    <tree edit="0" create="0" delete="0">
+                                         <field name="hr_list_id" column_invisible="1"/>
+                                        <field name="department_id"/>
+                                        <field name="nik"/>
+                                        <field name="employee_id"/>
+                                        <field name="job_id"/>
+                                        <field name="wd_code"/>
+                                        <field name="valid_from"/>
+                                        <field name="valid_to"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <footer>
+                        <button string="Close" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_employee_list_schedule_action" model="ir.actions.act_window">
+            <field name="name">List Of Employee Schedule</field>
+            <field name="res_model">hr.employeelist.schedule</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

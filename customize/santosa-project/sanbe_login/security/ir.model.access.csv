@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_login_image,access_login_image,model_login_image,,1,1,1,1
+access_user_face,user.face,model_res_users_image,base.group_user,1,1,1,1
+access_user_system_face,system.user.face,model_res_users_image,base.group_user,1,1,1,1

@@ -1,0 +1,456 @@
+<templates>
+ <t t-name="sanbe_hr_dashboard.ChartRendererField">
+        <div class="chart-container h-100">
+            <canvas t-ref="chart"/>
+        </div>
+    </t>
+    <t t-name="sanbe_hr_dashboard.SalesDashboardField">
+        <div class="dashboard">
+            <div class="vh-100 overflow-auto bg-muted">
+                <div class="row m-3">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col m-0 p-0">
+                                <div class="shadow-sm border m-2 p-4 bg-white">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <h1 class="text-primary fw-bold">Management Dashboard</h1>
+                                        <!-- <div>
+                                            <select class="form-select">
+                                                <option value="0">Select Period</option>
+                                                <option value="7">Last 7 Days</option>
+                                                <option value="30">Last 30 Days</option>
+                                                <option value="90">Last 90 Days</option>
+                                            </select>
+                                        </div> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 m-0 p-0 d-flex">
+                                <div class="shadow-sm border m-2 p-4 bg-white text-center w-100 d-flex flex-column">
+                                    <div class="col m-0 p-0">
+                                        <div class="shadow-sm border m-2 p-4 bg-white">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <h3 id="employee-count-title" class="text-primary fw-bold">Employee Head Count &amp; Turn Over <span t-out="state.currentMonth2" /></h3>
+                                                    <div class="month-selector">
+                                                        <select class="form-select" t-model="state.selectedMonth2" t-on-change="onChangePeriod2">
+                                                                <option value="Jan">Januari</option>
+                                                                <option value="Feb">Februari</option>
+                                                                <option value="Mar">Maret</option>
+                                                                <option value="Apr">April</option>
+                                                                <option value="May">May</option>
+                                                                <option value="Jun">June</option>
+                                                                <option value="Jul">July</option>
+                                                                <option value="Aug">Agustus</option>
+                                                                <option value="Sep">September</option>
+                                                                <option value="Oct">October</option>
+                                                                <option value="Nov">November</option>
+                                                                <option value="Dec">Desember</option>
+                                                            </select>
+                                                    </div>
+
+                                                    <div class="px-3 py-1 bg-primary cursor-pointer">
+                                                        <span class="fa fa-arrow-right text-white"/>
+                                                    </div>
+                                            </div>
+                                            <div style="height: 400px;">
+                                                <ChartRenderer 
+                                                        type="'bar'"
+                                                        title="'Monthly Head Count Report'" 
+                                                        data="state.chartData2"
+                                                         
+                                                    />
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-12 pt-4 flex-grow-1">
+                                        <div class="mt-8">
+                                            <table class="table table-bordered w-full">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="p-2 text-center" colspan="9" style="background-color: #f0f0f0;">Employee Head Count &amp; Turn Over</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="p-2 text-left"></th>
+                                                        <th class="p-2" colspan="3">Bulan <span t-out="state.lastMonth2" /></th>
+                                                        <th class="p-2" colspan="3">Bulan <span t-out="state.currentMonth2" /></th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="p-2"></th>
+                                                        <th class="p-2">TS</th>
+                                                        <th class="p-2">CMH</th>
+                                                        <th class="p-2">CMR</th>
+                                                        <th class="p-2">TS</th>
+                                                        <th class="p-2">CMH</th>
+                                                        <th class="p-2">CMR</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    
+                                                    <tr t-foreach="state.categories2" t-as="category" t-key="category">
+                                                        
+                                                        <td class="p-2">
+                                                            <t t-esc="category" />
+                                                        </td>
+                            
+                                                        <td class="p-2 text-center">
+                                                            <t t-esc="state.employeeHeadCountData.lastMonth[category]['Taman Sari']"/>
+                                                        </td>
+                                                        <td class="p-2 text-center">
+                                                            <t t-esc="state.employeeHeadCountData.lastMonth[category]['Cimahi']"/>
+                                                        </td>
+                                                        <td class="p-2 text-center">
+                                                            <t t-esc="state.employeeHeadCountData.lastMonth[category]['Cimareme']"/>
+                                                        </td>
+                                                        <td class="p-2 text-center">
+                                                            <t t-esc="state.employeeHeadCountData.currentMonth[category]['Taman Sari']"/>
+                                                        </td>
+                                                        <td class="p-2 text-center">
+                                                            <t t-esc="state.employeeHeadCountData.currentMonth[category]['Cimahi']"/>
+                                                        </td>
+                                                        <td class="p-2 text-center">
+                                                            <t t-esc="state.employeeHeadCountData.currentMonth[category]['Cimareme']"/>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>  
+                                </div>
+                            </div>
+                            <div class="col-lg-6 m-0 p-0 d-flex">
+                                <div class="shadow-sm border m-2 p-4 bg-white text-center w-100 d-flex flex-column">
+                                    <div class="col m-0 p-0">
+                                        <div class="shadow-sm border m-2 p-4 bg-white">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <h3 id="employee-exit-title" class="text-primary fw-bold">Employee Exit <span t-out="state.currentMonth" /></h3>
+                                                
+                                        
+                                                    <div class="month-selector">
+                                                        <select class="form-select" t-model="state.selectedMonth" t-on-change="onChangePeriod">
+                                                                <option value="Jan">Januari</option>
+                                                                <option value="Feb">Februari</option>
+                                                                <option value="Mar">Maret</option>
+                                                                <option value="Apr">April</option>
+                                                                <option value="May">May</option>
+                                                                <option value="Jun">June</option>
+                                                                <option value="Jul">July</option>
+                                                                <option value="Aug">Agustus</option>
+                                                                <option value="Sep">September</option>
+                                                                <option value="Oct">October</option>
+                                                                <option value="Nov">November</option>
+                                                                <option value="Dec">Desember</option>
+                                                            </select>
+                                                    </div>
+
+                                                    <div class="px-3 py-1 bg-primary cursor-pointer">
+                                                        <span class="fa fa-arrow-right text-white"/>
+                                                    </div>
+
+                                            </div>  
+                                            <div style="height: 400px;">
+                                                        
+                                                    <ChartRenderer 
+                                                        type="'bar'"
+                                                        title="'Monthly Resignation Report'" 
+                                                        data="state.chartData"
+                                                    />
+                    
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-12 pt-4 flex-grow-1">
+                                        <div class="mt-8">
+                                            <table class="table table-bordered w-full">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="p-2 text-center" colspan="9" style="background-color: #f0f0f0;">Employee Exit</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="p-2 text-left"></th>
+                                                        <th class="p-2" colspan="3">Bulan <span t-out="state.lastMonth" /></th>
+                                                        <th class="p-2" colspan="3">Bulan <span t-out="state.currentMonth" /></th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="p-2"></th>
+                                                        <th class="p-2">TS</th>
+                                                        <th class="p-2">CMH</th>
+                                                        <th class="p-2">CMR</th>
+                                                        <th class="p-2">TS</th>
+                                                        <th class="p-2">CMH</th>
+                                                        <th class="p-2">CMR</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    
+                                                    <tr t-foreach="state.categories" t-as="category" t-key="category">
+                                                        
+                                                        <td class="p-2">
+                                                            <t t-esc="category" />
+                                                        </td>
+                            
+                                                        <td class="p-2 text-center">
+                                                            <t t-esc="state.employeeExitData.lastMonth[category]['Taman Sari']"/>
+                                                        </td>
+                                                        <td class="p-2 text-center">
+                                                            <t t-esc="state.employeeExitData.lastMonth[category]['Cimahi']"/>
+                                                        </td>
+                                                        <td class="p-2 text-center">
+                                                            <t t-esc="state.employeeExitData.lastMonth[category]['Cimareme']"/>
+                                                        </td>
+                                                        <td class="p-2 text-center">
+                                                            <t t-esc="state.employeeExitData.currentMonth[category]['Taman Sari']"/>
+                                                        </td>
+                                                        <td class="p-2 text-center">
+                                                            <t t-esc="state.employeeExitData.currentMonth[category]['Cimahi']"/>
+                                                        </td>
+                                                        <td class="p-2 text-center">
+                                                            <t t-esc="state.employeeExitData.currentMonth[category]['Cimareme']"/>
+                                                        </td>
+                                                    </tr>
+                                                
+                                                    <tr class="font-weight-bold" style="background-color: #f0f0f0;">
+                                                        <td class="p-2">Total</td>
+                                                        <td class="p-2 text-center">
+                                                                <t t-esc="state.employeeExitData.lastMonthTotals['Taman Sari']"/>
+                                                            </td>
+                                                        <td class="p-2 text-center">
+                                                                <t t-esc="state.employeeExitData.lastMonthTotals['Cimahi']"/>
+                                                            </td>
+                                                        <td class="p-2 text-center">
+                                                                <t t-esc="state.employeeExitData.lastMonthTotals['Cimareme']"/>
+                                                            </td>
+                                                        <td class="p-2 text-center">
+                                                                <t t-esc="state.employeeExitData.currentMonthTotals['Taman Sari']"/>
+                                                            </td>
+                                                        <td class="p-2 text-center">
+                                                                <t t-esc="state.employeeExitData.currentMonthTotals['Cimahi']"/>
+                                                            </td>
+                                                        <td class="p-2 text-center">
+                                                                <t t-esc="state.employeeExitData.currentMonthTotals['Cimareme']"/>
+                                                            </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Chart Batang Exit Employee -->
+                        <div class="row">
+                            <!-- <div class="col m-0 p-0">
+                                <div class="shadow-sm border m-2 p-4 bg-white">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <h3 id="employee-exit-title" class="text-primary fw-bold">Employee Exit <span t-out="state.currentMonth" /></h3>
+                                        
+                                
+                                            <div class="month-selector">
+                                                <select class="form-select" t-model="state.selectedMonth" t-on-change="onChangePeriod">
+                                                        
+                                                        <option value="Jan">Januari</option>
+                                                        <option value="Feb">Februari</option>
+                                                        <option value="Mar">Maret</option>
+                                                        <option value="Apr">April</option>
+                                                        <option value="May">May</option>
+                                                        <option value="Jun">June</option>
+                                                        <option value="Jul">July</option>
+                                                        <option value="Aug">Agustus</option>
+                                                        <option value="Sep">September</option>
+                                                        <option value="Oct">October</option>
+                                                        <option value="Nov">November</option>
+                                                        <option value="Des">Desember</option>
+                                                    </select>
+                                            </div>
+
+                                            <div class="px-3 py-1 bg-primary cursor-pointer">
+                                                <span class="fa fa-arrow-right text-white"/>
+                                            </div>
+
+                                    </div>  
+                                    <div style="height: 400px;">
+                                                
+                                            <ChartRenderer 
+                                                type="'bar'"
+                                                title="'Monthly Resignation Report'" 
+                                                data="state.chartData"
+                                            />
+            
+                                    </div>
+                                </div>
+                            </div> -->
+                            <!-- <div class="row mt-12 pt-4">
+                                <div class="mt-8">
+                                    <table class="table table-bordered w-full">
+                                        <thead>
+                                            <tr>
+                                                <th class="p-2 text-center" colspan="9" style="background-color: #f0f0f0;">Employee Exit</th>
+                                            </tr>
+                                            <tr>
+                                                <th class="p-2 text-left"></th>
+                                                <th class="p-2" colspan="3">Bulan Lalu</th>
+                                                <th class="p-2" colspan="3">Bulan Ini</th>
+                                            </tr>
+                                            <tr>
+                                                <th class="p-2"></th>
+                                                <th class="p-2">TS</th>
+                                                <th class="p-2">CMH</th>
+                                                <th class="p-2">CMR</th>
+                                                <th class="p-2">TS</th>
+                                                <th class="p-2">CMH</th>
+                                                <th class="p-2">CMR</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            
+                                            <tr t-foreach="state.categories" t-as="category" t-key="category">
+                                                
+                                                <td class="p-2">
+                                                    <t t-esc="category" />
+                                                </td>
+                    
+                                                <td class="p-2 text-center">
+                                                    <t t-esc="state.employeeExitData.lastMonth[category]['Taman sari']"/>
+                                                </td>
+                                                <td class="p-2 text-center">
+                                                    <t t-esc="state.employeeExitData.lastMonth[category]['Cimahi']"/>
+                                                </td>
+                                                <td class="p-2 text-center">
+                                                    <t t-esc="state.employeeExitData.lastMonth[category]['Cimareme']"/>
+                                                </td>
+                                                <td class="p-2 text-center">
+                                                    <t t-esc="state.employeeExitData.currentMonth[category]['Taman sari']"/>
+                                                </td>
+                                                <td class="p-2 text-center">
+                                                    <t t-esc="state.employeeExitData.currentMonth[category]['Cimahi']"/>
+                                                </td>
+                                                <td class="p-2 text-center">
+                                                    <t t-esc="state.employeeExitData.currentMonth[category]['Cimareme']"/>
+                                                </td>
+                                            </tr>
+                                        
+                                            <tr class="font-weight-bold" style="background-color: #f0f0f0;">
+                                                <td class="p-2">Total</td>
+                                                <td class="p-2 text-center">
+                                                        <t t-esc="state.employeeExitData.lastMonthTotals['Taman sari']"/>
+                                                    </td>
+                                                <td class="p-2 text-center">
+                                                        <t t-esc="state.employeeExitData.lastMonthTotals['Cimahi']"/>
+                                                    </td>
+                                                <td class="p-2 text-center">
+                                                        <t t-esc="state.employeeExitData.lastMonthTotals['Cimareme']"/>
+                                                    </td>
+                                                <td class="p-2 text-center">
+                                                        <t t-esc="state.employeeExitData.currentMonthTotals['Taman sari']"/>
+                                                    </td>
+                                                <td class="p-2 text-center">
+                                                        <t t-esc="state.employeeExitData.currentMonthTotals['Cimahi']"/>
+                                                    </td>
+                                                <td class="p-2 text-center">
+                                                        <t t-esc="state.employeeExitData.currentMonthTotals['Cimareme']"/>
+                                                    </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div> -->
+                        </div>
+
+                        <!-- <div class="row">
+                            <div class="col m-0 p-0">
+                                <div class="shadow-sm border m-2 p-4 bg-white">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <h3 id="employee-count-title" class="text-primary fw-bold">Employee Head Count &amp; Turn Over <span t-out="state.currentMonth2" /></h3>
+                                            <div class="month-selector">
+                                                <select class="form-select" t-model="state.selectedMonth2" t-on-change="onChangePeriod2">
+                                                        <option value="Jan">Januari</option>
+                                                        <option value="Feb">Februari</option>
+                                                        <option value="Mar">Maret</option>
+                                                        <option value="Apr">April</option>
+                                                        <option value="May">May</option>
+                                                        <option value="Jun">June</option>
+                                                        <option value="Jul">July</option>
+                                                        <option value="Aug">Agustus</option>
+                                                        <option value="Sep">September</option>
+                                                        <option value="Oct">October</option>
+                                                        <option value="Nov">November</option>
+                                                        <option value="Des">Desember</option>
+                                                    </select>
+                                            </div>
+
+                                            <div class="px-3 py-1 bg-primary cursor-pointer">
+                                                <span class="fa fa-arrow-right text-white"/>
+                                            </div>
+                                    </div>
+                                    <div style="height: 400px;">
+                                        <ChartRenderer 
+                                                    type="'bar'"
+                                                    title="'Monthly Head Count Report'" 
+                                                    data="state.chartData2"
+                                                />
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-12 pt-4">
+                                <div class="mt-8">
+                                    <table class="table table-bordered w-full">
+                                        <thead>
+                                            <tr>
+                                                <th class="p-2 text-center" colspan="9" style="background-color: #f0f0f0;">Employee Head Count &amp; Turn Over</th>
+                                            </tr>
+                                            <tr>
+                                                <th class="p-2 text-left"></th>
+                                                <th class="p-2" colspan="3">Bulan Lalu</th>
+                                                <th class="p-2" colspan="3">Bulan Ini</th>
+                                            </tr>
+                                            <tr>
+                                                <th class="p-2"></th>
+                                                <th class="p-2">TS</th>
+                                                <th class="p-2">CMH</th>
+                                                <th class="p-2">CMR</th>
+                                                <th class="p-2">TS</th>
+                                                <th class="p-2">CMH</th>
+                                                <th class="p-2">CMR</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            
+                                            <tr t-foreach="state.categories2" t-as="category" t-key="category">
+                                                
+                                                <td class="p-2">
+                                                    <t t-esc="category" />
+                                                </td>
+                    
+                                                <td class="p-2 text-center">
+                                                    <t t-esc="state.employeeHeadCountData.lastMonth[category]['Taman Sari']"/>
+                                                </td>
+                                                <td class="p-2 text-center">
+                                                    <t t-esc="state.employeeHeadCountData.lastMonth[category]['Cimahi']"/>
+                                                </td>
+                                                <td class="p-2 text-center">
+                                                    <t t-esc="state.employeeHeadCountData.lastMonth[category]['Cimareme']"/>
+                                                </td>
+                                                <td class="p-2 text-center">
+                                                    <t t-esc="state.employeeHeadCountData.currentMonth[category]['Taman Sari']"/>
+                                                </td>
+                                                <td class="p-2 text-center">
+                                                    <t t-esc="state.employeeHeadCountData.currentMonth[category]['Cimahi']"/>
+                                                </td>
+                                                <td class="p-2 text-center">
+                                                    <t t-esc="state.employeeHeadCountData.currentMonth[category]['Cimareme']"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>  
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,60 @@
+<odoo>
+    <data>
+        <menuitem id="santosa_finance_root" name="Settings" sequence="99" parent="account.menu_finance" groups="santosa_finance.group_admin_sanfi"/>
+
+        <record id="mail.menu_root_discuss" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('santosa_finance.group_admin_sanfi')])]"/>
+        </record>
+
+        <record id="contacts.menu_contacts" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('santosa_finance.group_admin_sanfi')])]"/>
+        </record>
+
+        <record id="sale.sale_menu_root" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('santosa_finance.group_admin_sanfi')])]"/>
+        </record>
+
+        <record id="purchase.menu_purchase_root" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('santosa_finance.group_admin_sanfi')])]"/>
+        </record>
+
+        <record id="stock.menu_stock_root" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('santosa_finance.group_admin_sanfi')])]"/>
+        </record>
+
+        <record id="base.menu_management" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('santosa_finance.group_admin_sanfi')])]"/>
+        </record>
+
+        <record id="account.menu_finance_payables" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('santosa_finance.group_admin_sanfi')])]"/>
+        </record>
+
+        <record id="account.menu_finance_entries" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('santosa_finance.group_admin_sanfi')])]"/>
+        </record>
+
+        <record id="account.menu_finance_reports" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('santosa_finance.group_admin_sanfi')])]"/>
+        </record>
+
+        <record id="account.menu_finance_receivables" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('santosa_finance.group_admin_sanfi')])]"/>
+        </record>
+
+        <record id="account.menu_finance_configuration" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('santosa_finance.group_admin_sanfi')])]"/>
+        </record>
+
+        <!-- komentar rohim -->
+        <!-- <record id="account.menu_action_move_out_invoice_type" model="ir.ui.menu"> -->
+        <!--     <field name="parent_id" ref="santosa_finance.transaction_sanfi_root"/> -->
+        <!-- </record> -->
+
+        <!-- <record id="account.menu_action_account_form" model="ir.ui.menu"> -->
+        <!--     <field name="parent_id" ref="santosa_finance.masterdata_sanfi_root"/> -->
+        <!-- </record> -->
+        <!-- END komentar rohim -->
+
+    </data>
+</odoo>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <record id="report_ot_attendance_excel" model="ir.actions.report">
+            <field name="name">Report Overtime Attendance</field>
+            <field name="model">sb.overtime.attendance</field>
+            <field name="report_type">xlsx</field>
+            <field name="report_name">sanbe_hr_tms.report_ot_attendance_excel</field>
+            <field name="report_file">sanbe_hr_tms.report_ot_attendance_excel</field>
+            <field name="print_report_name">"Report OT Attendance"</field>
+            <field name="binding_model_id" ref="model_hr_tmsentry_summary"/>
+            <field name="binding_type">report</field>
+        </record>
+    
+    </data>
+    
+
+</odoo>

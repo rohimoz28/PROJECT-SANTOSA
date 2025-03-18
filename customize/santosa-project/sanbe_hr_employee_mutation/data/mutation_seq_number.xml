@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Sequences for hr_resignation -->
+        <record id="seq_hr_mutation" model="ir.sequence">
+            <field name="name">HR Mutation</field>
+            <field name="code">hr.employee.mutations</field>
+            <field name="prefix">MUTT/</field>
+            <field name="padding">7</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

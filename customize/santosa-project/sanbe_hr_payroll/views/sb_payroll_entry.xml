@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="sb_payroll_entry_form_view" model="ir.ui.view">
+            <field name="name">sb.payroll.entry.form</field>
+            <field name="model">sb.payroll.entry</field>
+            <field name="arch" type="xml">
+                <form string="Payroll Summary">
+                    <header>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="employee_group1"/>
+                                <field name="period_pay_calc"/>
+                                <field name="department_id" readonly="1"/>
+                                <field name="employee_id"/>
+                                <field name="job_id" readonly="1"/>
+                                <field name="job_status" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="calc_date"/>
+                                <field name="npwp" readonly="1"/>
+                                <field name="emp_status" readonly="1"/>
+                                <field name="gender" readonly="1"/>
+                                <field name="bank_account"/>
+                                <field name="area_id" readonly="1"/>
+                                <field name="branch_id" readonly="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="sb_payroll_entry_id" string="Payroll Entry Details">
+                                <!-- override by view sb_bank_transfer_summary_detail -->
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <footer class="o_list_footer">
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="sb_payroll_entry_tree_view" model="ir.ui.view">
+            <field name="name">sb.payroll.entry.tree</field>
+            <field name="model">sb.payroll.entry</field>
+            <field name="arch" type="xml">
+                <tree string="Payroll Entry List">
+                    <field name="employee_group1"/>
+                    <field name="employee_id"/>
+                    <field name="nik"/>
+                    <field name="area_id"/>
+                    <field name="branch_id"/>
+                    <field name="department_id"/>
+                    <field name="state"/>
+                    <button name="action_view_payroll_entry_list" type="object" string="View"
+                            class="fa fa-check"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="sb_payroll_entry_search" model="ir.ui.view">
+            <field name="name">sb.payroll.entry.search</field>
+            <field name="model">sb.payroll.entry</field>
+            <field name="arch" type="xml">
+                <search string="Payroll Entry List">
+                    <filter string="Employee P Group" name="employee_group1"
+                            context="{'group_by':'employee_group1'}"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_payroll_entry" model="ir.actions.act_window">
+            <field name="name">Payroll Entry</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sb.payroll.entry</field>
+            <field name="context">
+                {'search_default_employee_group1':1}
+            </field>
+            <!-- <field name="view_type">form</field> -->
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Payroll Entry List Records
+                </p>
+                <p>
+                    Create New Payroll Entry List Records
+                </p>
+            </field>
+        </record>
+
+        <!-- <menuitem name="ModelTitle" id="action_payroll_sb_payroll_summary" parent="menu_hr_payroll_sb_payroll_summary" action="action_payroll_bank_transfer_summary"/> -->
+
+    </data>
+</odoo>

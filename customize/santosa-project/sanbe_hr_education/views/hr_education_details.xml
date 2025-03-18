@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+
+        <record id="employee_education_level_form" model="ir.ui.view">
+            <field name="name">employee.education.level.form</field>
+            <field name="model">employee.educations</field>
+            <field name="arch" type="xml">
+                <form string="Employee Educations">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="school_level"/>
+                            <h1>
+                                <field name="school_level"/>
+                            </h1>
+                            <label for="name"/>
+                            <h1>
+                                <field id="name" options="{'line_breaks': False}" widget="text"
+                                    class="text-break" name="name" default_focus="1"
+                                    placeholder="e.g. School Name" />
+                            </h1>
+                        </div>
+                        <group>
+                                <field name="employee_id" invisible="1"/>
+                                <field name="year_garduated"/>
+                                <field name="majoring"/>
+                                <field name="level_certificated"/>
+                                <field name="gpa"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="employee_educations_level_tree" model="ir.ui.view">
+            <field name="name">employee.educations.level.tree</field>
+            <field name="model">employee.educations</field>
+            <field name="arch" type="xml">
+                <tree string="Employee Educations Level">
+                    <field name="employee_id" column_invisible="1"/>
+                    <field name="school_level"/>
+                    <field name="name"/>
+                    <field name="year_garduated"/>
+                    <field name="majoring"/>
+                    <field name="level_certificated"/>
+                    <field name="gpa"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_employee_education_level" model="ir.actions.act_window">
+            <field name="name">Employee Education Level</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">employee.educations</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Report Employee Education Level
+                </p>
+                <p>
+                    Create new Employee Educations Level
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

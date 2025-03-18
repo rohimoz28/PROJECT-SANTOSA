@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- View hr_mail_config View Tree -->
+    <record id="view_hr_mail_config_tree" model="ir.ui.view">
+        <field name="name">view.hr_mail_config.tree</field>
+        <field name="model">hr.mail.config</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="branch_id" string="Business Units"/>
+                <field name="list_email"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- View hr_mail_config form -->
+    <record id="view_hr_mail_config_form" model="ir.ui.view">
+        <field name="name">view.hr_mail_config.form</field>
+        <field name="model">hr.mail.config</field>
+        <field name="arch" type="xml">
+            <form string="Hr_mail_config">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="branch_id" string="Business Units"/>
+                        <h1>
+                            <field name="branch_id" placeholder="Name..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="company_id" invisible="1"/>
+                        <field name="list_email" placeholder="example@mail.com, example@mail.com"/>
+                        <label for="branch_id" string="Reminder Setting" invisible="1"/>
+                        <div class="o_row" invisible="1" >
+                            <field name="day7"/>
+                            <field name="day14"/>
+                            <field name="day30"/>
+                            <field name="day60"/>
+                        </div>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- View hr_mail_config search -->
+    <record id="view_hr_mail_config_search" model="ir.ui.view">
+        <field name="name">view.hr_mail_config.search</field>
+        <field name="model">hr.mail.config</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Name" filter_domain="['|','|','|','|',('name','ilike',self),('list_email','ilike',self)]"/>
+                <group expand="1" string="Group By">
+                    <filter string="Business Units" name="branch_id" domain="[]" context="{'group_by':'branch_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action hr_mail_config -->
+    <record id="action_hr_mail_config" model="ir.actions.act_window">
+        <field name="name">Mail Config Receiver</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.mail.config</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                There is no examples click here to add new Hr_mail_config.
+            </p>
+        </field>
+    </record>
+    <menuitem id="hr_mail_receiver" name="Mail Receiver" action="action_hr_mail_config" parent="hr.menu_human_resources_configuration" sequence="99"/>
+
+
+</odoo>

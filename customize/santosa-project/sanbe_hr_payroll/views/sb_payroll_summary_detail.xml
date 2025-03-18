@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inherit_sb_payroll_summary_form_view" model="ir.ui.view">
+        <field name="name">inherit.sb.payroll.summary.form.view</field>
+        <field name="model">sb.payroll.summary</field>
+        <field name="inherit_id" ref="sanbe_hr_payroll.sb_payroll_summary_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='sb_payroll_summary_id']" position="inside">
+                <field name="detail_ids">
+                    <tree editable="bottom" widget="one2many_list" create="true">
+                        <field name="employee_id"/>
+                        <field name="nik"/>
+                        <field name="employee_name"/>
+                        <field name="basic_salary"/>
+                        <field name="overtime"/>
+                        <field name="allowance"/>
+                        <field name="deduction"/>
+                        <field name="net_salary"/>
+                    </tree>
+                </field>
+            </xpath>
+        </field>
+    </record>
+</odoo>

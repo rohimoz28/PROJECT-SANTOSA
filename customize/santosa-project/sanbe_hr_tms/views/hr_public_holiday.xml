@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+         <!--        View Form - inherit resource calendar   -->
+        <record id="hr_public_holiday_tree" model="ir.ui.view">
+            <field name="name">hr.public.holiday.tree</field>
+            <field name="model">resource.calendar.leaves</field>
+            <field name="inherit_id" ref="hr_holidays.resource_calendar_leaves_tree_inherit" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="area_id"
+                        options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" />
+                    <field name="branch_ids" invisible="1" optional="hide"/>
+                    <field name="branch_id"
+                        options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" />
+                </xpath>
+            </field>
+        </record>
+         <!--        New View Form    -->
+         <record id="hr_public_holiday_form" model="ir.ui.view">
+            <field name="name">hr.public.holiday.form</field>
+            <field name="model">resource.calendar.leaves</field>
+            <field name="arch" type="xml">
+                <form string="Machine Setting">
+                    <header>
+                        <button name="action_draft" invisible="state != 'post'" string="Draft" type="object" class="btn-primary"/>
+                        <button name="action_posted" invisible="state != 'draft'" string="Posted" type="object" class="btn-primary"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,post" readonly="1"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" readonly="state=='post'"/>
+                                <field name="area_id" required="True" readonly="state=='post'"/>
+                                <field name="branch_ids" invisible="1" readonly="state=='post'"/>
+                                <field name="branch_id" invisible="1" readonly="state=='post'"/>
+                                <field name="date_from" readonly="state=='post'"/>
+                                <field name="date_to" readonly="state=='post'"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+         <!--    Calendar View    -->
+        <record id="public+holiday_view_dashboard" model="ir.ui.view">
+            <field name="name">public.holiday.view.dashboard</field>
+            <field name="model">resource.calendar.leaves</field>
+            <field name="arch" type="xml">
+                <calendar js_class="publicholiday_callendar"
+                        string="Calendar Holiday"
+                        form_view_id="%(sanbe_hr_tms.hr_public_holiday_form)d"
+                        event_open_popup="true"
+                        date_start="date_from"
+                        date_stop="date_to"
+                        quick_create="0"
+                        show_unusual_days="True"
+                        color="color"
+                        hide_time="True"
+                        mode="year">
+                    <field name="area_id" required="True"/>
+                    <field name="branch_ids" invisible="1" />
+                    <field name="branch_id" invisible="1" />
+                    <field name="date_from" />
+                    <field name="date_to" />
+                </calendar>
+            </field>
+        </record>
+
+    <!--   Filter view    -->
+    <record id="view_hr_publics_holidays_filter" model="ir.ui.view">
+        <field name="name">hr.publics.filter</field>
+        <field name="model">resource.calendar.leaves</field>
+        <field name="arch" type="xml">
+            <search string="Search Time Off">
+                <field name="name"/>
+                <field name="area_id"/>
+                <!--field name="branch_id"/-->
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <searchpanel>
+                    <field name="area_id" string="Area ID" icon="fa-users"/>
+                    <!--field name="branch_id" string="Branch ID" icon="fa-users"/-->
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+         <!--        Action Windows    -->
+        <record id="hr_opens_public_holiday" model="ir.actions.act_window">
+            <field name="name">Calendar Holiday</field>
+            <field name="res_model">resource.calendar.leaves</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="search_view_id" ref="sanbe_hr_tms.view_hr_publics_holidays_filter"/>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                   Calendar Holiday
+                </p><p>
+
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

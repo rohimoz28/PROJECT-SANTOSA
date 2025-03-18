@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="email_template_reminder_contract_end" model="mail.template">
+            <field name="name">Pengingat Kontrak HC</field>
+            <field name="email_cc"/>
+            <field name="subject">Pengingat: Kontrak Karyawan yang Akan Berakhir</field>
+            <field name="model_id" ref="sanbe_hr_monitoring_contract.model_hr_contract_monitoring"/>
+            <field name="auto_delete" eval="False"/>
+            <field name="lang">'id-ID'</field>
+        </record>
+
+         <record id="email_template_reminder_contract_end_to_manager" model="mail.template">
+            <field name="name">Pengingat Kontrak Mentor</field>
+            <field name="email_cc"/>
+            <field name="model_id" ref="sanbe_hr_monitoring_contract.model_hr_contract_monitoring"/>
+            <field name="auto_delete" eval="False"/>
+            <field name="lang">'id-ID'</field>
+            <field name="subject">Pengingat: Kontrak Karyawan yang Akan Berakhir</field>
+        </record>
+    </data>
+</odoo>

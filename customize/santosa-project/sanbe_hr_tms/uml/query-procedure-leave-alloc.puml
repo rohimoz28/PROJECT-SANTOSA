@@ -1,0 +1,26 @@
+@startuml
+|User|
+:Execute Query;
+|PostgreSQL|
+start
+:Query `hr_employee` Table;
+|hr_employee|
+:Return Employee Records;
+|PostgreSQL|
+:Store Employee Data;
+
+:LEFT JOIN `hr_permission_entry` Table on `employee_id`;
+|hr_permission_entry|
+:Filter `is_approved` = true;
+:Return Permission Records;
+|PostgreSQL|
+:Store Permission Data;
+
+:Calculate SUM(hpe.time_days);
+:Call `calculate_leave_alloc` Function;
+
+:Generate Result Set;
+|User|
+:Return Result Set;
+stop
+@enduml

@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+
+        <!-- Search -->
+        <record id="stg_transform_absent_search" model="ir.ui.view">
+            <field name="name">stg.transform.absent.search</field>
+            <field name="model">stg.transform.absent</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <search string="Data Absen Staging">
+                    <!-- <field name="emp_firstname" />
+                    <field name="emp_code" />
+                    <field name="dept_name" />
+                    <field name="date" widget="date" />
+                    <field name="time" widget="easy_timepicker" />
+                    <field name="in_out" /> -->
+                    <field name="userid" />
+                    <field name="logtime" />
+                    <field name="terminal" />
+                    <field name="status" />
+                    <field name="employee_id" readonly="1"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="stg_transform_absent_form" model="ir.ui.view">
+            <field name="name">stg.transform.absent.form</field>
+            <field name="model">stg.transform.absent</field>
+            <field name="arch" type="xml">
+                <form string="Data Absen Staging" create="0" edit="0" delete="0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <!-- <field name="emp_firstname" readonly="1"/>
+                                <field name="emp_code" readonly="1"/>
+                                <field name="dept_name" readonly="1"/> -->
+                                <field name="userid" readonly="1" />
+                                <field name="logtime" readonly="1" />
+                            </group>
+                        </group>
+                        <group col="2">
+                            <group>
+                                <!-- <field name="date" widget="date" readonly="1"/>
+                                <field name="time" widget="easy_timepicker" readonly="1"/>
+                                <field name="in_out" readonly="1"/> -->
+                                <field name="terminal" readonly="1" />
+                                <field name="status" readonly="1"/>
+                                <field name="employee_id" readonly="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View -->
+        <record id="stg_transform_absent_tree" model="ir.ui.view">
+            <field name="name">stg.transform.absent.tree</field>
+            <field name="model">stg.transform.absent</field>
+            <field name="arch" type="xml">
+                <tree string="Data Absen Staging" create="0" edit="0" delete="0">
+                    <!-- <field name="emp_firstname" readonly="1"/>
+                    <field name="emp_code" readonly="1"/>
+                    <field name="dept_name" readonly="1"/>
+                    <field name="date" widget="date" readonly="1"/>
+                    <field name="time" widget="easy_timepicker" readonly="1"/>
+                    <field name="in_out" readonly="1"/> -->
+                    <field name="userid" readonly="1" />
+                    <field name="logtime" readonly="1" />
+                    <field name="terminal" readonly="1" />
+                    <field name="status" readonly="1"/>
+                    <field name="employee_id" readonly="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_stg_transform_absent" model="ir.actions.act_window">
+            <field name="name">Data Absen Staging</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stg.transform.absent</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Data Absen Staging
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

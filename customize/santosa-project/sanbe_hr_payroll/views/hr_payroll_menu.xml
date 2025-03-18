@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+
+        <!-- PAYROLL MENU -->
+
+        <!-- Transaction -->
+        <menuitem id="menu_sanbe_hr_payroll_root" name="Payroll" sequence="45"
+                  web_icon="sanbe_hr_payroll,static/description/icon.png"
+                  groups="hr.group_hr_manager"
+        />
+
+        <!-- <menuitem -->
+        <!--         id="menu_hr_employee_payroll" -->
+        <!--         name="Payroll Entry" -->
+        <!--         parent="menu_sanbe_hr_payroll_root" -->
+        <!--         sequence="1" -->
+        <!--         action="action_employee_Payroll" -->
+        <!-- /> -->
+
+        <menuitem
+                id="menu_payroll_transaction"
+                name="Transaction"
+                sequence="2"
+                parent="menu_sanbe_hr_payroll_root"
+        />
+
+        <menuitem
+                id="menu_hr_payroll_bank_transfer_summary"
+                name="Bank Transfer Summary"
+                parent="menu_payroll_transaction"
+                sequence="10"
+                action="action_payroll_bank_transfer_summary"
+        />
+
+        <menuitem
+                id="menu_hr_payroll_monthly_tax_summary"
+                name="Monthly Tax Summary"
+                parent="menu_payroll_transaction"
+                sequence="9"
+                action="action_payroll_monthly_tax_summary"
+        />
+
+        <menuitem
+                id="menu_hr_payroll_summary"
+                name="Payroll Summary"
+                parent="menu_payroll_transaction"
+                sequence="8"
+                action="action_payroll_summary"
+        />
+
+        <menuitem
+                id="menu_hr_payroll_entry"
+                name="Payroll Entry"
+                parent="menu_payroll_transaction"
+                sequence="6"
+                action="action_payroll_entry"
+        />
+
+        <!-- Setting Parameter -->
+        <menuitem
+                id="menu_payroll_setting_parameter"
+                name="Setting Parameter"
+                sequence="4"
+                parent="menu_sanbe_hr_payroll_root"
+        />
+
+        <menuitem
+                id="menu_hr_payroll_employee_profile"
+                name="Employee Profile"
+                parent="menu_payroll_setting_parameter"
+                sequence="10"
+                action="action_payroll_employee_profile"
+        />
+        <menuitem
+                id="menu_hr_payroll_insurance_setting"
+                name="Insurance Setting"
+                parent="menu_payroll_setting_parameter"
+                sequence="11"
+                action="action_payroll_insurance_setting"
+        />
+    </data>
+</odoo>

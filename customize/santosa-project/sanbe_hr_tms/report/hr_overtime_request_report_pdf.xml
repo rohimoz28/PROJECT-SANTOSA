@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <data>
+    <record id="paperformat_overtime_request_report" model="report.paperformat">
+      <field name="name">Print Out PDF Overtime Request</field>
+      <field name="default" eval="True" />
+      <field name="format">A4</field>
+      <field name="orientation">Landscape</field>
+      <field name="margin_top">15</field>
+      <field name="margin_bottom">15</field>
+      <field name="margin_left">7</field>
+      <field name="margin_right">7</field>
+      <field name="header_line" eval="True"/>
+      <field name="header_spacing">35</field>
+      <field name="dpi">90</field>
+    </record>
+
+    <record id="overtime_request_report" model="ir.actions.report">
+      <field name="name">Overtime Request form Report</field>
+      <field name="model">hr.overtime.planning</field>
+      <field name="report_type">qweb-pdf</field>
+      <field name="report_name">sanbe_hr_tms.overtime_request_template</field>
+      <field name="report_file">sanbe_hr_tms.overtime_request_template</field>
+      <field name="print_report_name">'%s' % (object.name)</field>
+      <field name="binding_model_id" ref="model_hr_overtime_planning"></field>
+      <field name="binding_type">report</field>
+      <field name="paperformat_id" 
+             ref="sanbe_hr_tms.paperformat_overtime_request_report" />
+    </record>
+
+    <template id="overtime_request_template">
+      <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="doc">
+          <t t-call="web.basic_layout">
+            <style>
+              .header {
+                  width: 100%;
+                  overflow: hidden; 
+              }
+
+              .line-1 {
+                  border-top: 2px solid black; 
+                  margin-bottom: 5px;
+              }
+
+              .logo {
+                  margin-left: 20px; 
+              }
+
+              .metadata-table {
+                  font-size: 12px;
+                  line-height: 1.5;
+                  width: 100%;
+                  border: none;
+                  border-collapse: collapse; 
+                  text-align: right;
+              }
+              .metadata-table,
+              .metadata-table td,
+              .metadata-table th {
+                  border: none;
+                  border-spacing: 0;
+                  border-collapse: collapse;
+              }
+              .metadata-table p {
+                  margin-bottom: 2px;
+              }
+
+              .metadata-table .label-cell {
+                  padding-right: 10px;
+                  text-align: left;
+              }
+
+              .metadata-table .value-cell {
+                  text-align: left;
+              }
+
+              .title {
+                  font-weight: bold;
+                  font-size: 16pt;
+              }
+
+              .middle-line1 {
+                  border: none;
+                  border-top: 1.5px solid black;
+                  margin: 2px 0;
+              }
+
+              .middle-line2 {
+                  border: none;
+                  border-top: 1.5px solid black;
+                  margin-top: 2px;
+                  margin-bottom: 5px;
+              }
+
+              .header-table {
+                  border: 1.5px solid black;
+              }
+
+              .header1 {
+                  background-color: #d3d3d3;
+                  font-weight: bold;
+              }
+
+              .header1, .value1 {
+                  border: 1.5px solid black;
+                  padding: 8px;
+                  text-align: center;
+                  vertical-align: middle;
+              }
+
+              .detail-table {
+                  border: 1.5px solid black;
+              }
+
+              .header2, .value2 {
+                  border: 1.5px solid black;
+                  padding: 8px;
+                  text-align: center;
+                  vertical-align: middle;
+              }
+
+              .footer-line1 {
+                  border: none; 
+                  border-top: 2px solid black; 
+                  margin: 2px 0;
+              }
+
+              .footer-text {
+                  font-size: 10px; 
+                  font-style: italic;    
+              }
+            </style>
+
+            <header>
+              <div class="line-1" style="border-top: 2px solid black; margin-bottom: 5px;"></div>
+              <t t-set="company" t-value="res_company"/>
+              <table>
+                <tr>
+                  <td style="width: 25%; text-align: left; padding: 0;">
+                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo" style="max-width: 200px; margin-left: 20px;"/>
+                  </td>
+                  <td class="title" style="width: 60%; text-align: left; padding: 0;">
+                    <span style="font-size: 16pt; font-weight: bold; font-family: 'Times New Roman';">FORM EMPLOYEE OVERTIME REQUEST AND REALIZATION (FEOR)</span>
+                  </td>
+                  <td style="width: 15%; text-align: right; padding: 0;">
+                    <table class="metadata-table" style="font-size: 11px; line-height: 1.5; width: 100%; border: none; border-collapse: collapse; padding-right: 10px; text-align: left;">
+                      <tbody>
+                        <tr>
+                          <td class="label-cell" style="padding-right: 5px; text-align: left;">No.</td>
+                          <td class="value-cell" style="text-align: left;">: COHR/FOR/041</td>
+                        </tr>
+                        <tr>
+                          <td class="label-cell" style="padding-right: 5px; text-align: left; border: none;">Revision</td>
+                          <td class="value-cell" style="text-align: left;">: 01</td>
+                        </tr>
+                        <tr>
+                          <td class="label-cell" style="padding-right: 5px; text-align: left; border: none;">Effective Date</td>
+                          <td class="value-cell" style="text-align: left;">: 16 May 2022</td>
+                        </tr>
+                        <tr>
+                          <td class="label-cell" style="padding-right: 5px; text-align: left; border: none;">Next Review Date</td>
+                          <td class="value-cell" style="text-align: left;">: 16 May 2025</td>
+                        </tr>
+                        <tr>
+                          <td style="padding-right: 5px; text-align: left; padding: 0; border: none;">Page</td>
+                          <td style="text-align: left; padding: 0; border: none;">: 1 of 1</td>  
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </header>
+
+            <!-- <br/> -->
+
+            <hr class="middle-line1" style="border: none; border-top: 1.5px solid black; margin: 2px 0;"/>
+            <hr class="middle-line2" style="border: none; border-top: 1.5px solid black; margin-top: 2px; margin-bottom: 5px;"/>
+ 
+            <div class="page">
+              <table class="header-table" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                  <tr>
+                    <th class="header1" style="border: 1.5px solid black; padding: 8px; text-align: center; vertical-align: middle;">Section</th>
+                    <th class="header1" style="border: 1.5px solid black; padding: 8px; text-align: center; vertical-align: middle;">Day</th>
+                    <th class="header1" style="border: 1.5px solid black; padding: 8px; text-align: center; vertical-align: middle;">Date</th>
+                    <th class="header1" style="border: 1.5px solid black; padding: 8px; text-align: center; vertical-align: middle;">Proposed Time<br/>Period/Shift**</th>
+                    <th class="header1" style="border: 1.5px solid black; padding: 8px; text-align: center; vertical-align: middle;">Total Personel</th>
+                    <th class="header1" colspan="3" style="border: 1.5px solid black; padding: 8px; text-align: center; vertical-align: middle;">Overtime Proposal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="value1" style="border: 1.5px solid black; padding: 8px; text-align: center; vertical-align: middle;"><span t-field="doc.branch_id"/></td>
+                    <td class="value1"><span t-field="doc.request_day_name"/></td>
+                    <td class="value1"><span t-field="doc.request_date" /></td>
+                    <td class="value1">15:30 s/d 19:30 WIB<br/><br/>shift 01</td>
+                    <td class="value1"><span t-field="doc.count_record_employees"/> Persons</td>
+                    <td class="value1">Prepared by,<br/><br/><br/><br/>Supervisor</td>
+                    <td class="value1">Reviewed by,<br/><br/><br/><br/>Manager</td>
+                    <td class="value1">Acknowledge by,<br/><br/><br/><br/>Plant Manager / HOQ</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <br/> 
+              <t t-set="counter" t-value="0"/>
+              <table class="detail-table" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                  <tr>
+                    <th rowspan="3" class="header2" style="border: 1.5px solid black; padding: 8px; text-align: center; vertical-align: middle;">No.</th>
+                    <th rowspan="3" class="header2" style="border: 1.5px solid black; padding: 8px; text-align: center; vertical-align: middle;">NIK</th>
+                    <th rowspan="3" class="header2" style="border: 1.5px solid black; padding: 8px; text-align: center; vertical-align: middle;">Name</th>
+                    <th rowspan="3" class="header2" style="border: 1.5px solid black; padding: 8px; text-align: center; vertical-align: middle;">Trans.</th>
+                    <th rowspan="3" class="header2" style="border: 1.5px solid black; padding: 8px; text-align: center; vertical-align: middle;">Meal</th>
+                    <th rowspan="3" class="header2" style="border: 1.5px solid black; padding: 8px; text-align: center; vertical-align: middle;">Sign</th>
+                    <th colspan="3" class="header2" style="border: 1.5px solid black; padding: 8px; text-align: center; vertical-align: middle;">Overtime Proposal</th>
+                    <th colspan="4" class="header2" style="border: 1.5px solid black; padding: 8px; text-align: center; vertical-align: middle;">Realization Checked</th>
+                  </tr>
+                  <tr>
+                    <th colspan="2" class="header2" style="border: 1.5px solid black; padding: 8px; text-align: center; vertical-align: middle;">Time</th>
+                    <th rowspan="2" class="header2" style="border: 1.5px solid black; padding: 8px; text-align: center; vertical-align: middle;">Task Description</th>
+                    <th rowspan="2" class="header2" style="border: 1.5px solid black; padding: 8px; text-align: center; vertical-align: middle;">Ok/ <br/> Not Ok</th>
+                    <th rowspan="2" class="header2" style="border: 1.5px solid black; padding: 8px; text-align: center; vertical-align: middle;">Explanation</th>
+                    <th colspan="2" class="header2" style="border: 1.5px solid black; padding: 8px; text-align: center; vertical-align: middle;">Verification Time</th>
+                  </tr>
+                  <tr>
+                    <th class="header2" style="border: 1.5px solid black; padding: 8px; text-align: center; vertical-align: middle;">Start</th>
+                    <th class="header2" style="border: 1.5px solid black; padding: 8px; text-align: center; vertical-align: middle;">Finish</th>
+                    <th class="header2" style="border: 1.5px solid black; padding: 8px; text-align: center; vertical-align: middle;">Start</th>
+                    <th class="header2" style="border: 1.5px solid black; padding: 8px; text-align: center; vertical-align: middle;">Finish</th>
+                  </tr>
+                </thead>
+                <!-- <t t-set="dynamic_numbers" t-value="doc.get_dynamic_numbers()"/> -->
+                <tbody>
+                  <t t-foreach="doc.hr_ot_planning_ids" t-as="employee" t-foreach-index="index">
+                    <tr>
+                      <td style="border: 1.5px solid black; padding: 2px; text-align: center; vertical-align: middle; font-size: 11pt;">
+                        <!-- <span t-esc="doc.get_dynamic_numbers()"/> -->
+                        <t t-set="counter" t-value="counter + 1"/><t t-esc="counter"/>
+                      </td>
+                      <td style="border: 1.5px solid black; padding: 2px; text-align: center; vertical-align: middle; font-size: 11pt;">
+                        <span t-field="employee.nik"/>
+                      </td>
+                      <td style="border: 1.5px solid black; padding: 2px; text-align: center; vertical-align: middle; font-size: 11pt;">
+                        <span t-field="employee.employee_id.name"/>
+                      </td>
+                      <td t-esc="'Yes' if employee.transport else 'No'" style="border: 1.5px solid black; padding: 2px; text-align: center; vertical-align: middle; font-size: 11pt;"/>
+                      <td t-esc="'Dine' if employee.meals else ('Cash' if employee.meals_cash else '')" style="border: 1.5px solid black; padding: 2px; text-align: center; vertical-align: middle; font-size: 11pt;"/>
+                      <td style="border: 1.5px solid black; text-align: center;">&#160;</td>
+                      <td style="border: 1.5px solid black; padding: 2px; text-align: center; vertical-align: middle; font-size: 11pt;">
+                        <span t-field="employee.ot_plann_from"/>
+                      </td>
+                      <td style="border: 1.5px solid black; padding: 2px; text-align: center; vertical-align: middle; font-size: 11pt;">
+                        <span t-field="employee.ot_plann_to"/>
+                      </td>
+                      <td style="border: 1.5px solid black; padding: 2px; text-align: center; vertical-align: middle; font-size: 11pt;">
+                        <span t-field="employee.work_plann"/>
+                      </td>
+                      <td t-esc="'OK' if employee.output_plann else ''" style="border: 1.5px solid black; padding: 2px; text-align: center; vertical-align: middle; font-size: 11pt;"/>
+                      <td style="border: 1.5px solid black; text-align: center;">&#160;</td>
+                      <td style="border: 1.5px solid black; padding: 2px; text-align: center; vertical-align: middle; font-size: 11pt;">
+                        <span t-field="employee.approve_time_from"/>
+                      </td>
+                      <td style="border: 1.5px solid black; padding: 2px; text-align: center; vertical-align: middle; font-size: 11pt;">
+                        <span t-field="employee.approve_time_to"/>
+                      </td>
+                    </tr>
+                  </t>
+                </tbody>
+              </table>
+
+              <br/>
+              
+              <table class="detail-table-2" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                  <tr>
+                    <th style="border: 1.5px solid black; height: 120px; vertical-align: top; padding: 5px;">Realization Approved by,</th>
+                    <th style="border: none; border-bottom: none; width: 1.5%;"></th>
+                    <th style="border-top: 1.5px solid black; border-left: 1.5px solid black; border-right: 1.5px solid black; width: 60%; vertical-align: top; text-align: left; padding: 5px;">Note:</th>
+                    <th style="border: none; border-bottom: none; width: 1.5%;"></th>
+                    <th style="border: 1.5px solid black; vertical-align: top; padding: 5px;">Verification by,</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="border: 1.5px solid black; text-align: center;">Manager</td>
+                    <td style="border: none;"></td>
+                    <td style="border-bottom: 1.5px solid black; border-left: 1.5px solid black; border-right: 1.5px solid black;"></td>
+                    <td style="border: none;"></td>
+                    <td style="border: 1.5px solid black; text-align: center;">Human Capital Adm</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <div class="footer">
+              <!-- Garis  Horizontal -->
+              <hr class="footer-line1" style="border: none; border-top: 2px solid black; margin: 2px 0;"/>
+              <div style="float: left;">
+                <span style="font-size: 10px; font-style: italic;">
+                  Cimareme | Release | Corporate | COHR | COHR.FOR.041 - Form Employee Overtime Request And Realization (FEOR) - R01.doc
+                </span>
+              </div>
+              <div style="float: right; text-align: left; font-size: 10px; font-style: italic;">
+                <span class="page"></span> of <span class="topage"></span>
+              </div>
+            </div>
+          </t>
+        </t>
+      </t>
+    </template>
+  </data>
+</odoo>

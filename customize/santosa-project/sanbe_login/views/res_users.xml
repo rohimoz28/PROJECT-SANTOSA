@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Author => Albertus Restiyanto Pramayudha
+     email  => xabre0010@gmail.com
+     linkedin => https://www.linkedin.com/in/albertus-restiyanto-pramayudha-470261a8/
+     youtube => https://www.youtube.com/channel/UCCtgLDIfqehJ1R8cohMeTXA
+-->
+<odoo>
+
+    <!-- VIEWS -->
+
+<record id="res_users_form_view_face_recognition" model="ir.ui.view">
+        <field name="name">res.users.form.view.face.recognition</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="priority" eval="99"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="Face recognition" string="Face recognition">
+                    <group string="Face filters">
+                        <field name="face_emotion"/>
+                        <field name="face_gender"/>
+                        <field name="face_age"/>
+                    </group>
+                     <group name="face_recognition_images" string="Images">
+                         <field name="res_users_image_ids"
+                                class="o_website_sale_image_list"
+                                context="{'default_name': name, 'default_res_user_id': id}"
+                                mode="kanban"
+                                add-label="Add a face"
+                                nolabel="1"/>
+                    </group>
+                </page>
+                <page name="id_cards" string="ID Cards">
+                        <group string="Login ID Cards" name="identification_group">
+                            <label for="qr_code"/>
+                            <div class="o_row">
+                                <field name="qr_code" widget='image' class="oe_avatar"/>
+                                <button name="%(yudha_login_id_print_qrcodes)d" string="Print Badge" class="btn btn-link" type="action" invisible="not barcode"/>
+                            </div>
+
+                            <label for="barcode"/>
+                            <div class="o_row">
+                                <field name="barcode"/>
+                                <button string="Generate" class="btn btn-link" type="object" name="generate_random_barcode" invisible="barcode"/>
+                                <button name="%(yudha_login_id_print_badge)d" string="Print Badge" class="btn btn-link" type="action" invisible="not barcode"/>
+                            </div>
+                        </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_res_user_image_form" model="ir.ui.view">
+        <field name="name">res_user.image.view.form</field>
+        <field name="model">res.users.image</field>
+        <field name="arch" type="xml">
+            <form string="User Images">
+                <field name="sequence" invisible="1"/>
+                <div class="row o_website_sale_image_modal">
+                    <div class="col-md-6 col-xl-5">
+                        <label for="name" string="Image Name"/>
+                        <h2><field name="name" placeholder="Image Name"/></h2>
+                        <label for="name" string="Descriptor"/>
+                        <field name="res_user_id" readonly="1"/>>
+                    </div>
+                    <div class="col-md-6 col-xl-7 text-center o_website_sale_image_modal_container">
+                        <div class="row">
+                            <div class="col" id="face-recognition-image">
+                                <field name="image" widget="image"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </field>
+    </record>
+
+        <record id="res_users_image_view_kanban" model="ir.ui.view">
+        <field name="name">res.users.image.view.kanban</field>
+        <field name="model">res.users.image</field>
+        <field name="arch" type="xml">
+            <kanban string="Users Images" default_order="sequence">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="image"/>
+                <field name="sequence" widget="handle"/>
+                <input type="checkbox" id="toggle-face-rec" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="card oe_kanban_global_click p-0">
+                             <div class="o_squared_image">
+
+                                <img class="card-img-top"
+                                    t-att-src="kanban_image('res.users.image', 'image', record.id.value)"
+                                    t-att-alt="record.name.value"
+                                    t-att-data-id="record.id.value"
+                                    />
+                                <img class="card-img-top only-descriptor"
+                                    t-att-src="kanban_image('res.users.image', 'image_detection', record.id.value)"
+                                    t-att-alt="record.name.value"
+                                    />
+                            </div>
+                            <div class="card-body p-0">
+                                <h4 class="card-title p-2 m-0 bg-200">
+                                    <small><field name="name"/></small>
+                                </h4>
+                            </div>
+                            <t t-if="record.image.raw_value.length &lt; 100*1000">
+                                <t t-set="size_status" t-value="'badge-success'"/>
+                                <t t-set="message">Acceptable file size</t>
+                            </t>
+                            <t t-elif="record.image.raw_value.length &lt; 1000*1000">
+                                <t t-set="size_status" t-value="'badge-warning'" />
+                                <t t-set="message">Huge file size. The image should be optimized/reduced.</t>
+                            </t>
+                            <t t-else="1">
+                                <t t-set="size_status" t-value="'badge-danger'"/>
+                                <t t-set="message">Optimization required! Reduce the image size or increase your compression settings.</t>
+                            </t>
+                            <span t-attf-class="badge #{size_status} o_product_image_size" style="top:20px" t-esc="record.image.value" t-att-title="message"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>

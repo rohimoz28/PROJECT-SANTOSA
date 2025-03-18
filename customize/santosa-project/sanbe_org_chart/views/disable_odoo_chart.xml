@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem
+        id="hr_org_chart.menu_hr_employee_org_chart"
+        active="False"
+    />
+
+</odoo>
