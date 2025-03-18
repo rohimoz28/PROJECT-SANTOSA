@@ -9,8 +9,7 @@ services:
     volumes:
       - odoo-santosa:/var/lib/odoo
       - ./santosa-project/odoo:/etc/odoo
-      - ../customize/santosa-project/addons-customize:/mnt/addons-customize
-      - ../customize/santosa-project/addons-thirdparty:/mnt/addons-thirdparty
+      - ../customize/santosa-project:/mnt/addons-customize
     networks:
       - santosa_project_network
 
