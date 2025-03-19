@@ -81,9 +81,6 @@
             <field name="domain"></field>
 
         </record>
-        <!-- komentar rohim -->
-        <!-- <menuitem id="akun_kategori_data" name="Akun Kategori" sequence='15' parent="masterdata_sanfi_root" action="santosa_finance_akun_kategori_action"/> -->
-        <!-- END komentar rohim -->
-
+        <menuitem id="akun_kategori_data" name="Akun Kategori" sequence='15' parent="masterdata_sanfi_root" action="santosa_finance_akun_kategori_action"/>
     </data>
 </odoo>

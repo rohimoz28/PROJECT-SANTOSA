@@ -37,12 +37,8 @@
     </record>
 
     <!-- Menu items -->
-    <!-- komentar rohim -->
-    <!-- <menuitem id="account.menu_account_customer" name="Penjamin" parent="santosa_finance.masterdata_sanfi_root" action="account.res_partner_action_customer"/> -->
-    <!-- END komentar rohim -->
+    <menuitem id="account.menu_account_customer" name="Penjamin" parent="santosa_finance.masterdata_sanfi_root" action="account.res_partner_action_customer"/>
     <!-- <menuitem id="account.menu_account_customer" name="x" parent="santosa_finance.masterdata_sanfi_root" action="account.res_partner_action_customer"/> -->
-    <!-- komentar rohim -->
-    <!-- <menuitem id="account.menu_account_supplier" name="Vendors" parent="santosa_finance.masterdata_sanfi_root" groups="santosa_finance.group_admin_sanfi" action="account.res_partner_action_supplier"/> -->
-    <!-- <menuitem id="menu_dokter_mitra" name="Dokter" parent="santosa_finance.masterdata_sanfi_root" action="action_dokter_mitra"/> -->
-    <!-- END komentar rohim -->
+    <menuitem id="account.menu_account_supplier" name="Vendors" parent="santosa_finance.masterdata_sanfi_root" groups="santosa_finance.group_admin_sanfi" action="account.res_partner_action_supplier"/>
+    <menuitem id="menu_dokter_mitra" name="Dokter" parent="santosa_finance.masterdata_sanfi_root" action="action_dokter_mitra"/>
 </odoo>
