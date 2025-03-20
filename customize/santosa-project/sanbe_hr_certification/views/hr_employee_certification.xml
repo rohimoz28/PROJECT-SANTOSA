@@ -7,7 +7,7 @@
             <field name="model">hr.employee.certification</field>
             <field name="priority">1000</field>
             <field name="arch" type="xml">
-                <tree string="HR Certificated" decoration-danger="notification_date &lt; current_date and active != False" decoration-muted="active == False">
+                <tree string="HR Certificated">
                     <field name="employee_id" column_invisible="1" />
                     <field name="name" />
                     <field name="number" />
@@ -18,8 +18,8 @@
                     <field name="valid_to" />
                     <field name="certificate_attachmentids" widget="many2many_binary" />
                     <field name="remarks" />
-                    <field name="notification_date" column_invisible="1" />
-                    <field name="active" column_invisible="1" />
+                    <!-- <field name="notification_date" column_invisible="1" /> -->
+                    <!-- <field name="active" column_invisible="1" /> -->
                 </tree>
             </field>
         </record>
@@ -57,8 +57,8 @@
                         <field name="certificate_attachmentids" widget="many2many_binary"/>
                         <field name="cerv_refrence" />
                         <field name="remarks"/>
-                        <field name="active" invisible="1" />
-                        <field name="notification_date" invisible="1" />
+                        <!-- <field name="active" invisible="1" /> -->
+                        <!-- <field name="notification_date" invisible="1" /> -->
                         <div class="o_row flex-grow-1">
                             <button name="renewal_certivicate" string="Re-New" type="object"
                                     class="btn-secondary"/>
@@ -85,8 +85,8 @@
                     <separator/>
                     <!-- Filters -->
                     <filter name="filter_Expired" string="Expired" domain="[('valid_to', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter name="filter_to_expired" string="To Expire" domain="[('notification_date','&lt;', context_today().strftime('%Y-%m-%d')),('valid_to','&gt;', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter name="filter_Valid" string="Valid" domain="[('notification_date', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <!-- <filter name="filter_to_expired" string="To Expire" domain="[('notification_date','&lt;', context_today().strftime('%Y-%m-%d')),('valid_to','&gt;', context_today().strftime('%Y-%m-%d'))]"/> -->
+                    <!-- <filter name="filter_Valid" string="Valid" domain="[('notification_date', '&gt;', context_today().strftime('%Y-%m-%d'))]"/> -->
                 </search>
             </field>
         </record>
@@ -121,7 +121,7 @@
             <field name="res_model">hr.employee.certification</field>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_hr_certificated_tree" />
-            <field name="domain">[('notification_date','&lt;', context_today().strftime('%Y-%m-%d')),('active','=',True )]</field>
+            <!-- <field name="domain">[('notification_date','&lt;', context_today().strftime('%Y-%m-%d')),('active','=',True )]</field> -->
             <field name="search_view_id" ref="view_employee_certificate_search" />
         </record>
         

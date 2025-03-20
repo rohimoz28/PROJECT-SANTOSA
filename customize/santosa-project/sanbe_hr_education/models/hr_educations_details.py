@@ -19,7 +19,7 @@ class EducationLevel(models.Model):
                                      ('smp','SMP'),
                                      ('sd','SD')],default='universitas',string='School Level')
     name = fields.Char('School Name')
-    year_garduated = fields.Char('Year')
+    year_graduated = fields.Char('Year')
     majoring= fields.Char('Majoring')
     level_certificated = fields.Selection([('s3','S3'),
                                      ('s2','S2'),

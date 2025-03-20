@@ -22,7 +22,7 @@
                         </div>
                         <group>
                                 <field name="employee_id" invisible="1"/>
-                                <field name="year_garduated"/>
+                                <field name="year_graduated"/>
                                 <field name="majoring"/>
                                 <field name="level_certificated"/>
                                 <field name="gpa"/>
@@ -40,7 +40,7 @@
                     <field name="employee_id" column_invisible="1"/>
                     <field name="school_level"/>
                     <field name="name"/>
-                    <field name="year_garduated"/>
+                    <field name="year_graduated"/>
                     <field name="majoring"/>
                     <field name="level_certificated"/>
                     <field name="gpa"/>
