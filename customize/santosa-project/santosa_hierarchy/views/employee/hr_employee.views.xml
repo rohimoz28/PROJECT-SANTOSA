@@ -61,6 +61,10 @@
                 <xpath expr="//field[@name='job_id']" position="attributes">
                     <attribute name="required">1</attribute>
                 </xpath>
+                
+                <xpath expr="//field[@name='job_id']" position="attributes">
+                    <attribute name="string">Posisi Pekerjaan</attribute>
+                </xpath>
 
                 <xpath expr="//field[@name='department_id']" position="attributes">
                     <attribute name="required">0</attribute>
@@ -86,6 +90,7 @@
                                 <field name="attende_premie"/>
                                 <field name="allowance_jemputan" />
                                 <field name="allowance_ot" />
+                                <field name="leave_calculation" />
                                 <field name="allowance_transport" />
                                 <field name="allowance_meal" />
                                 <field name="allowance_night_shift"/>
@@ -275,7 +280,7 @@
                 </xpath>
 
                 <xpath expr="//field[@name='identification_id']" position="attributes">
-                    <attribute name="required" invisible="1">0</attribute>
+                    <attribute name="invisible">1</attribute>
                 </xpath>
 
                 <xpath expr="//page[@name='personal_information']/group/group[1]" position="after">
@@ -289,6 +294,7 @@
                         <field name="doc_npwp" widget="many2many_binary" />
                         <field name="nama_pekerjaans" invisible="1" />
                         <field name="no_sim" required="nama_pekerjaans =='Driver' " />
+                        <field name="driving_license_expiry_date"/>
                         <field name="religion" readonly="state =='approved' " />
                         <field name="insurance" string="BPJS No"/>
                         <field name="jamsostek"/>
@@ -304,7 +310,7 @@
                         <field name="first_date_join"/>
                         <field name="join_date" required="job_status =='permanent'" />
                         <field name="contract_id" invisible="job_status !='contract'"
-                            required="job_status =='contract'"
+                            options="{'no_create': True}"
                             context="{'is_employee': 1,'employee_name': name,'area': area,'branch': branch_id,'department': department_id,'job_id': job_id}" />
                         <field name="contract_datefrom" invisible="job_status !='contract'" />
                         <field name="contract_dateto" string="Akhir Kontrak" invisible="job_status !='contract'" />
@@ -342,7 +348,6 @@
                 <xpath expr="//page[@name='personal_information']/group/group[4]" position="after">
                     <group string="Kewarganegaraan">
                         <field name="country_id"  options='{"no_open": True, "no_create": True}'/>
-                        <field name="ssnid" invisible="1"/>
                         <field name="birthday"/>
                         <field name="place_of_birth"/>
                         <field name="country_of_birth"/>
@@ -350,19 +355,33 @@
                         <!-- <field name="gender"/> -->
                     </group>
                 </xpath>
+
+                <xpath expr="//field[@name='ssnid']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
                 
                 <xpath expr="//page[@name='personal_information']/group/group[5]"
                     position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
  
-                <xpath expr="//field[@name='certificate']" position="before">
+                <!-- <xpath expr="//field[@name='certificate']" position="before">
                     <field name="title"/>
+                </xpath> -->
+
+                <xpath expr="//group[field[@name='certificate']]" position="replace">
+                    <group string="Pendidikan">
+                        <field name="title"/>
+                        <field name="back_title"/>
+                        <field name="last_certificate"/>
+                        <field name="study_field"/>
+                        <field name="study_school"/>
+                    </group>
                 </xpath>
 
-                <xpath expr="//field[@name='title']" position="after">
+                <!-- <xpath expr="//field[@name='title']" position="after">
                     <field name="back_title" string="Gelar Belakang" />
-                </xpath>
+                </xpath> -->
 
                 <xpath expr="//field[@name='title']" position="attributes">
                     <attribute name="string">Gelar Depan</attribute>
@@ -400,7 +419,7 @@
                     <attribute name="invisible">1</attribute>
                 </xpath> -->
 
-                <!-- <xpath expr="//page[@name='personal_information']/group/group[5]/field[@name='identification_id']" position="attributes">
+                <!-- <xpath expr="//page[@name='hr.personal_information']/group/group[5]/field[@name='identification_id']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath> -->
 
