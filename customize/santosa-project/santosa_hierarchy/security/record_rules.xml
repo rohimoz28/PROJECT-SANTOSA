@@ -48,7 +48,7 @@
             <field name="name">Employee Branchs Managers</field>
             <field name="model_id" ref="model_hr_employee"/>
             <field name="global" eval="True"/>
-            <field name="domain_force">[('branch_id','in',branch_ids)]</field>
+             <!-- <field name="domain_force">[('branch_id','in',branch_ids)]</field> -->
             <field name="groups" eval="[(4, ref('base_territory.group_branch_user_manager'))]"/>
         </record>
 
@@ -56,7 +56,7 @@
             <field name="name">Employees Branchs</field>
             <field name="model_id" ref="model_hr_employee"/>
             <field name="global" eval="True"/>
-            <field name="domain_force">['|',('branch_id','=',False),('branch_id','=',user.branch_id.id)]</field>
+             <!-- <field name="domain_force">['|',('branch_id','=',False),('branch_id','=',user.branch_id.id)]</field> -->
             <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]"/>
         </record>
         <!-- HR Contract -->
