@@ -22,6 +22,7 @@
         # 'security/access_groups.xml',
         'security/ir.model.access.csv',
         'security/record_rules.xml',
+        'data/ir_sequence_data.xml',
         'views/documents/hr_employee_document.views.xml',
         'views/employee/hr_employee.views.xml',
         'views/employee/hr_employment.xml',

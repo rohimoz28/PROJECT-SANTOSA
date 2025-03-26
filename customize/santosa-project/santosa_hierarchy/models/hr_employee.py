@@ -64,9 +64,9 @@ class HrEmployee(models.Model):
     birthday = fields.Date(string='Date of Birth', groups="base.group_user",
                            help="Birthday")
     branch_id = fields.Many2one('res.branch',string='Unit Bisnis')
-    directorate_id = fields.Many2one('sanhrms.directorate',string='Directorate')
-    hrms_department_id = fields.Many2one('sanhrms.department',string='Department')
-    division_id = fields.Many2one('sanhrms.division',string='Division')
+    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat')
+    hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen')
+    division_id = fields.Many2one('sanhrms.division',string='Divisi')
     state = fields.Selection([
         ('draft', "Draft"),
         ('req_approval', 'Request For Approval'),
@@ -105,7 +105,7 @@ class HrEmployee(models.Model):
     place_of_birth = fields.Char('Tempat Lahir', groups="hr.group_hr_user", tracking=True)
     country_of_birth = fields.Many2one('res.country', string="Negara", groups="hr.group_hr_user", tracking=True)
     department_id = fields.Many2one(required=True, string='Department')
-    employee_id = fields.Char('Employee ID', default='New')
+    employee_id = fields.Char('Employee ID', default='New', dafault=lambda self:self.env.user.branch_id.id)
     nik = fields.Char('NIK')
     nik_lama = fields.Char('NIK LAMA')
     no_ktp = fields.Char('NO KTP')
@@ -143,12 +143,17 @@ class HrEmployee(models.Model):
     insurance = fields.Char('Nomor BPJS')
     jamsostek = fields.Char('Jamsostek')
     ptkp = fields.Char('PTKP')
-    back_title = fields.Char('Back Title')
+    back_title = fields.Char('Gelar Belakang')
     no_sim = fields.Char('Nomor SIM #')
+    driving_license_expiry_date = fields.Char(string="Masa berlaku SIM Hingga")
     attende_premie = fields.Boolean('Premi Kehadiran', default=False)
     attende_premie_amount = fields.Float(digits='Product Price', string='Amount')
     allowance_jemputan = fields.Boolean('Jemputan')
     allowance_ot = fields.Boolean('Lembur')
+    leave_calculation = fields.Selection(selection=[
+                                    ('contract_based', "Contract Based"),
+                                    ('first_month', "First Month"),
+                                    ],string="Perhitungan Saldo Cuti")
     allowance_transport = fields.Boolean('Transport')
     allowance_meal = fields.Boolean('Uang Makan')
     jemputan_remarks = fields.Char('Jemputan Remarks')
@@ -170,10 +175,10 @@ class HrEmployee(models.Model):
         readonly=True, copy=False, index=True,
         tracking=3,
         default='draft')
-    nama_pekerjaans = fields.Char(related='job_id.name', store=True)
+    nama_pekerjaans = fields.Char(string="Posisi Pekerjaan", related='job_id.name', store=True)
     initial = fields.Char('Inisial')
     work_unit = fields.Char('Unit kerja')
-    position_in_work_unit = fields.Char('Position in Work Unit')
+    position_in_work_unit = fields.Char('Posisi di Unit Kerja')
     berat_badan = fields.Integer('Berat Badan (Kg)')
     tinggi_badan = fields.Integer('Tinggi Badan (Cm)')
     kpi_kategory = fields.Selection([('direct_spv', "Direct"),
@@ -213,6 +218,14 @@ class HrEmployee(models.Model):
     hourly_cost = fields.Monetary('Hourly Cost')
     asset_ids = fields.One2many('hr.employee.assets','employee_id',auto_join=True,string='Asset Details')
     education_ids = fields.One2many('employee.educations','employee_id',string='Educations List',auto_join=True)
+    last_certificate = fields.Selection([('sma','SMA'),
+                                    ('d1','D1'),
+                                    ('d2','D2'),
+                                    ('d3','D3'),
+                                    ('s1','Sarjana'),
+                                    ('s2','Magister'),
+                                    ('s3','Doktor'),
+                                    ],default='s1',string='Ijasah Terakhir')
     certificate_ids = fields.One2many('hr.employee.certification','employee_id',string='Certificate List',auto_join=True)
     joining_date = fields.Date(compute='_compute_joining_date',
                                string='Joining Date', store=True,

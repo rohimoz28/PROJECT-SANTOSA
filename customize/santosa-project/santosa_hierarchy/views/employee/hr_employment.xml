@@ -20,7 +20,7 @@
                     <field name="employee_group1"/>
                     <field name="trx_number"/>
                     <field name="doc_number"/>
-                    <field name="end_contract"/>
+                    <field name="rehire"/>
                     <button name="ambil_view" type="object" string="Open View" class="fa fa-eye"/>
                 </tree>
             </field>

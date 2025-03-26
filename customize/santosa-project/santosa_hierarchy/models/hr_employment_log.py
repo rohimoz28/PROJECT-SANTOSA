@@ -44,6 +44,7 @@ class HrEmployementlog(models.Model):
     trx_number = fields.Char(string="Nomor Transaksi")
     doc_number = fields.Char(string="Nomor Dokumen")
     end_contract = fields.Boolean(string="Flag End of Contract", default=False)
+    rehire = fields.Boolean(string="Dipanggil Kembali", default=False)
     label = fields.Char(default="Open View")
 
     def ambil_view(self):
