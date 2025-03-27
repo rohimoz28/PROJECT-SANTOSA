@@ -13,7 +13,7 @@
         parent="base.menu_users"
         sequence="30"
     />
-    <menuitem
+    <!-- <menuitem
         id="menu_res_district"
         name="Districts"
         action="action_res_district"
@@ -26,5 +26,5 @@
         action="action_res_region"
         parent="base.menu_users"
         sequence="50"
-    />
+    /> -->
 </odoo>
