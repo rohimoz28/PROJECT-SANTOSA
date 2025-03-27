@@ -109,9 +109,8 @@
                         <field name="emp_status" readonly="emp_status not in ['probation','confirmed']"/>
                         <field name="first_date_join"/>
                         <field name="join_date" required="job_status =='permanent'" />
-                        <field name="contract_id" invisible="job_status !='contract'"
-                            required="job_status =='contract'"
-                            context="{'is_employee': 1,'employee_name': name,'area': area,'branch': branch_id,'department': department_id,'job_id': job_id}" />
+                        <field name="contract_id" invisible="job_status !='contract'" options="{'no_create': True,'no_create_edit': True}"
+                               context="{'is_employee': 1,'employee_name': name,'area': area,'branch': branch_id,'department': department_id,'job_id': job_id}" />
                         <field name="contract_datefrom" invisible="job_status !='contract'" />
                         <field name="contract_dateto" string="End Of Contract Date" invisible="job_status !='contract'" />
                         <field name="contracts_count" string="Contract Time"
