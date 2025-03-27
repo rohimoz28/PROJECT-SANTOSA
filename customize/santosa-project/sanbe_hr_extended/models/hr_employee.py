@@ -495,31 +495,6 @@ class HrEmployee(models.Model):
             else:
                 account.display_name = f"{account.name}"
 
-    @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-        # domain = domain or []
-        # if name:
-        #    # mybranch = self.env['res.branch'].sudo().search([('branch_code','=','BU3')])
-        #    mybranch = self.env.user.branch_id
-        #    if name=='Hendra Setiawan':
-        #        mybranch = self.env['res.branch'].sudo().search([('branch_code', '=', 'BU1')])
-        #    elif name=='Agus Soepriadi':
-        #        mybranch = self.env['res.branch'].sudo().search([('branch_code', '=', 'BU3')])
-        #    elif name=='Edi Mulyana Ssi':
-        #        mybranch = self.env['res.branch'].sudo().search([('branch_code', '=', 'BU2')])
-        #    search_domain = []
-        #    if str(name).find('#') != -1:
-        #        nik = str(name).split('#')[0]
-        #        nama = str(name).split('#')[1]
-        #        search_domain = [('nik','=',nik),('branch_id','=',mybranch.id),'|',('name', operator, nama), ('branch_id', '=', mybranch.id)]
-        #    else:
-        #        search_domain = [('name', operator, name),('branch_id','=',mybranch.id)]
-        #    # search_domain = [('name', operator, name),('branch_id','=',mybranch.id)]
-        #    user_ids = self._search(search_domain + domain, limit=limit, order=order)
-        #    return user_ids
-        # else:
-        return super()._name_search(name, domain, operator, limit, order)
-
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)
         if view_type in ('tree', 'form'):
@@ -531,6 +506,20 @@ class HrEmployee(models.Model):
                 for node in arch.xpath("//button"):
                     node.set('invisible', 'True')
         return arch, view
+
+    @api.model
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
+        parts = name.split('] ')
+        if name:
+            if len(parts) == 2:
+                emp_id = parts[0][1:]
+                emp_name = parts[1]
+                name_domain = ['|',('employee_id', operator, emp_id), ('name', operator, emp_name)]
+                return self._search(expression.AND([name_domain, domain]), limit=limit, order=order)
+            else:
+                name_domain = ['|',('employee_id', operator, name), ('name', operator, name)]
+                return self._search(expression.AND([name_domain, domain]), limit=limit, order=order)
+        return super()._name_search(name, domain, operator, limit, order)
 
     def _compute_hours_last_month(self):
         """
