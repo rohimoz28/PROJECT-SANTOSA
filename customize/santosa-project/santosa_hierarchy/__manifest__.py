@@ -24,7 +24,7 @@
         'security/record_rules.xml',
         'data/ir_sequence_data.xml',
         # 'views/documents/hr_employee_document.views.xml',
-        # 'views/employee/hr_employee.views.xml',
+        'views/employee/hr_employee.views.xml',
         # 'views/employee/hr_employment.xml',
         # 'views/employee/hr_employment_tracking.xml',
         # 'views/employee/hr_checking_id.xml',
@@ -40,7 +40,7 @@
 
         'views/hierarchy/hierarchy_menuitem.xml',
         # 'views/employee_exit/employee_exit.views.xml',
-        # 'views/documents/hr_menu_item.xml',
+        'views/documents/hr_menu_item.xml',
         'views/master_data/directorate/directorate.views.xml',
         'views/master_data/division/division.views.xml',
         'views/master_data/department/department.views.xml',

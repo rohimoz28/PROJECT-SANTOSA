@@ -36,8 +36,8 @@
                 </xpath>
 
                 <xpath expr="//field[@name='department_id']" position="before">
-                    <field name="area" required='1'/>
-                    <field name="branch_id" required='1'/>
+                    <!-- <field name="area" required='1'/> -->
+                    <!-- <field name="branch_id" required='1'/> -->
                     <field name="branch_ids" invisible="1" />
                     <field name="alldepartment" invisible="1" />
                     <field name="directorate_id" required='1'/>
@@ -54,7 +54,7 @@
                 </xpath> -->
 
                 <xpath expr="//field[@name='parent_id']" position="after">
-                    <field name="work_unit"/>
+                    <!-- <field name="work_unit"/> -->
                     <field name="position_in_work_unit"/>
                 </xpath>
 
@@ -283,63 +283,63 @@
                     <attribute name="invisible">1</attribute>
                 </xpath>
 
-                <xpath expr="//page[@name='personal_information']/group/group[1]" position="after">
-                    <group string="DATA PEKERJAAN">
-                        <field name="nomor_kk"/>
-                        <field name="nik" required="1" force_save="1"/>
-                        <field name="nik_lama" readonly="1" force_save="1"/>
-                        <field name="no_ktp" required="1" />
-                        <field name="doc_ktp" widget="many2many_binary" />
-                        <field name="no_npwp" required="1" />
-                        <field name="doc_npwp" widget="many2many_binary" />
-                        <field name="nama_pekerjaans" invisible="1" />
-                        <field name="no_sim" required="nama_pekerjaans =='Driver' " />
-                        <field name="driving_license_expiry_date"/>
-                        <field name="religion" readonly="state =='approved' " />
-                        <field name="insurance" string="BPJS No"/>
-                        <field name="jamsostek"/>
-                        <field name="ptkp"/>
-                    </group>
-                </xpath>
+                <!-- <xpath expr="//page[@name='personal_information']/group/group[1]" position="after"> -->
+                <!--     <group string="DATA PEKERJAAN"> -->
+                <!--         <field name="nomor_kk"/> -->
+                <!--         <field name="nik" required="1" force_save="1"/> -->
+                <!--         <field name="nik_lama" readonly="1" force_save="1"/> -->
+                <!--         <field name="no_ktp" required="1" /> -->
+                <!--         <field name="doc_ktp" widget="many2many_binary" /> -->
+                <!--         <field name="no_npwp" required="1" /> -->
+                <!--         <field name="doc_npwp" widget="many2many_binary" /> -->
+                <!--         <field name="nama_pekerjaans" invisible="1" /> -->
+                <!--         <field name="no_sim" required="nama_pekerjaans =='Driver' " /> -->
+                <!--         <field name="driving_license_expiry_date"/> -->
+                <!--         <field name="religion" readonly="state =='approved' " /> -->
+                <!--         <field name="insurance" string="BPJS No"/> -->
+                <!--         <field name="jamsostek"/> -->
+                <!--         <field name="ptkp"/> -->
+                <!--     </group> -->
+                <!-- </xpath> -->
 
-                <xpath expr="//page[@name='personal_information']/group/group[3]" position="after">
-                    <group string="Hubungan Pekerjaan">
-                        <field name="kpi_kategory" invisible="1"/>
-                        <field name="job_status" />
-                        <field name="emp_status" readonly="emp_status not in ['probation','confirmed']"/>
-                        <field name="first_date_join"/>
-                        <field name="join_date" required="job_status =='permanent'" />
-                        <field name="contract_id" invisible="job_status !='contract'"
-                            options="{'no_create': True}"
-                            context="{'is_employee': 1,'employee_name': name,'area': area,'branch': branch_id,'department': department_id,'job_id': job_id}" />
-                        <field name="contract_datefrom" invisible="job_status !='contract'" />
-                        <field name="contract_dateto" string="Akhir Kontrak" invisible="job_status !='contract'" />
-                        <field name="contracts_count" string="Kontrak ke"
-                            invisible="job_status !='contract'" />
-                        <label for="ws_day" string="Working Service"
-                            invisible="job_status !='permanent'" />
-                        <div class="o_row" invisible="job_status !='permanent'">
-                            <label for="ws_year" string="Year" />
-                            <div class="o_row">
-                                <field name="ws_year" readonly="1" force_save="1" />
-                            </div>
-                            <label for="ws_month" string="Month" />
-                            <div class="o_row">
-                                <field name="ws_month" readonly="1" force_save="1" />
-                            </div>
-                            <label for="ws_day" string="Day" />
-                            <div class="o_row">
-                                <field name="ws_day" readonly="1" force_save="1" />
-                            </div>
-                        </div>
-                        <field name="employee_levels"
-                            options="{'no_create': True,'no_quick_create': True}" />
-                        <field name="employee_group1"/>
-                        <field name="apoteker"
-                            invisible="employee_group1 !='group3'" />
-                        <field name="attachment_contract" invisible="1" />
-                    </group>
-                </xpath>
+                <!-- <xpath expr="//page[@name='personal_information']/group/group[3]" position="after"> -->
+                <!--     <group string="Hubungan Pekerjaan"> -->
+                <!--         <field name="kpi_kategory" invisible="1"/> -->
+                <!--         <field name="job_status" /> -->
+                <!--         <field name="emp_status" readonly="emp_status not in ['probation','confirmed']"/> -->
+                <!--         <field name="first_date_join"/> -->
+                <!--         <field name="join_date" required="job_status =='permanent'" /> -->
+                <!--         &lt;!&ndash; <field name="contract_id" invisible="job_status !='contract'" &ndash;&gt; -->
+                <!--         &lt;!&ndash;     options="{'no_create': True}" &ndash;&gt; -->
+                <!--         &lt;!&ndash;     context="{'is_employee': 1,'employee_name': name,'area': area,'branch': branch_id,'department': department_id,'job_id': job_id}" /> &ndash;&gt; -->
+                <!--         <field name="contract_datefrom" invisible="job_status !='contract'" /> -->
+                <!--         <field name="contract_dateto" string="Akhir Kontrak" invisible="job_status !='contract'" /> -->
+                <!--         <field name="contracts_count" string="Kontrak ke" -->
+                <!--             invisible="job_status !='contract'" /> -->
+                <!--         <label for="ws_day" string="Working Service" -->
+                <!--             invisible="job_status !='permanent'" /> -->
+                <!--         <div class="o_row" invisible="job_status !='permanent'"> -->
+                <!--             <label for="ws_year" string="Year" /> -->
+                <!--             <div class="o_row"> -->
+                <!--                 <field name="ws_year" readonly="1" force_save="1" /> -->
+                <!--             </div> -->
+                <!--             <label for="ws_month" string="Month" /> -->
+                <!--             <div class="o_row"> -->
+                <!--                 <field name="ws_month" readonly="1" force_save="1" /> -->
+                <!--             </div> -->
+                <!--             <label for="ws_day" string="Day" /> -->
+                <!--             <div class="o_row"> -->
+                <!--                 <field name="ws_day" readonly="1" force_save="1" /> -->
+                <!--             </div> -->
+                <!--         </div> -->
+                <!--         <field name="employee_levels" -->
+                <!--             options="{'no_create': True,'no_quick_create': True}" /> -->
+                <!--         <field name="employee_group1"/> -->
+                <!--         <field name="apoteker" -->
+                <!--             invisible="employee_group1 !='group3'" /> -->
+                <!--         <field name="attachment_contract" invisible="1" /> -->
+                <!--     </group> -->
+                <!-- </xpath> -->
 
                 <xpath expr="//page[@name='personal_information']/group/group[7]" position="attributes">
                     <attribute name="string">Kewarganegaraan</attribute>
