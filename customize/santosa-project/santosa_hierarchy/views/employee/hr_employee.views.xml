@@ -83,113 +83,113 @@
                     </attribute>
                 </xpath>
 
-                <xpath expr="//page[@name='personal_information']" position="after">
-                    <page name="benefit_allowance" string="Tunjangan dan asset">
-                        <group name="salary_info">
-                            <group string="Allowance">
-                                <field name="attende_premie"/>
-                                <field name="allowance_jemputan" />
-                                <field name="allowance_ot" />
-                                <field name="leave_calculation" />
-                                <field name="allowance_transport" />
-                                <field name="allowance_meal" />
-                                <field name="allowance_night_shift"/>
-                                <field name="allowance_nightshift_amount" invisible="allowance_night_shift == False"/>
-                                <field name="workingday"/>
-                            </group>
-                            <group string="Remarks">
-                                <field name="attende_premie_amount" invisible="attende_premie == False" required="attende_premie == True"/>
-                                <field name="jemputan_remarks" />
-                                <field name="ot_remarks" />
-                                <field name="transport_remarks" />
-                                <field name="meal_remarks" />
-                                <field name="allowance_nightshift_remarks"/>
-                            </group>
-                        </group>
-                    </page>
-                </xpath>
+                <!-- <xpath expr="//page[@name='personal_information']" position="after"> -->
+                <!--     <page name="benefit_allowance" string="Tunjangan dan asset"> -->
+                <!--         <group name="salary_info"> -->
+                <!--             <group string="Allowance"> -->
+                <!--                 <field name="attende_premie"/> -->
+                <!--                 <field name="allowance_jemputan" /> -->
+                <!--                 <field name="allowance_ot" /> -->
+                <!--                 <field name="leave_calculation" /> -->
+                <!--                 <field name="allowance_transport" /> -->
+                <!--                 <field name="allowance_meal" /> -->
+                <!--                 <field name="allowance_night_shift"/> -->
+                <!--                 <field name="allowance_nightshift_amount" invisible="allowance_night_shift == False"/> -->
+                <!--                 <field name="workingday"/> -->
+                <!--             </group> -->
+                <!--             <group string="Remarks"> -->
+                <!--                 <field name="attende_premie_amount" invisible="attende_premie == False" required="attende_premie == True"/> -->
+                <!--                 <field name="jemputan_remarks" /> -->
+                <!--                 <field name="ot_remarks" /> -->
+                <!--                 <field name="transport_remarks" /> -->
+                <!--                 <field name="meal_remarks" /> -->
+                <!--                 <field name="allowance_nightshift_remarks"/> -->
+                <!--             </group> -->
+                <!--         </group> -->
+                <!--     </page> -->
+                <!-- </xpath> -->
 
-                <xpath expr="//page[@name='personal_information']" position="after">
-                    <page name="certification" string="Sertifikasi">
-                        <group>
-                            <field name="certificate_ids" string="">
-                                <tree editable="bottom">
-                                    <field name="name" string="Nama Sertifikasi"/>
-                                    <field name="number" string="Nomor Sertifikat"/>
-                                    <field name="certification_types" string="Tipe Sertifikat"/>
-                                    <field name="must" string="Wajib ?"/>
-                                    <field name="issuing_institution" string="Instusi Penerbit Sertifikat"/>
-                                    <field name="valid_from" string="Berlaku mulai"/>
-                                    <field name="valid_to" string="Hingga"/>
-                                    <field name="certificate_attachmentids" string="Lampiran"/>
-                                    <field name="remarks" string="Keterangan"/>
-                                </tree>
-                            </field>
-                        </group>
-                    </page>
-                </xpath>
+                <!-- <xpath expr="//page[@name='personal_information']" position="after"> -->
+                <!--     <page name="certification" string="Sertifikasi"> -->
+                <!--         <group> -->
+                <!--             <field name="certificate_ids" string=""> -->
+                <!--                 <tree editable="bottom"> -->
+                <!--                     <field name="name" string="Nama Sertifikasi"/> -->
+                <!--                     <field name="number" string="Nomor Sertifikat"/> -->
+                <!--                     <field name="certification_types" string="Tipe Sertifikat"/> -->
+                <!--                     <field name="must" string="Wajib ?"/> -->
+                <!--                     <field name="issuing_institution" string="Instusi Penerbit Sertifikat"/> -->
+                <!--                     <field name="valid_from" string="Berlaku mulai"/> -->
+                <!--                     <field name="valid_to" string="Hingga"/> -->
+                <!--                     <field name="certificate_attachmentids" string="Lampiran"/> -->
+                <!--                     <field name="remarks" string="Keterangan"/> -->
+                <!--                 </tree> -->
+                <!--             </field> -->
+                <!--         </group> -->
+                <!--     </page> -->
+                <!-- </xpath> -->
 
-                <xpath expr="//page[@name='personal_information']" position="after">
-                    <page name="education" string="Pendidikan Detail">
-                        <group>
-                            <field name="education_ids" string="">
-                                <tree editable="bottom">
-                                    <field name="school_level"/>
-                                    <field name="name"/>
-                                    <field name="year_graduated"/>
-                                    <field name="majoring"/>
-                                    <field name="level_certificated"/>
-                                    <field name="gpa"/>
-                                </tree>
-                            </field>
-                        </group>
-                    </page>
-                </xpath>
+                <!-- <xpath expr="//page[@name='personal_information']" position="after"> -->
+                <!--     <page name="education" string="Pendidikan Detail"> -->
+                <!--         <group> -->
+                <!--             <field name="education_ids" string=""> -->
+                <!--                 <tree editable="bottom"> -->
+                <!--                     <field name="school_level"/> -->
+                <!--                     <field name="name"/> -->
+                <!--                     <field name="year_graduated"/> -->
+                <!--                     <field name="majoring"/> -->
+                <!--                     <field name="level_certificated"/> -->
+                <!--                     <field name="gpa"/> -->
+                <!--                 </tree> -->
+                <!--             </field> -->
+                <!--         </group> -->
+                <!--     </page> -->
+                <!-- </xpath> -->
 
-                <xpath expr="//page[@name='personal_information']" position="after">
-                    <page name="employment_details" string="Info Detil Kekaryawanan">
-                        <group>
-                            <group>
-                                <field name="periode_probation"/>
-                                <field name="retire_age"/>
-                                <field name="bond_service"/>
-                                <field name="is_pinalty"/>
-                                <field name="resign_notice"/>
-                                <field name="pinalty_bs"/>
-                            </group>
-                            <group>
-                                <field name="ext_probation"/>
-                                <field name="confirm_probation"/>
-                                <field name="pension_date"/>
-                                <field name="service_from"/>
-                                <field name="service_to"/>
-                                <field name="pinalty_amount"/>
-                            </group>
-                        </group>
-                        <notebook>
-                             <page name="employee_asset" string="Asset / Benefit">
-                                 <field name="asset_ids">
-                                     <tree editable="bottom">
-                                         <field name="employee_id" column_invisible="True"/>
-                                        <field name="asset_name"/>
-                                        <field name="asset_number"/>
-                                        <field name="uom"/>
-                                        <field name="asset_qty"/>
-                                        <field name="keterangan"/>
-                                     </tree>
-                                 </field>
-                             </page>
-                         </notebook>
-                    </page>
-                </xpath>
+                <!-- <xpath expr="//page[@name='personal_information']" position="after"> -->
+                <!--     <page name="employment_details" string="Info Detil Kekaryawanan"> -->
+                <!--         <group> -->
+                <!--             <group> -->
+                <!--                 <field name="periode_probation"/> -->
+                <!--                 <field name="retire_age"/> -->
+                <!--                 <field name="bond_service"/> -->
+                <!--                 <field name="is_pinalty"/> -->
+                <!--                 <field name="resign_notice"/> -->
+                <!--                 <field name="pinalty_bs"/> -->
+                <!--             </group> -->
+                <!--             <group> -->
+                <!--                 <field name="ext_probation"/> -->
+                <!--                 <field name="confirm_probation"/> -->
+                <!--                 <field name="pension_date"/> -->
+                <!--                 <field name="service_from"/> -->
+                <!--                 <field name="service_to"/> -->
+                <!--                 <field name="pinalty_amount"/> -->
+                <!--             </group> -->
+                <!--         </group> -->
+                <!--         <notebook> -->
+                <!--              <page name="employee_asset" string="Asset / Benefit"> -->
+                <!--                  <field name="asset_ids"> -->
+                <!--                      <tree editable="bottom"> -->
+                <!--                          <field name="employee_id" column_invisible="True"/> -->
+                <!--                         <field name="asset_name"/> -->
+                <!--                         <field name="asset_number"/> -->
+                <!--                         <field name="uom"/> -->
+                <!--                         <field name="asset_qty"/> -->
+                <!--                         <field name="keterangan"/> -->
+                <!--                      </tree> -->
+                <!--                  </field> -->
+                <!--              </page> -->
+                <!--          </notebook> -->
+                <!--     </page> -->
+                <!-- </xpath> -->
 
-                <xpath expr="//page[@name='hr_settings']" position="after">
-                    <page name="employment_tracking" string="Riwayat Kekaryawanan">
-                        <group>
-                            <field name="servicelog_ids"  context="{'tree_view_ref': 'sanbe_employment_tracking.view_hr_employment_log_tree'}" edit ="0" readonly="1" force_save="1" string=""/>
-                        </group>
-                    </page>
-                </xpath>
+                <!-- <xpath expr="//page[@name='hr_settings']" position="after"> -->
+                <!--     <page name="employment_tracking" string="Riwayat Kekaryawanan"> -->
+                <!--         <group> -->
+                <!--             <field name="servicelog_ids"  context="{'tree_view_ref': 'sanbe_employment_tracking.view_hr_employment_log_tree'}" edit ="0" readonly="1" force_save="1" string=""/> -->
+                <!--         </group> -->
+                <!--     </page> -->
+                <!-- </xpath> -->
 
                 <xpath expr="//page[@name='hr_settings']//field[@name='employee_type']" position="after">
                     <field name="joining_date"/>
@@ -211,25 +211,25 @@
                     <attribute name="string">Atasan Unit Kerja</attribute>
                 </xpath>
 
-                <xpath expr="//page[@name='public']" position="inside">
-                    <notebook>
-                        <page name="list_address" string="Employee Address">
-                        <field name="address_ids">
-                                <tree editable="bottom">
-                                    <field name="employee_id" column_invisible="True"/>
-                                    <field name="address_type"/>
-                                    <field name="address"/>
-                                    <field name="rt"/>
-                                    <field name="rw"/>
-                                    <field name="subdistrict"/>
-                                    <field name="district"/>
-                                    <field name="city"/>
-                                    <field name="default"/>
-                                </tree>
-                            </field>
-                        </page>
-                    </notebook>
-                </xpath>
+                <!-- <xpath expr="//page[@name='public']" position="inside"> -->
+                <!--     <notebook> -->
+                <!--         <page name="list_address" string="Employee Address"> -->
+                <!--         <field name="address_ids"> -->
+                <!--                 <tree editable="bottom"> -->
+                <!--                     <field name="employee_id" column_invisible="True"/> -->
+                <!--                     <field name="address_type"/> -->
+                <!--                     <field name="address"/> -->
+                <!--                     <field name="rt"/> -->
+                <!--                     <field name="rw"/> -->
+                <!--                     <field name="subdistrict"/> -->
+                <!--                     <field name="district"/> -->
+                <!--                     <field name="city"/> -->
+                <!--                     <field name="default"/> -->
+                <!--                 </tree> -->
+                <!--             </field> -->
+                <!--         </page> -->
+                <!--     </notebook> -->
+                <!-- </xpath> -->
 
                 <xpath expr="//page[@name='public']/div/div/group[last()]" position="attributes">
                     <attribute name="invisible">1</attribute>
@@ -434,20 +434,20 @@
                     <field name="passport_id" />
                 </xpath> -->
 
-                <xpath expr="//page[@name='personal_information']/group" position="after">
-                    <group name="family_info_ids" colspan="4" string="Dependence Details">
-                        <field name="family_info_ids">
-                            <tree editable="bottom">
-                                <field name="member_name" required="1"/>
-                                <field name="relation_id" required="1"/>
-                                <field name="member_contact"/>
-                                <field name="birth_date"/>
-                                <field name="address"/>
-                                <field name="emergency_contact"/>
-                            </tree>
-                        </field>
-                    </group>
-                </xpath>
+                <!-- <xpath expr="//page[@name='personal_information']/group" position="after"> -->
+                <!--     <group name="family_info_ids" colspan="4" string="Dependence Details"> -->
+                <!--         <field name="family_info_ids"> -->
+                <!--             <tree editable="bottom"> -->
+                <!--                 <field name="member_name" required="1"/> -->
+                <!--                 <field name="relation_id" required="1"/> -->
+                <!--                 <field name="member_contact"/> -->
+                <!--                 <field name="birth_date"/> -->
+                <!--                 <field name="address"/> -->
+                <!--                 <field name="emergency_contact"/> -->
+                <!--             </tree> -->
+                <!--         </field> -->
+                <!--     </group> -->
+                <!-- </xpath> -->
 
                 <xpath expr="//page[@name='hr_settings']/group/group[2]" position="after">
                     <group string="Application Settings">
