@@ -119,9 +119,9 @@ class HrContract(models.Model):
         res = super(HrContract,self).write(vals_list)
         for allrec in self:
             if allrec.state =='open':
-                if allrec.employee_id.state !='approved':
-                    raise UserError('Cannot Running Contract Because The Employee Not Yet Being Approved!')
-                empstatus = ''
+                # if allrec.employee_id.state !='approved':
+                #     raise UserError('Cannot Running Contract Because The Employee Not Yet Being Approved!')
+                # empstatus = ''
                 empstatus = allrec.employee_id.emp_status
                 allrec.employee_id.contract_id = allrec.id
                 allrec.employee_id.contract_datefrom = allrec.date_start

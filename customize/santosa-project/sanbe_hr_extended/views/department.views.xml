@@ -1,0 +1,54 @@
+<odoo>
+    <data>
+
+        <record id="san_hrms_department_form" model="ir.ui.view">
+            <field name="name">Department</field>
+            <field name="model">sanhrms.department</field>
+            <field name="arch" type="xml">
+                <form multi_edit="1">
+                    <sheet>
+
+                        <group>
+                           
+                            <field name="department_code" required='1'/>
+                            <field name="name" />
+                            <field name="directorate_id"/>
+                            <field name="division_ids" widget='many2many_tags'/>
+                            
+                        </group>
+                       
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="san_hrms_department_tree" model="ir.ui.view">
+            <field name="name">Department</field>
+            <field name="model">sanhrms.department</field>
+            <field name="arch" type="xml">
+
+                <tree limit="20">
+                    <field name="department_code" required='1'/>
+                    <field name="name" />
+                    <field name="directorate_id"/>   
+                    <field name="division_ids"/>
+                </tree>
+                
+            </field>
+        </record>
+        
+
+        <record id="san_hrms_department_action" model="ir.actions.act_window">
+            <field name="name">Department</field>
+            <field name="res_model">sanhrms.department</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
+
+            <field name="domain"></field>
+
+        </record>
+       
+        <menuitem id="department_date" name="Department" sequence='14' parent="hierarchy_id" action="san_hrms_department_action"/>
+
+    </data>
+</odoo>
