@@ -70,8 +70,11 @@ class HrEmployee(models.Model):
                                   store=False)
     alldepartment = fields.Many2many('hr.department', 'hr_department_rel', string='All Department',
                                      compute='_isi_department_branch', store=False)
-    branch_id = fields.Many2one('res.branch', string='Business Unit', domain="[('id','in',branch_ids)]", tracking=True,
-                                required=True)
+    branch_id = fields.Many2one('res.branch', string='Business Unit', domain="[('id','in',branch_ids)]", tracking=True, 
+        default=lambda self: self.env.user.branch_id, required=True)
+    medic = fields.Many2one('hr.profesion.medic','Profesi Medis',)
+    nurse = fields.Many2one('hr.profesion.nurse','Profesi Perawat',)
+    seciality = fields.Many2one('hr.profesion.special','Kategori Khusus',)
     street = fields.Char(related='branch_id.street')
     street2 = fields.Char(related='branch_id.street2')
     city = fields.Char(related='branch_id.city')
@@ -80,6 +83,9 @@ class HrEmployee(models.Model):
     country_id = fields.Many2one(related='branch_id.country_id')
     department_id = fields.Many2one(domain="[('id','in',alldepartment),('active','=',True)]", required=True,
                                     string='Sub Department')
+    hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen')
+    division_id = fields.Many2one('sanhrms.division',string='Divisi')
+    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat')
     employee_id = fields.Char('Employee ID', default='New')
     nik = fields.Char('NIK')
     nik_lama = fields.Char('NIK LAMA')
@@ -124,6 +130,9 @@ class HrEmployee(models.Model):
     contract_datefrom = fields.Date('Contract Date From', related='contract_id.date_start', store=True)
     contract_dateto = fields.Date('Contract Date To', related='contract_id.date_end', store=True)
     attachment_contract = fields.Binary(string='Contract Document', attachment=True)
+    
+    employee_group1s = fields.Many2one('emp.group',
+                                       string='Employee P Group')
     employee_group1 = fields.Selection(selection=_selection1,
                                        default='Group2',
                                        string='Employee P Group')

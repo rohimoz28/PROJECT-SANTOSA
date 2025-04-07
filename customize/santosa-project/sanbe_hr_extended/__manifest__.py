@@ -26,14 +26,19 @@
 
     # any module necessary for this one to work correctly
     'depends': ['base', 'hr','sanbe_hr','hr_payroll_community','hr_contract'],
-    'data': [
-        'security/hr_branch_security.xml',
-        'security/ir.model.access.csv',
-        'views/hr_employee.xml',
-        'views/employee_level.xml',
-        'data/hitung_employee_ws.xml',
-        'data/sequence_employee_id.xml',
-        'views/hr_contracts.xml',
+    "data": [
+        "data/hitung_employee_ws.xml",
+        "data/sequence_employee_id.xml",
+        "security/hr_branch_security.xml",
+        "security/ir.model.access.csv",
+        "views/emp_group_views.xml",
+        "views/employee_level.xml",
+        "views/hr_contracts.xml",
+        "views/department.views.xml",
+        "views/directorate.views.xml",
+        "views/division.views.xml",
+        "views/hr_employee.xml",
+        "views/hr_profesion_views.xml"
     ],
     'assets': {
         'web.assets_backend': [
