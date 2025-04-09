@@ -10,10 +10,10 @@
                     <sheet>
                         <group>
                            
-                            <field name="division_code" required='1'/>
-                            <field name="name" />
-                            <field name="branch_id"/>
-                            <field name="department_id"/>
+                            <field name="division_code" string="Kode" required='1'/>
+                            <field name="name" string="Nama" />
+                            <field name="branch_id" string="Bisnis Unit"/>
+                            <field name="department_id" string="Departmen"/>
                             
                         </group>
                        
@@ -29,10 +29,10 @@
             <field name="arch" type="xml">
 
                 <tree limit="20">
-                    <field name="division_code" required='1'/>
-                    <field name="name" />
-                    <field name="branch_id"/>
-                    <field name="department_id"/>
+                    <field name="division_code" string="Kode" required='1'/>
+                    <field name="name" string="Nama" />
+                    <field name="branch_id" string="Bisnis Unit"/>
+                    <field name="department_id" string="Departmen"/>
                             
                 </tree>
             </field>
@@ -48,7 +48,7 @@
 
         </record>
        
-        <menuitem id="division_date" name="Division" sequence='15' parent="hierarchy_id" action="san_hrms_division_action"/>
+        <menuitem id="division_date" name="Divisi" sequence='15' parent="hierarchy_id" action="san_hrms_division_action"/>
 
     </data>
 </odoo>

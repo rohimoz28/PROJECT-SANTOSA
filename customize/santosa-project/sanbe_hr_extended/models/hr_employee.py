@@ -70,8 +70,7 @@ class HrEmployee(models.Model):
                                   store=False)
     alldepartment = fields.Many2many('hr.department', 'hr_department_rel', string='All Department',
                                      compute='_isi_department_branch', store=False)
-    branch_id = fields.Many2one('res.branch', string='Business Unit', domain="[('id','in',branch_ids)]", tracking=True, 
-        default=lambda self: self.env.user.branch_id, required=True)
+    branch_id = fields.Many2one('res.branch', string='Business Unit', domain="[('id','in',branch_ids)]", tracking=True, default=lambda self: self.env.user.branch_id, required=True)
     medic = fields.Many2one('hr.profesion.medic','Profesi Medis',)
     nurse = fields.Many2one('hr.profesion.nurse','Profesi Perawat',)
     seciality = fields.Many2one('hr.profesion.special','Kategori Khusus',)
@@ -81,9 +80,24 @@ class HrEmployee(models.Model):
     state_id = fields.Char(related='branch_id.state_id')
     zip = fields.Char(related='branch_id.zip')
     country_id = fields.Many2one(related='branch_id.country_id')
-    department_id = fields.Many2one(domain="[('id','in',alldepartment),('active','=',True)]", required=True,
-                                    string='Sub Department')
+    department_id = fields.Many2one('hr.department', compute = '_find_department_id',  string='Departemen', store=True)
     hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen')
+    
+    @api.depends('hrms_department_id')
+    def _find_department_id(self):
+        for line in self:
+            if line.hrms_department_id:
+                Department = self.env['hr.department'].search([('name', 'ilike', line.division_id.name)], limit=1)
+                if Department:
+                    line.department_id = Department.id
+                else:
+                    Department = self.env['hr.department'].sudo().create({
+                        'name': line.hrms_department_id.name,
+                        'active': True,
+                        'company_id': self.env.user.company_id.id,
+                    })
+                    line.department_id = Department.id
+                     
     division_id = fields.Many2one('sanhrms.division',string='Divisi')
     directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat')
     employee_id = fields.Char('Employee ID', default='New')
@@ -130,18 +144,11 @@ class HrEmployee(models.Model):
     contract_datefrom = fields.Date('Contract Date From', related='contract_id.date_start', store=True)
     contract_dateto = fields.Date('Contract Date To', related='contract_id.date_end', store=True)
     attachment_contract = fields.Binary(string='Contract Document', attachment=True)
-    
     employee_group1s = fields.Many2one('emp.group',
                                        string='Employee P Group')
     employee_group1 = fields.Selection(selection=_selection1,
                                        default='Group2',
                                        string='Employee P Group')
-    # employee_group2 = fields.Selection(selection=_selection1,
-    #                                    default='Group2',
-    #                                   string='Employee P Group 2')
-    # employee_group3 = fields.Selection(selection=_selection1,
-    #                                    default='Group2',
-    #                                   string='Employee P Group 3')
     employee_levels = fields.Many2one('employee.level', string='Employee Level', index=True)
     insurance = fields.Char('BPJS No')
     jamsostek = fields.Char('Jamsostek')
@@ -176,6 +183,7 @@ class HrEmployee(models.Model):
     nama_pekerjaans = fields.Char(related='job_id.name', store=True)
     initial = fields.Char('Inisial')
     work_unit = fields.Char('Work Unit')
+    work_unit_id = fields.Many2one('hr.work.unit','Work Unit')
     berat_badan = fields.Integer('Berat Badan (Kg)')
     tinggi_badan = fields.Integer('Tinggi Badan (Cm)')
     kpi_kategory = fields.Selection([('direct_spv', "Direct"),

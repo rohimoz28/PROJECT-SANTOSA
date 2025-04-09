@@ -9,6 +9,7 @@ class Directorate(models.Model):
     name = fields.Char('Directorate Name')
     branch_id = fields.Many2one('res.branch',string='Bisnis Unit')
     department_ids = fields.Many2many("sanhrms.department", string="Department", domain="[('directorate_id', '=', False)]")
+    active = fields.Boolean('Active', default=True )
 
     @api.model
     def create(self, vals):

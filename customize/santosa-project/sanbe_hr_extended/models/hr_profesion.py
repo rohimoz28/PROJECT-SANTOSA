@@ -13,6 +13,8 @@ class HrProfesion(models.Model):
 
     type = fields.Selection([('medic','Medis'),('nurse','Perawat'),('other','Keahlian Khusus')],'Type')
     name = fields.Char('Name')
+    descr = fields.Char('Description')
+    active = fields.Boolean(string="Active", default=True)
     code = fields.Char('Code', required=True, size=20, unique=True)
 
 
@@ -21,7 +23,7 @@ class HrProfesion(models.Model):
         for profesion in self:
             name = ''
             if profesion.code and profesion.name:
-                name = '[' +  profesion.code +'] + ' + profesion.name
+                name = '[' +  profesion.code +'] ' + profesion.name
             profesion.display_name = name
             
 class HrProfesionMedic(models.Model):
@@ -29,6 +31,8 @@ class HrProfesionMedic(models.Model):
     _description = 'Hr Profesion Medical'
 
     name = fields.Char('Name')
+    descr = fields.Char('Description')
+    active = fields.Boolean(string="Active", default=True)
     code = fields.Char('Code', required=True, size=20, unique=True)
 
 
@@ -37,14 +41,21 @@ class HrProfesionMedic(models.Model):
         for profesion in self:
             name = ''
             if profesion.code and profesion.name:
-                name = '[' +  profesion.code +'] + ' + profesion.name
+                name = '[' +  profesion.code +'] ' + profesion.name
             profesion.display_name = name
+
+    # @api.model
+    def unlink(self):
+        return super(HrProfesionMedic, self).unlink()
+
             
 class HrProfesionNurse(models.Model):
     _name = 'hr.profesion.nurse'
     _description = 'Hr Profesion Medical'
 
     name = fields.Char('Name')
+    descr = fields.Char('Description')
+    active = fields.Boolean(string="Active", default=True)
     code = fields.Char('Code', required=True, size=20, unique=True)
 
 
@@ -53,14 +64,20 @@ class HrProfesionNurse(models.Model):
         for profesion in self:
             name = ''
             if profesion.code and profesion.name:
-                name = '[' +  profesion.code +'] + ' + profesion.name
+                name = '[' +  profesion.code +'] ' + profesion.name
             profesion.display_name = name
+            
+    # @api.model
+    def unlink(self):
+        return super(HrProfesionNurse, self).unlink()
             
 class HrProfesionSpecial(models.Model):
     _name = 'hr.profesion.special'
-    _description = 'Hr Profesion Medical'
+    _description = 'Hr Profesion non Medical'
 
     name = fields.Char('Name')
+    descr = fields.Char('Description')
+    active = fields.Boolean(string="Active", default=True)
     code = fields.Char('Code', required=True, size=20, unique=True)
 
 
@@ -69,5 +86,31 @@ class HrProfesionSpecial(models.Model):
         for profesion in self:
             name = ''
             if profesion.code and profesion.name:
-                name = '[' +  profesion.code +'] + ' + profesion.name
+                name = '[' +  profesion.code +'] ' + profesion.name
             profesion.display_name = name
+            
+    # @api.model
+    def unlink(self):
+        return super(HrProfesionSpecial, self).unlink()
+    
+class HrWorkUnit(models.Model):
+    _name = 'hr.work.unit'
+    _description = 'Unit Kerja'
+
+    name = fields.Char('Name')
+    descr = fields.Char('Description')
+    active = fields.Boolean(string="Active", default=True)
+    code = fields.Char('Code', required=True, size=20, unique=True)
+
+
+    @api.depends('name', 'code')
+    def _compute_display_name(self):
+        for profesion in self:
+            name = ''
+            if profesion.code and profesion.name:
+                name = '[' +  profesion.code +'] ' + profesion.name
+            profesion.display_name = name
+
+    # @api.model
+    def unlink(self):
+        return super(HrWorkUnit, self).unlink()

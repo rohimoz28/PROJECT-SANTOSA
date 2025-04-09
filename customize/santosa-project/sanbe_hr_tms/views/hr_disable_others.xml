@@ -6,23 +6,26 @@
         <menuitem id="hr_attendance.menu_hr_attendance_root"
                   active="False"/>
         <menuitem id="hr_holidays.menu_hr_holidays_root"
-                  active="True"
-                  name="Leaves Adm"/>
+                  active="False" parent="hr.menu_hr_root"
+                  name="Adminsitrasi Perijinan"/>
         <menuitem id="hr_timesheet.timesheet_menu_root"
                   active="False"/>
         <menuitem id="hr.menu_hr_root"
-                  name="Personal Adm"/>
+                  name="Administrsi Kepegawaian"/>
         <menuitem id="project.menu_main_pm"
                   active="False"/>
         <menuitem id="sale.sale_menu_root"
+                  name="Penjualan"
                   active="False"/>
         <menuitem id="purchase.menu_purchase_root"
+                  name="Pembelian"
                   active="False"/>
         <menuitem id="stock.menu_stock_root"
-                  name="Inventory"
+                  name="Persediaan"
                   active="True"/>
         <menuitem id="account.menu_finance"
-                  active="False"/>
+                  name="Keuangan"
+                  active="True"/>
         <menuitem id="event.event_main_menu"
                   active="False"/>
     </data>

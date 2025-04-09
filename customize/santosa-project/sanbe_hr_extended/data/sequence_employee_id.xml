@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-     Author   => Albertus Restiyanto Pramayudha
-     email    => xabre0010@gmail.com
-     linkedin => https://www.linkedin.com/in/albertus-restiyanto-pramayudha-470261a8/
-     youtube  => https://www.youtube.com/channel/UCCtgLDIfqehJ1R8cohMeTXA
--->
 <odoo>
-<!--    <data noupdate="1">-->
+   <data noupdate="1">
         <record id="seq_hr_employee_id_sequence" model="ir.sequence">
             <field name="name">HR Employee ID</field>
             <field name="code">hr.employee.sequence</field>
@@ -15,5 +9,328 @@
             <field name="implementation">no_gap</field>
             <field name="company_id" eval="False"/>
         </record>
-<!--    </data>-->
+        <record id="id_doc_uro" model="hr.profesion.medic">
+            <field name="name">Doc. Urologi</field>
+            <field name="code">DocUro</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_doc_rad" model="hr.profesion.medic">
+            <field name="name">Doc. Radiologi</field>
+            <field name="code">DocRad</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_doc_jp" model="hr.profesion.medic">
+            <field name="name">Doc. Radiologi</field>
+            <field name="code">DocJP</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_rad_grf" model="hr.profesion.medic">
+            <field name="name">Doc. Radiologi</field>
+            <field name="code">RadGrf</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_adm_rad" model="hr.profesion.medic">
+            <field name="name">Adm. Radiologi</field>
+            <field name="code">AdmRad</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_rb_rad" model="hr.profesion.medic">
+            <field name="name">Doc. Radiologi</field>
+            <field name="code">RbRad</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_per_rad" model="hr.profesion.medic">
+            <field name="name">Doc. Radiologi</field>
+            <field name="code">PerRad</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_per_cl" model="hr.profesion.medic">
+            <field name="name">Doc. Radiologi</field>
+            <field name="code">PerCL</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_per_eswl" model="hr.profesion.medic">
+            <field name="name">Doc. Radiologi</field>
+            <field name="code">PerESWL</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_tek_tbr" model="hr.profesion.medic">
+            <field name="name">Doc. Radiologi</field>
+            <field name="code">TekTBR</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_dok_si" model="hr.profesion.medic">
+            <field name="name">Doc. Radiologi</field>
+            <field name="code">DocSI</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_per_nuk" model="hr.profesion.medic">
+            <field name="name">Doc. Radiologi</field>
+            <field name="code">PerNuk</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_bill_can" model="hr.profesion.medic">
+            <field name="name">Doc. Radiologi</field>
+            <field name="code">BillCan</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_redioterapis" model="hr.profesion.medic">
+            <field name="name">Doc. Radiologi</field>
+            <field name="code">Radioterapis</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_fis_med" model="hr.profesion.medic">
+            <field name="name">Fisikawan Medis</field>
+            <field name="code">Fis.Med</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_per_can" model="hr.profesion.medic">
+            <field name="name">Fisikawan Medis</field>
+            <field name="code">PerCan</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_tbr_can" model="hr.profesion.medic">
+            <field name="name">Fisikawan Medis</field>
+            <field name="code">TBRCan</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_adm_can" model="hr.profesion.medic">
+            <field name="name">Fisikawan Medis</field>
+            <field name="code">AdmCan</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_far_can" model="hr.profesion.medic">
+            <field name="name">Fisikawan Medis</field>
+            <field name="code">FarCan</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_main_can" model="hr.profesion.medic">
+            <field name="name">Fisikawan Medis</field>
+            <field name="code">MainCan</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_med_can" model="hr.profesion.medic">
+            <field name="name">Fisikawan Medis</field>
+            <field name="code">MedCan</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_arrajal_can" model="hr.profesion.medic">
+            <field name="name">Fisikawan Medis</field>
+            <field name="code">ARrajalCan</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_u_0" model="hr.profesion.nurse">
+            <field name="name">Fisikawan Medis</field>
+            <field name="code">U-0</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_u_1" model="hr.profesion.nurse">
+            <field name="name">Fisikawan Medis</field>
+            <field name="code">U-1</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_u_2" model="hr.profesion.nurse">
+            <field name="name">Fisikawan Medis</field>
+            <field name="code">U-2</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_u_3" model="hr.profesion.nurse">
+            <field name="name">Fisikawan Medis</field>
+            <field name="code">U-3</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_u_4" model="hr.profesion.nurse">
+            <field name="name">Fisikawan Medis</field>
+            <field name="code">U-4</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_a_0" model="hr.profesion.nurse">
+            <field name="name">Fisikawan Medis</field>
+            <field name="code">A-0</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_a_1" model="hr.profesion.nurse">
+            <field name="name">Fisikawan Medis</field>
+            <field name="code">A-1</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_a_2" model="hr.profesion.nurse">
+            <field name="name">Fisikawan Medis</field>
+            <field name="code">A-2</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_a_3" model="hr.profesion.nurse">
+            <field name="name">Fisikawan Medis</field>
+            <field name="code">A-3</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_p_0" model="hr.profesion.nurse">
+            <field name="name">Fisikawan Medis</field>
+            <field name="code">P-0</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_p_1" model="hr.profesion.nurse">
+            <field name="name">Fisikawan Medis</field>
+            <field name="code">P-1</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_p_2" model="hr.profesion.nurse">
+            <field name="name">Fisikawan Medis</field>
+            <field name="code">P-2</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_p_3" model="hr.profesion.nurse">
+            <field name="name">Fisikawan Medis</field>
+            <field name="code">P-3</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_p_4" model="hr.profesion.nurse">
+            <field name="name">Fisikawan Medis</field>
+            <field name="code">P-4</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="id_checker" model="hr.profesion.special">
+            <field name="name">Checker</field>
+            <field name="code">Checker</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_kjr" model="hr.profesion.special">
+            <field name="name">Khusus Jr</field>
+            <field name="code">KJr</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_kmr" model="hr.profesion.special">
+            <field name="name">Khusus Mr</field>
+            <field name="code">KMr</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_ksr" model="hr.profesion.special">
+            <field name="name">Khusus Sr</field>
+            <field name="code">KSr</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_khjr" model="hr.profesion.special">
+            <field name="name">Khusus HD Jr</field>
+            <field name="code">KHJr</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_khmr" model="hr.profesion.special">
+            <field name="name">Khusus HD Mr</field>
+            <field name="code">KHMr</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_khsr" model="hr.profesion.special">
+            <field name="name">Khusus HD Sr</field>
+            <field name="code">KHSr</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_kk" model="hr.profesion.special">
+            <field name="name">Khusus Koordinator</field>
+            <field name="code">KK</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_kcp" model="hr.profesion.special">
+            <field name="name">Khusus Cov P</field>
+            <field name="code">KCP</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_kcna" model="hr.profesion.special">
+            <field name="name">Khusus Cov NA</field>
+            <field name="code">KCNA</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_kmcp" model="hr.profesion.special">
+            <field name="name">Khusus Mr Cov P</field>
+            <field name="code">KMCP</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_kcb" model="hr.profesion.special">
+            <field name="name">Khusus Cov B</field>
+            <field name="code">KCB</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_kscp" model="hr.profesion.special">
+            <field name="name">Khusus Sr Cov P</field>
+            <field name="code">KSCP</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_kch" model="hr.profesion.special">
+            <field name="name">Khusus Cov H</field>
+            <field name="code">KCH</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_ak1" model="hr.profesion.special">
+            <field name="name">A Kategori 1</field>
+            <field name="code">AK1</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_ak2" model="hr.profesion.special">
+            <field name="name">A Kategori 2</field>
+            <field name="code">AK2</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_ak3" model="hr.profesion.special">
+            <field name="name">A Kategori 3</field>
+            <field name="code">AK3</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_bk1" model="hr.profesion.special">
+            <field name="name">B Kategori 1</field>
+            <field name="code">BK1</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_bk2" model="hr.profesion.special">
+            <field name="name">B Kategori 2</field>
+            <field name="code">BK2</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_bk3" model="hr.profesion.special">
+            <field name="name">B Kategori 3</field>
+            <field name="code">BK3</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_ck1" model="hr.profesion.special">
+            <field name="name">C Kategori 1</field>
+            <field name="code">CK1</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_ck2" model="hr.profesion.special">
+            <field name="name">C Kategori 2</field>
+            <field name="code">CK2</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_ck3" model="hr.profesion.special">
+            <field name="name">C Kategori 3</field>
+            <field name="code">CK3</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="id_icu" model="hr.work.unit">
+            <field name="name">Intensive Care Unit</field>
+            <field name="code">ICU</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_nicu" model="hr.work.unit">
+            <field name="name">Neonatal Intensive Care Unit</field>
+            <field name="code">NICU</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_rad" model="hr.work.unit">
+            <field name="name">Radiologi</field>
+            <field name="code">RAD</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="id_sanbe" model="emp.group">
+            <field name="name">Sanbe</field>
+            <field name="code">SANBE</field>
+            <field name="active">True</field>
+        </record>
+        <record id="id_shbc" model="emp.group">
+            <field name="name">SHBC</field>
+            <field name="code">SHBC</field>
+            <field name="active">True</field>
+        </record>
+   </data>
 </odoo>

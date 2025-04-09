@@ -1,18 +1,10 @@
-# -*- coding : utf-8 -*-
-#################################################################################
-# Author    => Albertus Restiyanto Pramayudha
-# email     => xabre0010@gmail.com
-# linkedin  => https://www.linkedin.com/in/albertus-restiyanto-pramayudha-470261a8/
-# youtube   => https://www.youtube.com/channel/UCCtgLDIfqehJ1R8cohMeTXA
-#################################################################################
-
 {
-    'name': "Sanbe HR Extended",
+    'name': "Santosa HR Extended",
 
-    'summary': "Sanbe HR Extended",
+    'summary': "Santosa HR Extended",
 
     'description': """
-   Sanbe HR Extended
+   Santosa HR Extended
     """,
 
     'author': "Albertus Restiyanto Pramayudha",
@@ -25,7 +17,7 @@
     'currency': 'USD',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'hr','sanbe_hr','hr_payroll_community','hr_contract'],
+    'depends': ['base', 'hr','purchase','stock','sale','account','project','event','sanbe_hr','purchase_request','hr_holidays','hr_attendance','calendar','hr_payroll_community','hr_contract','hr_gamification','hr_payroll_community'],
     "data": [
         "data/hitung_employee_ws.xml",
         "data/sequence_employee_id.xml",
@@ -37,6 +29,7 @@
         "views/department.views.xml",
         "views/directorate.views.xml",
         "views/division.views.xml",
+        "views/hr_menu_item_views.xml",
         "views/hr_employee.xml",
         "views/hr_profesion_views.xml"
     ],
@@ -50,4 +43,3 @@
     ],
     "images": ["static/description/banner.png"],
 }
-

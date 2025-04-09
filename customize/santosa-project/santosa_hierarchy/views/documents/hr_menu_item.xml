@@ -33,16 +33,6 @@
             <field name="active" eval="False"/>
         </record>
 
-        <record id="base_territory.menu_res_territory" model="ir.ui.menu">
-            <field name="parent_id" ref="santosa_hierarchy.hierarchy_id"/>
-            <field name="sequence">1</field>
-        </record>
-
-        <record id="base_territory.menu_res_branch" model="ir.ui.menu">
-            <field name="parent_id" ref="santosa_hierarchy.hierarchy_id"/>
-            <field name="sequence">2</field>
-        </record>
-
         <record id="hr_payroll_community.menu_hr_payroll_community_root" model="ir.ui.menu">
             <field name="name">Penggajian</field>
         </record>

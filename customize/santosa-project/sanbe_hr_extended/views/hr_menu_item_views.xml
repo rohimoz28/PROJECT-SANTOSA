@@ -1,0 +1,93 @@
+<odoo>
+    <data>
+
+        <record id="hr.hr_menu_hr_reports" model="ir.ui.menu">
+            <field name="name">Dokumen</field>
+        </record>
+
+        <record id="hr.menu_hr_work_location_tree" model="ir.ui.menu">
+            <field name="sequence">100</field>
+        </record>
+
+        <record id="hr.menu_hr_department_tree" model="ir.ui.menu">
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="hr.menu_hr_department_kanban" model="ir.ui.menu">
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="hr_gamification.gamification_challenge_menu_hr" model="ir.ui.menu">
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="hr_gamification.gamification_goal_menu_hr" model="ir.ui.menu">
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="hr_gamification.gamification_badge_menu_hr" model="ir.ui.menu">
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="hr_gamification.menu_hr_gamification" model="ir.ui.menu">
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="hr_payroll_community.menu_hr_payroll_community_root" model="ir.ui.menu">
+            <field name="name">Penggajian</field>
+        </record>
+
+        <record id="hr.menu_hr_root" model="ir.ui.menu">
+            <field name="name">Administrasi Kepegawaian</field>
+        </record>
+
+        <record id="hr_skills_survey.hr_employee_certication_report_menu" model="ir.ui.menu">
+            <field name="name">Sertifikasi</field>
+            <field name="sequence">9</field>
+        </record>
+
+        <record id="hr_skills.hr_employee_skill_report_menu" model="ir.ui.menu">
+            <field name="name">Keahlian</field>
+        </record>
+        <record id="calendar.mail_menu_calendar" model="ir.ui.menu">
+            <field name="active" eval="False"/>
+        </record>
+        <record id="hr_attendance.menu_hr_attendance_root" model="ir.ui.menu">
+            <field name="active" eval="False"/>
+        </record>
+        <record id="hr_holidays.menu_hr_holidays_root" model="ir.ui.menu">
+            <field name="active" eval="False"/>
+        </record>
+        <record id="hr_timesheet.timesheet_menu_root" model="ir.ui.menu">
+            <field name="active" eval="False"/>
+        </record>
+        <record id="hr.menu_hr_root" model="ir.ui.menu">
+            <field name="name">Administrasi Kepegawaian</field>
+        </record>
+        <record id="project.menu_main_pm" model="ir.ui.menu">
+            <field name="active" eval="False"/>
+        </record>
+        <record id="sale.sale_menu_root" model="ir.ui.menu">
+            <field name="active" eval="False"/>
+            <field name="name">Penjualan</field>
+        </record>
+        <record id="purchase.menu_purchase_root" model="ir.ui.menu">
+            <field name="active" eval="True"/>
+            <field name="name">Pembelian</field>
+        </record>
+        <record id="stock.menu_stock_root" model="ir.ui.menu">
+            <field name="active" eval="True"/>
+            <field name="name">Persediaan</field>
+        </record>
+        <record id="account.menu_finance" model="ir.ui.menu">
+            <field name="active" eval="True"/>
+            <field name="name">Keuangan</field>
+        </record>
+        <record id="event.event_main_menu" model="ir.ui.menu">
+            <field name="active" eval="False"/>
+        </record>
+        <record id="purchase_request.parent_menu_purchase_request" model="ir.ui.menu">
+            <field name="name">Permintaan Pembelian</field>
+        </record>
+    </data>
+</odoo>

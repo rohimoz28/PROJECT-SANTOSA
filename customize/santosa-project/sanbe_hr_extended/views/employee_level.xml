@@ -25,7 +25,7 @@
             <field name="model">employee.level</field>
             <field name="arch" type="xml">
                 <tree string="Employee Level Name">
-                    <field name="name" optional="show" />
+                    <field name="name" string="Nama" optional="show" />
                 </tree>
             </field>
         </record>

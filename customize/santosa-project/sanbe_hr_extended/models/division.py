@@ -9,6 +9,8 @@ class Division(models.Model):
     name = fields.Char('Division Name')
     branch_id = fields.Many2one('res.branch',string='Bisnis Unit')
     department_id = fields.Many2one('sanhrms.department',string='Department')
+    active = fields.Boolean('Active', default=True )
+
     # @api.depends('department_code','name')
     # def _compute_display_name(self):
     #     for account in self:
