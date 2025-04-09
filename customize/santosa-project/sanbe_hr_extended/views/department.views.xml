@@ -10,10 +10,10 @@
 
                         <group>
                            
-                            <field name="department_code" required='1'/>
-                            <field name="name" />
-                            <field name="directorate_id"/>
-                            <field name="division_ids" widget='many2many_tags'/>
+                            <field name="department_code" string="Kode" required='1'/>
+                            <field name="name" string="Nama"/>
+                            <field name="directorate_id" string="Direktorat"/>
+                            <field name="division_ids" string="Divisi" widget='many2many_tags'/>
                             
                         </group>
                        
@@ -30,9 +30,9 @@
 
                 <tree limit="20">
                     <field name="department_code" required='1'/>
-                    <field name="name" />
-                    <field name="directorate_id"/>   
-                    <field name="division_ids"/>
+                    <field name="name" string="Nama" />
+                    <field name="directorate_id" string="Direktorat"/>   
+                    <field name="division_ids" string="Divisi"/>
                 </tree>
                 
             </field>
@@ -48,7 +48,7 @@
 
         </record>
        
-        <menuitem id="department_date" name="Department" sequence='14' parent="hierarchy_id" action="san_hrms_department_action"/>
+        <menuitem id="department_date" name="Departmen" sequence='14' parent="hierarchy_id" action="san_hrms_department_action"/>
 
     </data>
 </odoo>

@@ -7,56 +7,67 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form" />
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='parent_id']" position="attributes">
-                    <attribute name="string">Immediate Superior</attribute>
+                <xpath expr="//field[@name='parent_id']" position="replace" />
+                <xpath expr="//field[@name='mobile_phone']" position="attributes">
+                    <attribute name="invisible">1</attribute>
                 </xpath>
+                <xpath expr="//field[@name='job_id']" position="replace" />
+
+                <xpath expr="//field[@name='company_id']" position="attributes" >
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
                 <xpath expr="//field[@name='work_phone']" position="before">
                     <field name="area" options="{'no_create': True,'no_create_edit': True}" required="1"/>
                     <field name="branch_ids" invisible="1" />
                     <field name="alldepartment" invisible="1" />
-                    <field name="branch_id" options="{'no_create': True,'no_create_edit': True}" required="1"/>
-                    <field name="directorate_id" options="{'no_create': True,'no_create_edit': True}" required='1'/>
-                    <field name="hrms_department_id" options="{'no_create': True,'no_create_edit': True}" required='1'/>
-                    <field name="division_id" options="{'no_create': True,'no_create_edit': True}" required='1'/>
-                    <field name="medic" options="{'no_create': True,'no_create_edit': True}" required='1'/>
-                    <field name="nurse" options="{'no_create': True,'no_create_edit': True}" required='1'/>
-                    <field name="seciality" options="{'no_create': True,'no_create_edit': True}" required='1'/>
+                    <field name="branch_id" options="{'no_create': True,'no_create_edit': True}" string = "Unit Bisnis" required="1"/>
+                    <field name="directorate_id" options="{'no_create': True,'no_create_edit': True}" string = "Direktorat" required='1'/>
+                    <field name="hrms_department_id" options="{'no_create': True,'no_create_edit': True}" string = "Departemen" required='1'/>
+                    <field name="division_id" options="{'no_create': True,'no_create_edit': True}" string = "Divisi" required='1'/>
+                    <field name="job_id" options="{'no_create': True,'no_create_edit': True}" required="1" string="Jabatan"/>
+                    <field name="parent_id" options="{'no_create': True,'no_create_edit': True}" string="Atasan Langsung"/>
+                    <field name="employee_group1s" options="{'no_create': True,'no_create_edit': True}"/>
                 </xpath>
                 <xpath expr="//field[@name='work_phone']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
 
                 <xpath expr="//field[@name='department_id']" position="replace">
-                    <field name="department_id" options="{'no_create': True,'no_create_edit': True}" 
-                    invisible="1"
-                    />
+                    <field name="department_id" options="{'no_create': True,'no_create_edit': True}" invisible="1"/>
                 </xpath>
                 
-                <xpath expr="//field[@name='parent_id']" position="after">
-                    <field name="work_unit" string="Unit Kerja"/>
+                <xpath expr="//field[@name='coach_id']" position="before">
+                    <field name="work_unit" string="Posisi Unit Kerja" invisible="1" />
+                    <field name="work_unit_id" string="Posisi Unit Kerja" options="{'no_create': True,'no_create_edit': True}"/>
                 </xpath>
                 <xpath expr="//field[@name='coach_id']" position="attributes">
                     <attribute name="string">Atasan Unit Kerja</attribute>
+                    <attribute name="options">{'no_create': True,'no_create_edit': True}</attribute>
                 </xpath>
-                <xpath expr="//field[@name='job_id']" position="attributes">
-                    <attribute name="required">1</attribute>
-                    <attribute name="domain">[('department_id','=',department_id)]</attribute>
-                    <attribute name="options">{'no_create': True, 'no_open': True}</attribute>
+                <xpath expr="//field[@name='coach_id']" position="after">
+                    <field name="medic" options="{'no_create': True,'no_create_edit': True}"/>
+                    <field name="nurse" options="{'no_create': True,'no_create_edit': True}"/>
+                    <field name="seciality" options="{'no_create': True,'no_create_edit': True}"/>
                 </xpath>
+                <xpath expr="//field[@name='work_email']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
                 <xpath expr="//field[@name='identification_id']" position="attributes">
                     <attribute name="required">0</attribute>
                 </xpath>
-                <xpath expr="//field[@name='marital']" position="replace">
+                <!-- <xpath expr="//field[@name='marital']" position="replace">
                     <field name="marital" required="1" />
+                </xpath> -->
+                <xpath expr="//field[@name='marital']" position="attributes">
+                    <attribute name="required">1</attribute>
                 </xpath>
                 <xpath expr="//field[@name='birthday']" position="attributes">
                     <attribute name="required">1</attribute>
                 </xpath>
                 <xpath expr="//field[@name='gender']" position="attributes">
                     <attribute name="required">1</attribute>
-                </xpath>
-                <xpath expr="//field[@name='job_id']" position="attributes">
-                    <attribute name="options">{'no_create': True, 'no_open': True}</attribute>
                 </xpath>
                 <xpath expr="//field[@name='identification_id']" position="after">
                     <field name="nik" required="1" readonly="1" force_save="1"/>
@@ -110,7 +121,7 @@
                 </xpath>
                 <xpath expr="//page[@name='personal_information']/group/group[3]" position="after">
                     <group string="Job Status">
-                        <field name="kpi_kategory" />
+                        <field name="kpi_kategory" invisible="1" />
                         <field name="job_status" />
                         <field name="emp_status" readonly="emp_status not in ['probation','confirmed']"/>
                         <field name="first_date_join"/>
@@ -139,9 +150,7 @@
                         </div>
                         <field name="employee_levels"
                             options="{'no_create': True,'no_quick_create': True}" />
-                        <field name="employee_group1s" string="Employee P Group"
-                        required="1"
-                        />
+                        <field name="employee_group1s" string="Employee P Group" required="1"/>
                         <field name="employee_group1" invisible ="1" string="Employee P Group"/>
                         <field name="apoteker"
                             invisible="employee_group1 !='group3'" />
@@ -212,12 +221,12 @@
                     <field name="job_status"/>
                     <field name="emp_status" />
                     <field name="employee_levels"/>
-                    <field name="employee_group1"/>
+                    <field name="employee_group1s"/>
                 </xpath>
                 <xpath expr="//field[@name='work_phone']" position="replace" />
                 <xpath expr="//field[@name='work_email']" position="replace" />
                 <xpath expr="//field[@name='company_id']" position="replace" >
-                         <field name="company_id" groups="base.group_multi_company"/>
+                         <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                 </xpath>
                 <xpath expr="//field[@name='department_id']" position="replace" />
                 <xpath expr="//field[@name='job_id']" position="replace" />
@@ -232,7 +241,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='department_id']" position="before">
                     <field name="area"/>
-                    <field name="branch_id" />
+                    <field name="branch_id" string="Unit Bisnis"/>
                 </xpath>
             </field>
         </record>
