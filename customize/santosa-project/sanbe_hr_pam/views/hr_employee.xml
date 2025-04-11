@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="sanbe_hr_extended.hr_employee_extended_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='address_id']" position="after">
-                <label for="street" string="Work Address"/>
+                <label for="street" string="Alamat Tempat Kerja"/>
                     <div class="o_address_format">
                         <field name="street" nolabel='1' invisible="not street"/>
                         <field name="street2" nolabel='1' invisible="not street2"/>
@@ -33,7 +33,7 @@
                 <field name="ptkp" widget="radio" options="{'horizontal': true}"/>
             </xpath>
             <xpath expr="//field[@name='no_sim']" position="after">
-                <field name="exp_sim_no"/>
+                <field name="exp_sim_no" string="Masa berlaku SIM Hingga"/>
             </xpath>
             <xpath expr="//field[@name='allowance_ot_flat']" position="after">
                 <field name="allowance_ot1" invisible="1"/>
