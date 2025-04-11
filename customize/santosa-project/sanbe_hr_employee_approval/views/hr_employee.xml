@@ -237,7 +237,7 @@
                 <xpath expr="//field[@name='emp_status']" position="replace">
                     <field name="state" invisible="1"/>
                     <field name="status" invisible="1"/>
-                    <field name="emp_status_id" readonly="state not in ['draft']" domain="[('status', '=', job_status)]" options="{'no_create': True, 'no_open': True}" string="Employment Status"/>
+                    <field name="emp_status_id" readonly="state not in ['draft']" domain="[('status', '=', job_status)]" options="{'no_create': True, 'no_open': True}" string="Status Kekaryawanan"/>
                 </xpath>
                 <xpath expr="//field[@name='employee_group1']" position="attributes">
                     <attribute name="readonly">state not in ['draft']</attribute>

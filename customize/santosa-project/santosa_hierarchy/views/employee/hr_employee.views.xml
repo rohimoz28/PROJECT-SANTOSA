@@ -71,17 +71,17 @@
                     <attribute name="invisible">1</attribute>
                 </xpath> -->
 
-                <xpath expr="//page[@name='personal_information']" position="attributes">
+                <!-- <xpath expr="//page[@name='personal_information']" position="attributes">
                     <attribute name="string">
                         Info Pekerjaan
                     </attribute>
-                </xpath>
+                </xpath> -->
 
-                <xpath expr="//page[@name='public']" position="attributes">
+                <!-- <xpath expr="//page[@name='public']" position="attributes">
                     <attribute name="string">
                         Alamat
                     </attribute>
-                </xpath>
+                </xpath> -->
 
                 <!-- <xpath expr="//page[@name='personal_information']" position="after"> -->
                 <!--     <page name="benefit_allowance" string="Tunjangan dan asset"> -->
@@ -341,9 +341,9 @@
                 <!--     </group> -->
                 <!-- </xpath> -->
 
-                <xpath expr="//page[@name='personal_information']/group/group[7]" position="attributes">
+                <!-- <xpath expr="//page[@name='personal_information']/group/group[7]" position="attributes">
                     <attribute name="string">Kewarganegaraan</attribute>
-                </xpath>
+                </xpath> -->
 
                 <xpath expr="//page[@name='personal_information']/group/group[4]" position="after">
                     <group string="Kewarganegaraan">
@@ -399,9 +399,9 @@
                     <attribute name="string">Data Keluarga</attribute>
                 </xpath>
 
-                <xpath expr="//field[@name='marital']" position="attributes">
+                <!-- <xpath expr="//field[@name='marital']" position="attributes">
                     <attribute name="string">Status Perkawinan</attribute>
-                </xpath>
+                </xpath> -->
 
                 <xpath expr="//field[@name='spouse_complete_name']" position="attributes">
                     <attribute name="string">Nama Pasangan (Suami / Istri)</attribute>
@@ -411,9 +411,9 @@
                     <attribute name="string">Ulang Tahun Pasangan</attribute>
                 </xpath>
 
-                <xpath expr="//field[@name='children']" position="attributes">
+                <!-- <xpath expr="//field[@name='children']" position="attributes">
                     <attribute name="string">Jumlah anak Tanggungan</attribute>
-                </xpath>
+                </xpath> -->
 
                 <!-- <xpath expr="//page[@name='personal_information']/group/group[7]/field[@name='passport_id']" position="attributes">
                     <attribute name="invisible">1</attribute>

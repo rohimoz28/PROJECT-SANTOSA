@@ -102,8 +102,8 @@ class HrEmployee(models.Model):
     directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat')
     employee_id = fields.Char('Employee ID', default='New')
     nik = fields.Char('NIK')
-    nik_lama = fields.Char('NIK LAMA')
-    no_ktp = fields.Char('NO KTP')
+    nik_lama = fields.Char('NIK Lama')
+    no_ktp = fields.Char('No KTP')
     doc_ktp = fields.Many2many('ir.attachment', 'hr_employee_rel', string='KTP Document',
                                help="You may attach files to with this")
     no_npwp = fields.Char('No NPWP')

@@ -38,7 +38,7 @@
         # 'views/warning_letter/hr_warning_letter_type.views.xml',
         # 'views/contract/hr_contract_hide.views.xml',
 
-        # 'views/hierarchy/hierarchy_menuitem.xml',
+        'views/hierarchy/hierarchy_menuitem.xml',
         # 'views/employee_exit/employee_exit.views.xml',
         'views/documents/hr_menu_item.xml',
         # 'views/master_data/directorate/directorate.views.xml',
