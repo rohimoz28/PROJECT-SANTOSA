@@ -146,6 +146,9 @@
                 <xpath expr="//field[@name='private_country_id']" position="attributes">
                     <attribute name="placeholder">Negara</attribute>
                 </xpath>
+                <xpath expr="//field[@name='ssnid']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
                 <xpath expr="//field[@name='private_email']" position="after">
                     <field name="berat_badan" />
                     <field name="tinggi_badan" />
