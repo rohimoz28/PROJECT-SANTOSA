@@ -31,20 +31,20 @@ class HREmployee(models.Model):
     _inherit = "hr.employee"
 
 
-    periode_probation = fields.Integer('Periode Probation',default=3,readonly="job_status != 'permanent'")
-    ext_probation = fields.Integer('Ext Prob',readonly="job_status != 'permanent'")
-    confirm_probation = fields.Date('Confirmation Date',compute='hitung_confirmation',store=False,readonly=False)
-    retire_age = fields.Integer('Retire Age',default=55)
-    pension_date = fields.Date('Pension Date',compute='_isi_pensiunemployee',store=False,readonly=False)
-    bond_service = fields.Boolean('Bond Services',default=False)
-    service_from = fields.Date('Service From')
-    service_to = fields.Date('To')
-    is_pinalty = fields.Boolean('Pinalty',default=False)
-    pinalty_bs = fields.Integer('Pinalty BS')
+    periode_probation = fields.Integer('Masa percobaan',default=3,readonly="job_status != 'permanent'")
+    ext_probation = fields.Integer('Perpanjangan Percobaan',readonly="job_status != 'permanent'")
+    confirm_probation = fields.Date('Tanggal Terkonfirmasi',compute='hitung_confirmation',store=False,readonly=False)
+    retire_age = fields.Integer('Usia Pensiun',default=55)
+    pension_date = fields.Date('Tanggal Pensiun',compute='_isi_pensiunemployee',store=False,readonly=False)
+    bond_service = fields.Boolean('Ikatan Dinas',default=False)
+    service_from = fields.Date('Ikatan Dinas Mulai')
+    service_to = fields.Date('Ikatan Dinas Hingga')
+    is_pinalty = fields.Boolean('Penalti',default=False)
+    pinalty_bs = fields.Integer('Penalti BS')
 
-    pinalty_amount = fields.Monetary('Penalty Amount')
-    resign_notice = fields.Integer('Resign Notice')
-    asset_ids = fields.One2many('hr.employee.assets','employee_id',auto_join=True,string='Asset Details')
+    pinalty_amount = fields.Monetary('Jumlah Pinalti')
+    resign_notice = fields.Integer('Masa pengunduran diri')
+    asset_ids = fields.One2many('hr.employee.assets','employee_id',auto_join=True,string='Detail Asset')
 
 
     @api.depends('join_date','periode_probation')
@@ -77,17 +77,17 @@ class HREmployeeAssets(models.Model):
     _name = "hr.employee.assets"
 
     employee_id = fields.Many2one('hr.employee',string='Employee ID',index=True)
-    asset_name = fields.Char('Asset/Benefit Type')
-    asset_number = fields.Char('Asset/Benefit Number')
-    uom = fields.Many2one('uom.uom',string='UOM')
-    asset_qty = fields.Float('QTY')
+    asset_name = fields.Char('Tipe aset / Tunjangan')
+    asset_number = fields.Char('Nomor Aset / Tunjangan')
+    uom = fields.Many2one('uom.uom',string='UoM')
+    asset_qty = fields.Float('Qty')
     received_date = fields.Date('Tanggal Diterima')
     returned_date = fields.Date('Tanggal Dikembalikan')
     keterangan = fields.Text('Keterangan')
     brand = fields.Char(string = 'Merek / Model')
     serial_number = fields.Char(string = 'Serial Number')
     no_ref = fields.Char(string = 'No Ref (No TTU)')
-    product_id = fields.Many2one('product.product', string="Product", related="product_template_id.product_variant_id", store=True)
+    product_id = fields.Many2one('product.product', string="Produk", related="product_template_id.product_variant_id", store=True)
     stock_lot_id = fields.Many2one(comodel_name="stock.lot", string="stock lot")
     product_template_id = fields.Many2one(comodel_name="product.template", string="product template")
 
