@@ -19,23 +19,23 @@ class HrEmployeeCertification(models.Model):
     _name = 'hr.employee.certification'
     _description = 'HR Employee Certification'
 
-    employee_id = fields.Many2one('hr.employee', string='Employee ID', index=True, required=True)
-    name = fields.Char(string='Certification Name',required=True)
-    number = fields.Char(string='Certification Number',required=True)
+    employee_id = fields.Many2one('hr.employee', string='Nama Karyawan', index=True, required=True)
+    name = fields.Char(string='Nama Sertifikasi',required=True)
+    number = fields.Char(string='Nomor Sertifikasi',required=True)
     certification_types = fields.Selection([
         ('formal', 'Formal'),
         ('non_formal', 'Non Formal'),
         ('profesi', 'Profesi')
-    ], string='Certificate Type', index=True, default='formal',
+    ], string='Tipe Sertifikat', index=True, default='formal',
         help="Defines the certification type.")
-    must = fields.Boolean(string='Must',default=False)
-    issuing_institution = fields.Char('Issuing Institution',required=True)
-    valid_from = fields.Date(string='Valid From',default=fields.Date.today, required=True)
-    valid_to = fields.Date(string='Valid To', required=True)
+    must = fields.Boolean(string='Wajib',default=False)
+    issuing_institution = fields.Char('Institusi Penerbit Sertifikat',required=True)
+    valid_from = fields.Date(string='Berlaku mulai',default=fields.Date.today, required=True)
+    valid_to = fields.Date(string='Hingga', required=True)
     notification_date = fields.Date(string='Date Notification', compute='_compute_notification_date',store=True)
 
-    remarks = fields.Text(string='Remarks')
-    certificate_attachmentids = fields.Many2many('ir.attachment', string='Attachment',
+    remarks = fields.Text(string='Keterangan')
+    certificate_attachmentids = fields.Many2many('ir.attachment', string='Lampiran',
                                           help="You may attach files to with this")
     cerv_refrence= fields.Many2one('hr.employee.certification',readonly=True)
     active = fields.Boolean(string="Active", default=True)

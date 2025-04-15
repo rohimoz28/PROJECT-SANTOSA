@@ -17,10 +17,10 @@ class EducationLevel(models.Model):
     school_level = fields.Selection([('universitas','Perguruan Tinggi'),
                                      ('sma','SMA'),
                                      ('smp','SMP'),
-                                     ('sd','SD')],default='universitas',string='School Level')
-    name = fields.Char('School Name')
-    year_graduated = fields.Char('Year')
-    majoring= fields.Char('Majoring')
+                                     ('sd','SD')],default='universitas',string='Jenjang Pendidikan')
+    name = fields.Char('Nama Sekolah')
+    year_graduated = fields.Char('Tahun Pendidikan')
+    majoring= fields.Char('Bidang Studi')
     level_certificated = fields.Selection([('s3','S3'),
                                      ('s2','S2'),
                                      ('s1','S1'),
@@ -28,7 +28,7 @@ class EducationLevel(models.Model):
                                      ('d4', 'D4'),
                                      ('sma','SMA'),
                                      ('smp','SMP'),
-                                     ('sd','SD')],default='s1',string='Certificate Level')
+                                     ('sd','SD')],default='s1',string='Ijazah Terakhir')
     gpa = fields.Float('GPA')
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)

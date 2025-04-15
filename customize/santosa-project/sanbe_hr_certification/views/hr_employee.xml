@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//page[@name='personal_information']" position="after">
-                    <page name="certificate_details" string="Certification">
+                    <page name="certificate_details" string="Sertifikasi">
                         <field name="certificate_ids" context="{'tree_view_ref': 'sanbe_hr_certification.view_hr_certificated_tree', 'form_view_ref': 'sanbe_hr_certification.view_hr_certificate_form'}"/>
                     </page>
                 </xpath>
