@@ -155,19 +155,19 @@ class HrEmployee(models.Model):
     ptkp = fields.Char('PTKP')
     back_title = fields.Char('Back Title')
     no_sim = fields.Char('Driving Lisence #')
-    attende_premie = fields.Boolean('Attendee Premi', default=False)
-    attende_premie_amount = fields.Float(digits='Product Price', string='Amount')
+    attende_premie = fields.Boolean('Premi Kehadiran', default=False)
+    attende_premie_amount = fields.Float(digits='Product Price', string='Jumlah Premi Kehadiran')
     allowance_jemputan = fields.Boolean('Jemputan')
     allowance_ot = fields.Boolean('OT')
     allowance_transport = fields.Boolean('Transport')
-    allowance_meal = fields.Boolean('Meal')
-    jemputan_remarks = fields.Char('Remarks')
-    ot_remarks = fields.Char('Remarks')
-    transport_remarks = fields.Char('Remarks')
-    meal_remarks = fields.Char('Remarks')
-    allowance_night_shift = fields.Boolean('Night Shift')
-    allowance_nightshift_remarks = fields.Char('Remarks')
-    allowance_nightshift_amount = fields.Float('Night Shift Amount')
+    allowance_meal = fields.Boolean('Uang Makan')
+    jemputan_remarks = fields.Char('Keterangan Penjemputan')
+    ot_remarks = fields.Char('Keterangan Lembur')
+    transport_remarks = fields.Char('Keterangan Transport')
+    meal_remarks = fields.Char('Keterangan Makan')
+    allowance_night_shift = fields.Boolean('Dinas Malam')
+    allowance_nightshift_remarks = fields.Char('Keterangan Dinas Malam')
+    allowance_nightshift_amount = fields.Float('Jumlah Premi Dinas Malam')
     state = fields.Selection([
         ('draft', "Draft"),
         ('req_approval', 'Request For Approval'),
@@ -197,8 +197,8 @@ class HrEmployee(models.Model):
     apoteker = fields.Boolean('Apoteker', default=False)
     first_date_join = fields.Date('First Date Of Joining')
     workingday = fields.Integer(
-        string='Workingday',
-        help='Total Working Day in a Month',
+        string='Jumlah Hari kerja',
+        help='Jumlah Hari Kerja Dalam Satu Bulan',
         required=False)
     # wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.", group_operator="avg")
     # contract_wage = fields.Monetary('Contract Wage', compute='_compute_contract_wage')

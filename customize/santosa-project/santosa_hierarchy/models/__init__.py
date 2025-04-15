@@ -7,8 +7,8 @@ from . import employee_level
 from . import hr_employee_family
 from . import hr_employee_relation
 from . import hr_employee_assets
-from . import employee_educations
-from . import hr_employee_certification
+# from . import employee_educations
+# from . import hr_employee_certification
 from . import hr_employment_log
 from . import hr_payroll_entry
 from . import hr_mutations

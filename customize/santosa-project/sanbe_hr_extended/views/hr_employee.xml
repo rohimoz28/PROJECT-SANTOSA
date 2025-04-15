@@ -234,7 +234,7 @@
                     <field name="back_title" string="Gelar Belakang"/>
                 </xpath>
                 <xpath expr="//field[@name='certificate']" position="attributes">
-                    <attribute name="string">Ijasah Terakhir</attribute>
+                    <attribute name="string">Ijazah Terakhir</attribute>
                 </xpath>
                 <xpath expr="//field[@name='study_field']" position="attributes">
                     <attribute name="string">Bidang Pendidikan</attribute>
@@ -272,9 +272,9 @@
                 </xpath>
 
                 <xpath expr="//page[@name='personal_information']" position="after">
-                    <page name="Benefit / Allowance " class="o_hr_contract_salary_information">
+                    <page name="Tunjangan dan Manfaat" class="o_hr_contract_salary_information">
                         <group name="salary_info">
-                            <group string="Allowance">
+                            <group string="Tunjangan">
                                 <field name="attende_premie"/>
                                 <field name="allowance_jemputan" />
                                 <field name="allowance_ot" />
@@ -283,7 +283,7 @@
                                 <field name="allowance_night_shift"/>
                                 <field name="allowance_nightshift_amount" invisible="allowance_night_shift == False"/>
                             </group>
-                            <group string="Remarks">
+                            <group string="Manfaat">
                                 <field name="attende_premie_amount" invisible="attende_premie == False" required="attende_premie == True"/>
                                 <field name="jemputan_remarks" />
                                 <field name="ot_remarks" />

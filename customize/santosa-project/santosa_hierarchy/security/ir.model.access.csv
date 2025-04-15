@@ -7,8 +7,8 @@ access_employee_level,access_employee_level_user,model_employee_level,base.group
 access_hr_employee_family,access_hr_employee_family,model_hr_employee_family,base.group_user,1,1,1,1
 access_hr_employee_relation,access_hr_employee_relation,model_hr_employee_relation,base.group_user,1,1,1,1
 access_hr_employee_assets,access_hr_employee_assets,model_hr_employee_assets,base.group_user,1,1,1,1
-access_employee_educations,access_employee_educations,model_employee_educations,base.group_user,1,1,1,1
-access_hr_employee_certification,access_hr_employee_certification,model_hr_employee_certification,base.group_user,1,1,1,1
+
+
 access_hr_employment_log,access_hr_employment_log,model_hr_employment_log,base.group_user,1,1,1,1
 access_hr_employee_mutations,access_hr_employee_mutations,model_hr_employee_mutations,base.group_user,1,1,1,1
 access_hr_payroll_users,access.hr.payroll.users,model_hr_payroll_entry,base.group_user,1,1,1,1
