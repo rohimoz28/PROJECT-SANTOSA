@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+        <record id="sb_allowance_deduction_form" model="ir.ui.view">
+            <field name="name">sb.allowance.deduction.form</field>
+            <field name="model">sb.allowance.deduction</field>
+            <field name="arch" type="xml">
+                <form string="">
+                    <header>
+                        <button string="Approve" name="btn_approve" type="object" class="oe_highlight" invisible="state in ['approved','inactive']"/>
+                        <button string="Inactive" name="btn_inactive" type="object" class="oe_highlight" invisible="state not in ['approved']"/>
+                        <button string="Draft" name="btn_draft" type="object" class="oe_highlight" invisible="state not in ['approved']"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,approved,inactive"/>
+                    </header>
+                    <group>
+                        <label for="ed_from" />
+                            <div class="column">
+                                <field name="ed_from" style="width: 49%;"/>
+                            </div>
+                    </group>
+                    <group name="allowance_deduction" string="Allowance Deduction">
+                        <group>
+                            <field name="pay_code" />
+                            <field name="desc" />
+                            <field name="pay_type" widget="radio" options="{'horizontal': true}"/>
+                            <field name="pay_group" widget="radio" options="{'horizontal': true}"/>
+                            <field name="formula" />
+                            <field name="fixed_amount" />
+                            <field name="times" />
+                            <field name="remarks" />
+                            <field name="isTaxable" />
+                        </group>  
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="sb_allowance_deduction_tree_view" model="ir.ui.view">
+            <field name="name">sb.allowance.deduction.tree.view</field>
+            <field name="model">sb.allowance.deduction</field>
+            <field name="arch" type="xml">
+                <tree string="Allowance Deduction">
+                    <!-- <field name="ed_from" /> -->
+                    <field name="pay_code" />
+                    <field name="desc" />
+                    <field name="pay_type" string="Type"/>
+                    <field name="fixed_amount" string="Fix Amount"/>
+                    <field name="formula" />
+                    <field name="isTaxable" string="Tax"/>
+                    <field name="pay_group" string="Group"/>
+                    <!-- <field name="times" /> -->
+                    <field name="state" />
+                    <field name="remarks" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="sb_allowance_deduction_search" model="ir.ui.view">
+            <field name="name">sb.allowance.deduction.search</field>
+            <field name="model">sb.allowance.deduction</field>
+            <field name="arch" type="xml">
+                <search string="Allowance Deduction">
+                    <field name="ed_from" />
+                    <field name="pay_code" />
+                    <field name="desc" />
+                    <field name="pay_type" />
+                    <field name="pay_group" />
+                    <field name="formula" />
+                    <field name="fixed_amount" />
+                    <field name="times" />
+                    <field name="remarks" />
+                    <field name="isTaxable" />
+                </search>
+            </field>
+        </record>
+
+        <record id="action_sb_allowance_deduction" model="ir.actions.act_window">
+            <field name="name">Allowance Deduction</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sb.allowance.deduction</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Allowance Deduction Records
+                </p>
+                <p>
+                    Create New Allowance Deduction Records
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

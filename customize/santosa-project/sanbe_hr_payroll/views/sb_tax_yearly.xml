@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+        <record id="sb_tax_yearly_form" model="ir.ui.view">
+            <field name="name">sb.tax.yearly.form</field>
+            <field name="model">sb.tax.yearly</field>
+            <field name="arch" type="xml">
+                <form string="Tax Setting - Yearly">
+                    <sheet>
+                        <label for="effective_date" />
+                            <div class="column">
+                                <field name="effective_date" style="width: 49%;"/>
+                            </div>
+                        <group name="ptkp" string="PTKP Setting">
+                            <group>
+                                <field name="tk0" />
+                                <field name="tk1" />
+                                <field name="tk2" />
+                                <field name="tk3" />
+                            </group>
+                            <group>
+                                <field name="k0" />
+                                <field name="k1" />
+                                <field name="k2" />
+                                <field name="k3" />
+                            </group>
+                        </group>
+                        <group name="positional_allowance" string="Positional Allowance">
+                            <group>
+                                <field name="positional_allowance" />
+                                <field name="or_max" />
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="tax_statutory" string="Tax Statutory">
+                                <field name="tax_statutory_ids">
+                                    <form string="Tax Statutory Form">
+                                        <group>
+                                            <label for="s_from" />
+                                                <div class="column">
+                                                    <field name="s_from" style="width: 49%;"/>
+                                                </div>
+                                            <label for="s_to" />
+                                                <div class="column">
+                                                    <field name="s_to" style="width: 49%;"/>
+                                                </div>
+                                            <label for="s_deduct" />
+                                                <div class="column">
+                                                    <field name="s_deduct" style="width: 49%;"/>
+                                                </div>
+                                        </group>
+                                        <!-- <field name="s_from" string="From" />
+                                        <field name="s_to" string="To" />
+                                        <field name="s_deduct" string="Deduct" /> -->
+                                    </form>
+                                    <tree>
+                                        <field name="s_from" />
+                                        <field name="s_to" />
+                                        <field name="s_deduct" />
+                                    </tree>
+                                </field>
+                            </page>
+                            <page name="tax_formula" string="Tax Formula">
+                                <field name="tax_fomula_ids">
+                                    <form string="Tax Formula Form">
+                                        <group>
+                                            <label for="f_from" />
+                                                <div class="column">
+                                                    <field name="f_from" style="width: 49%;"/>
+                                                </div>
+                                            <label for="f_to" />
+                                                <div class="column">
+                                                    <field name="f_to" style="width: 49%;"/>
+                                                </div>
+                                            <label for="f_factor_x" />
+                                                <div class="column">
+                                                    <field name="f_factor_x" style="width: 49%;"/>
+                                                </div>
+                                            <label for="f_formula" />
+                                                <div class="column">
+                                                    <field name="f_formula"/>
+                                                </div>
+                                        </group>
+                                        <!-- <field name="f_from" />
+                                        <field name="f_to" />
+                                        <field name="f_factor_x" />
+                                        <field name="f_formula" /> -->
+                                    </form>
+                                    <tree>
+                                        <field name="f_from" />
+                                        <field name="f_to" />
+                                        <field name="f_factor_x" />
+                                        <field name="f_formula" />
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="sb_tax_yearly_tree_view" model="ir.ui.view">
+            <field name="name">sb.tax.yearly.tree.view</field>
+            <field name="model">sb.tax.yearly</field>
+            <field name="arch" type="xml">
+                <tree string="Tax Setting - Yearly">
+                    <field name="effective_date" />
+                    <field name="tk0" />
+                    <field name="tk1" />
+                    <field name="tk2" />
+                    <field name="tk3" />
+                    <field name="k0" />
+                    <field name="k1" />
+                    <field name="k2" />
+                    <field name="k3" />
+                    <field name="positional_allowance" />
+                    <field name="or_max" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="sb_tax_yearly_search" model="ir.ui.view">
+            <field name="name">sb.tax.yearly.search</field>
+            <field name="model">sb.tax.yearly</field>
+            <field name="arch" type="xml">
+                <search string="Tax Setting - Yearly">
+                    <field name="tk0" />
+                    <field name="tk1" />
+                    <field name="tk2" />
+                    <field name="tk3" />
+                    <field name="k0" />
+                    <field name="k1" />
+                    <field name="k2" />
+                    <field name="k3" />
+                    <field name="positional_allowance" />
+                    <field name="or_max" />
+                </search>
+            </field>
+        </record>
+
+        <record id="action_sb_tax_yearly" model="ir.actions.act_window">
+            <field name="name">Tax Setting - Yearly</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sb.tax.yearly</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Tax Setting - Yearly Records
+                </p>
+                <p>
+                    Create New Tax Setting - Yearly Records
+                </p>
+            </field>
+        </record>
+    
+    </data>
+</odoo>

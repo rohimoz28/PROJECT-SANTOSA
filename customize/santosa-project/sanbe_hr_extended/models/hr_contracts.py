@@ -29,12 +29,43 @@ class HrContract(models.Model):
     attachment_contract =  fields.Many2many('ir.attachment', 'hr_contract_rel',string='Contract Document',
                                           help="You may attach files to with this")
     number = fields.Char('Contract Number')
-    area = fields.Many2one('res.territory',string='Area',tracking=True,readonly=False)
-    branch_ids = fields.Many2many('res.branch','res_branch_rel',string='AllBranch',compute='_isi_semua_branch',store=False)
+    area = fields.Many2one('res.territory', string='Area', tracking=True, required=True)
+    branch_ids = fields.Many2many('res.branch', 'res_branch_rel', string='AllBranch', compute='_isi_semua_branch',
+                                  store=False)
+    alldepartment = fields.Many2many('hr.department', 'hr_department_rel', string='All Department',
+                                     compute='_isi_department_branch', store=False)
+    branch_id = fields.Many2one('res.branch', string='Business Unit', domain="[('id','in',branch_ids)]", tracking=True, default=lambda self: self.env.user.branch_id, required=True)
+                     
+    division_id = fields.Many2one('sanhrms.division',string='Divisi', related='employee_id.division_id')
+    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', related='employee_id.directorate_id')
+    employee_group1s = fields.Many2one('emp.group',
+                                       string='Employee P Group', related='employee_id.employee_group1s')
+    work_unit_id = fields.Many2one('hr.work.unit','Work Unit', related='employee_id.work_unit_id')
+    medic = fields.Many2one('hr.profesion.medic','Profesi Medis', related='employee_id.medic')
+    nurse = fields.Many2one('hr.profesion.nurse','Profesi Perawat', related='employee_id.nurse')
+    job_id = fields.Many2one('hr.job','Jabatan', related='employee_id.job_id', readonly=True)
+    seciality = fields.Many2one('hr.profesion.special','Kategori Khusus', related='employee_id.seciality')
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True, tracking=True, domain="[('state','not in',['hold'])]", index=True)
     date_end = fields.Date('End Date', tracking=True, help="End date of the contract (if it's a fixed-term contract).", required=True)
+    department_id = fields.Many2one('hr.department', compute = '_find_department_id',  string='Departemen', store=True, related='employee_id.department_id')
+    hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen', related='employee_id.hrms_department_id')
+    
+    @api.depends('hrms_department_id')
+    def _find_department_id(self):
+        for line in self:
+            if line.hrms_department_id:
+                Department = self.env['hr.department'].search(['|',('name', '=', line.division_id.name),('name', 'ilike', line.division_id.name)], limit=1)
+                if Department:
+                    line.department_id = Department.id
+                else:
+                    Department = self.env['hr.department'].sudo().create({
+                        'name': line.hrms_department_id.name,
+                        'active': True,
+                        'company_id': self.env.user.company_id.id,
+                    })
+                    line.department_id = Department.id
+
     alldepartment = fields.Many2many('hr.department','hr_department_rel', string='All Department',compute='_isi_department_branch',store=False)
-    branch_id = fields.Many2one('res.branch',string='Business Units',domain="[('id','in',branch_ids)]",tracking=True,readonly=False)
     depart_id = fields.Many2one('hr.department', domain="[('id','in',alldepartment)]",string='Sub Department' )
     wage = fields.Monetary('Wage', required=False, tracking=True, help="Employee's monthly gross wage.", group_operator="avg")
     ws_month = fields.Integer('Working Service Month', compute="_compute_service_duration_display",readonly=True)

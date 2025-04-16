@@ -1,5 +1,5 @@
 <odoo>
-    <data>
+    <data  noupdate="0">
 
         <record id="hr.hr_menu_hr_reports" model="ir.ui.menu">
             <field name="name">Dokumen</field>
@@ -33,18 +33,46 @@
             <field name="active" eval="False"/>
         </record>
 
+        <!-- <record id="sanbe_hr_payroll.menu_sanbe_hr_payroll_root" model="ir.ui.menu">
+            <field name="name">Pengupahan</field>
+            <field name="active" eval="False"/>
+        </record> -->
+
         <record id="hr_payroll_community.menu_hr_payroll_community_root" model="ir.ui.menu">
-            <field name="name">Penggajian</field>
+            <field name="name">Pengupahan</field>
+            <!-- <field name="active" eval="False"/> -->
         </record>
 
         <record id="hr.menu_hr_root" model="ir.ui.menu">
             <field name="name">Administrasi Kepegawaian</field>
         </record>
 
-        <record id="hr_skills_survey.hr_employee_certication_report_menu" model="ir.ui.menu">
+        <record id="hr.menu_hr_employee_payroll" model="ir.ui.menu">
+            <field name="name">Kepegawaian</field>
+        </record>
+
+        <record id="hr.menu_hr_employee_user" model="ir.ui.menu">
+            <field name="name">Kepegawaian</field>
+        </record>
+
+        <record id="hr.menu_view_hr_job" model="ir.ui.menu">
+            <field name="name">Jabatan</field>
+            <field name="sequence">14</field>
+        </record>
+        <!-- <record id="hr.menu_config_employee" model="ir.ui.menu">
+            <field name="name">Riwayat Pegawai</field>
+        </record> -->
+
+        <!-- <record id="hr_skills_survey.hr_employee_certification_report_menu" model="ir.ui.menu">
             <field name="name">Sertifikasi</field>
             <field name="sequence">9</field>
-        </record>
+        </record> -->
+
+        <!-- <record id="hr.hr_employee_certification_report_menu" model="ir.ui.menu">
+            <field name="name">Sertifikasi</field>
+            <field name="sequence">9</field>
+        </record> -->
+
 
         <record id="hr_skills.hr_employee_skill_report_menu" model="ir.ui.menu">
             <field name="name">Keahlian</field>
@@ -60,9 +88,6 @@
         </record>
         <record id="hr_timesheet.timesheet_menu_root" model="ir.ui.menu">
             <field name="active" eval="False"/>
-        </record>
-        <record id="hr.menu_hr_root" model="ir.ui.menu">
-            <field name="name">Administrasi Kepegawaian</field>
         </record>
         <record id="project.menu_main_pm" model="ir.ui.menu">
             <field name="active" eval="False"/>
@@ -89,5 +114,31 @@
         <record id="purchase_request.parent_menu_purchase_request" model="ir.ui.menu">
             <field name="name">Permintaan Pembelian</field>
         </record>
+
+        <record id="hr_org_chart.menu_hr_employee_org_chart" model="ir.ui.menu">
+            <field name="name">Diagram Organisasi</field>
+        </record>
+
+        <record id="base_territory.menu_res_branch" model="ir.ui.menu">
+            <field name="active" eval="True"/>
+            <field name="name">Unit Bisnis</field>
+            <field name="parent_id" ref="base.menu_users"/> <!-- ✅ Corrected -->
+        </record>
+
+        <record id="base_territory.menu_res_territory" model="ir.ui.menu">
+            <field name="name">Area</field>
+            <field name="parent_id" ref="base.menu_users"/> <!-- ✅ Corrected -->
+        </record>
+
+
+        <record id="menu_hr_warning_letter" model="ir.ui.menu">
+            <field name="name">Surat Peringatan</field>
+        </record>
+
+        <!-- <record id="hr_contract.hr_menu_contract" model="ir.ui.menu">
+            <field name="active" eval="True"/>
+            <field name="parent_id" ref="hr.menu_hr_employee_payroll"/>
+            <field name="name">Kontrak Kerja</field>
+        </record> -->
     </data>
 </odoo>

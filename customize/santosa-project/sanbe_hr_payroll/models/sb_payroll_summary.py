@@ -1,4 +1,5 @@
 from odoo import fields, models, api
+from odoo.exceptions import ValidationError, UserError
 
 
 EMP_GROUP1 = [
@@ -69,4 +70,23 @@ class SbPayrollSummaryDetail(models.Model):
 
 
     def payrol_summary_detail_button(self):
-        pass
+        # pass
+        # Menyaring payroll employee berdasarkan payroll_summary_detail_id yang ada
+        payroll_employee = self.env['sb.payroll.employee'].search([
+            ('payroll_summary_detail_id', '=', self.id)
+        ], limit=1)  # Mengambil satu record pertama yang ditemukan
+        
+        if not payroll_employee:
+            raise UserError("No related Payroll Employee Detail found.")
+
+        # Mengarahkan pengguna ke form `SbPayrollEmployee`
+        action = {
+            'type': 'ir.actions.act_window',
+            'name': 'Payroll Employee',
+            'res_model': 'sb.payroll.employee',
+            'view_mode': 'form',
+            'view_id': self.env.ref('sanbe_hr_payroll.sb_payroll_employee_form').id,  # Ganti dengan ID form view yang sesuai
+            'res_id': payroll_employee.id,  # Mengarah ke record sb.payroll.employee yang sesuai
+            'target': 'current',  # Mengarahkan di jendela yang sama
+        }
+        return action

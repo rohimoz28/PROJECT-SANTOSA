@@ -30,6 +30,12 @@
                             <field name="code" placeholder="Code..."/>
                         </h3>
                     </div>
+                    <group>
+                        <group>
+                            <field name="area" string="Area"/>
+                            <field name="branch_id" string="Unit Bisnis"/>
+                        </group>
+                    </group>
                 </sheet>
             </form>
         </field>
@@ -41,7 +47,9 @@
         <field name="arch" type="xml">
             <search>
                 <group expand="1" string="Group By">
+                    <filter string="Area" name="area" domain="[]" context="{'group_by':'area'}"/>
                     <filter string="Type" name="type" domain="[]" context="{'group_by':'type'}"/>
+                    <filter string="Unit Bisnis" name="branch_id" context="{'group_by':'branch_id'}"/>
                 </group>
             </search>
         </field>
@@ -92,6 +100,12 @@
                             <field name="code" placeholder="Code..."/>
                         </h3>
                     </div>
+                    <group>
+                        <group>
+                            <field name="area" string="Area"/>
+                            <field name="branch_id" string="Unit Bisnis"/>
+                        </group>
+                    </group>
                 </sheet>
             </form>
         </field>
@@ -103,7 +117,8 @@
         <field name="arch" type="xml">
             <search>
                 <group expand="1" string="Group By">
-                    <filter string="Tipe" name="type" domain="[]" context="{}"/>
+                    <filter string="Area" name="area" domain="[]" context="{'group_by':'area'}"/>
+                    <filter string="Unit Bisnis" name="branch_id" context="{'group_by':'branch_id'}"/>
                 </group>
             </search>
         </field>
@@ -123,7 +138,7 @@
         </field>
     </record>
  
-    <menuitem id="emp_hr_profesion_medic" name="Setting Profesi Medis" sequence='30' parent="hierarchy_id" action="action_hr_profesion_medic"/>
+    <menuitem id="emp_hr_profesion_medic" name=" Profesi Medis" sequence='30' parent="profesion_id" action="action_hr_profesion_medic"/>
 <!-- ================================================================================ -->
 
    <!-- View hr_profesion View Tree -->
@@ -156,6 +171,12 @@
                             <field name="code" placeholder="Code..."/>
                         </h3>
                     </div>
+                    <group>
+                        <group>
+                            <field name="area" string="Area"/>
+                            <field name="branch_id" string="Unit Bisnis"/>
+                        </group>
+                    </group>
                 </sheet>
             </form>
         </field>
@@ -167,7 +188,8 @@
         <field name="arch" type="xml">
             <search>
                 <group expand="1" string="Group By">
-                    <filter string="Type" name="type" domain="[]" context="{}"/>
+                    <filter string="Area" name="area" domain="[]" context="{'group_by':'area'}"/>
+                    <filter string="Unit Bisnis" name="branch_id" context="{'group_by':'branch_id'}"/>
                 </group>
             </search>
         </field>
@@ -188,7 +210,7 @@
     </record>
     
 
-    <menuitem id="emp_hr_profesion_nurse" name="Setting Profesi Perawat" sequence='30' parent="hierarchy_id" action="action_hr_profesion_nurse"/> 
+    <menuitem id="emp_hr_profesion_nurse" name=" Profesi Perawat" sequence='30' parent="profesion_id" action="action_hr_profesion_nurse"/> 
 
 <!-- ================================================================================ -->
 
@@ -222,6 +244,12 @@
                             <field name="code" placeholder="Code..."/>
                         </h3>
                     </div>
+                    <group>
+                        <group>
+                            <field name="area" string="Area"/>
+                            <field name="branch_id" string="Unit Bisnis"/>
+                        </group>
+                    </group>
                 </sheet>
             </form>
         </field>
@@ -233,7 +261,8 @@
         <field name="arch" type="xml">
             <search>
                 <group expand="1" string="Group By">
-                    <filter string="Type" name="type" domain="[]" context="{}"/>
+                    <filter string="Area" name="area" domain="[]" context="{'group_by':'area'}"/>
+                    <filter string="Unit Bisnis" name="branch_id" context="{'group_by':'branch_id'}"/>
                 </group>
             </search>
         </field>
@@ -253,6 +282,5 @@
         </field>
     </record>
 
-    <menuitem id="emp_hr_profesion_special" name="Setting Profesi Khusus" sequence='30' parent="hierarchy_id" action="action_hr_profesion_special"/>
-
+    <menuitem id="emp_hr_profesion_special" name=" Profesi Khusus" sequence='30' parent="profesion_id" action="action_hr_profesion_special"/>
 </odoo>
