@@ -5,7 +5,7 @@
         <!-- PAYROLL MENU -->
 
         <!-- Transaction -->
-        <menuitem id="menu_sanbe_hr_payroll_root" name="Payroll" sequence="45"
+        <menuitem id="menu_sanbe_hr_payroll_root" name="Pengupahan" sequence="45"
                   web_icon="sanbe_hr_payroll,static/description/icon.png"
                   groups="hr.group_hr_manager"
         />
@@ -66,17 +66,49 @@
         />
 
         <menuitem
-                id="menu_hr_payroll_employee_profile"
-                name="Employee Profile"
+                id="menu_sb_allowance_deduction"
+                name="Allowance Deduction"
+                parent="menu_payroll_setting_parameter"
+                sequence="8"
+                action="action_sb_allowance_deduction"
+        />
+
+        <menuitem
+                id="menu_sb_ptkp_setting"
+                name="PTKP Setting"
                 parent="menu_payroll_setting_parameter"
                 sequence="10"
+                action="action_sb_ptkp_setting"
+        />
+
+        <menuitem
+                id="menu_sb_tax_setting"
+                name="Tax Setting - TER"
+                parent="menu_payroll_setting_parameter"
+                sequence="11"
+                action="action_sb_tax_setting"
+        />
+
+        <menuitem
+                id="menu_sb_tax_yearly"
+                name="Tax Setting - Yearly"
+                parent="menu_payroll_setting_parameter"
+                sequence="12"
+                action="action_sb_tax_yearly"
+        />
+
+        <menuitem
+                id="menu_hr_payroll_employee_profile"
+                name="Employee Profile"
+                parent="menu_sanbe_hr_payroll_root"
+                sequence="3"
                 action="action_payroll_employee_profile"
         />
         <menuitem
                 id="menu_hr_payroll_insurance_setting"
                 name="Insurance Setting"
                 parent="menu_payroll_setting_parameter"
-                sequence="11"
+                sequence="9"
                 action="action_payroll_insurance_setting"
         />
     </data>

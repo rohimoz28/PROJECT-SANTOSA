@@ -101,7 +101,7 @@
                         <notebook>
                             <page name='payroll_summary_detail' string='Payroll Summary Detail'>
                                 <field name='payroll_detail_ids'>
-                                    <tree>
+                                    <tree editable="bottom">
                                         <field name='nik' optional='show'/>
                                         <field name='employee_id' optional='show'/>
                                         <field name='job_id' optional='show'/>

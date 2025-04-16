@@ -8,5 +8,16 @@ access_sb_monthly_tax_summary,access.sb.monthly.tax.summary.users,model_sb_month
 access_sb_payroll_summary,access.sb.payroll.summary.users,model_sb_payroll_summary,base.group_user,1,1,1,1
 access_sb_payroll_summary_detail,access.sb.payroll.summary.detail,model_sb_payroll_summary_detail,base.group_user,1,1,1,1
 access_sb_employee_profile,access.sb.employee.profile.users,model_sb_employee_profile,base.group_user,1,1,1,1
+access_allowance_deduction_detail,access.allowance.deduction.detail,model_allowance_deduction_detail,base.group_user,1,1,1,1
 access_sb_compensation,access.sb.compensation.users,model_sb_compensation,base.group_user,1,1,1,1
 access_sb_insurance_setting,access.sb.insurance.setting.users,model_sb_insurance_setting,base.group_user,1,1,1,1
+access_sb_tax_setting,access.sb.tax.setting.users,model_sb_tax_setting,base.group_user,1,1,1,1
+access_sb_tax_setting_details,access.sb.tax.setting.details.users,model_sb_tax_setting_details,base.group_user,1,1,1,1
+access_sb_payroll_employee,access.sb.payroll.employee.users,model_sb_payroll_employee,base.group_user,1,1,1,1
+access_sb_payroll_employee_details,access.sb.payroll.employee.details.users,model_sb_payroll_employee_details,base.group_user,1,1,1,1
+access_sb_allowance_deduction,access.sb.allowance.deduction.users,model_sb_allowance_deduction,base.group_user,1,1,1,1
+
+access_sb_tax_yearly,access.sb.tax.yearly.users,model_sb_tax_yearly,base.group_user,1,1,1,1
+access_sb_tax_statutory,access.sb.tax.statutory.users,model_sb_tax_statutory,base.group_user,1,1,1,1
+access_sb_tax_formula,access.sb.tax.formula.users,model_sb_tax_formula,base.group_user,1,1,1,1
+access_sb_ptkp_setting,access.sb.ptkp.setting.users,model_sb_ptkp_setting,base.group_user,1,1,1,1

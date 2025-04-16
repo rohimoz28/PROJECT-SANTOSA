@@ -8,22 +8,71 @@
             <field name="arch" type="xml">
                 <form string="Insurance Setting">
                     <sheet>
+                        <label for="effective_date" />
+                        <div class="column">
+                            <field name="effective_date" style="width: 49%;"/>
+                        </div>
                         <group>
-                            <group>
-                                <field name="effective_date"/>
-                                <field name="name"/>
-                                <field name="code"/>
+                            <group string="Employee">
+                                <!-- <field name="name"/>
+                                <field name="code"/> -->
+                                <label for="health_insurance" />
+                                <div class="o_row">
+                                    <div class="column">
+                                        <field name="health_insurance" />
+                                    </div>
+                                    <div class="column">
+                                        <field name="hi_percentage" widget="percentage"/>
+                                    </div>
+                                    <!-- <div class="column">
+                                        <field name="employer_percentage" widget="percentage"/>
+                                    </div> -->
+                                </div>
+                                <label for="work_insurance" />
+                                <div class="o_row">
+                                    <div class="column">
+                                        <field name="work_insurance"/>
+                                    </div>
+                                    <div class="column">
+                                        <field name="wi_percentage" widget="percentage"/>
+                                    </div>
+                                </div>
+                                <label for="life_insurance" />
+                                <div class="o_row">
+                                    <div class="column">
+                                        <field name="life_insurance" />
+                                    </div>
+                                    <div class="column">
+                                        <field name="li_percentage" widget="percentage"/>
+                                    </div>
+                                </div>
+                                <label for="retirement_insurance" />
+                                <div class="o_row">
+                                    <div class="column">
+                                        <field name="retirement_insurance" />
+                                    </div>
+                                    <div class="column">
+                                        <field name="ri_percentage" widget="percentage"/>
+                                    </div>
+                                </div>
                             </group>
-                            <group>
-                                <label for="percentage"/>
+                            <group string="Employer">
+                                <label for="employer_percentage" string=" "/>
+                                <div class="o_row">
+                                    <div class="column">
+                                        <field name="employer_percentage" widget="percentage"/>
+                                    </div>
+                                </div>
+                                <!-- <field name="employer_percentage" widget="percentage"/> -->
+                                <!-- <label for="percentage"/>
                                 <div class="o_row">
                                     <field name="percentage" widget="percentage" width="50%"/>
-                                    <!-- <label for="percentage">%%</label> -->
+                                    <label for="percentage">%%</label>
                                 </div>
                                 <label for="taxpayer" string="Tax Payer"/>
                                 <div class="o_row">
                                     <field name="taxpayer"/>
-                                </div>
+                                </div> -->
                             </group>
                         </group>
                     </sheet>
@@ -37,10 +86,14 @@
             <field name="arch" type="xml">
                 <tree string="Insurance Setting">
                     <field name="effective_date"/>
-                    <field name="name"/>
+                    <field name="health_insurance" />
+                    <field name="work_insurance" />
+                    <field name="life_insurance" />
+                    <field name="retirement_insurance" />
+                    <!-- <field name="name"/>
                     <field name="code"/>
                     <field name="percentage" widget="percentage"/>
-                    <field name="taxpayer"/>
+                    <field name="taxpayer"/> -->
                 </tree>
             </field>
         </record>
@@ -65,8 +118,11 @@
             <!-- <field name="view_type">form</field> -->
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    There is no examples click here to add new Insurance Setting.
+                <p class="o_view_nocontent_smiling_face">
+                    No Insurance Setting Records
+                </p>
+                <p>
+                    Create New Insurance Setting Records
                 </p>
             </field>
         </record>

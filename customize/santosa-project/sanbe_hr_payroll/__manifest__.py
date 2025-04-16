@@ -20,7 +20,7 @@
     'price': 0,
     'currency': 'USD',
     # any module necessary for this one to work correctly
-    'depends': ['base', 'sanbe_hr_tms','hr_payroll_community'],
+    'depends': ['base', 'sanbe_hr_tms','hr_payroll_community', 'sanbe_hr_extended'],
     'data': [
         'views/hr_payroll_entry.xml',
         'views/sb_bank_transfer_summary.xml',
@@ -32,6 +32,12 @@
         'views/sb_payroll_entry_detail.xml',
         'views/sb_employee_profile.xml',
         'views/sb_compensation.xml',
+        'views/sb_tax_setting.xml',
+        'views/sb_payroll_employee.xml',
+        'views/sb_allowance_deduction.xml',
+        'views/sb_allowance_deduction.xml',
+        'views/sb_tax_yearly.xml',
+        'views/sb_ptkp_setting.xml',
         'views/hr_payroll_menu.xml',
         'security/ir.model.access.csv',
     ],
