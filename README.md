@@ -29,9 +29,8 @@ Pastikan, port tidak digunakan (bentrok) dengan yang sudah berjalan pada lokal.
    `git commit -m "commit_description"`
 4. lalu push branch feature tersebut ke remote repository. <br>
    `git push origin HEAD`
-5. buka akun gitlab, lalu buat Merge Request ke branch `main`
+5. buka akun gitlab, lalu buat Merge Request ke branch `staging`
 6. jika ada conflict, cek tingkat kerumitannya. jika mudah, langsung solve di halaman gitlab.
-7. Untuk proses pembuatan fitur baru selanjutnya, dimulai dari branch `main`.
+7. **WAJIB!** Untuk proses pembuatan fitur baru selanjutnya, dimulai dari branch `main`.
    `git checkout main`
    `git pull origin main`
-8. **WAJIB!** setiap fitur baru, harus membuat branch feature baru.
