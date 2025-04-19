@@ -191,9 +191,9 @@
                 <!--     </page> -->
                 <!-- </xpath> -->
 
-                <xpath expr="//page[@name='hr_settings']//field[@name='employee_type']" position="after">
+                <!-- <xpath expr="//page[@name='hr_settings']//field[@name='employee_type']" position="after">
                     <field name="joining_date"/>
-                </xpath>
+                </xpath> -->
 
                 <xpath expr="//field[@name='mobile_phone']" position="attributes">
                     <attribute name="string">No Ponsel</attribute>
@@ -449,11 +449,11 @@
                 <!--     </group> -->
                 <!-- </xpath> -->
 
-                <xpath expr="//page[@name='hr_settings']/group/group[2]" position="after">
+                <!-- <xpath expr="//page[@name='hr_settings']/group/group[2]" position="after">
                     <group string="Application Settings">
                         <field name="hourly_cost" />
                     </group>
-                </xpath>
+                </xpath> -->
 
                 <!-- <xpath expr="//field[@name='emp_status']" position="replace"> -->
                     <!-- <field name="emp_status" readonly="state in ['approved']"/> -->

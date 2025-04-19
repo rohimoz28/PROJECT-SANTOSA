@@ -130,7 +130,7 @@
                                     invisible="not context.get('chat_icon')" />
                             </div>
 
-                            <field name="name" placeholder="Employee's Name" required="True"
+                            <field name="name" placeholder="Nama karyawan" required="True"
                                 style="font-size: min(4vw, 2.6rem);" />
                         </h1>
                         <field name="initial" placeholder="Inisial" />
@@ -308,6 +308,42 @@
                             </group>
                         </group>
                     </page>
+                </xpath>
+
+                <xpath expr="//page[@name='hr_settings']" position="attributes">
+                    <attribute name="string">Pengaturan HR</attribute>
+                </xpath>
+                <xpath expr="//page[@name='hr_settings']//group[@name='active_group']//field[@name='employee_type']" position="attributes">
+                    <attribute name="string">Jenis Karyawan</attribute>
+                </xpath>
+                <xpath expr="//page[@name='hr_settings']//group[@name='active_group']//field[@name='user_id']" position="attributes">
+                    <attribute name="string">Pengguna terkait</attribute>
+                </xpath>
+                <xpath expr="//page[@name='hr_settings']//group[@name='identification_group']" position="attributes">
+                    <attribute name="string">Absensi / Titik Penjualan</attribute>
+                </xpath>
+                <xpath expr="//page[@name='hr_settings']//group[@name='identification_group']//field[@name='pin']" position="attributes">
+                    <attribute name="string">Kode PIN</attribute>
+                </xpath>
+                <xpath expr="//page[@name='hr_settings']//group[@name='identification_group']//field[@name='barcode']" position="attributes">
+                    <attribute name="string">Nomor PIN</attribute>
+                </xpath>
+                <xpath expr="//page[@name='hr_settings']//group[@name='identification_group']//button[@name='generate_random_barcode']" position="attributes">
+                    <attribute name="string">Buat</attribute>
+                </xpath>      
+                <xpath expr="//page[@name='hr_settings']//group[@name='application_group']" position="attributes">
+                    <attribute name="string">Pengaturan Lamaran</attribute>
+                </xpath>                      
+            </field>
+        </record>       
+        <record id="view_employee_form" model="ir.ui.view">
+            <field name="name">view.employee.form.inherit.hr.employee.hourly.wage</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="priority" eval="40"/>
+            <field name="arch" type="xml">
+                <xpath expr="//label[@for='hourly_cost']" position="attributes">
+                    <attribute name="string">Ongkos Per Jam</attribute>
                 </xpath>
             </field>
         </record>

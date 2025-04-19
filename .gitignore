@@ -8,7 +8,7 @@ _build/
 .idea/profiles_settings.xml
 .idea/vcs.xml
 .idea/*.iml
-.*
+.gitignore
 !.gitignore
 !.github
 !.mailmap
