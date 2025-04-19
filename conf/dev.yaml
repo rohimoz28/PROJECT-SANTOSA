@@ -1,21 +1,34 @@
 version: "3.8"
 services:
-  odoo-santosa:
+  dev-odoo-santosa:
     restart: unless-stopped
     ports:
-      - "8234:8069"
+      - "8075:8069"
     depends_on:
-      - postgres-santosa
+      - dev-postgres-santosa
     env_file: santosa-project/env/dev.env
 
-  postgres-santosa:
+  dev-postgres-santosa:
     image: postgres:15
-    container_name: postgres-santosa
+    container_name: dev-postgres-santosa
     ports:
-      - "5434:5432"
+      - "5435:5432"
     restart: unless-stopped
     env_file: santosa-project/env/dev.env
     volumes:
       - ./santosa-project/pg-data:/var/lib/pgsql/data/pgdata
     networks:
-      - santosa_project_network
+      - dev-santosa_project_network
+    shm_size: '1gb'  # Bisa bantu untuk improve query besar
+    command:
+      - "postgres"
+      - "-c"
+      - "shared_buffers=4GB"
+      - "-c"
+      - "work_mem=64MB"
+      - "-c"
+      - "maintenance_work_mem=512MB"
+      - "-c"
+      - "max_parallel_workers=4"
+      - "-c"
+      - "max_connections=200"
