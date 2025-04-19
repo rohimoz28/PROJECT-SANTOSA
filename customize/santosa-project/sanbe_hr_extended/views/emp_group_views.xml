@@ -73,5 +73,5 @@
         </field>
     </record>
     
-    <menuitem id="emp_group" name="Group Pegawai" sequence='20' parent="hierarchy_id" action="action_emp_group"/>
+    <menuitem id="emp_group" name="Group Pegawai" sequence='20' parent="hr.menu_human_resources_configuration" action="action_emp_group"/>
 </odoo>

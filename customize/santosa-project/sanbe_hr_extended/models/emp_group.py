@@ -19,7 +19,12 @@ class EmpGroup(models.Model):
        'hr.employee',
        string='Penanggung Jawab')
     responsible_name = fields.Char(
-       related= 'responsible_id.name', string='Penanggung Jawab', store=True)
+       related= 'responsible_id.name', 
+       Sstring='Penanggung Jawab', store=True)
+    branch_id = fields.Many2one('res.branch', 
+      string='Business Unit', 
+      tracking=True, 
+      default=lambda self: self.env.user.branch_id, required=True)
     employee_ids = fields.One2many(
        'hr.employee', 'employee_group1s', string='Karyawan')
     

@@ -26,15 +26,22 @@
                     <field name="hrms_department_id" options="{'no_create': True,'no_create_edit': True}" string = "Departemen" required='1'/>
                     <field name="division_id" options="{'no_create': True,'no_create_edit': True}" string = "Divisi" required='1'/>
                     <field name="job_id" options="{'no_create': True,'no_create_edit': True}" required="1" string="Jabatan"/>
-                    <field name="parent_id" options="{'no_create': True,'no_create_edit': True}" string="Atasan Langsung"/>
+                    <field name="parent_id" options="{'no_create': True,'no_create_edit': True}" domain="[('id', '!=', id),('branch_id','=',branch_id)]" string="Atasan Langsung"/>
                 </xpath>
                 <xpath expr="//field[@name='work_phone']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
-
+                <xpath expr="//field[@name='country_id']" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                    <attribute name="context">{'default_country_id': 100}</attribute>
+                </xpath>
                 <xpath expr="//field[@name='department_id']" position="replace">
                     <field name="department_id" options="{'no_create': True,'no_create_edit': True}" invisible="1"/>
                 </xpath>
+
+                <!-- <xpath expr="//page[@name='hr.hr_settings']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath> -->
 
                 <xpath expr="//page[@name='public']" position="attributes">
                     <attribute name="string">Alamat</attribute>
@@ -53,6 +60,7 @@
                 <xpath expr="//field[@name='coach_id']" position="attributes">
                     <attribute name="string">Atasan Unit Kerja</attribute>
                     <attribute name="options">{'no_create': True,'no_create_edit': True}</attribute>
+                    <attribute name="domain">[('id', '!=', id),('branch_id','=',branch_id)]</attribute>
                 </xpath>
                 <xpath expr="//field[@name='coach_id']" position="after">
                     <field name="medic" options="{'no_create': True,'no_create_edit': True}"/>
@@ -74,9 +82,12 @@
                     <attribute name="required">1</attribute>
                 </xpath>
                 <xpath expr="//field[@name='gender']" position="attributes">
+                    <attribute name="string">Jenis Kelamin</attribute>
                     <attribute name="required">1</attribute>
+                    <attribute name="readonly">0</attribute>
                 </xpath>
                 <xpath expr="//field[@name='job_id']" position="attributes">
+                    <attribute name="string">Jabatan</attribute>
                     <attribute name="options">{'no_create': True, 'no_open': True}</attribute>
                 </xpath>
                 <xpath expr="//page[@name='personal_information']" position="attributes">
@@ -84,13 +95,14 @@
                 </xpath>
                 <xpath expr="//field[@name='birthday']/.." position="attributes">
                     <attribute name="string">Kewarganegaraan</attribute>
+                    <attribute name="readonly">0</attribute>
                 </xpath> 
                 <xpath expr="//field[@name='identification_id']" position="after">
                     <field name="nik" required="1" readonly="1" force_save="1"/>
-                    <field name="nik_lama" readonly="1" force_save="1"/>
-                    <field name="no_ktp" required="1"/>
+                    <field name="nik_lama" readonly="0" force_save="1"/>
+                    <field name="no_ktp" required="1" readonly="0" />
                     <field name="doc_ktp" widget="many2many_binary" string="Dokumen KTP"/>
-                    <field name="no_npwp" required="1" />
+                    <field name="no_npwp" required="1" readonly="0" string="No. NPWP"/>
                     <field name="doc_npwp" widget="many2many_binary" string="Dokumen NPWP"/>
                     <field name="nama_pekerjaans" invisible="1" />
                     <field name="no_sim" required="nama_pekerjaans =='Driver'" string="Nomor SIM"/>
@@ -121,7 +133,7 @@
                             <field name="name" placeholder="Employee's Name" required="True"
                                 style="font-size: min(4vw, 2.6rem);" />
                         </h1>
-                        <field name="initial" placeholder="Employee Initial" />
+                        <field name="initial" placeholder="Inisial" />
                     </div>
                 </xpath>
                 <xpath expr="//page[@name='personal_information']/group/group[1]"
@@ -159,7 +171,10 @@
                 <xpath expr="//page[@name='personal_information']/group/group[3]" position="after">
                     <group string="Status Hubungan Kerja">
                         <!-- <field name="kpi_kategory" /> -->
-                        <field name="job_status" string="Status Hubungan Kerja"/>
+                        <field name="job_status" string="Status Hubungan Kerja" 
+                        />
+                        <field name="job_status_id" options="{'no_create': True,'no_create_edit': True}" string="Status Hubungan Kerja"
+                        invisible="1"/>
                         <field name="emp_status" readonly="emp_status not in ['probation','confirmed']"/>
                         <field name="first_date_join" string="Tanggal Pertama bergabung"/>
                         <field name="join_date" required="job_status =='permanent'" string="Tanggal Bergabung"/>
@@ -170,22 +185,22 @@
                         <field name="contracts_count" string="Kontrak ke" invisible="job_status !='contract'" />
                         <label for="ws_day" string="Working Service" invisible="job_status !='permanent'" />
                         <div class="o_row" invisible="job_status !='permanent'">
-                            <label for="ws_year" string="Year" />
+                            <label for="ws_year" string="Tahun" />
                             <div class="o_row">
                                 <field name="ws_year" readonly="1" force_save="1" />
                             </div>
-                            <label for="ws_month" string="Month" />
+                            <label for="ws_month" string="Bulan" />
                             <div class="o_row">
                                 <field name="ws_month" readonly="1" force_save="1" />
                             </div>
-                            <label for="ws_day" string="Day" />
+                            <label for="ws_day" string="Hari" />
                             <div class="o_row">
                                 <field name="ws_day" readonly="1" force_save="1" />
                             </div>
                         </div>
                         <field name="employee_levels" options="{'no_create': True,'no_quick_create': True}" string="Level"/>
                         <field name="employee_group1s" string="Group Penggajian" required="1"/>
-                        <field name="employee_group1" invisible ="1" string="Employee P Group"/>
+                        <field name="employee_group1" invisible ="1" string="Employee Group"/>
                         <field name="apoteker" invisible="employee_group1 !='group3'" />
                         <field name="attachment_contract" invisible="1" />
                     </group>
@@ -195,7 +210,7 @@
                     <attribute name="string">Telepon</attribute>
                 </xpath>
                 <xpath expr="//field[@name='private_phone']" position="before">
-                    <field name="gender" />
+                    <field name="gender" string="Jenis Kelamin"/>
                 </xpath>
                 <xpath expr="//field[@name='lang']" position="attributes">
                     <attribute name="string">Bahasa</attribute>
@@ -310,7 +325,10 @@
                 <xpath expr="//field[@name='department_id']" position="after">
                     <field name="alldepartment" column_invisible="1" />
                     <field name="job_id" />
-                    <field name="job_status"/>
+                    <field name="job_status"
+                    />
+                    <field name="job_status_id" 
+                    invisible="1"/>
                     <field name="emp_status" />
                     <field name="employee_levels"/>
                     <field name="employee_group1s"/>

@@ -4,7 +4,7 @@
         <menuitem
             id="hr.menu_human_resources_configuration"
             parent="hr.menu_hr_root"
-            name="Configuration"
+            name="Konfigurasi"
             groups="sanbe_hr_extended.group_hr_no_config_employee"/>
         <record id="sanbe_hr_contracts_form_attachment" model="ir.ui.view">
             <field name="name">sanbe.hr.contract.form.attachment</field>
@@ -42,6 +42,21 @@
                 <xpath expr="//page[@name='information']" position="attributes">
                     <Attribute name="invisible">1</Attribute>
                 </xpath>
+
+                <xpath expr="//field[@name='employee_id']" position="attributes">
+                    <attribute name="string">Karyawan</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='date_start']" position="attributes">
+                    <attribute name="string">Mulai Kontrak</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='date_end']" position="attributes">
+                    <attribute name="string">Akhir Kontrak</attribute>
+                </xpath>
+
+
+
                 <xpath expr="//div[@id='resource_calendar_warning']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
@@ -61,18 +76,18 @@
                         <field name="division_id" options="{'no_create': True,'no_create_edit': True}" string = "Divisi" required='1'/>
                         <field name="work_unit_id" options="{'no_create': True,'no_create_edit': True}" string = "Unit Kerja" required="1"/>
                         <field name="job_id" options="{'no_create': True,'no_create_edit': True}" string = "Jabatan" required='1' readonly="1" />
-                        <label for="ws_day" string="Contract Length"
+                        <label for="ws_day" string="Periode Kontrak"
                                 />
                         <div class="o_row" >
-                            <label for="ws_year" string="Year" />
+                            <label for="ws_year" string="Tahun" />
                             <div class="o_row">
                                 <field name="ws_year" readonly="1" force_save="1" />
                             </div>
-                            <label for="ws_month" string="Month" />
+                            <label for="ws_month" string="Bulan" />
                             <div class="o_row">
                                 <field name="ws_month" readonly="1" force_save="1" />
                             </div>
-                            <label for="ws_day" string="Day" />
+                            <label for="ws_day" string="Hari" />
                             <div class="o_row">
                                 <field name="ws_day" readonly="1" force_save="1" />
                             </div>
@@ -89,10 +104,10 @@
                     <attribute name="invisible">1</attribute>
                 </xpath>
                 <xpath expr="//field[@name='hr_responsible_id']" position="before">
-                    <field name="contracts_count" string="Contract Time"/>
+                    <field name="contracts_count" string="Jumlah Kontrak"/>
                 </xpath>
                 <xpath expr="//group[@name='top_info_right']" position="before">
-                    <group name="notes_groups" string="Notes">
+                    <group name="notes_groups" string="Catatan">
                         <field name="notes" nolabel="1" colspan="2" placeholder="Type in notes about this contract..."/>
                     </group>
                 </xpath>
@@ -112,10 +127,10 @@
                                     widget="state_selection" readonly="0"/>
                             </h1>
                             <h2>
-                                <field name="contract_type_id" placeholder="Contract Type" nolabel="1"/>
-                                <field name="number" placeholder="Contract Number" nolabel="1"/>
+                                <field name="contract_type_id" placeholder="Tipe Kontrak" options="{'no_create': True,'no_create_edit': True}" nolabel="1"/>
+                                <field name="number" placeholder="No. Kontrak" nolabel="1"/>
                             </h2>
-                            <field name="company_id" groups="base.group_multi_company" invisible="1"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True,'no_create_edit': True}" invisible="1"/>
                         </div>
                         <div class="o_employee_avatar m-0 p-0">
                             
@@ -171,6 +186,21 @@
                 </xpath>
                 <xpath expr="//page[@name='information']" position="attributes">
                      <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="sanbe_hr_contracts_form_employee" model="ir.ui.view">
+            <field name="name">sanbe.hr.contract.form.inherits</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_payroll_account_community.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='journal_id']" position="after">
+                    <h5><strong>Profesi</strong></h5>
+                    <br/>
+                    <field name="medic" string="Medis"/>
+                    <field name="nurse" string="Perawat"/>
+                    <field name="seciality" string="Khusus"/>
                 </xpath>
             </field>
         </record>

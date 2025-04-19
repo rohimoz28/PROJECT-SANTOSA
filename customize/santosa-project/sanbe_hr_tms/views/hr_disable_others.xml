@@ -11,7 +11,7 @@
         <menuitem id="hr_timesheet.timesheet_menu_root"
                   active="False"/>
         <menuitem id="hr.menu_hr_root"
-                  name="Administrsi Kepegawaian"/>
+                  name="Administrasi Kepegawaian"/>
         <menuitem id="project.menu_main_pm"
                   active="False"/>
         <menuitem id="sale.sale_menu_root"
