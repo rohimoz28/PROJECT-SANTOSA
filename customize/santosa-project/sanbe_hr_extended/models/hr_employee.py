@@ -71,9 +71,9 @@ class HrEmployee(models.Model):
     alldepartment = fields.Many2many('hr.department', 'hr_department_rel', string='All Department',
                                      compute='_isi_department_branch', store=False)
     branch_id = fields.Many2one('res.branch', string='Business Unit', domain="[('id','in',branch_ids)]", tracking=True, default=lambda self: self.env.user.branch_id, required=True)
-    medic = fields.Many2one('hr.profesion.medic','Profesi Medis',)
-    nurse = fields.Many2one('hr.profesion.nurse','Profesi Perawat',)
-    seciality = fields.Many2one('hr.profesion.special','Kategori Khusus',)
+    medic = fields.Many2one('hr.profesion.medic', 'Profesi Medis',tracking=True, )
+    nurse = fields.Many2one('hr.profesion.nurse', 'Profesi Perawat',tracking=True, )
+    seciality = fields.Many2one('hr.profesion.special', 'Kategori Khusus',tracking=True, )
     street = fields.Char(related='branch_id.street')
     street2 = fields.Char(related='branch_id.street2')
     city = fields.Char(related='branch_id.city')
@@ -81,7 +81,7 @@ class HrEmployee(models.Model):
     zip = fields.Char(related='branch_id.zip')
     country_id = fields.Many2one(related='branch_id.country_id')
     department_id = fields.Many2one('hr.department', compute = '_find_department_id',  string='Departemen', store=True)
-    hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen')
+    hrms_department_id = fields.Many2one('sanhrms.department', tracking=True, string='Departemen')
     
     @api.depends('hrms_department_id')
     def _find_department_id(self):
@@ -98,8 +98,8 @@ class HrEmployee(models.Model):
                     })
                     line.department_id = Department.id
                      
-    division_id = fields.Many2one('sanhrms.division',string='Divisi')
-    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat')
+    division_id = fields.Many2one('sanhrms.division', tracking=True, string='Divisi')
+    directorate_id = fields.Many2one('sanhrms.directorate', tracking=True, string='Direktorat')
     employee_id = fields.Char('Employee ID', default='New')
     nik = fields.Char('NIK')
     nik_lama = fields.Char('NIK Lama')
@@ -118,15 +118,19 @@ class HrEmployee(models.Model):
                                  ('budha', 'Budha')],
                                 default='islam', string='Religion')
 
-    join_date = fields.Date('Join Date')
-    job_status = fields.Selection([('permanent', 'Permanent'),
-                                   ('contract', 'Contract'),
+    join_date = fields.Date('Join Date',tracking=True, )
+    job_status_id = fields.Many2one('sanhrms.job.status',required=True, string='Status Pekerjaan')
+    job_status = fields.Selection([('permanent', 'Karyawan Tetap (PKWTT)'),
+                                   ('contract', 'Karyawan Kontrak (PKWT)'),
+                                   ('med_permanent', 'Karyawan Medis (PKWTT)'),
+                                   ('med_contract', 'Karyawan Medis (PKWT)'),
+                                   ('med_tenant', 'Karyawan Medis (Mitra)'),
+                                   ('mitra', 'Mitra'),
                                    ('outsource', 'Outsource'),
                                    ('visitor', 'Visitor'),
-                                   ('mitra', 'Mitra'),
                                    ('tka', 'TKA'),
                                    ],
-                                  default='contract', string='Job Status')
+                                  default='contract', tracking=True, string='Job Status')
     emp_status = fields.Selection([('probation', 'Probation'),
                                    ('confirmed', 'Confirmed'),
                                    ('end_contract', 'End Of Contract'),
@@ -136,20 +140,20 @@ class HrEmployee(models.Model):
                                    ('terminated', 'Terminated'),
                                    ('pass_away', 'Pass Away'),
                                    ('long_illness', 'Long Illness')
-                                   ], string='Employment Status')
+                                   ], tracking=True, string='Employment Status')
     ws_month = fields.Integer('Working Service Month', compute="_compute_service_duration_display", readonly=True)
     ws_year = fields.Integer('Working Service Year', compute="_compute_service_duration_display", readonly=True)
     ws_day = fields.Integer('Working Service Day', compute="_compute_service_duration_display", readonly=True)
     contract_id = fields.Many2one('hr.contract', string='Contract', index=True)
-    contract_datefrom = fields.Date('Contract Date From', related='contract_id.date_start', store=True)
-    contract_dateto = fields.Date('Contract Date To', related='contract_id.date_end', store=True)
+    contract_datefrom = fields.Date('Contract Date From', related='contract_id.date_start', tracking=True,  store=True)
+    contract_dateto = fields.Date('Contract Date To', related='contract_id.date_end', tracking=True, store=True)
     attachment_contract = fields.Binary(string='Contract Document', attachment=True)
     employee_group1s = fields.Many2one('emp.group',
                                        string='Employee P Group')
     employee_group1 = fields.Selection(selection=_selection1,
                                        default='Group2',
                                        string='Employee P Group')
-    employee_levels = fields.Many2one('employee.level', string='Employee Level', index=True)
+    employee_levels = fields.Many2one('employee.level', string='Employee Level', index=True, store=True)
     insurance = fields.Char('BPJS No')
     jamsostek = fields.Char('Jamsostek')
     ptkp = fields.Char('PTKP')
@@ -183,7 +187,7 @@ class HrEmployee(models.Model):
     nama_pekerjaans = fields.Char(related='job_id.name', store=True)
     initial = fields.Char('Inisial')
     work_unit = fields.Char('Work Unit')
-    work_unit_id = fields.Many2one('hr.work.unit','Work Unit')
+    work_unit_id = fields.Many2one('hr.work.unit','Work Unit',tracking=True, )
     berat_badan = fields.Integer('Berat Badan (Kg)')
     tinggi_badan = fields.Integer('Tinggi Badan (Cm)')
     kpi_kategory = fields.Selection([('direct_spv', "Direct"),

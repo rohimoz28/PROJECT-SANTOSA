@@ -32,21 +32,21 @@
 <!--                                        class="btn-primary" data-hotkey="q"/>-->
 <!--                                </group>-->
                                 <group>
-                                    <field name="employee_id" invisible="1"/>
-                                    <field name="employee_name" readonly="1" force_save="1"/>
+                                    <field name="employee_id" string="Karyawan" invisible="1"/>
+                                    <field name="employee_name" string="Nama Karyawan" readonly="1" force_save="1"/>
                                     <field name="nik" readonly="1" force_save="1"/>
                                      <field name="departmentid" readonly="1" force_save="1"/>
                                 </group>
 
                             <group>
-                                    <field name="area" readonly="1" force_save="1"/>
-                                    <field name="bisnis_unit" readonly="1" force_save="1"/>
+                                    <field name="area" string="Area" readonly="1" force_save="1"/>
+                                    <field name="bisnis_unit" string="Unit Bisnis" readonly="1" force_save="1"/>
                                 </group>
                             </group>
                         <group name="'warning_details" string="Details Warning">
                             <group>
-                                    <field name="warning_type" widget="selection"/>
-                                    <field name="warning_date"/>
+                                    <field name="warning_type" widget="selection" string="Tipe Peringatan"/>
+                                    <field name="warning_date" string="Tgl Peringatan"/>
                                     <field name="pasal_pelanggaran" widget="selection"/>
                             </group>
                             <group>
@@ -104,7 +104,7 @@
             </field>
         </record>
         <menuitem id="menu_hr_warning_letter"
-                  name="Warning Letter"
+                  name="Surat Peringatan"
                   parent="hr.menu_hr_employee_payroll"
                   sequence="9"
                   action="action_hr_warning_letter"/>
