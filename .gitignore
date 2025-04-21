@@ -43,5 +43,6 @@ setup/win32/static/postgresql*.exe
 .husky
 
 conf/santosa-project/staging/pg-data/
+conf/santosa-project/production/pg-data/
 conf/santosa-project/pg-data/
-
+conf/santosa-project/production/.env
