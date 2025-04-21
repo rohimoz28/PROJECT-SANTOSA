@@ -1,0 +1,40 @@
+version: "3.8"
+services:
+  odoo-santosa:
+    image: custom-odoo:17.0
+    build:
+      context: .  # Build from the current directory
+      dockerfile: Dockerfile  # Specify the Dockerfile name
+    container_name: odoo-santosa
+    restart: unless-stopped
+    ports:
+      - "8234:8069"
+    depends_on:
+      - postgres-santosa
+    env_file: .env
+    volumes:
+      - odoo-santosa:/var/lib/odoo
+      - ./odoo.conf:/etc/odoo/odoo.conf
+      - ../../../customize/santosa-project:/mnt/addons-customize
+    networks:
+      - santosa_project_network
+
+  postgres-santosa:
+    image: postgres:15
+    container_name: postgres-santosa
+    ports:
+      - "5434:5432"
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./pg-data:/var/lib/pgsql/data/pgdata
+    networks:
+      - santosa_project_network
+
+volumes:
+  odoo-santosa:
+
+networks:
+  santosa_project_network:
+    name: santosa_project_network
+    driver: bridge
