@@ -16,3 +16,4 @@ from . import hr_department
 from . import ir_sequence
 from . import emp_group
 from . import hr_profesion
+from . import job_status

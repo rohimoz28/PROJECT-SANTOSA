@@ -7,10 +7,10 @@
         <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='date_end']" position="after">
-                <label for="notice_days"/>
+                <label for="notice_days" string="Notifikasi"/>
                 <div class="o_row">
                     <field name="notice_days"/>
-                    <span>days</span>
+                    <span>Hari</span>
                 </div>
             </xpath>
         </field>

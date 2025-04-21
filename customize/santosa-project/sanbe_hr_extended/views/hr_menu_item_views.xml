@@ -125,6 +125,15 @@
             <field name="parent_id" ref="base.menu_users"/> <!-- ✅ Corrected -->
         </record>
 
+        <record id="hr_contract.hr_menu_contract" model="ir.ui.menu">
+            <field name="name">Kontrak Karyawan</field>
+            <field name="sequence">3</field>
+        </record>
+
+        <record id="hr_contract.action_hr_contract" model="ir.actions.act_window">
+            <field name="name">Kontrak</field>
+        </record>
+
         <record id="base_territory.menu_res_territory" model="ir.ui.menu">
             <field name="name">Area</field>
             <field name="parent_id" ref="base.menu_users"/> <!-- ✅ Corrected -->
