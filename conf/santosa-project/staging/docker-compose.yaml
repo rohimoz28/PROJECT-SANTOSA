@@ -1,0 +1,40 @@
+version: "3.8"
+services:
+  stg-odoo-santosa:
+    image: custom-odoo:17.0
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: stg-odoo-santosa
+    restart: unless-stopped
+    ports:
+      - "8234:8069"
+    depends_on:
+      - stg-postgres-santosa
+    env_file: .env
+    volumes:
+      - stg-odoo-santosa:/var/lib/odoo
+      - ./odoo.conf:/etc/odoo/odoo.conf
+      - ../../../customize/santosa-project:/mnt/addons-customize
+    networks:
+      - stg_santosa_project_network
+
+  stg-postgres-santosa:
+    image: postgres:15
+    container_name: stg-postgres-santosa
+    ports:
+      - "5434:5432"
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./pg-data:/var/lib/pgsql/data/pgdata
+    networks:
+      - stg_santosa_project_network
+
+volumes:
+  stg-odoo-santosa:
+
+networks:
+  stg_santosa_project_network:
+    name: stg_santosa_project_network
+    driver: bridge
