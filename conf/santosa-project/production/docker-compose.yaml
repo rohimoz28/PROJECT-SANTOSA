@@ -14,14 +14,14 @@ services:
       - prod-postgres-santosa
     env_file: .env
     volumes:
-      - data:/var/lib/odoo
+      - sanfi_data:/var/lib/odoo
       - ./odoo.conf:/etc/odoo/odoo.conf
       - ../../../customize/santosa-project:/mnt/addons-customize
     networks:
       - prod_santosa_project_network
 
   prod-postgres-santosa:
-    image: postgres:15
+    image: postgres:latest
     container_name: prod-postgres-santosa
     ports:
       - "5444:5432"
@@ -29,7 +29,7 @@ services:
     env_file: .env
     shm_size: '6gb'
     volumes:
-      - postgresql:/var/lib/pgsql/data/pgdata
+      - sanfi_postgresql:/var/lib/pgsql/data/pgdata
     networks:
       - prod_santosa_project_network
     command: >
@@ -62,8 +62,10 @@ services:
       -c effective_io_concurrency=200
 
 volumes:
-  data:
-  postgresql:
+  sanfi_data:
+    external: true
+  sanfi_postgresql:
+    external: true
 
 networks:
   prod_santosa_project_network:
