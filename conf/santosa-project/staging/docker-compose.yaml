@@ -8,12 +8,12 @@ services:
     container_name: stg-odoo-santosa
     restart: unless-stopped
     ports:
-      - "8234:8069"
+      - "8075:8069"
     depends_on:
       - stg-postgres-santosa
     env_file: .env
     volumes:
-      - stg-odoo-santosa:/var/lib/odoo
+      - conf_dev-odoo-santosa:/var/lib/odoo
       - ./odoo.conf:/etc/odoo/odoo.conf
       - ../../../customize/santosa-project:/mnt/addons-customize
     networks:
@@ -32,7 +32,8 @@ services:
       - stg_santosa_project_network
 
 volumes:
-  stg-odoo-santosa:
+  conf_dev-odoo-santosa:
+    external: true
 
 networks:
   stg_santosa_project_network:
