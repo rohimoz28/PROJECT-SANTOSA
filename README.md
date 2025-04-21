@@ -7,8 +7,10 @@
    `cd project-santosa/conf`
 3. build image custom-odoo:17.0 (optional) <br>
    `docker build -t custom-odoo:17.0 .`
-4. jalankan docker compose <br>
-   `docker compose -f docker-compose.yaml -f dev.yaml up -d`
+4. masuk ke direktori config <br>
+   `cd conf/santosa-project/development`
+5. jalankan docker compose <br>
+   `docker compose up -d`
 ## FaQ
 Umumnya, semua masalah pada docker bisa telusuri melalui logs-nya menggunakan command:
 `docker compose logs -f --tail 200`. <br> Namun, jika setelah membaca logs belum ditemukan akar masalah-nya. Bisa
