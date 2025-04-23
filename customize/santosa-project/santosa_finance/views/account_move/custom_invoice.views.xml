@@ -66,10 +66,10 @@
                 <xpath expr="//tree/field[@name='invoice_date']" position="replace"/>
 
                 <xpath expr="//tree/field[@name='name']" position="before">
-                    <!-- <field name="invoice_date" string="Invoice Date"/> -->
+                    <field name="populated_date" string="Populat Date"/>
+                    <field name="invoice_date" string="Invoice Date"/>
                     <field name="temp_invoice_no" string="Invoice No"/>
                     <field name="transaction_no"/>
-                    
                 </xpath>
                 <xpath expr="//tree/field[@name='name']" position="after">
                     <field name="sales_point" string="Sales Point"/>
@@ -85,9 +85,9 @@
                 <field name="amount_total_signed" position="attributes">
                     <attribute name="string">Total Invoice</attribute>
                 </field>
-                <field name="invoice_date" position="attributes">
+                <!-- <field name="invoice_date" position="attributes">
                     <attribute name="string">Journal Date</attribute>
-                </field>
+                </field> -->
                 
             </field>
         </record>
