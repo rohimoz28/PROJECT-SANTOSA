@@ -59,13 +59,13 @@ class AccountMove(models.Model):
     admission_date = fields.Datetime()
     discharge_date = fields.Datetime()
     line_of_sales = fields.Char()
-    sales_group = fields.Selection([ 
+    sales_group = fields.Selection([
         ('Biling', 'Biling'),
         ('KemoJKN', 'KemoJKN'),
         ('ProlanisJKN', 'ProlanisJKN'),
         ('RefVarBB', 'RefVarBB')
     ])
-    corp_group = fields.Selection([ 
+    corp_group = fields.Selection([
         ('Corp Asuransi', 'Corp Asuransi'),
         ('JKN', 'JKN'),
         ('KemoJKN', 'KemoJKN'),
@@ -93,7 +93,7 @@ class AccountMove(models.Model):
     binary_checksum = fields.Char()
     location = fields.Char()
     last_update = fields.Datetime()
-    status_sinkronisasi = fields.Selection([ 
+    status_sinkronisasi = fields.Selection([
         ('Proses Pembentukan AR Harian', 'Proses Pembentukan AR Harian'),
         ('Proses Penyesuaian AR', 'Proses Penyesuaian AR'),
         ('Selesai', 'Selesai')
@@ -213,7 +213,7 @@ class AccountMove(models.Model):
         print(am, "ini record am untuk penyesuaian kembali")
         for record in am:
             print("fungsi penyesuaian kembali berjalan")
-       
+
             move_lines = self.env['account.move.line'].search([('need_to_calculate', '=', True)])
             print(move_lines, "ini yang akan harus disesuaikan lagi")
             print(move_lines.move_id, "in move_id yang akan harus disesuaikan lagi")
@@ -234,12 +234,12 @@ class AccountMove(models.Model):
         am = self.env['account.move'].search([('status_sinkronisasi', '=', 'Proses Penyesuaian AR')])
         for record in am:
             print("fungsi delete AR bawaan jalan")
-       
+
             move_lines = self.env['account.move.line'].search([('populate_date', '=', False),('debit', '!=', 0),('move_id', '=', record.id)])
             print(move_lines, "ini yang akan dihapus")
-            
+
             deleted_rows = move_lines.sudo().unlink()
-            
+
             print(f"Jumlah baris yang dihapus: {deleted_rows}")
             record.status_sinkronisasi = 'Selesai'
 
@@ -268,5 +268,3 @@ class AccountMove(models.Model):
         #             format_amount(self.env, sum_credit, move.company_id.currency_id),
         #             move.journal_id.name)
         #     raise UserError(error_msg)
-
-    

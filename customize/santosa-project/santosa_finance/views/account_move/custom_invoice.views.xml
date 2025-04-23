@@ -59,36 +59,37 @@
     </record>
 
     <record id="view_move_tree_inherit" model="ir.ui.view">
-            <field name="name">account.move.tree.inherit</field>
-            <field name="model">account.move</field>
-            <field name="inherit_id" ref="account.view_out_invoice_tree"/>
-            <field name="arch" type="xml">
-                <xpath expr="//tree/field[@name='invoice_date']" position="replace"/>
+        <field name="name">account.move.tree.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_out_invoice_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='invoice_date']" position="replace"/>
 
-                <xpath expr="//tree/field[@name='name']" position="before">
-                    <field name="populated_date" string="Populat Date"/>
-                    <field name="invoice_date" string="Invoice Date"/>
-                    <field name="temp_invoice_no" string="Invoice No"/>
-                    <field name="transaction_no"/>
-                </xpath>
-                <xpath expr="//tree/field[@name='name']" position="after">
-                    <field name="sales_point" string="Sales Point"/>
-                    
-                </xpath>
-                <xpath expr="//tree/field[@name='state']" position="after">
-                    <field name="status_invoice" widget="badge" decoration-success="status_invoice == 'Closed'" decoration-danger="status_invoice == 'Open'"/>
-                    <field name="status_staging" optional='hide'/>
-                </xpath>
-                <field name="state" position="attributes">
-                    <attribute name="optional">hide</attribute>
-                </field>
-                <field name="amount_total_signed" position="attributes">
-                    <attribute name="string">Total Invoice</attribute>
-                </field>
-                <!-- <field name="invoice_date" position="attributes">
-                    <attribute name="string">Journal Date</attribute>
-                </field> -->
-                
+            <xpath expr="//tree/field[@name='name']" position="before">
+                <field name="populated_date" string="Populat Date"/>
+                <field name="invoice_date" string="Invoice Date"/>
+                <field name="temp_invoice_no" string="Invoice No"/>
+                <field name="transaction_no"/>
+
+            </xpath>
+            <xpath expr="//tree/field[@name='name']" position="after">
+                <field name="sales_point" string="Sales Point"/>
+
+            </xpath>
+            <xpath expr="//tree/field[@name='state']" position="after">
+                <field name="status_invoice" widget="badge" decoration-success="status_invoice == 'Closed'" decoration-danger="status_invoice == 'Open'"/>
+                <field name="status_staging" optional='hide'/>
+            </xpath>
+            <field name="state" position="attributes">
+                <attribute name="optional">hide</attribute>
             </field>
-        </record>
+            <field name="amount_total_signed" position="attributes">
+                <attribute name="string">Total Invoice</attribute>
+            </field>
+            <!-- <field name="invoice_date" position="attributes">
+                <attribute name="string">Journal Date</attribute>
+            </field> -->
+
+        </field>
+    </record>
 </odoo>

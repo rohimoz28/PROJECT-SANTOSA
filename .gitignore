@@ -42,4 +42,8 @@ setup/win32/static/postgresql*.exe
 # js tooling
 .husky
 
-
+conf/santosa-project/staging/pg-data/
+conf/santosa-project/production/pg-data/
+conf/santosa-project/development/pg-data/
+conf/santosa-project/pg-data/
+conf/santosa-project/production/.env

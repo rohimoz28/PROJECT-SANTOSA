@@ -1,0 +1,73 @@
+version: "3.8"
+services:
+  prod-odoo-santosa:
+    image: custom-odoo:17.0
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: prod-odoo-santosa
+    restart: unless-stopped
+    ports:
+      - "8076:8069"
+      - "8096:8072"
+    depends_on:
+      - prod-postgres-santosa
+    env_file: .env
+    volumes:
+      - sanfi_data:/var/lib/odoo
+      - ./odoo.conf:/etc/odoo/odoo.conf
+      - ../../../customize/santosa-project:/mnt/addons-customize
+    networks:
+      - prod_santosa_project_network
+
+  prod-postgres-santosa:
+    image: postgres:latest
+    container_name: prod-postgres-santosa
+    ports:
+      - "5444:5432"
+    restart: unless-stopped
+    env_file: .env
+    shm_size: '6gb'
+    volumes:
+      - sanfi_postgresql:/var/lib/pgsql/data/pgdata
+    networks:
+      - prod_santosa_project_network
+    command: >
+      postgres
+      -c max_connections=300
+      -c shared_buffers=6GB
+      -c work_mem=32MB
+      -c maintenance_work_mem=1GB
+      -c effective_cache_size=12GB
+      -c wal_level=replica
+      -c wal_compression=on
+      -c wal_buffers=32MB
+      -c commit_delay=10000
+      -c synchronous_commit=off
+      -c max_wal_size=2GB
+      -c min_wal_size=512MB
+      -c autovacuum_vacuum_threshold=1000
+      -c autovacuum_vacuum_scale_factor=0.05
+      -c autovacuum_analyze_scale_factor=0.02
+      -c autovacuum_max_workers=6
+      -c autovacuum_naptime=5s
+      -c autovacuum_vacuum_cost_limit=3000
+      -c max_parallel_workers=8
+      -c max_worker_processes=16
+      -c max_parallel_workers_per_gather=4
+      -c parallel_tuple_cost=0.01
+      -c parallel_setup_cost=200
+      -c temp_buffers=32MB
+      -c random_page_cost=1.1
+      -c effective_io_concurrency=200
+
+volumes:
+  sanfi_data:
+    external: true
+  sanfi_postgresql:
+    external: true
+
+networks:
+  prod_santosa_project_network:
+    name: prod_santosa_project_network
+    driver: bridge
