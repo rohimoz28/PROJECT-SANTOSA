@@ -15,9 +15,12 @@ class StoreProcedure(models.Model):
 
     # Header
     name = fields.Char()
-    tanggal_terakhir_dijalankan = fields.Datetime()
-    populate_date = fields.Date()
-    order_lines_ids = fields.One2many('santosa_finance.missing_coa', 'order_id')
+    tanggal_terakhir_dijalankan = fields.Datetime(
+        default=lambda self:datetime.now()
+    )
+    populate_date = fields.Date(
+        default=lambda self:date.today())
+    order_lines_ids = fields.One2many('santosa_finance.missing_coa','order_id')
 
     def panggil_store_procedure(self):
         for record in self:

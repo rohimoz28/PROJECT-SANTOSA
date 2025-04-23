@@ -32,7 +32,9 @@ class TransactionTracking(models.Model):
     partner_id = fields.Many2one('res.partner')
     account_move_id = fields.Many2one('account.move')
     currency_id = fields.Many2one('res.currency', string="Currency")
-    
+    offset_id = fields.Many2one('account.move')
+    offset_amt = fields.Monetary()
+
     def ambil_view(self):
         self.ensure_one()  # Ensure this method is called on a single record
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
@@ -46,3 +48,16 @@ class TransactionTracking(models.Model):
             }
         else:
             raise ValidationError("Account Move ID Belum Terisi!!!")
+
+    @api.depends('transaction_no', 'document_no')
+    def _compute_display_name(self):
+        for emp in self:
+            name = ''
+            context = self.env.context
+            module_name = context.get('module', 'Default Module')
+            if module_name != 'hr.tmsentry.summary':
+                if emp.transaction_no and emp.document_no:
+                    name = '[' + emp.transaction_no + '] ' + emp.document_no
+                emp.display_name = name
+            else:
+                emp.display_name = emp.document_no
