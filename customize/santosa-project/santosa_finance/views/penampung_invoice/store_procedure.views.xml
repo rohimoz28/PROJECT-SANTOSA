@@ -7,19 +7,34 @@
                 <form multi_edit="1">
                     <sheet>
                     <header>
-                    <button name="panggil_store_procedure"
-                                        string="Insert AM AML"
-                                        type="object"
-                                        class="btn-primary"/>
+                        <button name="panggil_store_procedure" string="Insert AM AML" type="object" class="btn-primary"/>
                     </header>
-                            <group>
-                                <field name="name"/>
-                                <field name="tanggal_terakhir_dijalankan"/>
-                                <field name="populate_date"/>
-                                
-                            </group>
-                          
+                        <group>
+                            <field name="name" 
+                            invisible="1"
+                            />
+                            <field name="tanggal_terakhir_dijalankan"/>
+                            <field name="populate_date"/>
+                        </group>
+                        <notebook>
+                            <page string="">
+                                <field name="order_lines_ids" mode="tree,kanban" readonly="1">
+                                    <tree>
+                                        <field name="populate_date"/>
+                                        <field name="sales_point"/>
+                                        <field name="item_group_key"/>
+                                        <field name="item_group_name"/>
+                                        <field name="coa_patient_key"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -29,14 +44,10 @@
             <field name="name">Processing</field>
             <field name="model">santosa_finance.store_procedure</field>
             <field name="arch" type="xml">
-
                 <tree limit="20">
-                    <field name="name" />
-                           
-                                <field name="tanggal_terakhir_dijalankan"/>
-                                <field name="populate_date"/>
-                            
-                            
+                    <field name="name" column_invisible="1"/>
+                    <field name="tanggal_terakhir_dijalankan"/>
+                    <field name="populate_date"/>        
                 </tree>
             </field>
         </record>
@@ -45,9 +56,7 @@
             <field name="name">Processing</field>
             <field name="res_model">santosa_finance.store_procedure</field>
             <field name="view_mode">tree,form,graph,pivot</field>
-
             <field name="domain"></field>
-
         </record>
 
         <menuitem id="store_procedure" name="Processing" sequence="99" parent="account.menu_finance" action="santosa_finance_store_procedure_action"/>

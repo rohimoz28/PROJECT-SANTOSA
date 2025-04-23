@@ -4,29 +4,75 @@
         <field name="name">res.partner.form.custom</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="priority" eval="98"/>
         <field name="arch" type="xml">
             <!-- Tambahkan Tab Baru -->
             <xpath expr="//notebook" position="inside">
-                <page string="Transaction Tracking">
+                <page string="Piutang Usaha" invisible="not is_customer">
                     <group>
                         <field name="transaction_tracking_ids" string="" readonly='1'>
                                 <tree delete='0' default_order='id asc'>
+                                    <field name="id" string="id" optional='hide'/>
                                     <field name="transaction_date" string="Transaction Date" optional='hide'/>
                                     <field name="populate_date" string="Populate Date" optional='hide'/>
                                     <field name="account_move_id" string="Transaction Number" optional='show'/>
                                     <field name="document_date" string="Document Date" optional='hide'/>
                                     <field name="entered_date" string="Entered Date" optional='show'/>
                                     <field name="document_no" string="Document Number" optional='show'/>
+                                    <field name="description" string="Description" optional='show'/>
                                     <field name="transaction_class" string="Transaction Class" optional='hide'/>
-                                    <field name="description" string="Description" optional='hide'/>
                                     <field name="beginning_balance" string="Beginning Balance" optional='show'/>
                                     <field name="amount_debit" string="Amount Debit" optional='show'/>
                                     <field name="amount_credit" string="Amount Credit" optional='show'/>
                                     <field name="ending_balance" string="Ending Balance" optional='show'/>
                                     <field name="journal_number" string="Journal Number" optional='hide'/>
-                                    <!-- <field name="partner_id" string="Partner ID" optional='hide'/> -->
                                     <button name="ambil_view" type="object" string="Detail" class="fa fa-eye"/>
-
+                                </tree>
+                            </field>
+                    </group>
+                </page>
+                <page string="Piutang Klaim" invisible="not is_customer">
+                    <group>
+                        <field name="transaction_tracking_ids" string="" readonly='1'>
+                                <tree delete='0' default_order='id asc'>
+                                    <field name="id" string="id" optional='hide'/>
+                                    <field name="transaction_date" string="Transaction Date" optional='hide'/>
+                                    <field name="populate_date" string="Populate Date" optional='hide'/>
+                                    <field name="account_move_id" string="Transaction Number" optional='show'/>
+                                    <field name="document_date" string="Document Date" optional='hide'/>
+                                    <field name="entered_date" string="Entered Date" optional='show'/>
+                                    <field name="document_no" string="Document Number" optional='show'/>
+                                    <field name="description" string="Description" optional='show'/>
+                                    <field name="transaction_class" string="Transaction Class" optional='hide'/>
+                                    <field name="beginning_balance" string="Beginning Balance" optional='show'/>
+                                    <field name="amount_debit" string="Amount Debit" optional='show'/>
+                                    <field name="amount_credit" string="Amount Credit" optional='show'/>
+                                    <field name="ending_balance" string="Ending Balance" optional='show'/>
+                                    <field name="journal_number" string="Journal Number" optional='hide'/>
+                                    <button name="ambil_view" type="object" string="Detail" class="fa fa-eye"/>
+                                </tree>
+                            </field>
+                    </group>
+                </page>
+                <page string="Hutang Usaha" invisible="not is_supplier">
+                    <group>
+                        <field name="transaction_tracking_ids" string="" readonly='1'>
+                                <tree delete='0' default_order='id asc'>
+                                    <field name="id" string="id" optional='hide'/>
+                                    <field name="transaction_date" string="Transaction Date" optional='hide'/>
+                                    <field name="populate_date" string="Populate Date" optional='hide'/>
+                                    <field name="account_move_id" string="Transaction Number" optional='show'/>
+                                    <field name="document_date" string="Document Date" optional='hide'/>
+                                    <field name="entered_date" string="Entered Date" optional='show'/>
+                                    <field name="document_no" string="Document Number" optional='show'/>
+                                    <field name="description" string="Description" optional='show'/>
+                                    <field name="transaction_class" string="Transaction Class" optional='hide'/>
+                                    <field name="beginning_balance" string="Beginning Balance" optional='show'/>
+                                    <field name="amount_debit" string="Amount Debit" optional='show'/>
+                                    <field name="amount_credit" string="Amount Credit" optional='show'/>
+                                    <field name="ending_balance" string="Ending Balance" optional='show'/>
+                                    <field name="journal_number" string="Journal Number" optional='hide'/>
+                                    <button name="ambil_view" type="object" string="Detail" class="fa fa-eye"/>
                                 </tree>
                             </field>
                     </group>
@@ -44,6 +90,7 @@
                 <group>
                 <field name="is_customer" string="Customer?" invisible="context.get('default_is_customer', False) != 1"/>
                 <field name="tipe_customer" string="Customer Type" invisible="is_customer != True"/>
+                <filter string="Dokter Mitra" name="filter_dokter_mitra" domain="[('is_dokter_mitra', '=', True)]"/>
 
                 </group>
             </xpath>
@@ -58,8 +105,7 @@
         <field name="arch" type="xml">
             <xpath expr="//form/sheet/group" position="inside">
                 <group>
-                <field name="is_supplier" string="Supplier?" invisible="context.get('default_is_supplier', False) != 1"/>
-
+                    <field name="is_supplier" string="Supplier?" invisible="context.get('default_is_supplier', False) != 1"/>
                 </group>
             </xpath>
         </field>
@@ -74,7 +120,6 @@
             <xpath expr="//form/sheet/group" position="inside">
             <group>
                 <field name="is_dokter_mitra" string="Dokter Mitra?" invisible="context.get('default_is_dokter_mitra', False) != 1"/>
-
             </group>
             </xpath>
         </field>

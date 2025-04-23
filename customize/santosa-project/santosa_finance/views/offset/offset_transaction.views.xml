@@ -6,28 +6,44 @@
             <field name="model">santosa_finance.offset_transaction</field>
             <field name="arch" type="xml">
                 <form multi_edit="1">
-                   
                     <sheet>
                         <group>
-                           
-                            <field name="odoo_transaction_no" />
-                            <field name="transaction_date" />
-                            <field name="offset_no" />
-                            <field name="offset_date" />
-                            <field name="offset_type" />
+                            <group>
+                                <field name="offset_no" string="Name"/>
+                                <field name="partner_id"/>
+                                <field name="offset_type" />
+                                <field name="remarks" />
+                                <field name="attachment_document_ref" /> 
+                                <field name="periode_number" />
+                            </group>
+                            <group>
+                                <field name="offset_date" />
+                                <field name="periode_number" />
+                                <field name="periode_closing_date" />                            
+                                <field name="total_amount_offset" />
+                                <field name="status_transaksi" />                           
+                            </group>
                             <field name="offset_description" />
-                            <field name="document_ref_number" />
-                            <field name="attachment_document_ref" />
-                            <field name="total_amount_offset" />
-                            <field name="remarks" />
-                            <field name="status_transaksi" />
-                            <field name="periode_number" />
-                            <field name="periode_closing_date" />
-                            
-                            
-                            
                         </group>
-                       
+                        <notebook>
+                            <page name="detail_offset" string="Detail Transaction">
+                                <field name="line_ids">
+                                    <tree editable="bottom">
+                                        <field name="trx_id" />
+                                        <field name="odoo_transaction_no"/>
+                                        <field name="transaction_date" />
+                                        <field name="transaction_no" />
+                                        <field name="document_date" />
+                                        <field name="document_no" />
+                                        <field name="description" />
+                                        <field name="partner_id" />
+                                        <field name="amount_debit"/>
+                                        <field name="amount_credit"/>                                                
+                                        <field name="offset_amt"/>                                                
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
@@ -67,6 +83,8 @@
             <field name="domain"></field>
 
         </record>
+
+
        
         <menuitem id="offset_transaction_data" name="Offset Transaction" sequence='15' parent="santosa_finance.offset_root" action="santosa_finance_offset_transaction_action"/>
 
