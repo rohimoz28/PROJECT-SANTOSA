@@ -32,6 +32,8 @@ class TransactionTracking(models.Model):
     partner_id = fields.Many2one('res.partner')
     account_move_id = fields.Many2one('account.move')
     currency_id = fields.Many2one('res.currency', string="Currency")
+    offset_id = fields.Many2one('account.move')
+    offset_amt = fields.Monetary()
 
     def ambil_view(self):
         self.ensure_one()  # Ensure this method is called on a single record
