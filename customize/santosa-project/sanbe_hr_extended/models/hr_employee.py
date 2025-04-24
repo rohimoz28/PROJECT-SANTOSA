@@ -80,7 +80,7 @@ class HrEmployee(models.Model):
     state_id = fields.Char(related='branch_id.state_id')
     zip = fields.Char(related='branch_id.zip')
     country_id = fields.Many2one(related='branch_id.country_id')
-    department_id = fields.Many2one('hr.department', compute = '_find_department_id',  string='Departemen', store=True)
+    department_id = fields.Many2one('hr.department', compute = '_find_department_id',  string='Departemen', store=True, required=False)
     hrms_department_id = fields.Many2one('sanhrms.department', tracking=True, string='Departemen')
     
     @api.depends('hrms_department_id')
@@ -646,6 +646,9 @@ class ResPartner(models.Model):
 
 class HRJob(models.Model):
     _inherit = "hr.job"
+
+
+    hrms_department_id = fields.Many2one('sanhrms.department', tracking=True, string='Departemen')
 
     _sql_constraints = [
         ('name_company_uniq', 'check(1=1)', 'The name of the job position must be unique per department in company!'),
