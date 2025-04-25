@@ -96,17 +96,26 @@
                             <field name="employee_id" invisible="1" />
                             <field name="employee_name" readonly="1" force_save="1" />
                             <field name="nik" readonly="1" force_save="1" />
-                            <field name="nik_lama" readonly="1" force_save="1" />
+                            <field name="nik_lama" readonly="1" force_save="1" string="NIK Lama"/>
                             <field name="emp_status"
                                 readonly="service_type != 'conf'" force_save="1" />
-                            <field name="employee_levels" readonly="1" force_save="1" />
-                            <field name="employee_group1" readonly="1" force_save="1" />
+                            <field name="employee_levels" string="Level Karyawan" readonly="1" force_save="1" />
+                            <field name="employee_group1s" string="Group Penggajian" readonly="1" force_save="1" />
+                            <field name="medic" options="{'no_create': True,'no_create_edit': True}" string = "Medis" required='1' readonly="1" force_save="1" />
+                            <field name="nurse" options="{'no_create': True,'no_create_edit': True}" string = "Perawat" required='1' readonly="1" force_save="1" />
+                            <field name="seciality" options="{'no_create': True,'no_create_edit': True}" string = "Keahlian Khusus" required="1" readonly="1" force_save="1" />                            
 
                         </group>
                         <group>
-                            <field name="area" readonly="1" force_save="1" />
-                            <field name="bisnis_unit" readonly="1" force_save="1" />
-                            <field name="departmentid" readonly="1" force_save="1" />
+                            <field name="area" required="1" readonly="1" force_save="1" invisible="1" />
+                            <field name="area_id" required="1" readonly="1" force_save="1" invisible="1" />
+                            <field name="branch_ids" invisible="1" />
+                            <field name="alldepartment" invisible="1" />
+                            <field name="branch_id" options="{'no_create': True,'no_create_edit': True}" string = "Unit Bisnis" required="1" readonly="1" force_save="1" />
+                            <field name="directorate_id" options="{'no_create': True,'no_create_edit': True}" string = "Direktorat" required='1' readonly="1" force_save="1" />
+                            <field name="hrms_department_id" options="{'no_create': True,'no_create_edit': True}" string = "Departemen" required='1' readonly="1" force_save="1" />
+                            <field name="division_id" options="{'no_create': True,'no_create_edit': True}" string = "Divisi" required='1' readonly="1" force_save="1" />
+                            <field name="work_unit_id" options="{'no_create': True,'no_create_edit': True}" string = "Unit Kerja" required="1" readonly="1" force_save="1" />                            
                             <field name="job_status" readonly="1" force_save="1" />
                             <field name="job_title" readonly="1" force_save="1" />
                         </group>
@@ -128,6 +137,11 @@
                             <field name="service_nik_lama" readonly="1" force_save="1" />
                             <field name="service_no_npwp" readonly="state in ['approved']" force_save="1" />
                             <field name="service_no_ktp" readonly="state in ['approved']" force_save="1" />
+                            <field name="service_employee_levels" readonly="state in ['approved']"  invisible="service_type != 'prom'" required="service_type == 'prom'" options="{'no_create': True,'no_quick_create': True}" />
+                            <field name="service_employee_group1s" string="Group Penggajian" force_save="1" />
+                            <field name="service_medic" options="{'no_create': True,'no_create_edit': True}" string = "Medis" required='1' force_save="1" domain="[('branch_id', '=', service_bisnisunit)]" />
+                            <field name="service_nurse" options="{'no_create': True,'no_create_edit': True}" string = "Perawat" required='1'  force_save="1" domain="[('branch_id', '=', service_bisnisunit)]" />
+                            <field name="service_seciality" options="{'no_create': True,'no_create_edit': True}" string = "Keahlian Khusus" required="1" force_save="1" domain="[('branch_id', '=', service_bisnisunit)]" />                      
                             <field name="remarks" readonly="state in ['approved']" />
                             <field name="image" readonly="state in ['approved']" widget="many2many_binary" />
                         </group>
@@ -139,7 +153,12 @@
                             <field name="service_area" readonly="state in ['approved']" force_save="1" />
                             <field name="branch_ids" invisible="1"/>
                             <field name="service_bisnisunit" readonly="state in ['approved']" force_save="1" />
-                            <field name="service_departmentid" readonly="state in ['approved']" force_save="1" />
+                            <field name="service_departmentid" readonly="state in ['approved']" force_save="1" invisible="1" domain="[('branch_id', '=', service_bisnisunit)]" />
+                            <field name="service_directorate_id" options="{'no_create': True,'no_create_edit': True}" readonly="state in ['approved']" string = "Direktorat" required='1' force_save="1" domain="[('branch_id', '=', service_bisnisunit)]" />
+                            <field name="service_hrms_department_id" options="{'no_create': True,'no_create_edit': True}" readonly="state in ['approved']" string = "Departemen" required='1'  force_save="1" domain="[('branch_id', '=', service_bisnisunit)]" />
+                            <field name="service_division_id" options="{'no_create': True,'no_create_edit': True}" readonly="state in ['approved']" string = "Divisi" required='1' force_save="1" domain="[('branch_id', '=', service_bisnisunit)]" />
+                            <field name="service_work_unit_id" options="{'no_create': True,'no_create_edit': True}" readonly="state in ['approved']" string = "Unit Kerja" required="1" force_save="1" domain="[('branch_id', '=', service_bisnisunit)]" />                          
+                            <field name="service_jobstatus" readonly="state in ['approved']" force_save="1" />
                             <field name="service_jobstatus" readonly="state in ['approved']" force_save="1" />
                             <field name="service_employementstatus" readonly="state in ['approved']" 
                                 invisible="job_status !='permanent'" force_save="1" />
@@ -190,7 +209,7 @@
 
         <menuitem
             id="menu_hr_mutation"
-            name="Mutation"
+            name="Mutasi Karyawan"
             parent="hr.menu_hr_employee_payroll"
             sequence="5"
             action="open_view_employee_mutation_tree" />
