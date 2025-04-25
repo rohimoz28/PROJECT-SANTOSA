@@ -171,10 +171,8 @@
                 <xpath expr="//page[@name='personal_information']/group/group[3]" position="after">
                     <group string="Status Hubungan Kerja">
                         <!-- <field name="kpi_kategory" /> -->
-                        <field name="job_status" string="Status Hubungan Kerja" 
-                        />
-                        <field name="job_status_id" options="{'no_create': True,'no_create_edit': True}" string="Status Hubungan Kerja"
-                        invisible="1"/>
+                        <field name="job_status" />
+                        <field name="job_status_id" options="{'no_create': True,'no_create_edit': True}" string="Status Hubungan Kerja" invisible="1"/>
                         <field name="emp_status" readonly="emp_status not in ['probation','confirmed']"/>
                         <field name="first_date_join" string="Tanggal Pertama bergabung"/>
                         <field name="join_date" required="job_status =='permanent'" string="Tanggal Bergabung"/>
