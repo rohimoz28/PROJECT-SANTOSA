@@ -47,3 +47,7 @@ class STGInvoiceHeaders(models.Model):
     COBName = fields.Char()
     EnteredDate = fields.Datetime()
     PopulatedTime = fields.Datetime()
+    CostPrice_AVG = fields.Float()
+    CostPrice_LAST = fields.Float(string = "Cost Price",help="Nilai dari CostPrice terakhir (mengacu pada metode LastBuy atau LastHNA", default=0.0)
+    CostPrice_LAST_Date = fields.Date(string = "Cost Price Last Date", help="Tanggal saat nilai cost price terakhir tersebut berlaku")
+    CostPrice_LAST_Based = fields.Char(string = "Cost Price Last Based", help="Menjelaskan nilai cost price terakhir ini didapat dari metode apa, misalnya LastBuy atau LastHNA")

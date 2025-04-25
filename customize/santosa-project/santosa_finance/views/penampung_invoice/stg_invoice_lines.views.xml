@@ -84,6 +84,9 @@
                             <field name="Qty" optional='hide'/>
                             <field name="Price" optional='hide'/>
                             <field name="CostPrice_AVG" optional='hide'/>
+                            <field name="CostPrice_LAST" optional='hide'/>
+                            <field name="CostPrice_LAST_Date" optional='hide'/>
+                            <field name="CostPrice_LAST_Based" optional='hide'/>
 
                             <field name="DiscountItem" optional='hide' string='Discount Item'/>
                             <field name="DiscountDokter" optional='hide'/>

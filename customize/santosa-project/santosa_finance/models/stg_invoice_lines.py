@@ -35,7 +35,6 @@ class STGInvoiceLines(models.Model):
     Qty = fields.Integer()
     Price = fields.Float()
     Total = fields.Float()
-    CostPrice_AVG = fields.Float()
     DiscountItem = fields.Float()
     DiscountDokter = fields.Float()
     DiscountSubtotal = fields.Float()
@@ -55,5 +54,9 @@ class STGInvoiceLines(models.Model):
     EnteredDate = fields.Datetime()
     PopulatedTime = fields.Datetime()
     IsPPN_Boolean = fields.Boolean()
+    CostPrice_AVG = fields.Float()
+    CostPrice_LAST = fields.Float(string = "Cost Price",help="Nilai dari CostPrice terakhir (mengacu pada metode LastBuy atau LastHNA", default=0.0)
+    CostPrice_LAST_Date = fields.Date(string = "Cost Price Last Date", help="Tanggal saat nilai cost price terakhir tersebut berlaku")
+    CostPrice_LAST_Based = fields.Char(string = "Cost Price Last Based", help="Menjelaskan nilai cost price terakhir ini didapat dari metode apa, misalnya LastBuy atau LastHNA")
 
     

@@ -37,6 +37,10 @@ class AccountMove(models.Model):
     periode_number = fields.Char()
     periode_closing_date = fields.Date()
     journal_type = fields.Many2one('offset.type')
+    cost_price = fields.Monetary(string = "Cost Price",help="Nilai dari CostPrice terakhir (mengacu pada metode LastBuy atau LastHNA", default=0.0)
+    cost_price_avg= fields.Monetary(string = "Cost Price AVG", default=0.0)
+    cost_price_last_date = fields.Date(string = "Cost Price Last Date", help="Tanggal saat nilai cost price terakhir tersebut berlaku")
+    cost_price_last_based = fields.Char(string = "Cost Price Last Based", help="Menjelaskan nilai cost price terakhir ini didapat dari metode apa, misalnya LastBuy atau LastHNA")
 
     #AR
     tgl_klaim = fields.Date()
