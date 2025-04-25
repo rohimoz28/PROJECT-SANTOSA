@@ -151,7 +151,7 @@ class HrEmployeeMutation(models.Model):
     service_nurse = fields.Many2one('hr.profesion.nurse','Profesi Perawat', default=lambda self:self.emp_nos.nurse.id)
     service_seciality = fields.Many2one('hr.profesion.special','Kategori Khusus', default=lambda self:self.emp_nos.seciality.id)
     service_hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen', default=lambda self:self.emp_nos.hrms_department_id.id)
-    service_departmentid = fields.Many2one('hr.department', domain="[('branch_id','=',service_bisnisunit)]", string='Departemen', default=lambda self:self.emp_nos.departmentid.id)
+    service_departmentid = fields.Many2one('hr.department', domain="[('branch_id','=',service_bisnisunit)]", string='Departemen', default=lambda self:self.emp_nos.department_id.id)
     service_identification = fields.Char('Identification Number')
     service_jobstatus = fields.Selection([('permanent', 'Permanent'),
                                           ('contract', 'Contract'),
