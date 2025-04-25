@@ -122,15 +122,9 @@ class HrEmployee(models.Model):
     job_status_id = fields.Many2one('sanhrms.job.status',required=True, string='Status Pekerjaan')
     job_status = fields.Selection([('permanent', 'Karyawan Tetap (PKWTT)'),
                                    ('contract', 'Karyawan Kontrak (PKWT)'),
-                                   ('med_permanent', 'Karyawan Medis (PKWTT)'),
-                                   ('med_contract', 'Karyawan Medis (PKWT)'),
-                                   ('med_tenant', 'Karyawan Medis (Mitra)'),
-                                   ('mitra', 'Mitra'),
-                                   ('outsource', 'Outsource'),
+                                   ('partner_doctor', 'Dokter Mitra'),
                                    ('visitor', 'Visitor'),
-                                   ('tka', 'TKA'),
-                                   ],
-                                  default='contract', tracking=True, string='Job Status')
+                                   ], default='contract', tracking=True, string='Status Hubungan Kerja')
     emp_status = fields.Selection([('probation', 'Probation'),
                                    ('confirmed', 'Confirmed'),
                                    ('end_contract', 'End Of Contract'),
@@ -204,6 +198,11 @@ class HrEmployee(models.Model):
         string='Jumlah Hari kerja',
         help='Jumlah Hari Kerja Dalam Satu Bulan',
         required=False)
+    kontrak_medis = fields.Boolean(string="Kontrak Medis")
+    sip_number = fields.Char(string="Nomor SIP")
+    sip_date_from = fields.Date(string="Masa Berlaku SIP Dari")
+    sip_date_to = fields.Date(string="Masa Berlaku SIP Hingga")
+    
     # wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.", group_operator="avg")
     # contract_wage = fields.Monetary('Contract Wage', compute='_compute_contract_wage')
     # hra = fields.Monetary(string='HRA', tracking=True,

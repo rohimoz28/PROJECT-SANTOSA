@@ -40,6 +40,10 @@ class AccountMoveLine(models.Model):
     tgl_transaksi_alokasi = fields.Date()
     status_invoice = fields.Char()
     is_revisi = fields.Boolean()
+    cost_price = fields.Monetary(string = "Cost Price",help="Nilai dari CostPrice terakhir (mengacu pada metode LastBuy atau LastHNA", default=0.0)
+    cost_price_avg= fields.Monetary(string = "Cost Price AVG", default=0.0)
+    cost_price_last_date = fields.Date(string = "Cost Price Last Date", help="Tanggal saat nilai cost price terakhir tersebut berlaku")
+    cost_price_last_based = fields.Char(string = "Cost Price Last Based", help="Menjelaskan nilai cost price terakhir ini didapat dari metode apa, misalnya LastBuy atau LastHNA")
 
     #tambahan terakhir
     rowkey = fields.Char()

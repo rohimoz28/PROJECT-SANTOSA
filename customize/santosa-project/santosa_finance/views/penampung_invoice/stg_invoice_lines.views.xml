@@ -39,7 +39,10 @@
                                 <field name="Qty" />
                                 <field name="Price" />
                                 <field name="Total" />
-                                <field name="CostPrice_AVG" />
+                                <field name="CostPrice_AVG"/>
+                                <field name="CostPrice_LAST"/>
+                                <field name="CostPrice_LAST_Date"/>
+                                <field name="CostPrice_LAST_Based"/>
                                 <field name="DiscountItem" />
                                 <field name="DiscountDokter" />
                                 <field name="DiscountSubtotal" />
@@ -84,6 +87,9 @@
                             <field name="Qty" optional='hide'/>
                             <field name="Price" optional='hide'/>
                             <field name="CostPrice_AVG" optional='hide'/>
+                            <field name="CostPrice_LAST" optional='hide'/>
+                            <field name="CostPrice_LAST_Date" optional='hide'/>
+                            <field name="CostPrice_LAST_Based" optional='hide'/>
 
                             <field name="DiscountItem" optional='hide' string='Discount Item'/>
                             <field name="DiscountDokter" optional='hide'/>

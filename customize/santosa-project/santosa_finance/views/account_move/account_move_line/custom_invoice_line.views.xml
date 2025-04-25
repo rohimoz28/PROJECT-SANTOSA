@@ -28,6 +28,10 @@
                 <field name="need_to_calculate" optional="hide"/>
                 <field name="idTrx" optional="hide"/>
                 <field name="costprice_jasamedik" optional='show'/>
+                <field name="cost_price" optional="hide"/>
+                <field name="cost_price_avg" optional="hide"/>
+                <field name="cost_price_last_date" optional="hide"/>
+                <field name="cost_price_last_based" optional="hide"/>
 
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='discount']" position="replace">
@@ -55,6 +59,8 @@
                 <field name="flag" optional='show'/>
                 <field name="no_trx" optional='hide'/>
                 <field name="costprice_jasamedik" optional='show'/>
+                <field name="cost_price" optional="show"/>
+                <field name="cost_price_avg" optional="show"/>
                 <field name="dokter_name" optional="hide"/>
                 <field name="quantity" optional='hide'/>
             </xpath>
