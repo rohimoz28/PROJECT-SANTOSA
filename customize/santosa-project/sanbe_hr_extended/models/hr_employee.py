@@ -204,6 +204,11 @@ class HrEmployee(models.Model):
         string='Jumlah Hari kerja',
         help='Jumlah Hari Kerja Dalam Satu Bulan',
         required=False)
+    kontrak_medis = fields.Boolean(string="Kontrak Medis")
+    sip_number = fields.Char(string="Nomor SIP")
+    sip_date_from = fields.Date(string="Masa Berlaku SIP Dari")
+    sip_date_to = fields.Date(string="Masa Berlaku SIP Hingga")
+    
     # wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.", group_operator="avg")
     # contract_wage = fields.Monetary('Contract Wage', compute='_compute_contract_wage')
     # hra = fields.Monetary(string='HRA', tracking=True,
