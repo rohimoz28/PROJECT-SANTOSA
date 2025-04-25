@@ -39,7 +39,10 @@
                                 <field name="Qty" />
                                 <field name="Price" />
                                 <field name="Total" />
-                                <field name="CostPrice_AVG" />
+                                <field name="CostPrice_AVG"/>
+                                <field name="CostPrice_LAST"/>
+                                <field name="CostPrice_LAST_Date"/>
+                                <field name="CostPrice_LAST_Based"/>
                                 <field name="DiscountItem" />
                                 <field name="DiscountDokter" />
                                 <field name="DiscountSubtotal" />
