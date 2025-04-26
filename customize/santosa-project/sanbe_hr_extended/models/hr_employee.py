@@ -122,15 +122,9 @@ class HrEmployee(models.Model):
     job_status_id = fields.Many2one('sanhrms.job.status',required=True, string='Status Pekerjaan')
     job_status = fields.Selection([('permanent', 'Karyawan Tetap (PKWTT)'),
                                    ('contract', 'Karyawan Kontrak (PKWT)'),
-                                   ('med_permanent', 'Karyawan Medis (PKWTT)'),
-                                   ('med_contract', 'Karyawan Medis (PKWT)'),
-                                   ('med_tenant', 'Karyawan Medis (Mitra)'),
-                                   ('mitra', 'Mitra'),
-                                   ('outsource', 'Outsource'),
+                                   ('partner_doctor', 'Dokter Mitra'),
                                    ('visitor', 'Visitor'),
-                                   ('tka', 'TKA'),
-                                   ],
-                                  default='contract', tracking=True, string='Job Status')
+                                   ], default='contract', tracking=True, string='Status Hubungan Kerja')
     emp_status = fields.Selection([('probation', 'Probation'),
                                    ('confirmed', 'Confirmed'),
                                    ('end_contract', 'End Of Contract'),

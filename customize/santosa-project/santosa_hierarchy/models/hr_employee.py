@@ -123,13 +123,13 @@ class HrEmployee(models.Model):
                                  ('budha', 'Budha')],
                                 default='islam', string='Agama')
     join_date = fields.Date('Tanggal Bergabung')
-    job_status = fields.Selection([('permanent', 'PKWTT'),
-                                   ('contract', 'PKWT'),
-                                   ('kk_pkwt', 'Kontrak Klinis PKWT'),
-                                   ('kk_pkwtt', 'Kontrak Klinis PKWTT'),
-                                   ('kontrak_medis_mitra', 'Kontrak Medis Mitra'),
-                                   ],
-                                  default='contract', string='Status Hubungan Kerja')
+    # job_status = fields.Selection([('permanent', 'PKWTT'),
+    #                                ('contract', 'PKWT'),
+    #                                ('kk_pkwt', 'Kontrak Klinis PKWT'),
+    #                                ('kk_pkwtt', 'Kontrak Klinis PKWTT'),
+    #                                ('kontrak_medis_mitra', 'Kontrak Medis Mitra'),
+    #                                ],
+    #                               default='contract', string='Status Hubungan Kerja')
     emp_status = fields.Selection([('probation', 'Masa Percobaan'),
                                    ('confirmed', 'Terkonfirmasi Aktif'),
                                    ('end_contract', 'Kontrak berakhir'),
