@@ -54,7 +54,7 @@
                 </xpath>
                 
                 <xpath expr="//field[@name='coach_id']" position="before">
-                    <field name="work_unit" string="Posisi Unit Kerja" invisible="1" />
+                    <field name="work_unit" string="Unit Kerja" />
                     <field name="work_unit_id" string="Posisi Unit Kerja" options="{'no_create': True,'no_create_edit': True}"/>
                 </xpath>
                 <xpath expr="//field[@name='coach_id']" position="attributes">
@@ -181,6 +181,10 @@
                         <field name="contract_datefrom" invisible="job_status !='contract'" string="Mulai Kontrak"/>
                         <field name="contract_dateto" string="Akhir Kontrak" invisible="job_status !='contract'" />
                         <field name="contracts_count" string="Kontrak ke" invisible="job_status !='contract'" />
+                        <field name="kontrak_medis" />
+                        <field name="sip_number" invisible="kontrak_medis == False" />
+                        <field name="sip_date_from" invisible="kontrak_medis == False" />
+                        <field name="sip_date_to" invisible="kontrak_medis == False" />
                         <label for="ws_day" string="Working Service" invisible="job_status !='permanent'" />
                         <div class="o_row" invisible="job_status !='permanent'">
                             <label for="ws_year" string="Tahun" />
