@@ -178,13 +178,20 @@
                         <field name="join_date" required="job_status =='permanent'" string="Tanggal Bergabung"/>
                         <field name="contract_id" invisible="job_status !='contract'" options="{'no_create': True,'no_create_edit': True}" string="Nomor Kontrak"
                                context="{'is_employee': 1,'employee_name': name,'area': area,'branch': branch_id,'department': department_id,'job_id': job_id}" />
-                        <field name="contract_datefrom" invisible="job_status !='contract'" string="Mulai Kontrak"/>
-                        <field name="contract_dateto" string="Akhir Kontrak" invisible="job_status !='contract'" />
+                        <label for="kontrak_medis" invisible="job_status !='contract'" string="Masa Kontrak"/>
+                        <div class="o_row" invisible="job_status !='contract'">
+                            <field name="contract_datefrom" invisible="job_status !='contract'"/> - 
+                            <field name="contract_dateto" invisible="job_status !='contract'" />
+                        </div>
                         <field name="contracts_count" string="Kontrak ke" invisible="job_status !='contract'" />
                         <field name="kontrak_medis" />
+                        <!-- <field name="sip_id" invisible="kontrak_medis == False" /> -->
                         <field name="sip_number" invisible="kontrak_medis == False" />
-                        <field name="sip_date_from" invisible="kontrak_medis == False" />
-                        <field name="sip_date_to" invisible="kontrak_medis == False" />
+                        <label for="kontrak_medis" invisible="not kontrak_medis" string="Masa Berlaku SIP"/>
+                        <div class="o_row" invisible="not kontrak_medis">
+                            <field name="sip_date_from"/> - 
+                            <field name="sip_date_from"/>
+                        </div>
                         <label for="ws_day" string="Working Service" invisible="job_status !='permanent'" />
                         <div class="o_row" invisible="job_status !='permanent'">
                             <label for="ws_year" string="Tahun" />

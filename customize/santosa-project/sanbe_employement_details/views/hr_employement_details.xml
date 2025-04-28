@@ -16,6 +16,11 @@
                                 <field name="periode_probation"/>
                                 <field name="retire_age"/>
                                 <field name="bond_service"/>
+                                <label for="bond_service" invisible="not bond_service" string="Tgl Kontrak"/>
+                                <div class="o_row" invisible="not bond_service">
+                                    <field name="service_from"/> - 
+                                    <field name="service_to"/>
+                                </div>
                                 <field name="is_pinalty"/>
                                 <field name="resign_notice"/>
                                 <field name="pinalty_bs"/>
@@ -24,8 +29,6 @@
                                 <field name="ext_probation"/>
                                 <field name="confirm_probation"/>
                                 <field name="pension_date"/>
-                                <field name="service_from"/>
-                                <field name="service_to"/>
                                 <field name="pinalty_amount"/>
                             </group>
                         </group>
