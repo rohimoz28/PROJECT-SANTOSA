@@ -7,7 +7,7 @@
             <field name="model">hr.employee.certification</field>
             <field name="priority">1000</field>
             <field name="arch" type="xml">
-                <tree string="HR Certificated">
+                <tree string="HR Certificated" create="false" edit="false">
                     <field name="employee_id" column_invisible="1" />
                     <field name="name" />
                     <field name="number" />
