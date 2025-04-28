@@ -108,6 +108,7 @@ class HrWorkUnit(models.Model):
     name = fields.Char('Name')
     descr = fields.Char('Description')
     area = fields.Many2one('res.territory', string='Area', tracking=True, required=True)
+    area = fields.Many2one('res.territory', string='Area', tracking=True, required=True)
     branch_id = fields.Many2one('res.branch', string='Business Unit', tracking=True, default=lambda self: self.env.user.branch_id, required=True)
     active = fields.Boolean(string="Active", default=True)
     code = fields.Char('Code', required=True, size=20, unique=True)

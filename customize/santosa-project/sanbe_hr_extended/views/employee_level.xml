@@ -56,6 +56,6 @@
 
         <menuitem id="hierarchy_id" name="Hirarki" sequence='16' parent="hr.menu_human_resources_configuration"/>
         <menuitem id="profesion_id" name="Profesi" sequence='30' parent="hr.menu_human_resources_configuration"/>
-        <menuitem id="employee_level_id" name="Level Karyawan" sequence='2' parent="hierarchy_id" action="action_employee_level"/>
+        <menuitem id="employee_level_id" name="Level Karyawan" sequence='80' parent="hierarchy_id" action="action_employee_level"/>
     </data>
 </odoo>

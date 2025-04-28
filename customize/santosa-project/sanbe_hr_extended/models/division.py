@@ -7,8 +7,8 @@ class Division(models.Model):
 
     division_code = fields.Char('Division Code')
     name = fields.Char('Division Name')
-    branch_id = fields.Many2one('res.branch',string='Bisnis Unit')
-    department_id = fields.Many2one('sanhrms.department',string='Department')
+    branch_id = fields.Many2one('res.branch',string='Unit Bisnis',required=True)
+    department_id = fields.Many2one('sanhrms.department',string='Department',required=True)
     active = fields.Boolean('Active', default=True )
 
     # @api.depends('department_code','name')

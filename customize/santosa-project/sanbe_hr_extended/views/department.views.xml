@@ -29,10 +29,11 @@
             <field name="arch" type="xml">
 
                 <tree limit="20">
+                    <field name="branch_id" string="Unit Bisnis"/>
                     <field name="department_code" required='1'/>
                     <field name="name" string="Nama" />
                     <field name="directorate_id" string="Direktorat"/>   
-                    <field name="division_ids" string="Divisi"/>
+                    <!-- <field name="division_ids" string="Divisi"/> -->
                 </tree>
                 
             </field>

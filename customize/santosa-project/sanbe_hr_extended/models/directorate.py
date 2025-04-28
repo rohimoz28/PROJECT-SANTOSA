@@ -7,8 +7,8 @@ class Directorate(models.Model):
 
     directorate_code = fields.Char('Directorate Code')
     name = fields.Char('Directorate Name')
-    branch_id = fields.Many2one('res.branch',string='Bisnis Unit')
-    department_ids = fields.Many2many("sanhrms.department", string="Department", domain="[('directorate_id', '=', False)]")
+    branch_id = fields.Many2one('res.branch',string='Unit Bisnis',required=True)
+    department_ids = fields.Many2many("sanhrms.department", string="Department")
     active = fields.Boolean('Active', default=True )
 
     @api.model

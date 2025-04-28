@@ -23,9 +23,9 @@
                     <field name="alldepartment" invisible="1" />
                     <field name="branch_id" options="{'no_create': True,'no_create_edit': True}" string = "Unit Bisnis" required="1"/>
                     <field name="directorate_id" options="{'no_create': True,'no_create_edit': True}" domain="[('branch_id','=',branch_id)]"  string = "Direktorat" required='1'/>
-                    <field name="hrms_department_id" options="{'no_create': True,'no_create_edit': True}" domain="[('branch_id','=',branch_id),('directorate_id','=',directorate_id)]" string = "Departemen" required='1'/>
-                    <field name="division_id" options="{'no_create': True,'no_create_edit': True}" domain="[('branch_id','=',branch_id),('department_id','=',hrms_department_id)]" string = "Divisi" required='1'/>
-                    <field name="job_id" options="{'no_create': True,'no_create_edit': True}" domain="[('branch_id','=',branch_id),('division_id','=',division_id)]"  required="1" string="Jabatan"/>
+                    <field name="hrms_department_id" options="{'no_create': True,'no_create_edit': True}" domain="[('directorate_id','=',directorate_id)]" string = "Departemen" required='1'/>
+                    <field name="division_id" options="{'no_create': True,'no_create_edit': True}" domain="[('department_id','=',hrms_department_id)]" string = "Divisi" required='1'/>
+                    <field name="job_id" options="{'no_create': True,'no_create_edit': True}" domain="[('division_id','=',division_id)]"  required="1" string="Jabatan"/>
                     <field name="parent_id" options="{'no_create': True,'no_create_edit': True}" domain="[('id', '!=', id),('branch_id','=',branch_id)]" string="Atasan Langsung"/>
                 </xpath>
                 <xpath expr="//field[@name='work_phone']" position="attributes">

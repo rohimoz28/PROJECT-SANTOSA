@@ -29,6 +29,7 @@
             <field name="arch" type="xml">
 
                 <tree limit="20">
+                    <field name="branch_id" string="Unit Bisnis"/>
                     <field name="division_code" string="Kode" required='1'/>
                     <field name="name" string="Nama" />
                     <field name="branch_id" string="Bisnis Unit"/>
