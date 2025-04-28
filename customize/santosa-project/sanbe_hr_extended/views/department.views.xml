@@ -43,7 +43,6 @@
             <field name="name">Department</field>
             <field name="res_model">sanhrms.department</field>
             <field name="view_mode">tree,form,graph,pivot</field>
-
             <field name="domain"></field>
 
         </record>

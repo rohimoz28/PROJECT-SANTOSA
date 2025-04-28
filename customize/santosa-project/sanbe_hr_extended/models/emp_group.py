@@ -14,7 +14,7 @@ class EmpGroup(models.Model):
 
     name = fields.Char('Name')
     code = fields.Char('Code')
-    active = fields.Boolean('Code')
+    active = fields.Boolean('Active')
     responsible_id = fields.Many2one(
        'hr.employee',
        string='Penanggung Jawab')

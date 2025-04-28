@@ -80,6 +80,26 @@ class HRJob(models.Model):
     branch_ids = fields.Many2many('res.branch','res_branch_rel',string='AllBranch',compute='_isi_semua_branch',store=False)
 
     branch_id = fields.Many2one('res.branch',domain="[('id','in',branch_ids)]", string='Bisnis Unit')
+    department_id = fields.Many2one('hr.department', compute = '_find_department_id',  string='Departemen', store=True, required=False)
+    hrms_department_id = fields.Many2one('sanhrms.department', tracking=True, string='Departemen')
+    
+    @api.depends('hrms_department_id')
+    def _find_department_id(self):
+        for line in self:
+            if line.hrms_department_id:
+                Department = self.env['hr.department'].search([('name', 'ilike', line.division_id.name)], limit=1)
+                if Department:
+                    line.department_id = Department.id
+                else:
+                    Department = self.env['hr.department'].sudo().create({
+                        'name': line.hrms_department_id.name,
+                        'active': True,
+                        'company_id': self.env.user.company_id.id,
+                    })
+                    line.department_id = Department.id
+                     
+    division_id = fields.Many2one('sanhrms.division', tracking=True, string='Divisi')
+    directorate_id = fields.Many2one('sanhrms.directorate', tracking=True, string='Direktorat')
 
     # @api.model
     # def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):

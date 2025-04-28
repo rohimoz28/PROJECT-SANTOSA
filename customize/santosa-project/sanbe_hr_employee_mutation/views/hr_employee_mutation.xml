@@ -155,9 +155,9 @@
                             <field name="service_bisnisunit" readonly="state in ['approved']" force_save="1" />
                             <field name="service_departmentid" readonly="state in ['approved']" force_save="1" invisible="1" domain="[('branch_id', '=', service_bisnisunit)]" />
                             <field name="service_directorate_id" options="{'no_create': True,'no_create_edit': True}" readonly="state in ['approved']" string = "Direktorat" required='1' force_save="1" domain="[('branch_id', '=', service_bisnisunit)]" />
-                            <field name="service_hrms_department_id" options="{'no_create': True,'no_create_edit': True}" readonly="state in ['approved']" string = "Departemen" required='1'  force_save="1" domain="[('branch_id', '=', service_bisnisunit)]" />
-                            <field name="service_division_id" options="{'no_create': True,'no_create_edit': True}" readonly="state in ['approved']" string = "Divisi" required='1' force_save="1" domain="[('branch_id', '=', service_bisnisunit)]" />
-                            <field name="service_work_unit_id" options="{'no_create': True,'no_create_edit': True}" readonly="state in ['approved']" string = "Unit Kerja" required="1" force_save="1" domain="[('branch_id', '=', service_bisnisunit)]" />                          
+                            <field name="service_hrms_department_id" options="{'no_create': True,'no_create_edit': True}" readonly="state in ['approved']" string = "Departemen" required='1'  force_save="1" domain="[('branch_id', '=', service_bisnisunit),('directorate_id', '=',service_directorate_id)]" />
+                            <field name="service_division_id" options="{'no_create': True,'no_create_edit': True}" readonly="state in ['approved']" string = "Divisi" required='1' force_save="1" domain="[('branch_id', '=', service_bisnisunit),('department_id', '=',service_hrms_department_id)]" />
+                            <field name="service_work_unit_id" options="{'no_create': True,'no_create_edit': True}" readonly="state in ['approved']" string = "Unit Kerja" required="1" force_save="1" domain="[('branch_id', '=', service_bisnisunit),('division_id', '=',service_division_id)]" />                    
                             <field name="service_jobstatus" readonly="state in ['approved']" force_save="1" />
                             <field name="service_jobstatus" readonly="state in ['approved']" force_save="1" />
                             <field name="service_employementstatus" readonly="state in ['approved']" 
