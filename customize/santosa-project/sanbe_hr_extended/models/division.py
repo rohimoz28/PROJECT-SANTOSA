@@ -37,3 +37,8 @@ class Division(models.Model):
                 old_department = old_department_map.get(division.id)
                 if old_department and old_department != division.department_id:
                     old_department.with_context(from_division=True).write({'division_ids': [(3, division.id)]})
+                        
+class JObPosition(models.Model):
+    _inherit = 'hr.job'
+
+    division_id = fields.Many2one('sanhrms.division',string='Division')
