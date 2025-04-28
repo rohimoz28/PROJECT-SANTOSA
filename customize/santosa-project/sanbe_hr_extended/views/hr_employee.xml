@@ -404,7 +404,9 @@
                     <field name="branch_id" options="{'no_create': True, 'no_open': True}"/>
                 </xpath>
                 <xpath expr="//field[@name='department_id']" position="replace">
-                    <field name="hrms_department_id"/>
+                    <field name="directorate_id" options="{'no_create': True,'no_create_edit': True}" domain="[('branch_id','=',branch_id)]"  string = "Direktorat" required='1'/>
+                    <field name="hrms_department_id" options="{'no_create': True,'no_create_edit': True}" domain="[('branch_id','=',branch_id),('directorate_id','=',directorate_id)]" string = "Departemen" required='1'/>
+                    <field name="division_id" options="{'no_create': True,'no_create_edit': True}" domain="[('branch_id','=',branch_id),('department_id','=',hrms_department_id)]" string = "Divisi" required='1'/>
                 </xpath>
             </field>
         </record>

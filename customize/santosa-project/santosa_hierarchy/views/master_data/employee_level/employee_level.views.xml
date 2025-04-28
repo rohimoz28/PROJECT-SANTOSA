@@ -45,7 +45,7 @@
             </field>
         </record>
 
-        <menuitem id="employee_level_id" name="Employee Level" sequence='2' parent="hr.menu_human_resources_configuration" action="action_employee_level"/>
+        <!-- <menuitem id="employee_level_id" name="Employee Level" sequence='2' parent="hr.menu_human_resources_configuration" action="action_employee_level"/> -->
 
     </data>
 </odoo>
