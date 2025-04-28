@@ -7,9 +7,9 @@ class Department(models.Model):
 
     department_code = fields.Char('Department Code')
     name = fields.Char('Department Name')
-    branch_id = fields.Many2one('res.branch',string='Bisnis Unit')
-    directorate_id = fields.Many2one('sanhrms.directorate',string='Directorate')
-    division_ids = fields.Many2many('sanhrms.division',string='Division', domain="[('department_id', '=', False)]")
+    branch_id = fields.Many2one('res.branch',string='Unit Bisnis',required=True)
+    directorate_id = fields.Many2one('sanhrms.directorate',string='Directorate',required=True)
+    division_ids = fields.Many2many('sanhrms.division',string='Division')
     active = fields.Boolean('Active', default=True )
 
     #Saat buat record baru dan milih direktorat maka di direktorat nya akan terpilih department nya
