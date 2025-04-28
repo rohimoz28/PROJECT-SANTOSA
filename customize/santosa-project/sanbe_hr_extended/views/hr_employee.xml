@@ -408,5 +408,23 @@
                 </xpath>
             </field>
         </record>
+        <record id="view_hr_certificated_tree_editable" model="ir.ui.view">
+            <field name="name">certificate.tree.editable</field>
+            <field name="model">hr.employee.certification</field>
+            <field name="arch" type="xml">
+                <tree string="Certificates" create="true" edit="true">
+                    <field name="employee_id" column_invisible="1" />
+                    <field name="name" optional="show"/>
+                    <field name="number" optional="show"/>
+                    <field name="certification_types" optional="show"/>
+                    <field name="must" optional="show"/>
+                    <field name="issuing_institution" optional="show"/>
+                    <field name="valid_from" optional="show"/>
+                    <field name="valid_to" optional="show"/>
+                    <field name="certificate_attachmentids" widget="many2many_binary" optional="hide"/>
+                    <field name="remarks" optional="hide"/>
+                </tree>
+            </field>
+        </record>        
     </data>
 </odoo>
