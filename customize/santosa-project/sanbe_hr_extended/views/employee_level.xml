@@ -14,7 +14,15 @@
                                     class="text-break" name="name" default_focus="1"
                                     placeholder="e.g. Months Name" />
                             </h1>
+                            <h3>
+                                <field name="code"></field>
+                            </h3>
                         </div>
+                        <group>
+                            <group>
+                                <field name="branch_id"/>
+                            </group>
+                        </group>
                     </sheet>
                 </form>
             </field>
@@ -25,13 +33,15 @@
             <field name="model">employee.level</field>
             <field name="arch" type="xml">
                 <tree string="Employee Level Name">
+                    <field name="branch_id" string="Unit Bisnis"/>
+                    <field name="code" string="Kode"/>
                     <field name="name" string="Nama" optional="show" />
                 </tree>
             </field>
         </record>
 
         <record id="action_employee_level" model="ir.actions.act_window">
-            <field name="name">Employee Level</field>
+            <field name="name">Level Karyawan</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">employee.level</field>
             <field name="view_mode">tree,form</field>

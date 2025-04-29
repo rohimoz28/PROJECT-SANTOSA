@@ -57,7 +57,7 @@
 
         <record id="hr.menu_view_hr_job" model="ir.ui.menu">
             <field name="name">Jabatan</field>
-            <field name="sequence">14</field>
+            <field name="sequence">50</field>
         </record>
         <!-- <record id="hr.menu_config_employee" model="ir.ui.menu">
             <field name="name">Riwayat Pegawai</field>
