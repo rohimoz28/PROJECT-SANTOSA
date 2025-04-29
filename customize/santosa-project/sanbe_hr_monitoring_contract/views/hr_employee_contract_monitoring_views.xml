@@ -6,7 +6,8 @@
         <field name="name">view.hr.employee.contract.monitoring.tree</field>
         <field name="model">hr.employee.contract.monitoring</field>
         <field name="arch" type="xml">
-            <tree default_order="territory_id,branch_id,time_limit,department_id,employee_id">
+            <tree default_order="territory_id,branch_id,time_limit,department_id,employee_id" 
+                  create="false" edit="false">
                 <field name="territory_id" string="Area"/>
                 <field name="branch_id" string="Business Units"/>
                 <field name="department_id" string="Sub Department"/>
@@ -134,7 +135,9 @@
         <field name="name">view.contract.monitoring.tree</field>
         <field name="model">hr.contract.monitoring</field>
         <field name="arch" type="xml">
-            <tree default_order="territory_id,branch_id,time_limit,department_id,employee_id" decoration-danger="date_end &lt; current_date and is_done == 'waiting'">
+            <tree default_order="territory_id,branch_id,time_limit,department_id,employee_id" 
+                  decoration-danger="date_end &lt; current_date and is_done == 'waiting'"
+                  create="false" edit="false">
                 <header>
                     <button name="generate_data" string="Generate Data" type="object" class="oe_highlight" invisible="1" />
                     <button name="mail_send_hr" type="object" string="Check Branch" invisible="1" />
