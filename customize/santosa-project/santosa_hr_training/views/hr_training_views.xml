@@ -1,0 +1,106 @@
+<odoo>
+    <record id="view_hr_training_form" model="ir.ui.view">
+        <field name="name">hr.training.form</field>
+        <field name="model">hr.training</field>
+        <field name="arch" type="xml">
+            <form string="HR Training">
+                <header>
+                    <button name="act_approve" string="Approve Training" type="object" data-hotkey="a"/>
+                    <button name="act_wip" string="Mark as WIP" type="object" data-hotkey="w"/>
+                    <button name="act_done" string="Mark as Done" type="object" data-hotkey="d"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Nama Pelatihan" required="1"/>
+                        </h1>
+                        <h3>
+                            <field name="name_institusi" placeholder="Institusi" required="1"/>
+                        </h3>
+                    </div>
+                    <br/>
+                    <group>
+                        <group>
+                            <field name="certificate_name"/>
+                            <field name="skill_id"/>
+                            <field name="type"/>
+                            <field name="invoiceable"/>
+                            <field name="is_bonding"/>
+                            <label for="is_bonding" string="Tanggal Kontrak Kerja" 
+                            invisible="not is_bonding" />
+                            <div class="o_row" invisible="not is_bonding" >
+                                <field name="date_start_bond"/> s/d
+                                <field name="date_end_bond"/>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="date" readonly="1"/>
+                            <field name="name_trainer"/>
+                            <field name="location_training"/>
+                            <label for="name" string="Tanggal Pelatihan"/>
+                            <div class="o_row">
+                                <field name="date_start"/> s/d
+                                <field name="date_end"/>
+                            </div>
+                            <field name="approved_by" readonly="1"/>
+                            <field name="type_payment"/>
+                            <field name="amount" invisible="type_payment == 'none'" />
+                            <field name="total_amount" invisible="type_payment == 'none'" />
+                            <field name="branch_id" invisible="1" />
+                        </group>
+                    </group>
+
+
+                    <notebook>
+                        <page string="Attendees">
+                            <field name="employee_attende">
+                                <tree editable="bottom">
+                                    <field name="type_payment" column_invisible="True"/>
+                                    <field name="employee_id" options="{'no_create': True,'no_quick_create': True}" />
+                                    <field name="result_score" string="Nilai"/>
+                                    <field name="results" string="Hasil"/>
+                                    <field name="no_certivicate" string="No. Sertifikat"/>
+                                    <field name="date_start" string="Valid Dari"/>
+                                    <field name="date_end" string="Hingga"/>
+                                    <field name="amount"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hr_training_tree" model="ir.ui.view">
+        <field name="name">hr.training.tree</field>
+        <field name="model">hr.training</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="branch_id"/>
+                <field name="name_institusi"/>
+                <field name="name_trainer"/>
+                <field name="type"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_hr_training" model="ir.actions.act_window">
+        <field name="name">Pelatihan Karyawan</field>
+        <field name="res_model">hr.training</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="hr_training_menu_root" name="Pelatihan Sertifikasi" parent="hr.menu_hr_root" sequence="10"/>
+    <menuitem id="hr_training_menu" name="Pelatihan" parent="hr_training_menu_root" action="action_hr_training"/>
+    <record id="sanbe_hr_certification.hr_sanbe_certification" model="ir.ui.menu">
+        <field name="name">Sertifikasi Karyawan</field>
+        <field name="parent_id" ref="hr_training_menu_root"/> <!-- ✅ Corrected -->
+    </record>
+
+</odoo>

@@ -7,8 +7,9 @@ class Division(models.Model):
 
     division_code = fields.Char('Division Code')
     name = fields.Char('Division Name')
-    branch_id = fields.Many2one('res.branch',string='Bisnis Unit')
-    department_id = fields.Many2one('sanhrms.department',string='Department')
+    branch_id = fields.Many2one('res.branch',string='Unit Bisnis',
+      default=lambda self: self.env.user.branch_id,required=True)
+    department_id = fields.Many2one('sanhrms.department',string='Department',required=True)
     active = fields.Boolean('Active', default=True )
 
     # @api.depends('department_code','name')
@@ -37,8 +38,3 @@ class Division(models.Model):
                 old_department = old_department_map.get(division.id)
                 if old_department and old_department != division.department_id:
                     old_department.with_context(from_division=True).write({'division_ids': [(3, division.id)]})
-                        
-class JObPosition(models.Model):
-    _inherit = 'hr.job'
-
-    division_id = fields.Many2one('sanhrms.division',string='Division')
