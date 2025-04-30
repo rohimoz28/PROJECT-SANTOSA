@@ -189,19 +189,9 @@
                         </div>
                         <field name="kontrak_medis" invisible="job_status_type in ('pkwtt','pkwt','mitra')"  />
                         <field name="sip_number" invisible="kontrak_medis == False" />
-                        <label for="kontrak_medis" invisible="not kontrak_medis" string="Masa Berlaku SIP"/>
-                        <div class="o_row" invisible="not kontrak_medis">
-                            <field name="sip_date_from" required="kontrak_medis"/> s/d
-                            <field name="sip_date_from" required="kontrak_medis"/>
-                        </div>
-                        <field name="spk" invisible="kontrak_medis == False" string="No SPK"/>
-                        <label for="kontrak_medis" invisible="not kontrak_medis" string="Masa Berlaku SPK"/>
-                        <div class="o_row" invisible="not kontrak_medis">
-                            <field name="spk_start"  required="kontrak_medis"/> s/d
-                            <field name="spk_finish"  required="kontrak_medis"/>
-                        </div>
-                        <field name="skills_ids"  widget="many2many_tags" string="Kompetensi"/>
-                        <field name="contracts_count" string="Kontrak ke" invisible="job_status !='contract'" />
+                        <field name="sip_date_from" invisible="kontrak_medis == False" />
+                        <field name="sip_date_to" invisible="kontrak_medis == False" />
+                        <field name="competence" invisible="kontrak_medis == False" />
                         <label for="ws_day" string="Working Service" invisible="job_status !='permanent'" />
                         <div class="o_row" invisible="job_status !='permanent'">
                             <label for="ws_year" string="Tahun" />
