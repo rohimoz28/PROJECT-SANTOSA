@@ -16,7 +16,7 @@ class EmployeeLeveling(models.Model):
         for profesion in self:
             name = ''
             if profesion.code and profesion.name:
-                name = '[' +  profesion.code +'] ' + profesion.name + '(' + profesion.type.upper() + ')'
+                name = '[' +  profesion.code +'] ' + profesion.name
             profesion.display_name = name
 
     # @api.model
