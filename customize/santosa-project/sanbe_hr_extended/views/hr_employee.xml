@@ -185,6 +185,7 @@
                         <field name="sip_number" invisible="kontrak_medis == False" />
                         <field name="sip_date_from" invisible="kontrak_medis == False" />
                         <field name="sip_date_to" invisible="kontrak_medis == False" />
+                        <field name="competence" invisible="kontrak_medis == False" />
                         <label for="ws_day" string="Working Service" invisible="job_status !='permanent'" />
                         <div class="o_row" invisible="job_status !='permanent'">
                             <label for="ws_year" string="Tahun" />
