@@ -36,9 +36,9 @@ class HREmployee(models.Model):
     confirm_probation = fields.Date('Tanggal Terkonfirmasi',compute='hitung_confirmation',store=False,readonly=False)
     retire_age = fields.Integer('Usia Pensiun',default=55)
     pension_date = fields.Date('Tanggal Pensiun',compute='_isi_pensiunemployee',store=False,readonly=False)
-    bond_service = fields.Boolean('Ikatan Dinas',default=False)
-    service_from = fields.Date('Ikatan Dinas Mulai')
-    service_to = fields.Date('Ikatan Dinas Hingga')
+    bond_service = fields.Boolean('Ikatan Kontrak',default=False)
+    service_from = fields.Date('Kontrak Mulai')
+    service_to = fields.Date('Kontrak Hingga')
     is_pinalty = fields.Boolean('Penalti',default=False)
     pinalty_bs = fields.Integer('Penalti BS')
 
