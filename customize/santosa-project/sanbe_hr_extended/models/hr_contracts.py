@@ -83,30 +83,16 @@ class HrContract(models.Model):
                                 ('3','3'),
                                 ('4','4'),
                                 ('5','5')],string='# of PKWT',ondelete='cascade')
-    # @api.model
-    # def name_create(self, name):
-    #     default_type = self._context.get('employee_name')
-    #     create_values = {self._rec_name: name}
-    #     partner = self.create(create_values)
-    #     print('name create')
-    #     return partner.id, partner.display_name
+
     _sql_constraints = [
         ('contract_code_unique', 'UNIQUE(name)', 'A Contract must have a unique name.'),
     ]
 
+    
     # @api.model
-    # def create(self, vals):
-    #     check_contract = self.env['hr.contract'].search(
-    #         [('employee_id', '=', vals.get('employee_id')),
-    #          #  ('state', '!=', 'close')
-    #          ('state', '=', 'open')
-    #          ], limit=1)
-        
-    #     if check_contract:
-    #         raise UserError('A contract with the same employee is already active. You cannot create another contract for the same employee.')
-        
-    #     return super(HrContract, self).create(vals)
-
+    def unlink(self):
+        return super(HrContract, self).unlink()
+    
     @api.constrains('name')
     def _contrains_name(self):
         # Prevent a coupon from having the same code a program
@@ -207,18 +193,6 @@ class HrContract(models.Model):
             return user_ids
         else:
             return super()._name_search(name, domain, operator, limit, order)
-
-    def _get_view(self, view_id=None, view_type='form', **options):
-        arch, view = super()._get_view(view_id, view_type, **options)
-        if view_type in ('tree', 'form'):
-               group_name = self.env['res.groups'].search([('name','=','HRD CA')])
-               cekgroup = self.env.user.id in group_name.users.ids
-               if cekgroup:
-                   for node in arch.xpath("//field"):
-                          node.set('readonly', 'True')
-                   for node in arch.xpath("//button"):
-                          node.set('invisible', 'True')
-        return arch, view
 
     @api.model
     def default_get(self, default_fields):

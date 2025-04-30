@@ -23,9 +23,9 @@
                     <field name="alldepartment" invisible="1" />
                     <field name="branch_id" options="{'no_create': True,'no_create_edit': True}" string = "Unit Bisnis" required="1"/>
                     <field name="directorate_id" options="{'no_create': True,'no_create_edit': True}" domain="[('branch_id','=',branch_id)]"  string = "Direktorat" required='1'/>
-                    <field name="hrms_department_id" options="{'no_create': True,'no_create_edit': True}" domain="[('branch_id','=',branch_id),('directorate_id','=',directorate_id)]" string = "Departemen" required='1'/>
-                    <field name="division_id" options="{'no_create': True,'no_create_edit': True}" domain="[('branch_id','=',branch_id),('department_id','=',hrms_department_id)]" string = "Divisi" required='1'/>
-                    <field name="job_id" options="{'no_create': True,'no_create_edit': True}" domain="[('branch_id','=',branch_id),('division_id','=',division_id)]"  required="1" string="Jabatan"/>
+                    <field name="hrms_department_id" options="{'no_create': True,'no_create_edit': True}" domain="[('directorate_id','=',directorate_id)]" string = "Departemen" required='1'/>
+                    <field name="division_id" options="{'no_create': True,'no_create_edit': True}" domain="[('department_id','=',hrms_department_id)]" string = "Divisi" required='1'/>
+                    <field name="job_id" options="{'no_create': True,'no_create_edit': True}" domain="[('division_id','=',division_id)]"  required="1" string="Jabatan"/>
                     <field name="parent_id" options="{'no_create': True,'no_create_edit': True}" domain="[('id', '!=', id),('branch_id','=',branch_id)]" string="Atasan Langsung"/>
                 </xpath>
                 <xpath expr="//field[@name='work_phone']" position="attributes">
@@ -171,17 +171,23 @@
                 <xpath expr="//page[@name='personal_information']/group/group[3]" position="after">
                     <group string="Status Hubungan Kerja">
                         <!-- <field name="kpi_kategory" /> -->
-                        <field name="job_status" />
-                        <field name="job_status_id" options="{'no_create': True,'no_create_edit': True}" string="Status Hubungan Kerja" invisible="1"/>
+                        <field name="job_status"  invisible="1"/>
+                        <field name="job_status_id" options="{'no_create': True,'no_create_edit': True}" string="Status Hubungan Kerja"/>
+                        <field name="job_status_type" string="Type Status Hubungan Kerja"/>
                         <field name="emp_status" readonly="emp_status not in ['probation','confirmed']"/>
                         <field name="first_date_join" string="Tanggal Pertama bergabung"/>
                         <field name="join_date" required="job_status =='permanent'" string="Tanggal Bergabung"/>
                         <field name="contract_id" invisible="job_status !='contract'" options="{'no_create': True,'no_create_edit': True}" string="Nomor Kontrak"
                                context="{'is_employee': 1,'employee_name': name,'area': area,'branch': branch_id,'department': department_id,'job_id': job_id}" />
-                        <field name="contract_datefrom" invisible="job_status !='contract'" string="Mulai Kontrak"/>
-                        <field name="contract_dateto" string="Akhir Kontrak" invisible="job_status !='contract'" />
-                        <field name="contracts_count" string="Kontrak ke" invisible="job_status !='contract'" />
-                        <field name="kontrak_medis" />
+                        <label for="contract_id" invisible="job_status_type !='pkwt'" string="Masa Kontrak"/>
+                        <div class="o_row" invisible="job_status_type !='pkwt'">
+                            <field name="contract_datefrom" invisible="job_status_type !='pkwt'" 
+                            required="job_status_type =='pkwt'"
+                            /> s/d 
+                            <field name="contract_dateto" invisible="job_status_type !='pkwt'"
+                            required="job_status_type =='contract'" />
+                        </div>
+                        <field name="kontrak_medis" invisible="job_status_type in ('pkwtt','pkwt','mitra')"  />
                         <field name="sip_number" invisible="kontrak_medis == False" />
                         <field name="sip_date_from" invisible="kontrak_medis == False" />
                         <field name="sip_date_to" invisible="kontrak_medis == False" />
@@ -405,7 +411,9 @@
                     <field name="branch_id" options="{'no_create': True, 'no_open': True}"/>
                 </xpath>
                 <xpath expr="//field[@name='department_id']" position="replace">
-                    <field name="hrms_department_id"/>
+                    <field name="directorate_id" options="{'no_create': True,'no_create_edit': True}" domain="[('branch_id','=',branch_id)]"  string = "Direktorat" required='1'/>
+                    <field name="hrms_department_id" options="{'no_create': True,'no_create_edit': True}" domain="[('branch_id','=',branch_id),('directorate_id','=',directorate_id)]" string = "Departemen" required='1'/>
+                    <field name="division_id" options="{'no_create': True,'no_create_edit': True}" domain="[('branch_id','=',branch_id),('department_id','=',hrms_department_id)]" string = "Divisi" required='1'/>
                 </xpath>
             </field>
         </record>

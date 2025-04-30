@@ -15,8 +15,9 @@ class JobStatus(models.Model):
     type = fields.Selection([('pkwt', 'PKWT'),
                                    ('pkwtt', 'PKWTT'),
                                    ('outsource', 'Outsource'),
-                                   ('visitor', 'Visitor'),
+                                   ('internship', 'Magang'),
                                    ('mitra', 'Mitra'),
+                                   ('visitor', 'Visitor'),
                                    ('tka', 'TKA'),
                                    ], string='Type',required=True)
     branch_id = fields.Many2one('res.branch', string='Business Unit', tracking=True, default=lambda self: self.env.user.branch_id, required=True)
