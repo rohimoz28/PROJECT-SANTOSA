@@ -51,8 +51,14 @@
                         <label for="valid_from" string="Berlaku mulai"/>
                         <div class="o_row flex-grow-1">
                             <field name="valid_from"/>
-                            <label for="valid_to" string="Hingga" invisible="(is_long_life == True)" />
+                            <label for="valid_to" string="s/d" invisible="(is_long_life == True)" />
                             <field name="valid_to" required="(must == True) and (is_long_life == False)" invisible="(is_long_life == True)"/>
+                        </div>
+                        <field name="is_dinas" />
+                        <label for="valid_from" string="Berlaku mulai" invisible="(is_dinas != True)"/>
+                        <div class="o_row flex-grow-1" invisible="(is_dinas != True)">
+                            <field name="date_from"  required="is_dinas" invisible="(is_dinas != True)"/> s/d
+                            <field name="date_to" required="is_dinas" invisible="(is_dinas != True)"/>
                         </div>
                         <field name="certificate_attachmentids" widget="many2many_binary"/>
                         <field name="cerv_refrence" />
