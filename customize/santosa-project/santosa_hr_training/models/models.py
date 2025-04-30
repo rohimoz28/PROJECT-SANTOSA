@@ -92,7 +92,7 @@ class HRTrainingAttendee(models.Model):
     amount = fields.Float('Nominal', default=0.0)
     date_start = fields.Date('Valid From')
     date_end = fields.Date('Valid To')
-    is_bonding = fields.Boolean(related="order_id.is_bonding",'Ikatan Dinas')
+    is_bonding = fields.Boolean(related="order_id.is_bonding")
     start_bonding = fields.Date()
     finish_bonding = fields.Date()
     
