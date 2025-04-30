@@ -23,6 +23,10 @@ class HrDepartment(models.Model):
                 'branch_id' : self.env.user.branch_id.id or False
             })
         return res
+    
+    # @api.model
+    def unlink(self):
+        return super(HrDepartment, self).unlink()
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
@@ -50,18 +54,8 @@ class HrDepartment(models.Model):
                 return super()._name_search(name, search_domain, operator, limit, order)
         else:
             return super()._name_search(name, domain, operator, limit, order)
+    
 
-    def _get_view(self, view_id=None, view_type='form', **options):
-        arch, view = super()._get_view(view_id, view_type, **options)
-        if view_type in ('tree', 'form'):
-               group_name = self.env['res.groups'].search([('name','=','HRD CA')])
-               cekgroup = self.env.user.id in group_name.users.ids
-               if cekgroup:
-                   for node in arch.xpath("//field"):
-                          node.set('readonly', 'True')
-                   for node in arch.xpath("//button"):
-                          node.set('invisible', 'True')
-        return arch, view
 
 class HRJob(models.Model):
     _inherit = "hr.job"
@@ -78,10 +72,46 @@ class HRJob(models.Model):
 
     area = fields.Many2one('res.territory',string='Area',tracking=True,)
     branch_ids = fields.Many2many('res.branch','res_branch_rel',string='AllBranch',compute='_isi_semua_branch',store=False)
-
     branch_id = fields.Many2one('res.branch',domain="[('id','in',branch_ids)]", string='Bisnis Unit')
+    directorate_id = fields.Many2one('sanhrms.directorate', tracking=True, string='Direktorat')
     department_id = fields.Many2one('hr.department', compute = '_find_department_id',  string='Departemen', store=True, required=False)
     hrms_department_id = fields.Many2one('sanhrms.department', tracking=True, string='Departemen')
+    division_id = fields.Many2one('sanhrms.division', tracking=True, string='Divisi')
+
+    _sql_constraints = [
+        ('name_company_uniq', 'check(1=1)', 'The name of the job position must be unique per department in company!'),
+        ('no_of_recruitment_positive', 'CHECK(no_of_recruitment >= 0)',
+         'The expected number of new employees must be positive.')
+    ]
+
+
+    # @api.model
+    def unlink(self):
+        return super(HRJob, self).unlink()
+    
+
+    @api.model
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
+        domain = domain or []
+        if name:
+            # mybranch = self.env['res.branch'].sudo().search([('branch_code','=','BU3')])
+            mybranch = self.env.user.branch_id
+            search_domain = [('name', operator, name), ('branch_id', '=', mybranch.id)]
+            # search_domain = [('name', operator, name),('branch_id','=',mybranch.id)]
+            user_ids = self._search(search_domain + domain, limit=limit, order=order)
+            return user_ids
+        else:
+            return super()._name_search(name, domain, operator, limit, order)
+
+    @api.model
+    def default_get(self, default_fields):
+        res = super(HRJob, self).default_get(default_fields)
+        if self.env.user.branch_id:
+            res.update({
+                'branch_id': self.env.user.branch_id.id or False
+            })
+        return res
+
     
     @api.depends('hrms_department_id')
     def _find_department_id(self):
@@ -97,21 +127,6 @@ class HRJob(models.Model):
                         'company_id': self.env.user.company_id.id,
                     })
                     line.department_id = Department.id
-                     
-    division_id = fields.Many2one('sanhrms.division', tracking=True, string='Divisi')
-    directorate_id = fields.Many2one('sanhrms.directorate', tracking=True, string='Direktorat')
-
-    # @api.model
-    # def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-    #     domain = domain or []
-    #     if name:
-    #         #mybranch = self.env['res.branch'].sudo().search([('branch_code','=','BU3')])
-    #         mybranch = self.env.user.branch_id
-    #         search_domain = [('name', operator, name),('branch_id','=',mybranch.id)]
-    #         user_ids = self._search(search_domain, limit=1, order=order)
-    #         return user_ids
-    #     else:
-    #         return super()._name_search(name, domain, operator, limit, order)
 
     @api.model
     def create(self, vals):
@@ -120,15 +135,3 @@ class HRJob(models.Model):
             if not allres.branch_id:
                 allres.branch_id = allres.department_id.branch_id.id
         return res
-
-    def _get_view(self, view_id=None, view_type='form', **options):
-        arch, view = super()._get_view(view_id, view_type, **options)
-        if view_type in ('tree', 'form'):
-               group_name = self.env['res.groups'].search([('name','=','HRD CA')])
-               cekgroup = self.env.user.id in group_name.users.ids
-               if cekgroup:
-                   for node in arch.xpath("//field"):
-                          node.set('readonly', 'True')
-                   for node in arch.xpath("//button"):
-                          node.set('invisible', 'True')
-        return arch, view

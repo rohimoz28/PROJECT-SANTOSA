@@ -11,15 +11,15 @@
                         <div class="oe_title">
                             <h1>
                                 <field name="name" default_focus="1"
-                                    placeholder="Name" />
+                                    placeholder="Nama" />
                             </h1>
                             <h3>
-                                <field name="code" placeholder="Code" />
+                                <field name="code" placeholder="Kode" />
                             </h3>
                         </div>
                         <group>
                             <group>
-                                <field name="branch_id"/>
+                                <field name="branch_id" string="Unit Bisnis"/>
                             </group>
                         </group>
                     </sheet>

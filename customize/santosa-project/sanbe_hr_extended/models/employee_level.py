@@ -8,16 +8,8 @@ class EmployeeLeveling(models.Model):
     name = fields.Char('Name')
     code = fields.Char('Code')
     active = fields.Boolean('Active')
-    branch_id = fields.Many2one('res.branch',string='Bisnis Unit')
-
-#     def _get_view(self, view_id=None, view_type='form', **options):
-#         arch, view = super()._get_view(view_id, view_type, **options)
-#         if view_type in ('tree', 'form'):
-#                for node in arch.xpath("//field"):
-#                       node.set('readonly', 'True')
-#                for node in arch.xpath("//button"):
-#                       node.set('invisible', 'True')
-#         return arch, view
+    branch_id = fields.Many2one('res.branch',string='Bisnis Unit',
+      default=lambda self: self.env.user.branch_id,)
 
     @api.depends('name', 'code')
     def _compute_display_name(self):

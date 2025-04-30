@@ -7,7 +7,8 @@ class Division(models.Model):
 
     division_code = fields.Char('Division Code')
     name = fields.Char('Division Name')
-    branch_id = fields.Many2one('res.branch',string='Unit Bisnis',required=True)
+    branch_id = fields.Many2one('res.branch',string='Unit Bisnis',
+      default=lambda self: self.env.user.branch_id,required=True)
     department_id = fields.Many2one('sanhrms.department',string='Department',required=True)
     active = fields.Boolean('Active', default=True )
 

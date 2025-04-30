@@ -104,6 +104,10 @@ class HrEmployee(models.Model):
     nik = fields.Char('NIK')
     nik_lama = fields.Char('NIK Lama')
     no_ktp = fields.Char('No KTP')
+    spk = fields.Char('No. SPK',store=True)
+    spk_start = fields.Date('SPK Date',store=True)
+    spk_finish = fields.Date('SPK Finish',store=True)
+    skills_ids = fields.Many2many('hr.skill','hr_skills_emp_rel')
     doc_ktp = fields.Many2many('ir.attachment', 'hr_employee_rel', string='KTP Document',
                                help="You may attach files to with this")
     no_npwp = fields.Char('No NPWP')
@@ -120,6 +124,7 @@ class HrEmployee(models.Model):
 
     join_date = fields.Date('Join Date',tracking=True, )
     job_status_id = fields.Many2one('sanhrms.job.status',required=True, string='Status Pekerjaan')
+    job_status_type = fields.Selection(related='job_status_id.type',store=True)
     job_status = fields.Selection([('permanent', 'Karyawan Tetap (PKWTT)'),
                                    ('contract', 'Karyawan Kontrak (PKWT)'),
                                    ('partner_doctor', 'Dokter Mitra'),
@@ -180,6 +185,9 @@ class HrEmployee(models.Model):
         default='draft')
     nama_pekerjaans = fields.Char(related='job_id.name', store=True)
     initial = fields.Char('Inisial')
+    marital = fields.Selection([('single', 'Single'),
+                            ('married', 'Married'),
+                            ('seperate', 'Seperate')], string='Status Pernikahan')
     work_unit = fields.Char('Work Unit')
     work_unit_id = fields.Many2one('hr.work.unit','Work Unit',tracking=True, )
     berat_badan = fields.Integer('Berat Badan (Kg)')
@@ -582,23 +590,6 @@ class IrConfigParameter(models.Model):
     """Per-database storage of configuration key-value pairs."""
     _inherit = 'ir.config_parameter'
 
-
-class Department(models.Model):
-    _inherit = "hr.department"
-
-    # def _get_view(self, view_id=None, view_type='form', **options):
-    #     arch, view = super()._get_view(view_id, view_type, **options)
-    #     if view_type in ('tree', 'form'):
-    #            group_name = self.env['res.groups'].search([('name','=','HRD CA')])
-    #            cekgroup = self.env.user.id in group_name.users.ids
-    #            if cekgroup:
-    #                for node in arch.xpath("//field"):
-    #                       node.set('readonly', 'True')
-    #                for node in arch.xpath("//button"):
-    #                       node.set('invisible', 'True')
-    #     return arch, view
-
-
 class ResUsers(models.Model):
     _inherit = "res.users"
 
@@ -641,50 +632,3 @@ class ResPartner(models.Model):
                 for node in arch.xpath("//button"):
                     node.set('invisible', 'True')
         return arch, view
-
-
-class HRJob(models.Model):
-    _inherit = "hr.job"
-
-
-    hrms_department_id = fields.Many2one('sanhrms.department', tracking=True, string='Departemen')
-
-    _sql_constraints = [
-        ('name_company_uniq', 'check(1=1)', 'The name of the job position must be unique per department in company!'),
-        ('no_of_recruitment_positive', 'CHECK(no_of_recruitment >= 0)',
-         'The expected number of new employees must be positive.')
-    ]
-
-    def _get_view(self, view_id=None, view_type='form', **options):
-        arch, view = super()._get_view(view_id, view_type, **options)
-        if view_type in ('tree', 'form'):
-            group_name = self.env['res.groups'].search([('name', '=', 'HRD CA')])
-            cekgroup = self.env.user.id in group_name.users.ids
-            if cekgroup:
-                for node in arch.xpath("//field"):
-                    node.set('readonly', 'True')
-                for node in arch.xpath("//button"):
-                    node.set('invisible', 'True')
-        return arch, view
-
-    @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-        domain = domain or []
-        if name:
-            # mybranch = self.env['res.branch'].sudo().search([('branch_code','=','BU3')])
-            mybranch = self.env.user.branch_id
-            search_domain = [('name', operator, name), ('branch_id', '=', mybranch.id)]
-            # search_domain = [('name', operator, name),('branch_id','=',mybranch.id)]
-            user_ids = self._search(search_domain + domain, limit=limit, order=order)
-            return user_ids
-        else:
-            return super()._name_search(name, domain, operator, limit, order)
-
-    @api.model
-    def default_get(self, default_fields):
-        res = super(HRJob, self).default_get(default_fields)
-        if self.env.user.branch_id:
-            res.update({
-                'branch_id': self.env.user.branch_id.id or False
-            })
-        return res

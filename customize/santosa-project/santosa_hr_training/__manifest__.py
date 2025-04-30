@@ -18,13 +18,14 @@ Long description of module's purpose
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','hr'],
+    'depends': ['base','hr','sanbe_hr_extended','sanbe_hr_certification'],
 
     # always loaded
-    'data': [
-        # 'security/ir.model.access.csv',
-        'views/views.xml',
-        'views/templates.xml',
+    "data": [
+        "views/hr_training_views.xml",
+        "views/templates.xml",
+        "views/views.xml",
+        "security/ir.model.access.csv"
     ],
     # only loaded in demonstration mode
     'demo': [

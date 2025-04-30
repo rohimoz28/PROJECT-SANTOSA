@@ -6,17 +6,19 @@
             <field name="model">sanhrms.directorate</field>
             <field name="arch" type="xml">
                 <form multi_edit="1">
-                   
                     <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Nama..." nolabel="1" required='1'/>
+                            </h1>
+                            <h3>
+                                <field name="directorate_code" placeholder="Kode..." required='1'/>
+                            </h3>
+                        </div>
                         <group>
-                           
-                            <field name="directorate_code" required='1'/>
-                            <field name="name" string="Nama"/>
-                            <field name="branch_id" string="Bisnis Unit"/>
+                            <field name="branch_id" string="Bisnis Unit" required='1'/>
                             <field name="department_ids" string="Department" widget='many2many_tags'/>
-                            
                         </group>
-                       
                     </sheet>
                 </form>
             </field>
@@ -41,9 +43,7 @@
             <field name="name">Directorate</field>
             <field name="res_model">sanhrms.directorate</field>
             <field name="view_mode">tree,form,graph,pivot</field>
-
             <field name="domain"></field>
-
         </record>
        
         <menuitem id="directorate_date" name="Direktorat" sequence='3' parent="hierarchy_id" action="san_hrms_directorate_action"/>

@@ -32,7 +32,7 @@
         "views/hr_employee.xml",
         "views/hr_menu_item_views.xml",
         "views/hr_profesion_views.xml",
-        "views/job_status_views.xml"
+        "views/job_status_views.xml",   
     ],
     'assets': {
         'web.assets_backend': [

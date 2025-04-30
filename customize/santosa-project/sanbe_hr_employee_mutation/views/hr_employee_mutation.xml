@@ -23,16 +23,13 @@
                     <field name="service_area" optional="show" />
                     <field name="service_bisnisunit" optional="show" />
                     <field name="service_departmentid" optional="show" />
-                    <field name="service_jobstatus" optional="show" />
+                    <!-- <field name="service_jobstatus" optional="show" /> -->
+                    <field name="service_job_status_id" optional="show" />
                     <field name="service_employementstatus" optional="show" />
                     <field name="service_employee_levels" optional="show" />
-                    <field name="job_status" optional="show" />
-                    <!--field name="employee_group1" invisible="job_status !='permanent'"
-                           force_save="1" /-->
+                    <field name="job_status_id" optional="show" />
                     <field name="employee_group1" force_save="1" optional="show" />
                     <field name="service_jobtitle" optional="show" />
-                    <field name="service_empgroup1" invisible="service_jobstatus !='permanent'"
-                        readonly="1" force_save="1" optional="show" />
                     <field name="service_start" required="1" optional="show" />
                     <field name="service_end" optional="show" />
                     <field name="remarks" optional="show" />
@@ -58,7 +55,7 @@
                         <button string="Accept" name="button_accept" type="object"
                             invisible="service_type != 'muta' or state != 'intransfer'" />
                         <button string="Print FKPM" name="print_fkpm_action_button" 
-                                groups="base.group_user" type="object" class="btn btn-primary" icon="fa-print"/>     
+                            type="object" class="btn btn-primary" icon="fa-print"/>     
                         <field name="state" widget="statusbar"
                             statusbar_visible="draft,approved" invisible="service_type == 'muta'" />
                         <field name="state" widget="statusbar"
@@ -116,7 +113,9 @@
                             <field name="hrms_department_id" options="{'no_create': True,'no_create_edit': True}" string = "Departemen" required='1' readonly="1" force_save="1" />
                             <field name="division_id" options="{'no_create': True,'no_create_edit': True}" string = "Divisi" required='1' readonly="1" force_save="1" />
                             <field name="work_unit_id" options="{'no_create': True,'no_create_edit': True}" string = "Unit Kerja" required="1" readonly="1" force_save="1" />                            
-                            <field name="job_status" readonly="1" force_save="1" />
+                            <field name="job_status_id" readonly="1" force_save="1" />    
+                            <field name="job_status_type" invisible="1" />
+                            <!-- <field name="job_status" readonly="1" force_save="1" /> -->
                             <field name="job_title" readonly="1" force_save="1" />
                         </group>
                     </group>
@@ -124,8 +123,8 @@
                         <group>
                             <field name="service_type" readonly="state in ['approved']"/>
                             <field name="emp_status" invisible="service_type not in ['corr']" readonly="state in ['approved']" force_save="1" />
-                            <field name="join_date" invisible="service_type not in ['corr']" required="job_status =='permanent'" readonly="state in ['approved']"/>
-                            <field name="marital" invisible="service_type not in ['corr']" required="job_status =='permanent'" readonly="state in ['approved']"/>
+                            <field name="join_date" invisible="service_type not in ['corr']" required="job_status_type =='pkwtt'" readonly="state in ['approved']"/>
+                            <field name="marital" invisible="service_type not in ['corr']" required="job_status_type =='pkwtt'" readonly="state in ['approved']"/>
                             <field name="emp_status_actv" invisible="service_type not in ['actv']" readonly="state in ['approved']" force_save="1" />
                             <field name="emp_status_other" invisible="service_type in ['actv','corr']" readonly="state in ['approved']" force_save="1" />
                             <field name="service_employee_levels" readonly="state in ['approved']" 
@@ -135,10 +134,11 @@
                             <field name="service_identification" readonly="state in ['approved']"/>
                             <field name="service_nik" readonly="state in ['approved']" force_save="1" />
                             <field name="service_nik_lama" readonly="1" force_save="1" />
+                            <field name="service_job_status_type" readonly="1" force_save="1" invisible="1" />
                             <field name="service_no_npwp" readonly="state in ['approved']" force_save="1" />
                             <field name="service_no_ktp" readonly="state in ['approved']" force_save="1" />
                             <field name="service_employee_levels" readonly="state in ['approved']"  invisible="service_type != 'prom'" required="service_type == 'prom'" options="{'no_create': True,'no_quick_create': True}" />
-                            <field name="service_employee_group1s" string="Group Penggajian" force_save="1" />
+                            <field name="service_employee_group1s" string="Group Penggajian" force_save="1"  invisible="service_job_status_type !='pkwtt'"/>
                             <field name="service_medic" options="{'no_create': True,'no_create_edit': True}" string = "Medis" required='1' force_save="1" domain="[('branch_id', '=', service_bisnisunit)]" />
                             <field name="service_nurse" options="{'no_create': True,'no_create_edit': True}" string = "Perawat" required='1'  force_save="1" domain="[('branch_id', '=', service_bisnisunit)]" />
                             <field name="service_seciality" options="{'no_create': True,'no_create_edit': True}" string = "Keahlian Khusus" required="1" force_save="1" domain="[('branch_id', '=', service_bisnisunit)]" />                      
@@ -158,17 +158,17 @@
                             <field name="service_hrms_department_id" options="{'no_create': True,'no_create_edit': True}" readonly="state in ['approved']" string = "Departemen" required='1'  force_save="1" domain="[('directorate_id', '=',service_directorate_id)]" />
                             <field name="service_division_id" options="{'no_create': True,'no_create_edit': True}" readonly="state in ['approved']" string = "Divisi" required='1' force_save="1" domain="[('department_id', '=',service_hrms_department_id)]" />
                             <field name="service_work_unit_id" options="{'no_create': True,'no_create_edit': True}" readonly="state in ['approved']" string = "Unit Kerja" required="1" force_save="1" />                    
-                            <field name="service_jobstatus" readonly="state in ['approved']" force_save="1" />
-                            <field name="service_jobstatus" readonly="state in ['approved']" force_save="1" />
+                            <field name="service_job_status_id" readonly="state in ['approved']" force_save="1" />
+                            <field name="service_job_status_type" readonly="1" force_save="1" invisible="1" />
                             <field name="service_employementstatus" readonly="state in ['approved']" 
-                                invisible="job_status !='permanent'" force_save="1" />
-                            <field name="service_jobtitle" readonly="state in ['approved']" />
+                                invisible="service_job_status_type =='pkwtt'" force_save="1" />
+                            <field name="service_jobtitle" readonly="state in ['approved']" options="{'no_create': True,'no_create_edit': True}" domain="[('division_id', '=',service_division_id)]" />
                             <field name="service_empgroup1" readonly="state in ['approved']" force_save="1" />
                             <field name="company_id" invisible="1"/>
                             <!-- <field name="join_date" /> -->
-                            <field name="contract_no" invisible="service_type not in [('corr','actv')]" required="job_status =='Permanent'"/>
-                            <field name="contract_from" invisible="service_type not in [('corr','actv')]" required="job_status =='Contract'"/>
-                            <field name="contract_to" invisible="service_type not in [('corr','actv')]" required="job_status =='Contract'"/>
+                            <field name="contract_no" invisible="service_type not in [('corr','actv')]" required="service_job_status_type =='pkwtt'"/>
+                            <field name="contract_from" invisible="service_type not in [('corr','actv')]" required="service_job_status_type =='pkwt'"/>
+                            <field name="contract_to" invisible="service_type not in [('corr','actv')]" required="service_job_status_type =='pkwt'"/>
                         </group>
                     </group>
                 </sheet>
