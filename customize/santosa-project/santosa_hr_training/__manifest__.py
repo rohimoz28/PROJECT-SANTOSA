@@ -18,7 +18,7 @@ Long description of module's purpose
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base'],
+    'depends': ['base','hr','sanbe_hr_extended','sanbe_hr_extended'],
 
     # always loaded
     'data': [
