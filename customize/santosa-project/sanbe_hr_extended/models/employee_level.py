@@ -7,9 +7,9 @@ class EmployeeLeveling(models.Model):
 
     name = fields.Char('Name')
     code = fields.Char('Code')
-    active = fields.Boolean('Active')
-    branch_id = fields.Many2one('res.branch',string='Bisnis Unit',
-      default=lambda self: self.env.user.branch_id,)
+    active = fields.Boolean('Active',default=True)
+    # branch_id = fields.Many2one('res.branch',string='Bisnis Unit',
+    #   default=lambda self: self.env.user.branch_id,)
 
     @api.depends('name', 'code')
     def _compute_display_name(self):
