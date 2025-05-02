@@ -34,6 +34,9 @@ class HrEmployeeCertification(models.Model):
     valid_to = fields.Date(string='Hingga', required=True)
     notification_date = fields.Date(string='Date Notification', compute='_compute_notification_date',store=True)
 
+    is_dinas = fields.Boolean(string="Ikatan Dinas")
+    date_from = fields.Date(string="Ikatan Dinas Dari")
+    date_to = fields.Date(string="Ikatan Dinas Hingga")
     remarks = fields.Text(string='Keterangan')
     certificate_attachmentids = fields.Many2many('ir.attachment', string='Lampiran',
                                           help="You may attach files to with this")

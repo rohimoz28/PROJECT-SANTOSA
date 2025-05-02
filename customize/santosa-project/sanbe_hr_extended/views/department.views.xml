@@ -7,12 +7,20 @@
             <field name="arch" type="xml">
                 <form multi_edit="1">
                     <sheet>
-
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Nama..." nolabel="1"/>
+                            </h1>
+                            <h3>
+                                <field name="department_code" placeholder="Kode..."/>
+                            </h3>
+                        </div>
                         <group>
                            
                             <field name="department_code" string="Kode" required='1'/>
                             <field name="name" string="Nama"/>
-                            <field name="directorate_id" string="Direktorat"/>
+                            <field name="branch_id" string="Unit Bisnis"/>
+                            <field name="directorate_id" string="Direktorat" domain=""  required='1'/>
                             <field name="division_ids" string="Divisi" widget='many2many_tags'/>
                             
                         </group>
@@ -29,10 +37,11 @@
             <field name="arch" type="xml">
 
                 <tree limit="20">
+                    <field name="branch_id" string="Unit Bisnis"/>
                     <field name="department_code" required='1'/>
                     <field name="name" string="Nama" />
                     <field name="directorate_id" string="Direktorat"/>   
-                    <field name="division_ids" string="Divisi"/>
+                    <!-- <field name="division_ids" string="Divisi"/> -->
                 </tree>
                 
             </field>
@@ -43,7 +52,6 @@
             <field name="name">Department</field>
             <field name="res_model">sanhrms.department</field>
             <field name="view_mode">tree,form,graph,pivot</field>
-
             <field name="domain"></field>
 
         </record>

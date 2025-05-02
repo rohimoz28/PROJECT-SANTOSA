@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Tree view -->
+    <record id="hr_service_contract_view_tree" model="ir.ui.view">
+        <field name="name">hr.service.contract.view.tree</field>
+        <field name="model">hr.service.contract</field>
+        <field name="arch" type="xml">
+            <tree string="Kontrak Dinas">
+                <field name="emp_name_selectec_id" optional="show"/>
+                <field name="sip_number" optional="show"/>
+                <field name="branch_id" optional="show"/>
+                <field name="directorate_id" optional="show"/>
+                <field name="department_id" optional="show"/>
+                <field name="division_id" optional="show"/>
+                <field name="job_id" optional="show"/>
+                <field name="start_date" optional="show"/>
+                <field name="end_date" optional="show"/>
+                <field name="contract_type_id" optional="show"/>
+                <field name="state" widget="badge"
+                    decoration-info="state == 'draft'" 
+                    decoration-warning="state == 'close'" 
+                    decoration-success="state == 'open'"
+                    decoration-danger="state == 'cancel'"
+                    optional="show"/>
+            </tree>
+        </field>
+    </record>
+    <!-- action window -->
+    <record id="hr_service_contract_action" model="ir.actions.act_window">
+        <field name="name">Kontrak Dinas</field>
+        <field name="res_model">hr.service.contract</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <!-- Form View-->
+    <record id="hr_service_contract_form" model="ir.ui.view">
+        <field name="name">hr.service.contract.form</field>
+        <field name="model">hr.service.contract</field>
+        <field name="arch" type="xml">
+            <form string="Form Kontrak Dinas">
+                <header>
+                    <field name='state' widget='statusbar' options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_title pe-0 w-100 mw-100" name="title">
+                        <h1 class="d-flex flex-row justify-content-between">
+                            <field name="sip_number" class="text-truncate" placeholder="Nomor SIP"/>
+                        </h1>
+                        <h2>
+                            <field name="contract_type_id" placeholder="Tipe Kontrak" options="{'no_create': True,'no_create_edit': True}" nolabel="1"/>
+                        </h2>
+                        <h2>
+                        </h2>
+                    </div>
+                    <group name="top_info">
+                        <group name="top_info_left">
+                            <field name='emp_name_selectec_id'/>
+                            <field name='employee_id' options="{'no_create': True,'no_create_edit': True}" context="{'search_by': 'No','search_by_name': False}"/>
+                            <field name='nik'/>
+                            <field name='nik_lama'/>
+                            <field name='area'/>
+                            <field name='department_id'/>
+                            <field name='directorate_id'/>
+                            <field name='division_id'/>
+                            <field name='branch_id' string='Unit Bisnis'/>
+                            <field name='job_id'/>
+                        </group>
+                        <group name="top_info_right">
+                            <field name="start_date" />
+                            <field name="end_date" />
+                            <field name="no_pkwt" />
+                            <field name="company_id" string="Nama Perusahaan"/>
+                            <label for="kd_day" string="Periode Kontrak"/>
+                            <div class="o_row">
+                                <label for="kd_year" string="Tahun"/>
+                                <div>
+                                    <field name="kd_year" force_save="1"/>
+                                </div>
+                                <label for="kd_month" string="Bulan"/>
+                                <div>
+                                    <field name="kd_month" force_save="1"/>
+                                </div>
+                                <label for="kd_day" string="Hari"/>
+                                <div>
+                                    <field name="kd_day" force_save="1"/>
+                                </div>
+                            </div>
+                            <field name="contract_counts" />
+                            <field name="attachment_contract" widget="many2many_binary"/>
+                            <label for="notice_day" string="Periode Notifikasi"/>
+                            <div class="o_row">
+                                <field name="notice_day"/>
+                                <span>Hari</span>
+                            </div>
+                            <field name="structure_type_id" string="Jenis Struktur Gaji"/>
+                            <field name="salary_amount"/>
+                        </group>
+                    </group>
+                    <group name="notes_group2" string="Catatan">
+                        <field name="notes" nolabel="1" colspan="2" placeholder="Ketik catatan tentang kontrak ini..."/>
+                    </group>
+                </sheet>
+                <!-- tracking log -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <!-- menuitem -->
+    <menuitem 
+        id="hr_service_contract_menu"
+        name="Kontrak Dinas"
+        parent="hr.menu_hr_employee_payroll"
+        sequence="100"
+        action="hr_service_contract_action"
+    />
+</odoo>

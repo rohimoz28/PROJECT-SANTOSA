@@ -102,6 +102,8 @@ class HrEmployeeMutation(models.Model):
                                    ('mitra', 'Mitra'),
                                    ('tka', 'TKA')],
                                   default='contract', string='Job Status')
+    job_status_id = fields.Many2one('sanhrms.job.status',required=True, string='Status Pekerjaan',related="emp_nos.job_status_id", store=True)
+    job_status_type = fields.Selection(related='job_status_id.type',store=True)
     # employementstatus = fields.Char('Employment Status')
     emp_status = fields.Selection([('probation', 'Probation'),
                                    ('confirmed', 'Confirmed'),
@@ -157,6 +159,8 @@ class HrEmployeeMutation(models.Model):
                                           ('contract', 'Contract'),
                                           ('outsource', 'Out Source')],
                                          default='contract', string='Job Status')
+    service_job_status_id = fields.Many2one('sanhrms.job.status',required=True, string='Status Pekerjaan', default=lambda self:self.emp_nos.job_status_id.id)
+    service_job_status_type = fields.Selection(store=True, default=lambda self:self.emp_nos.job_status_type, related='service_job_status_id.type')
     service_employementstatus = fields.Selection([('probation', 'Probation'),
                                                   ('confirmed', 'Confirmed'),
                                                   ('probation', 'Probation'),
@@ -181,10 +185,8 @@ class HrEmployeeMutation(models.Model):
     service_employee_levels = fields.Many2one('employee.level', string='Employee Level', default=lambda self:self.emp_nos.employee_levels.id)
     join_date = fields.Date('Join Date')
     marital = fields.Selection([('single', 'Single'),
-                                ('married', 'Married'),
-                                ('cohabitant', 'Legal Cohabitant'),
-                                ('widower', 'Widower'),
-                                ('divorced', 'Divorced')], string='Marital Status')
+                            ('married', 'Menikah'),
+                            ('seperate', 'Berpisah')], string='Status Pernikahan')
     contract_no = fields.Many2one('hr.contract', related='employee_id.contract_id', readonly=False)
     contract_from = fields.Date('Contract Date From', related='employee_id.contract_datefrom', readonly=False)
     contract_to = fields.Date('Contract Date To', related='employee_id.contract_dateto', readonly=False)

@@ -70,6 +70,10 @@ class HREmployee(models.Model):
                 rec.periode_probation = 0
                 rec.joining_date = False
         return res
+    
+    # @api.model
+    def unlink(self):
+        return super(HREmployee, self).unlink()
         
     @api.onchange('retire_age')
     def _isi_pensiun(self):
@@ -86,6 +90,7 @@ class HREmployeeAssets(models.Model):
     _name = "hr.employee.assets"
 
     employee_id = fields.Many2one('hr.employee',string='Employee ID',index=True)
+    branch_id = fields.Many2one('res.branch', string='Business Unit', tracking=True, related="employee_id.branch_id", required=True)
     asset_name = fields.Char('Asset/Benefit Type')
     asset_number = fields.Char('Asset/Benefit Number')
     uom = fields.Many2one('uom.uom',string='UOM')

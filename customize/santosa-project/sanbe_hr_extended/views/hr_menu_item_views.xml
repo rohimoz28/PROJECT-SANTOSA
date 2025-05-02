@@ -144,6 +144,17 @@
             <field name="name">Surat Peringatan</field>
         </record>
 
+        <record id="hr.open_view_employee_list" model="ir.actions.act_window">
+            <field name="name">Karyawan</field>
+        </record>
+
+        <!-- Optionally, change name in another action -->
+        <record id="hr.act_employee_from_department" model="ir.actions.act_window">
+            <field name="name">Karyawan</field>
+        </record>
+        <record id="hr.open_view_employee_list_my" model="ir.actions.act_window">
+            <field name="name">Karyawan</field>
+        </record>
         <!-- <record id="hr_contract.hr_menu_contract" model="ir.ui.menu">
             <field name="active" eval="True"/>
             <field name="parent_id" ref="hr.menu_hr_employee_payroll"/>

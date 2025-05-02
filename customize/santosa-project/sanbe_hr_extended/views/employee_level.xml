@@ -10,17 +10,16 @@
                     <sheet>
                         <div class="oe_title">
                             <h1>
-                                <field id="name" options="{'line_breaks': False}" widget="text"
-                                    class="text-break" name="name" default_focus="1"
-                                    placeholder="e.g. Months Name" />
+                                <field name="name" default_focus="1"
+                                    placeholder="Nama" />
                             </h1>
                             <h3>
-                                <field name="code"></field>
+                                <field name="code" placeholder="Kode" />
                             </h3>
                         </div>
                         <group>
                             <group>
-                                <field name="branch_id"/>
+                                <field name="branch_id" string="Unit Bisnis"/>
                             </group>
                         </group>
                     </sheet>
@@ -33,8 +32,8 @@
             <field name="model">employee.level</field>
             <field name="arch" type="xml">
                 <tree string="Employee Level Name">
-                    <field name="branch_id" string="Unit Bisnis"/>
-                    <field name="code" string="Kode"/>
+                    <field name="branch_id" string="Unit Bisnis" optional="show"/>
+                    <field name="code" string="Kode" optional="show"/>
                     <field name="name" string="Nama" optional="show" />
                 </tree>
             </field>
@@ -54,7 +53,9 @@
                 </p>
             </field>
         </record>
+
         <menuitem id="hierarchy_id" name="Hirarki" sequence='16' parent="hr.menu_human_resources_configuration"/>
         <menuitem id="profesion_id" name="Profesi" sequence='30' parent="hr.menu_human_resources_configuration"/>
+        <menuitem id="employee_level_id" name="Level Karyawan" sequence='80' parent="hierarchy_id" action="action_employee_level"/>
     </data>
 </odoo>
