@@ -12,6 +12,7 @@
                     <field name="name" />
                     <field name="number" />
                     <field name="certification_types" />
+                    <field name="skill_id" string="Kompetensi"/>
                     <field name="must" />
                     <field name="issuing_institution" />
                     <field name="valid_from" />
@@ -45,6 +46,12 @@
                     <group>
                         <field name="employee_id" force_save="1"/>
                         <field name="certification_types"/>
+                        <label for="skill_id" string="Kompetensi"/>
+                        <div class="o_row">
+                            <field name="skill_id" string="Kompetensi"/>
+                            Tingkat
+                            <field name="level_skill"/>
+                        </div>
                         <field name="must" />
                         <field name="is_long_life" invisible="(certification_types != 'non_formal')"/>
                         <field name="issuing_institution" />
