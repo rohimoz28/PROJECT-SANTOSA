@@ -70,7 +70,7 @@ class StoreProcedure(models.Model):
                     write_uid
                 )
                 SELECT DISTINCT
-                    PopulatedTime"::date AS populate_date,
+                    "PopulatedTime"::date AS populate_date,
                     %s AS order_id,
                     d."SalesPoint" AS sales_point,
                     d."ItemGroupName" AS item_group_name,
