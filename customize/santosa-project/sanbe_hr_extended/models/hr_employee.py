@@ -207,6 +207,9 @@ class HrEmployee(models.Model):
         help='Jumlah Hari Kerja Dalam Satu Bulan',
         required=False)
     kontrak_medis = fields.Boolean(string="Kontrak Medis")
+    kontrak_medis_number = fields.Char(string="No. kontrak_medis")
+    medic_finish_date = fields.Date('Start Kontrak Date',store=True)
+    medic_start_date = fields.Date('Finish Kontrak Date',store=True)
     sip_number = fields.Char(string="Nomor SIP")
     sip_date_from = fields.Date(string="Masa Berlaku SIP Dari")
     sip_date_to = fields.Date(string="Masa Berlaku SIP Hingga")
