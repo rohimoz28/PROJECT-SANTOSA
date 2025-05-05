@@ -5,63 +5,76 @@
         <field name="arch" type="xml">
             <form string="HR Training">
                 <header>
-                    <button name="act_approve" string="Approve Training" type="object" data-hotkey="a"/>
-                    <button name="act_wip" string="Mark as WIP" type="object" data-hotkey="w"/>
-                    <button name="act_done" string="Mark as Done" type="object" data-hotkey="d"/>
-                    <field name="state" widget="statusbar"/>
+                    <button name="act_approve" string="Approve Training" type="object" invisible="state != 'draft'" data-hotkey="a"/>
+                    <button name="act_hold" string="Hold" type="object" invisible="state != 'draft'" data-hotkey="h"/>
+                    <button name="act_wip" string="Berlangsung" type="object" invisible="state != 'approve'" data-hotkey="b"/>
+                    <button name="act_done" string="Selesai" type="object" invisible="state != 'wip'" data-hotkey="s"/>
+                    <button name="act_cancel" string="Batal" data-hotkey="x" invisible="state != 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,approve,wip,done"/>
                 </header>
                 <sheet>
+                    <label for="name" string="Nama"/>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" placeholder="Nama Pelatihan" required="1"/>
+                            <field name="name" placeholder="Nama Pelatihan" required="1" readonly="state not in ('draft','hold')"/>
                         </h1>
                         <h3>
-                            <field name="name_institusi" placeholder="Institusi" required="1"/>
+                            <field name="certificate_name" string="Nama Sertifikat" placeholder="Nama Sertifikat" required="1" readonly="state not in ('draft','hold')"/>
+                            <field name="name_institusi" string="Nama Institusi" placeholder="Institusi" required="1" readonly="state not in ('draft','hold')"/>
                         </h3>
                     </div>
                     <br/>
                     <group>
                         <group>
-                            <field name="certificate_name"/>
-                            <field name="skill_id"/>
-                            <field name="type"/>
-                            <field name="invoiceable"/>
-                            <field name="is_bonding"/>
-                            <label for="is_bonding" string="Tanggal Kontrak Kerja" 
-                            invisible="not is_bonding" />
-                            <div class="o_row" invisible="not is_bonding" >
-                                <field name="date_start_bond"/> s/d
-                                <field name="date_end_bond"/>
+                            <label for="skill_id" string="Kompetensi"/>
+                            <div class="o_row" readonly="state not in ('draft','hold')">
+                                <field name="skill_id" string="Kompetensi" readonly="state not in ('draft','hold')"/>
+                                Tingkat
+                                <field name="level_skill" readonly="state not in ('draft','hold')"/>
                             </div>
+                            <field name="name_trainer" string="Nama Pelatih" readonly="state not in ('draft','hold')"/>
+                            <label for="name" string="Tanggal Pelatihan"/>
+                            <div class="o_row" readonly="state not in ('draft','hold')">
+                                <field name="date_start" readonly="state not in ('draft','hold')"/> s/d
+                                <field name="date_end" readonly="state not in ('draft','hold')"/>
+                            </div>
+                            <field name="type" string="Tipe" readonly="state not in ('draft','hold')"/>
+                            <field name="location_training" string="Alamat" readonly="state not in ('draft','hold')"/>
+                            <field name="descr" string="Deskripsi" readonly="state not in ('draft','hold')"/>
                         </group>
                         <group>
-                            <field name="date" readonly="1"/>
-                            <field name="name_trainer"/>
-                            <field name="location_training"/>
-                            <label for="name" string="Tanggal Pelatihan"/>
-                            <div class="o_row">
-                                <field name="date_start"/> s/d
-                                <field name="date_end"/>
+                            <field name="date" readonly="1" string="Tanggal"/>
+                            <field name="is_bonding" string="Ikatan Dinas" readonly="state not in ('draft','hold')"/>
+                            <label for="is_bonding" string="Masa IkaDin"
+                            invisible="not is_bonding" />
+                            <div class="o_row" invisible="not is_bonding" readonly="state not in ('draft','hold')" >
+                                <field name="date_start_bond" required="is_bonding" readonly="state not in ('draft','hold')"/> s/d
+                                <field name="date_end_bond" required="is_bonding" readonly="state not in ('draft','hold')"/>
                             </div>
                             <field name="approved_by" readonly="1"/>
-                            <field name="type_payment"/>
-                            <field name="amount" invisible="type_payment == 'none'" />
-                            <field name="total_amount" invisible="type_payment == 'none'" />
+                            <field name="invoiceable" readonly="state not in ('draft','hold')" string="Berbayar?"/>
+                            <field name="type_payment"
+                            invisible="not invoiceable"
+                            />
+                            <field name="amount" invisible="not invoiceable" readonly="state not in ('draft','hold')"/>
+                            <field name="total_amount" string="Jumlah Bayar" invisible="not invoiceable" readonly="state not in ('draft','hold')"/>
                             <field name="branch_id" invisible="1" />
                         </group>
                     </group>
 
 
                     <notebook>
-                        <page string="Attendees">
-                            <field name="employee_attende">
+                        <page string="Peserta">
+                            <field name="employee_attende"
+                            readonly="state not in ('draft','hold')"
+                            >
                                 <tree editable="bottom">
                                     <field name="type_payment" column_invisible="True"/>
                                     <field name="employee_id" options="{'no_create': True,'no_quick_create': True}" />
                                     <field name="result_score" string="Nilai"/>
                                     <field name="results" string="Hasil"/>
                                     <field name="no_certivicate" string="No. Sertifikat"/>
-                                    <field name="date_start" string="Valid Dari"/>
+                                    <field name="date_start" string="Berlaku Dari"/>
                                     <field name="date_end" string="Hingga"/>
                                     <field name="amount"/>
                                 </tree>
@@ -78,14 +91,14 @@
         <field name="model">hr.training</field>
         <field name="arch" type="xml">
             <tree>
+                <field name="branch_id" string="Unit Bisnis"/>
                 <field name="name"/>
-                <field name="branch_id"/>
                 <field name="name_institusi"/>
-                <field name="name_trainer"/>
-                <field name="type"/>
-                <field name="date_start"/>
-                <field name="date_end"/>
-                <field name="state"/>
+                <field name="name_trainer" string="Pelatih"/>
+                <field name="type" string="Tipe"/>
+                <field name="date_start" string="Mulai"/>
+                <field name="date_end" string="Hingga"/>
+                <field name="state" string="Status"/>
             </tree>
         </field>
     </record>

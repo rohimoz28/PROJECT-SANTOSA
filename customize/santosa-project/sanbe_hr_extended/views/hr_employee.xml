@@ -179,16 +179,13 @@
                         <field name="join_date" required="job_status =='permanent'" string="Tanggal Bergabung"/>
                         <field name="contract_id" invisible="job_status !='contract'" options="{'no_create': True,'no_create_edit': True}" string="Nomor Kontrak"
                                context="{'is_employee': 1,'employee_name': name,'area': area,'branch': branch_id,'department': department_id,'job_id': job_id}" />
-                        <label for="contract_id" required="job_status !='contract'" string="Masa Kontrak"/>
-                        <div class="o_row" required="job_status !='contract'">
-                            <field name="contract_datefrom" invisible="job_status !='contract'" 
-                            required="job_status =='contract'" 
-                            /> s/d 
-                            <field name="contract_dateto" invisible="job_status !='contract'" 
-                            required="job_status =='contract'" />
+                        <label for="contract_id" invisible="job_status !='contract'" string="Masa Kontrak"/>                        
+                        <div class="o_row" invisible="job_status !='contract'">
+                            <field name="contract_datefrom" invisible="job_status !='contract'" /> s/d 
+                            <field name="contract_dateto" invisible="job_status !='contract'" />
                         </div>
-                        <field name="kontrak_medis" invisible="job_status not in ('partner_doctor')"  force_save="1"/>
-
+                        <field name="kontrak_medis" invisible="job_status == 'visitor'"  force_save="1"/>
+                        <field name="kontrak_medis_number" required="kontrak_medis" />
                         <label for="kontrak_medis" string="Masa Kontrak Medis " invisible="not kontrak_medis" />
                         <div class="o_row" invisible="not kontrak_medis">
                                 <field name="medic_start_date" force_save="1" required="kontrak_medis" /> s/d 
@@ -199,10 +196,8 @@
                         <div class="o_row" invisible="not kontrak_medis">
                             <field name="sip_date_from" invisible="not kontrak_medis"/> s/d
                             <field name="sip_date_to" invisible="not kontrak_medis"/>
-                        </div>field name="sip_number" invisible="kontrak_medis == False" />
-                        <field name="sip_date_from" invisible="kontrak_medis == False" />
-                        <field name="sip_date_to" invisible="kontrak_medis == False" />
-                        <field name="competence" invisible="kontrak_medis == False" />
+                        </div>
+                        <field name="competence" string="Kompetensi"/>
                         <label for="ws_day" string="Working Service" invisible="job_status !='permanent'" />
                         <div class="o_row" invisible="job_status !='permanent'">
                             <label for="ws_year" string="Tahun" />

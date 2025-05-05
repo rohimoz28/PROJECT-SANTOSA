@@ -82,7 +82,7 @@ class HrEmployee(models.Model):
     country_id = fields.Many2one(related='branch_id.country_id')
     department_id = fields.Many2one('hr.department', compute = '_find_department_id',  string='Departemen', store=True, required=False)
     hrms_department_id = fields.Many2one('sanhrms.department', tracking=True, string='Departemen')
-    
+    medic_finish_date = fields.Date('SPK Date',store=True)
     @api.depends('hrms_department_id')
     def _find_department_id(self):
         for line in self:
@@ -210,10 +210,10 @@ class HrEmployee(models.Model):
     kontrak_medis_number = fields.Char(string="No. kontrak_medis")
     medic_finish_date = fields.Date('Start Kontrak Date',store=True)
     medic_start_date = fields.Date('Finish Kontrak Date',store=True)
-    sip_number = fields.Char(string="Nomor SIP")
+    sip_number = fields.Char(string="No. SIP")
     sip_date_from = fields.Date(string="Masa Berlaku SIP Dari")
     sip_date_to = fields.Date(string="Masa Berlaku SIP Hingga")
-    competence = fields.Text(string="Kompetensi")
+    competence = fields.Text(string="Kompetensi", compute="result_skill", store=True)
 
     # wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.", group_operator="avg")
     # contract_wage = fields.Monetary('Contract Wage', compute='_compute_contract_wage')
@@ -244,6 +244,14 @@ class HrEmployee(models.Model):
     # def _get_contract_wage_field(self):
     #     self.ensure_one()
     #     return 'wage'
+    
+    # @api.depends("employee_skill_ids")
+    def result_skill(self):
+        pass
+        # for line in self:
+        #     for skill in line.employee_skill_ids:
+        #         if skill.skill_id:
+        #             str(line.competence) += skill.skill_id.name + ', '
 
     _sql_constraints = [
         ('nik_uniq', 'check(1=1)', "The NIK  must be unique, this one is already assigned to another employee."),
