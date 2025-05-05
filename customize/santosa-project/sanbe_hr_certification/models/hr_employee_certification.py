@@ -33,7 +33,11 @@ class HrEmployeeCertification(models.Model):
     valid_from = fields.Date(string='Berlaku mulai',default=fields.Date.today, required=True)
     valid_to = fields.Date(string='Hingga', required=True)
     notification_date = fields.Date(string='Date Notification', compute='_compute_notification_date',store=True)
-
+    skill_id = fields.Many2one('hr.skill','Kompetensi')
+    level_skill = fields.Selection([
+        ('basic', 'Dasar'),
+        ('intermediate', 'Menengah'),
+        ('advanced', 'Lanjutan')], default='basic')
     is_dinas = fields.Boolean(string="Ikatan Dinas")
     date_from = fields.Date(string="Ikatan Dinas Dari")
     date_to = fields.Date(string="Ikatan Dinas Hingga")
@@ -46,6 +50,7 @@ class HrEmployeeCertification(models.Model):
     # New field: indicates whether the certificate has an expiration date or not
     is_long_life = fields.Boolean(string="Long Life Certification", 
                                   help="Indicates whether the certificate doesn't expire.")
+    
     
     
     @api.depends('valid_to')
@@ -62,6 +67,10 @@ class HrEmployeeCertification(models.Model):
         ('valid', 'Valid'),
         ('expired', 'Expired')
     ], string="Certification Status", default='draft', compute="_compute_is_expired", store=True)
+    
+    
+    def unlink(self):
+        return super(HrEmployeeCertification, self).unlink()
     
     
     @api.depends('certification_types')
@@ -125,6 +134,7 @@ class HrEmployeeCertification(models.Model):
             'target': 'new',  # This makes it open as a pop-up
             'context': {'employee_id': self.employee_id.id,
                         'must':self.must,
+                        'skill_id':self.skill_id,
                         'certification_types':self.certification_types,
                         'valid_from':date.today(),
                         'cerv_refrence':self.id}
