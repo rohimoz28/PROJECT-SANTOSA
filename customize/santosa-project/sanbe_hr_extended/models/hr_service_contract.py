@@ -9,25 +9,24 @@ class ServiceContract(models.Model):
 
     sip_number = fields.Char(string='Nomor SIP')
     contract_type_id = fields.Many2one('hr.contract.type', "Tipe Kontrak", tracking=True)
-    employee_id = fields.Many2one(comodel_name='hr.employee', 
+    employee_id = fields.Many2one(comodel_name='hr.employee',
+                                           string='Nama Karyawan',
+                                           #domain="[('state','not in',['hold']),('job_status','=','contract')]",
+                                           store=True)
+    emp_selected_id = fields.Char(related='employee_id.employee_id', 
                                   string='ID Karyawan', 
                                   readonly=True,
                                   tracking=True, 
-                                  domain="[('state','not in',['hold']),('job_status','=','contract')]", 
                                   store=True,
                                   index=True)
-    emp_name_selectec_id = fields.Many2one(comodel_name='hr.employee',
-                                           string='Nama Karyawan',
-                                           domain="[('state','not in',['hold']),('job_status','=','contract')]")
-    nik = fields.Char(string='NIK')
-    nik_lama = fields.Char(string='NIK Lama')
-    area = fields.Many2one(comodel_name='res.territory', 
+    nik = fields.Char(string='NIK', related='employee_id.nik', store=True)
+    nik_lama = fields.Char(string='NIK Lama', related='employee_id.nik_lama', store=True)
+    area = fields.Many2one(related='employee_id.area', 
                            string='Area', 
                            tracking=True, 
-                           store=True,
-                           required=True)
-    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', related='employee_id.directorate_id')
-    division_id = fields.Many2one('sanhrms.division',string='Divisi', related='employee_id.division_id')
+                           store=True)
+    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', related='employee_id.directorate_id', store=True)
+    division_id = fields.Many2one('sanhrms.division',string='Divisi', related='employee_id.division_id', store=True)
     branch_id = fields.Many2one(related='employee_id.branch_id', store=True, string="Unit Bisnis")
     department_id = fields.Many2one('hr.department', 
                                     compute='_find_department_id', 
@@ -35,7 +34,7 @@ class ServiceContract(models.Model):
                                     store=True, related='employee_id.department_id')
     hrms_department_id = fields.Many2one('sanhrms.department',
                                          string='Departemen', 
-                                         related='employee_id.hrms_department_id')
+                                         related='employee_id.hrms_department_id', store=True)
     alldepartment = fields.Many2many('hr.department',
                                      'hr_department_rel', 
                                      string='All Department',
@@ -70,13 +69,9 @@ class ServiceContract(models.Model):
                                         store=True,
                                         readonly=False,
                                         tracking=True)
-    currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
+    currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True, store=True)
     salary_amount = fields.Monetary(string='Jumlah Gaji', currency_field='currency_id')
     notes = fields.Html(string='Catatan')
-
-    # contract_id = fields.Many2one(comodel_name='hr.contract',
-    #                               string='Contract',
-    #                               domain="[('employee_id', '=', employee_id)]")
     state = fields.Selection([
         # related='contract_id.state',
         # string='Kontrak Status',
@@ -86,6 +81,7 @@ class ServiceContract(models.Model):
         ('cancel', 'Cancelled'),
     ], string='Status', tracking=True, help='Status Kontak Dinas'
     )
+
 
     @api.depends('hrms_department_id')
     def _find_department_id(self):
@@ -101,17 +97,6 @@ class ServiceContract(models.Model):
                         'company_id': self.env.user.company_id.id,
                     })
                     line.department_id = Department.id
-
-    @api.depends('employee_id')
-    def _compute_employee_contract(self):
-        for contract in self.filtered('employee_id'):
-            contract.job_id = contract.employee_id.job_id
-            contract.department_id = contract.employee_id.department_id
-            contract.company_id = contract.employee_id.company_id
-            contract.area = contract.employee_id.area.id
-            contract.branch_id = contract.employee_id.branch_id.id
-            contract.nik = contract.employee_id.nik
-            contract.nik_lama = contract.employee_id.nik_lama    
 
 
     @api.depends('start_date', 'end_date')
@@ -135,8 +120,3 @@ class ServiceContract(models.Model):
                     record.kd_month = 0
                     record.kd_day = 0
 
-    @api.onchange('emp_name_selectec_id')
-    def _onchange_emp_name_selectec_id(self):
-        for rec in self:
-            if rec.emp_name_selectec_id:
-                rec.employee_id = rec.emp_name_selectec_id
