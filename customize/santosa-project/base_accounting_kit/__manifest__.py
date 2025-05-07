@@ -94,5 +94,10 @@
     'installable': True,
     'auto_install': False,
     'application': True,
+    'assets': {
+        'web.assets_backend': [
+            'base_accounting_kit/static/src/css/detail_table.css',
+        ]
+    }
 }
 
