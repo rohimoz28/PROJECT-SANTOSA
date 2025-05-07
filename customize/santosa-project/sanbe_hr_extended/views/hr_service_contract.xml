@@ -6,7 +6,7 @@
         <field name="model">hr.service.contract</field>
         <field name="arch" type="xml">
             <tree string="Kontrak Dinas">
-                <field name="emp_name_selectec_id" optional="show"/>
+                <field name="employee_id" optional="show"/>
                 <field name="sip_number" optional="show"/>
                 <field name="branch_id" optional="show"/>
                 <field name="directorate_id" optional="show"/>
@@ -53,22 +53,25 @@
                     </div>
                     <group name="top_info">
                         <group name="top_info_left">
-                            <field name='emp_name_selectec_id'/>
-                            <field name='employee_id' options="{'no_create': True,'no_create_edit': True}" context="{'search_by': 'No','search_by_name': False}"/>
-                            <field name='nik'/>
-                            <field name='nik_lama'/>
-                            <field name='area'/>
-                            <field name='department_id'/>
-                            <field name='directorate_id'/>
-                            <field name='division_id'/>
-                            <field name='branch_id' string='Unit Bisnis'/>
-                            <field name='job_id'/>
+                            <field name='employee_id'/>
+                            <field name='emp_selected_id' 
+                            options="{'no_create': True,'no_create_edit': True}" 
+                            context="{'search_by': 'No','search_by_name': False}"
+                            force_save="1"/>
+                            <field name='nik' force_save="1"/>
+                            <field name='nik_lama' force_save="1"/>
+                            <field name='area' force_save="1"/>
+                            <field name='department_id' force_save="1"/>
+                            <field name='directorate_id' force_save="1"/>
+                            <field name='division_id' force_save="1"/>
+                            <field name='branch_id' string='Unit Bisnis' force_save="1"/>
+                            <field name='job_id' force_save="1"/>
                         </group>
                         <group name="top_info_right">
                             <field name="start_date" />
                             <field name="end_date" />
                             <field name="no_pkwt" />
-                            <field name="company_id" string="Nama Perusahaan"/>
+                            <field name="company_id" string="Nama Perusahaan" force_save="1"/>
                             <label for="kd_day" string="Periode Kontrak"/>
                             <div class="o_row">
                                 <label for="kd_year" string="Tahun"/>
@@ -91,7 +94,7 @@
                                 <field name="notice_day"/>
                                 <span>Hari</span>
                             </div>
-                            <field name="structure_type_id" string="Jenis Struktur Gaji"/>
+                            <field name="structure_type_id" string="Jenis Struktur Gaji" force_save="1"/>
                             <field name="salary_amount"/>
                         </group>
                     </group>
