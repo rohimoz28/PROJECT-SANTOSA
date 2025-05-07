@@ -1,0 +1,32 @@
+.o_horizontal_scroll {
+    overflow-x: auto;
+    max-width: 100%;
+    overflow-y: auto; 
+    max-height: 500px;
+}
+
+.o_horizontal_scroll table {
+    width: 100%;
+    table-layout: auto !important;
+    min-width: 0;
+}
+
+.o_horizontal_scroll th {
+    width: auto !important;
+    max-width: none !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    position: relative; 
+    cursor: col-resize; 
+}
+
+.o_horizontal_scroll .o_resize {
+    width: 5px;
+    cursor: col-resize;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+}
