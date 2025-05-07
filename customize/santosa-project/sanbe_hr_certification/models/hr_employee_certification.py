@@ -21,6 +21,7 @@ class HrEmployeeCertification(models.Model):
 
     employee_id = fields.Many2one('hr.employee', string='Nama Karyawan', index=True, required=True)
     name = fields.Char(string='Nama Sertifikasi',required=True)
+    nik = fields.Char(string='Nik',compute="_get_nik", index=True)
     number = fields.Char(string='Nomor Sertifikasi',required=True)
     certification_types = fields.Selection([
         ('formal', 'Formal'),
@@ -51,7 +52,14 @@ class HrEmployeeCertification(models.Model):
     is_long_life = fields.Boolean(string="Long Life Certification", 
                                   help="Indicates whether the certificate doesn't expire.")
     
-    
+    # @api.depends('employee_id')    
+    # def _get_nik(self):
+    #     for line in self:
+    #         query =""" select nik from hr_employee where id = %s """
+    #         self.env.cr.execute((query)%(line.employee_id.id))
+    #         for x in self.env.cr.dictfetchall():
+    #             line.nik =  x['nik']
+                
     
     @api.depends('valid_to')
     def _compute_notification_date(self):
