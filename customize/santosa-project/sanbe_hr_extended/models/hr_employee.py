@@ -215,6 +215,12 @@ class HrEmployee(models.Model):
     sip_date_to = fields.Date(string="Masa Berlaku SIP Hingga")
     competence = fields.Text(string="Kompetensi", compute="result_skill", store=True)
 
+    @api.depends('skill_ids')    
+    def result_skill(self):
+        for record in self:
+            skill_names = [skill.name for skill in record.skills_ids if skill.name]
+            record.competence = ', '.join(skill_names)
+
     # wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.", group_operator="avg")
     # contract_wage = fields.Monetary('Contract Wage', compute='_compute_contract_wage')
     # hra = fields.Monetary(string='HRA', tracking=True,
@@ -246,12 +252,6 @@ class HrEmployee(models.Model):
     #     return 'wage'
     
     # @api.depends("employee_skill_ids")
-    def result_skill(self):
-        pass
-        # for line in self:
-        #     for skill in line.employee_skill_ids:
-        #         if skill.skill_id:
-        #             str(line.competence) += skill.skill_id.name + ', '
 
     _sql_constraints = [
         ('nik_uniq', 'check(1=1)', "The NIK  must be unique, this one is already assigned to another employee."),

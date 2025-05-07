@@ -72,12 +72,14 @@
                         <field name="remarks"/>
                         <!-- <field name="active" invisible="1" /> -->
                         <!-- <field name="notification_date" invisible="1" /> -->
-                        <div class="o_row flex-grow-1">
-                            <button name="renewal_certivicate" string="Re-New" type="object"
-                                    class="btn-secondary"/>
-                            <button name="set_reactiv" string="Confirm" type="object"
-                                    class="btn-primary"/>
-                        </div> 
+
+                        
+                        <!-- To recreate and renew certificate  -->
+                        <!-- <div class="o_row flex-grow-1">
+                            <button name="renewal_certivicate" string="Re-New" type="object" invisible="is_expired != 'expired'" class="btn-secondary"/>
+                            <button name="set_reactiv" string="Confirm" type="object" invisible="is_expired != 'draft'" class="btn-primary"/>
+                        </div>  -->
+
                     </group> 
                 </form>
             </field>
