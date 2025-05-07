@@ -14,11 +14,24 @@
                        domain="[('type','=','purchase')]"
                        context="{'default_type':'purchase'}"/>
             </xpath>
-            <xpath expr="//field[@name='line_ids']/tree/field[@name='account_id']"
+            <!-- <xpath expr="//field[@name='line_ids']/tree/field[@name='account_id']"
                    position="after">
                 <field string="Asset Category" name="asset_category_id"
                        invisible="1"/>
-            </xpath>
+            </xpath> -->
+        </field>
+    </record>
+    <!-- hide chatter and ad css -->
+    <record id="hide_chatter_invoice_form_detail" model="ir.ui.view">
+        <field name="name">account.move.hide.chatter</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@class='oe_chatter']" position="replace"/>
+            
+            <xpath expr="//field[@name='line_ids']/tree" position="attributes">
+                <attribute name="class">o_horizontal_scroll</attribute>
+            </xpath>            
         </field>
     </record>
 </odoo>
