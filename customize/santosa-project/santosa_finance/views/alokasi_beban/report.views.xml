@@ -34,6 +34,7 @@
                     <field name="entered_date" optional='show'/>
                     <field name="sales_point" optional='hide'/>
                     <field name="no_trx" optional='show' />
+                    <field name="no_invoice" optional='show' />
                     <field name="ar_in_transit" optional='show' string="AR In-Patient / AR In-Service" decoration-info = "1"/>
                     <field name="sales" string="AR" optional='show' decoration-info = "1"/>
                     <field name="other_service" optional='show' decoration-info = "1"/>
