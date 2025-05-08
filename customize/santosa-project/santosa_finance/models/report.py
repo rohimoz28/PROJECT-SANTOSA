@@ -30,6 +30,7 @@ class Report(models.Model):
     date = fields.Date()
     entered_date = fields.Date()
     balance = fields.Float()
+    no_invoice = fields.Char(string='No. Invoice')
 
     def ambil_view(self):
         self.ensure_one()  # Ensure this method is called on a single record
