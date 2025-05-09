@@ -23,10 +23,9 @@
 		'static/src/img/main_screenshot.png'
 	],
 	'assets': {
-		'web.assets_backend': [
-		],
-		'web.assets_qweb': [
-		],
+        'web.assets_backend': [
+            'sanbe_hr_certification/static/src/css/feature1.css',
+        ],
 	},
 	'installable': True,
 	'application': True,

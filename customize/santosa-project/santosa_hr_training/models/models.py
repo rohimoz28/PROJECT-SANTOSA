@@ -181,6 +181,22 @@ class HRTrainingAttendee(models.Model):
     results = fields.Selection([
         ('failed', 'Tidak Lulus'),
         ('pass', 'Lulus')])
+    periode = fields.Char(string='Periode', compute='_compute_periode', store=True)
+
+    @api.depends('date_start')
+    def _compute_periode(self):
+        for record in self:
+            record.periode = str(record.date_start.year) if record.date_start else ''
+            
+     
+    @api.constrains('date_start','date_end','date_start_bond','date_end_bond')
+    def _check_validation_training(self):
+        for record in self:
+            if record.date_start > record.date_end :
+                raise UserError("harap masukan tangal peatihan yang sesuai")
+            if record.date_start_bond > record.date_end_bond :
+                raise UserError("harap masukan tanggal ikatan dinas yang benar")
+            
     certivicate_id = fields.Many2one('hr.employee.certification')
     no_certivicate = fields.Char('No Sertipikat')
     amount = fields.Float('Nominal', default=0.0,compute="_compute_type_payment")
@@ -194,6 +210,19 @@ class HRTrainingAttendee(models.Model):
     date_start_bond = fields.Date('Start Bonding',related="order_id.date_start_bond")
     date_end_bond = fields.Date('End Bonding',related="order_id.date_end_bond")
     state = fields.Selection(related='order_id.state')
+    
+    _sql_constraints = [
+        (
+            'constraint_unique_certification_training',
+            'unique(order_id, employee_id)',
+            'Tidak diperkenankan memasukan karyawan yang sama.'
+        ),
+        (
+            'constraint_unique_certification',
+            'unique(order_id, no_certivicate, name_institusi)',
+            'Tidak diperkenankan memasukan memasukkan nomor sertipikat sama.'
+        ),
+    ]
 
 
     @api.depends('order_id.type_payment')
@@ -228,3 +257,4 @@ class HRSkillType(models.Model):
     
     def unlink(self):
         return super(HRSkillType, self).unlink()
+

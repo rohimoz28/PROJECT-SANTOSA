@@ -27,6 +27,12 @@ Long description of module's purpose
         "views/views.xml",
         "security/ir.model.access.csv"
     ],
+    
+    'assets': {
+        'web.assets_backend': [
+            'santosa_hr_training/static/src/css/feature1.css',
+        ]
+    },
     # only loaded in demonstration mode
     'demo': [
         'demo/demo.xml',
