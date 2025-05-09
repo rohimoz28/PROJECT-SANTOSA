@@ -18,7 +18,7 @@ class AkunKategori(models.Model):
     account_name = fields.Char()
     product_category_id_temp = fields.Integer()
     SalesPoint = fields.Integer()
-    penjamin_id = fields.Integer()
+    penjamin_id = fields.Integer(string="Eksternal ID")
     tipe = fields.Selection([ 
         ('Penjamin', 'Penjamin'),
         ('Item', 'Item'),

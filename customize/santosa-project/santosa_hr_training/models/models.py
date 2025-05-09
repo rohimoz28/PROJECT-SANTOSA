@@ -4,6 +4,14 @@ from odoo import models, fields, api
 from datetime import timedelta
 from odoo.exceptions import UserError
 
+
+
+class HRTraining(models.Model):
+    _inherit = 'hr.employee.certification'
+
+    nik = fields.Char('NIK', related='employee_id.nik', store=True)
+
+
 class HRTraining(models.Model):
     _name = 'hr.training'
     _description = 'Santosa HR Training'

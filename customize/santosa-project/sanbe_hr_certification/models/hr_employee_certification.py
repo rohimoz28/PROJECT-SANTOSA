@@ -21,6 +21,7 @@ class HrEmployeeCertification(models.Model):
 
     employee_id = fields.Many2one('hr.employee', string='Nama Karyawan', index=True, required=True)
     name = fields.Char(string='Nama Sertifikasi',required=True)
+    nik = fields.Char(string='Nik',compute="_get_nik", index=True)
     number = fields.Char(string='Nomor Sertifikasi',required=True)
     certification_types = fields.Selection([
         ('formal', 'Formal'),
@@ -40,7 +41,11 @@ class HrEmployeeCertification(models.Model):
             record.periode = str(record.valid_from.year) if record.valid_from else ''
             
     notification_date = fields.Date(string='Date Notification', compute='_compute_notification_date',store=True)
-
+    skill_id = fields.Many2one('hr.skill','Kompetensi')
+    level_skill = fields.Selection([
+        ('basic', 'Dasar'),
+        ('intermediate', 'Menengah'),
+        ('advanced', 'Lanjutan')], default='basic')
     is_dinas = fields.Boolean(string="Ikatan Dinas")
     date_from = fields.Date(string="Ikatan Dinas Dari")
     date_to = fields.Date(string="Ikatan Dinas Hingga")
@@ -139,6 +144,7 @@ class HrEmployeeCertification(models.Model):
             'target': 'new',  # This makes it open as a pop-up
             'context': {'employee_id': self.employee_id.id,
                         'must':self.must,
+                        'skill_id':self.skill_id,
                         'certification_types':self.certification_types,
                         'valid_from':date.today(),
                         'cerv_refrence':self.id}

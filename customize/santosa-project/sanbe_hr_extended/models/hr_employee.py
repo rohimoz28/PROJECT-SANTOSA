@@ -82,7 +82,7 @@ class HrEmployee(models.Model):
     country_id = fields.Many2one(related='branch_id.country_id')
     department_id = fields.Many2one('hr.department', compute = '_find_department_id',  string='Departemen', store=True, required=False)
     hrms_department_id = fields.Many2one('sanhrms.department', tracking=True, string='Departemen')
-    
+    medic_finish_date = fields.Date('SPK Date',store=True)
     @api.depends('hrms_department_id')
     def _find_department_id(self):
         for line in self:
@@ -271,6 +271,8 @@ class HrEmployee(models.Model):
     # def _get_contract_wage_field(self):
     #     self.ensure_one()
     #     return 'wage'
+    
+    # @api.depends("employee_skill_ids")
 
     _sql_constraints = [
         ('nik_uniq', 'check(1=1)', "The NIK  must be unique, this one is already assigned to another employee."),

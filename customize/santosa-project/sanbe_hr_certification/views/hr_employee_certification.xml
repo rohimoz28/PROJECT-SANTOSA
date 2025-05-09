@@ -12,6 +12,7 @@
                     <field name="name" />
                     <field name="number" />
                     <field name="certification_types" />
+                    <field name="skill_id" string="Kompetensi"/>
                     <field name="must" />
                     <field name="issuing_institution" />
                     <field name="valid_from" />
