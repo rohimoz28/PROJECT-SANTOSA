@@ -11,8 +11,8 @@
                         <group>
                            
                             <field name="kategori" required='1'/>
+                            <field name="journal_id" />
                             <field name="name" />
-                            <!-- <field name="journal_id" /> -->
                             <!-- <field name="account_code" /> -->
                             <!-- <field name="account_name" /> -->
                             <field name="akun_kategori_account_expense_categ_id" string='Income Account'/>
@@ -58,7 +58,7 @@
                 <tree limit="20">
                     <field name="kategori" required='1'/>
                     <field name="name" />
-                    <!-- <field name="journal_id" /> -->
+                    <field name="journal_id" />
                     <!-- <field name="account_code" /> -->
                     <!-- <field name="account_name" /> -->
                     <field name="akun_kategori_account_expense_categ_id" string='Income Account'/>
