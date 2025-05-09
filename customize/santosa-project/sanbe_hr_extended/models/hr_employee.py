@@ -207,10 +207,40 @@ class HrEmployee(models.Model):
         help='Jumlah Hari Kerja Dalam Satu Bulan',
         required=False)
     kontrak_medis = fields.Boolean(string="Kontrak Medis")
+    
+    @api.constrains('no_ktp','no_sim','no_npwp','identification_id')
+    def _check_numeric_reference(self):
+        for record in self:
+            if record.no_ktp and not record.no_ktp.isdigit() :
+                raise UserError("No. KTP harus Numerik.")
+            if record.no_npwp and not record.no_npwp.isdigit() :
+                raise UserError("No. NPWP harus Numerik")
+            if record.no_sim and not record.no_sim.isdigit() :
+                raise UserError("No. SIM harus Numerik")
+            if record.identification_id and not record.identification_id.isdigit() :
+                raise UserError("No. Kartu Keluarga harus Numerik")
+            
+    kontrak_medis_id = fields.Many2one('hr.service.contract')
+
     sip_number = fields.Char(string="Nomor SIP")
     sip_date_from = fields.Date(string="Masa Berlaku SIP Dari")
     sip_date_to = fields.Date(string="Masa Berlaku SIP Hingga")
     competence = fields.Text(string="Kompetensi")
+    list_skill = fields.Text(string="Kompetensi", compute="result_skill", store=True)
+
+    @api.depends('kontrak_medis_id')    
+    def get_detail_sip(self):
+        for record in self:
+            skill_names = [skill.name for skill in record.skills_ids if skill.name]
+            record.competence = ', '.join(skill_names)
+
+
+    @api.depends('skill_ids')    
+    def result_skill(self):
+        for record in self:
+            skill_names = [skill.name for skill in record.skills_ids if skill.name]
+            record.competence = ', '.join(skill_names)
+
 
     # wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.", group_operator="avg")
     # contract_wage = fields.Monetary('Contract Wage', compute='_compute_contract_wage')

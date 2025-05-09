@@ -7,10 +7,24 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//page[@name='personal_information']" position="after">
-                    <page name="certificate_details" string="Sertifikasi">
-                        <field name="certificate_ids" 
-                               context="{'tree_view_ref': 'sanbe_hr_certification.view_hr_certificated_tree_editable', 
-                                         'form_view_ref': 'sanbe_hr_certification.view_hr_certificate_form'}"/>
+                    <page name="certificate_details" string="Sertipikasi">
+                        <field name="certificate_ids">
+                            <tree  class="o_horizontal_scroll">
+                                <field name="employee_id" column_invisible="1" />
+                                <field name="name" optional="show"/>
+                                <field name="number" optional="show"/>
+                                <field name="certification_types" optional="show"/>
+                                <field name="must" optional="show"/>
+                                <field name="issuing_institution" optional="show"/>
+                                <field name="valid_from" optional="show"/>
+                                <field name="valid_to" optional="show"/>
+                                <field name="is_dinas" string="Ikatan Dinas"/>
+                                <field name="date_from" string="Ikatan Dinas Dari" optional="show"/>
+                                <field name="date_to" string="Ikatan Dinas Hingga" optional="show"/>
+                                <field name="certificate_attachmentids" widget="many2many_binary" optional="hide"/>
+                                <field name="remarks" optional="hide"/>
+                            </tree>
+                        </field>
                     </page>
                 </xpath>
             </field>

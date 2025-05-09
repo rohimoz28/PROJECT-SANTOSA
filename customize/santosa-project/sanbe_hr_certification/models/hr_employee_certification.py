@@ -30,8 +30,15 @@ class HrEmployeeCertification(models.Model):
         help="Defines the certification type.")
     must = fields.Boolean(string='Wajib',default=False)
     issuing_institution = fields.Char('Institusi Penerbit Sertifikat',required=True)
-    valid_from = fields.Date(string='Berlaku mulai',default=fields.Date.today, required=True)
+    valid_from = fields.Date(string='Berlaku mulai', default=fields.Date.today, required=True)
     valid_to = fields.Date(string='Hingga', required=True)
+    periode = fields.Char(string='Periode', compute='_compute_periode', store=True)
+
+    @api.depends('valid_from')
+    def _compute_periode(self):
+        for record in self:
+            record.periode = str(record.valid_from.year) if record.valid_from else ''
+            
     notification_date = fields.Date(string='Date Notification', compute='_compute_notification_date',store=True)
 
     is_dinas = fields.Boolean(string="Ikatan Dinas")
@@ -46,6 +53,9 @@ class HrEmployeeCertification(models.Model):
     # New field: indicates whether the certificate has an expiration date or not
     is_long_life = fields.Boolean(string="Long Life Certification", 
                                   help="Indicates whether the certificate doesn't expire.")
+    
+    def unlink(self):
+        return super(HrEmployeeCertification, self).unlink()
     
     
     @api.depends('valid_to')
@@ -62,6 +72,10 @@ class HrEmployeeCertification(models.Model):
         ('valid', 'Valid'),
         ('expired', 'Expired')
     ], string="Certification Status", default='draft', compute="_compute_is_expired", store=True)
+    
+    
+    def unlink(self):
+        return super(HrEmployeeCertification, self).unlink()
     
     
     @api.depends('certification_types')

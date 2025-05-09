@@ -430,6 +430,9 @@
                     <field name="issuing_institution" optional="show"/>
                     <field name="valid_from" optional="show"/>
                     <field name="valid_to" optional="show"/>
+                    <field name="is_dinas" string="Ikatan Dinas"/>
+                    <field name="date_from" string="Ikatan Dinas Dari" optional="show"/>
+                    <field name="date_to" string="Ikatan Dinas Hingga" optional="show"/>
                     <field name="certificate_attachmentids" widget="many2many_binary" optional="hide"/>
                     <field name="remarks" optional="hide"/>
                 </tree>
