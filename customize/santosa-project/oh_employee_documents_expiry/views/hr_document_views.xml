@@ -48,6 +48,7 @@
               name="Document Templates"
               parent="hr.menu_hr_root"
               sequence="4"
+              active="False"
               action="hr_document_action"
               groups="hr.group_hr_manager"/>
 </odoo>

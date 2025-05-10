@@ -13,7 +13,8 @@
                     <field name="number" />
                     <field name="certification_types" />
                     <field name="skill_id" string="Kompetensi"/>
-                    <field name="must" />
+                    <field name="level_skill" string="Tingkatan"/>
+                    <field name="must" />`
                     <field name="issuing_institution" />
                     <field name="valid_from" />
                     <field name="valid_to" />
@@ -45,15 +46,16 @@
                     <group>
                         <field name="employee_id" force_save="1"/>
                         <field name="certification_types"/>
-                        <!--
+                        <!--    
                         == kalau sertifikat berkaitan dengan skill/ kompetensi == ready to reactivate  
-                        <label for="skill_id" string="Kompetensi"/>
-                        <div class="o_row">
+                        <label for="skill_id" string="Kompetensi" invisible="not skill_id"/>
+                        <div class="o_row" invisible="not skill_id">
                             <field name="skill_id" string="Kompetensi" readonly="is_expired != 'draft'"/>
                             Tingkat
                             <field name="level_skill" readonly="is_expired != 'draft'"/>
                         </div> -->
                         <field name="must" readonly="is_expired != 'draft'"/>
+                        <field name="level_skill" string="Tingkatan" readonly="is_expired != 'draft'"/>
                         <field name="is_long_life" invisible="(certification_types != 'non_formal')" readonly="is_expired != 'draft'"/>
                         <field name="issuing_institution" readonly="is_expired != 'draft'"/>
                         <label for="valid_from" string="Berlaku mulai" readonly="is_expired != 'draft'"/>

@@ -95,10 +95,12 @@ class HrEmployeeMutation(models.Model):
                              string="Status", readonly=True,
                              copy=False, index=True,
                              tracking=3, default='draft')
-    job_status = fields.Selection([('permanent', 'Karyawan Tetap (PKWTT)'),
-                                   ('contract', 'Karyawan Kontrak (PKWT)'),
-                                   ('partner_doctor', 'Dokter Mitra'),
-                                   ('visitor', 'Visitor')],
+    job_status = fields.Selection([('permanent', 'Permanent'),
+                                   ('contract', 'Contract'),
+                                   ('outsource', 'Outsource'),
+                                   ('visitor', 'Visitor'),
+                                   ('mitra', 'Mitra'),
+                                   ('tka', 'TKA')],
                                   default='contract', string='Job Status')
     job_status_id = fields.Many2one('sanhrms.job.status',required=True, string='Status Pekerjaan',related="emp_nos.job_status_id", store=True)
     job_status_type = fields.Selection(related='job_status_id.type',store=True)

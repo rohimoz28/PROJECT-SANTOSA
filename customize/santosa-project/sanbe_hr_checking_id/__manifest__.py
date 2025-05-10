@@ -24,7 +24,7 @@
     'currency': 'USD',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'hr'],
+    'depends': ['base', 'hr','sanbe_hr_extended'],
     'data': [
         'views/hr_checking_id.xml',
         'security/ir.model.access.csv',
