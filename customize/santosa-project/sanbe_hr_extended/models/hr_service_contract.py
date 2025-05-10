@@ -88,14 +88,12 @@ class ServiceContract(models.Model):
             if line.state ==  'open':
                 line.employee_id.kontrak_medis = True
                 line.employee_id.kontrak_medis_id = line.id
-                line.employee_id.kontrak_medis_number = line.sip_number
                 line.employee_id.sip_number = line.sip_number
                 line.employee_id.sip_date_from = line.start_date
                 line.employee_id.sip_date_to = line.end_date
             else:
                 line.employee_id.kontrak_medis = False
                 line.employee_id.kontrak_medis_id = False
-                line.employee_id.kontrak_medis_number = False
                 line.employee_id.sip_number = False
                 line.employee_id.sip_date_from = False
                 line.employee_id.sip_date_to = False

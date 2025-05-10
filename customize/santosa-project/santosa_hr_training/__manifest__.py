@@ -22,6 +22,7 @@ Long description of module's purpose
 
     # always loaded
     "data": [
+        "data/set_run_training_cron.xml",
         "views/hr_training_views.xml",
         "views/templates.xml",
         "views/views.xml",

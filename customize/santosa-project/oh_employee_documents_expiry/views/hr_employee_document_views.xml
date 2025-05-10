@@ -86,5 +86,6 @@
               name="Documents"
               parent="hr.menu_hr_employee_payroll"
               action="hr_employee_document_action"
+              active="False"
               groups="hr.group_hr_manager"/>
 </odoo>

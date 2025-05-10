@@ -44,6 +44,15 @@ class HRTraining(models.Model):
         help="Defines the certification type.")
     date_start = fields.Date('Start Date Training', required=True)
     date_end = fields.Date('Finish Training', required=True)
+    
+    @api.constrains('date_start','date_end','date_start_bond','date_end_bond')
+    def _check_validation_training(self):
+        for record in self:
+            if record.date_start > record.date_end :
+                raise UserError("harap masukan tangal peatihan yang sesuai")
+            if record.date_start_bond > record.date_end_bond :
+                raise UserError("harap masukan tanggal ikatan dinas yang benar")
+            
     invoiceable = fields.Boolean(default=False)
     type_payment = fields.Selection([
         ('person', 'Per Person'),
@@ -57,13 +66,20 @@ class HRTraining(models.Model):
         ('draft', 'Draft'),
         ('approve', 'Approve'),
         ('wip', 'Berlangsung'),
+        ('fin', 'Selesai'),
         ('hold', 'Hold'),
         ('cancel', 'Batal'),
-        ('done', 'Selesai')
-    ], default='draft')
+        ('done', 'Valid')
+    ], default='draft', tracking=True)
     descr = fields.Text("Description")
     date_start_bond = fields.Date('Start Bonding')
     date_end_bond = fields.Date('End Bonding')
+    
+    @api.constrains('date_start_bond','date_end_bond')
+    def _check_validation_training(self):
+        for record in self:
+            if record.date_start_bond > record.date_end_bond :
+                raise UserError("harap masukan tanggal ikatan dinas yang benar")
 
     @api.depends('invoiceable', 'type_payment', 'amount', 'employee_attende.amount')
     def _compute_total_amount(self):
@@ -117,16 +133,15 @@ class HRTraining(models.Model):
                         'is_expired': 'valid'
                     })
                     att.certivicate_id = certivicate.id
+                    self.env['hr.resume.line'].sudo().create({
+                        'employee_id': att.employee_id.id,
+                        'name': rec.name,
+                        'date_start': rec.date_start,
+                        'date_end': rec.date_end,
+                        'description': f"{att.employee_id.name} Telah LULUS dari Pelatihan {rec.name} /n yang diadakan {rec.name_institusi} dari tanggal {rec.date_start} hingga {rec.date_end}."
+                    })
             rec.readonly = True
                     # deliver to resume and skill employee
-                    # self.env['hr.resume.line'].sudo().create({
-                    #     'employee_id': att.employee_id.id,
-                    #     'name': rec.name,
-                    #     'date_start': rec.date_start,
-                    #     'date_end': rec.date_end,
-                    #     'description': f"{att.employee_id.name} {rec.name}"
-                    # })
-
                     # emp_skill = self.env['hr.employee.skill'].search([
                     #     ('employee_id', '=', att.employee_id.id),
                     #     ('skill_id', '=', rec.skill_id.id),
@@ -154,7 +169,11 @@ class HRTraining(models.Model):
         self.write({'state': 'hold'})
 
     def act_wip(self):
-        self.write({'state': 'wip'})
+        for training in self.env['hr.training'].search([]):
+            if training.state == 'approve' and fields.Date.today() == training.date_start:
+                training.write({'state': 'wip'})
+            if fields.Date.today() == training.date_end and training.state == 'wip':
+                training.write({'state': 'fin'})
 
     def act_approve(self):
         self.write({

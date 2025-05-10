@@ -83,6 +83,10 @@ class HrEmployeeCertification(models.Model):
         return super(HrEmployeeCertification, self).unlink()
     
     
+    def unlink(self):
+        return super(HrEmployeeCertification, self).unlink()
+    
+    
     @api.depends('certification_types')
     def _certification_types(self):
         for line in self:
