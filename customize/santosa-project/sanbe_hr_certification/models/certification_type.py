@@ -16,16 +16,23 @@ class CertificationType(models.Model):
     _name = 'certification.type'
     _description = 'HR Employee Certification Type'
 
-    name = fields.Char(string='name')
+    code = fields.Char(string='Kode',size=3,required=True)
+    name = fields.Char(string='Nama' ,required=True)
 
-    def _get_view(self, view_id=None, view_type='form', **options):
-        arch, view = super()._get_view(view_id, view_type, **options)
-        if view_type in ('tree', 'form'):
-               group_name = self.env['res.groups'].search([('name','=','HRD CA')])
-               cekgroup = self.env.user.id in group_name.users.ids
-               if cekgroup:
-                   for node in arch.xpath("//field"):
-                          node.set('readonly', 'True')
-                   for node in arch.xpath("//button"):
-                          node.set('invisible', 'True')
-        return arch, view
+#     def _get_view(self, view_id=None, view_type='form', **options):
+#         arch, view = super()._get_view(view_id, view_type, **options)
+#         if view_type in ('tree', 'form'):
+#                group_name = self.env['res.groups'].search([('name','=','HRD CA')])
+#                cekgroup = self.env.user.id in group_name.users.ids
+#                if cekgroup:
+#                    for node in arch.xpath("//field"):
+#                           node.set('readonly', 'True')
+#                    for node in arch.xpath("//button"):
+#                           node.set('invisible', 'True')
+#         return arch, view
+ 
+
+    @api.depends('code','name')
+    def _compute_display_name(self):
+        for account in self:
+            account.display_name = f"[{account.code or ''}] {account.name}"
