@@ -118,14 +118,14 @@
     <!--              sequence="21"/>-->
     <!-- Menu item for Resignation Request -->
 
-    <menuitem id="hr_resignation_menu_root"
+    <!-- <menuitem id="hr_resignation_menu_root"
               parent="hr.menu_hr_root"
               name="Employee Exit"
-              sequence="4"/>
-    <menuitem id="hr_resignation_menu_request"
-              parent="hr_resignation_menu_root" name="Employee Exit"
-              action="hr_resignation_action" groups="base.group_user"
-              sequence="4"/>
+              sequence="4"/> -->
+    <menuitem id="hr_resignation_menu_id"
+              parent="hr.menu_hr_employee_payroll" name="Karyawan Keluar"
+              action="hr_resignation_action" 
+              sequence="30"/>
     <!-- Menu item for Approved Resignation -->
     <!--    <menuitem id="hr_resignation_menu_approved_request"-->
     <!--              parent="hr_resignation_menu_root"-->
