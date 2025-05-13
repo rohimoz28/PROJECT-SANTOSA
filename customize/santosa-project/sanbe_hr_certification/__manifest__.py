@@ -14,6 +14,7 @@
 	'support': 'xabre0010@gmail.com',
 	'data': [
 		'data/generate_certivicate_checker_cron.xml',
+		'data/data.xml',
 		'security/ir.model.access.csv',
 		'views/certificated_type.xml',
 		'views/hr_employee_certification.xml',

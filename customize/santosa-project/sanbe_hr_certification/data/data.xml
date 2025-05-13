@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="profesi" model="certification.type">
+            <field name="code">pf</field>
+            <field name="name">Profesi</field>
+        </record>
+
+        <record id="non_formal" model="certification.type">
+            <field name="code">nf</field>
+            <field name="name">Non Formal</field>
+        </record>
+
+        <record id="formal" model="certification.type">
+            <field name="code">fm</field>
+            <field name="name">Formal</field>
+        </record>
+    </data>
+</odoo>
