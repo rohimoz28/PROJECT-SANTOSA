@@ -53,6 +53,7 @@
 
         <record id="hr.menu_hr_employee_user" model="ir.ui.menu">
             <field name="name">Kepegawaian</field>
+            <field name="sequence">1</field>
         </record>
 
         <record id="hr.menu_view_hr_job" model="ir.ui.menu">
@@ -117,6 +118,7 @@
 
         <record id="hr_org_chart.menu_hr_employee_org_chart" model="ir.ui.menu">
             <field name="name">Diagram Organisasi</field>
+            <field name="sequence">10</field>
         </record>
 
         <record id="base_territory.menu_res_branch" model="ir.ui.menu">
@@ -127,7 +129,7 @@
 
         <record id="hr_contract.hr_menu_contract" model="ir.ui.menu">
             <field name="name">Kontrak Karyawan</field>
-            <field name="sequence">3</field>
+            <field name="sequence">50</field>
         </record>
 
         <record id="hr_contract.action_hr_contract" model="ir.actions.act_window">

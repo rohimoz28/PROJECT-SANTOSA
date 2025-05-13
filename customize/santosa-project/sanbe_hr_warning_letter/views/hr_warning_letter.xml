@@ -106,8 +106,7 @@
         <menuitem id="menu_hr_warning_letter"
                   name="Surat Peringatan"
                   parent="hr.menu_hr_employee_payroll"
-                  sequence="9"
+                  sequence="90"
                   action="action_hr_warning_letter"/>
     </data>
-
 </odoo>

@@ -211,7 +211,7 @@
             id="menu_hr_mutation"
             name="Mutasi Karyawan"
             parent="hr.menu_hr_employee_payroll"
-            sequence="5"
+            sequence="70"
             action="open_view_employee_mutation_tree" />
 
     </data>

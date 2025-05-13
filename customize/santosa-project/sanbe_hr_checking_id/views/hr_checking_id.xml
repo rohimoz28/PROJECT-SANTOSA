@@ -56,9 +56,9 @@
         </record>
         
         <menuitem id="menu_hr_checking_id"
-                  name="Checking ID"
+                  name="ID Aktivasi"
                   parent="hr.menu_hr_employee_payroll"
-                  sequence="7"
+                  sequence="20"
                   action="action_view_hr_checking_id"/>
 
                   <!-- active="False" -->

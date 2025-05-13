@@ -102,9 +102,9 @@
             <field name="target">new</field>
         </record>
         <menuitem id="menu_hr_mutation"
+                  name="Pelacakan Karyawan"
                   parent="hr.menu_hr_employee_payroll"
-                  name="Riwayat Kekaryawanan"
-                  sequence="6"
+                  sequence="80"
                   action="action_view_hr_employement_tracking"/>
 
     </data>
