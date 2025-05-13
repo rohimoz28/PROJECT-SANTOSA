@@ -31,6 +31,7 @@ class HrEmployeeCertification(models.Model):
         help="Defines the certification type.")
     certification_types_id = fields.Many2one('certification.type', string='Tipe Sertifikat', index=True,
         help="Defines the certification type.")
+    certification_code = fields.Char(related='certification_types_id.code',store=True)
     must = fields.Boolean(string='Wajib',default=False)
     issuing_institution = fields.Char('Institusi Penerbit Sertifikat',required=True)
     valid_from = fields.Date(string='Berlaku mulai', default=fields.Date.today, required=True)
