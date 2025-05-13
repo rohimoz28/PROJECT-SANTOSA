@@ -43,7 +43,7 @@
                                     <field name="bisnis_unit" string="Unit Bisnis" readonly="1" force_save="1"/>
                                 </group>
                             </group>
-                        <group name="'warning_details" string="Details Warning">
+                        <group name="'warning_details" string="Penjelasan Pelanggaran">
                             <group>
                                     <field name="warning_type" widget="selection" string="Tipe Peringatan"/>
                                     <field name="warning_date" string="Tgl Peringatan"/>
@@ -90,7 +90,7 @@
 
 
         <record id="action_hr_warning_letter" model="ir.actions.act_window">
-            <field name="name">Warning Letter</field>
+            <field name="name">Surat Peringatan</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.warning.letter</field>
             <field name="view_mode">tree,form</field>
@@ -106,8 +106,7 @@
         <menuitem id="menu_hr_warning_letter"
                   name="Surat Peringatan"
                   parent="hr.menu_hr_employee_payroll"
-                  sequence="9"
+                  sequence="90"
                   action="action_hr_warning_letter"/>
     </data>
-
 </odoo>

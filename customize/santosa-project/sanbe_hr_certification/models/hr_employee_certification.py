@@ -29,10 +29,19 @@ class HrEmployeeCertification(models.Model):
         ('profesi', 'Profesi')
     ], string='Tipe Sertifikat', index=True, default='formal',
         help="Defines the certification type.")
+    certification_types_id = fields.Many2one('certification.type', string='Tipe Sertifikat', index=True,
+        help="Defines the certification type.")
     must = fields.Boolean(string='Wajib',default=False)
     issuing_institution = fields.Char('Institusi Penerbit Sertifikat',required=True)
-    valid_from = fields.Date(string='Berlaku mulai',default=fields.Date.today, required=True)
+    valid_from = fields.Date(string='Berlaku mulai', default=fields.Date.today, required=True)
     valid_to = fields.Date(string='Hingga', required=True)
+    periode = fields.Char(string='Periode', compute='_compute_periode', store=True)
+
+    @api.depends('valid_from')
+    def _compute_periode(self):
+        for record in self:
+            record.periode = str(record.valid_from.year) if record.valid_from else ''
+            
     notification_date = fields.Date(string='Date Notification', compute='_compute_notification_date',store=True)
     skill_id = fields.Many2one('hr.skill','Kompetensi')
     level_skill = fields.Selection([
@@ -52,14 +61,9 @@ class HrEmployeeCertification(models.Model):
     is_long_life = fields.Boolean(string="Long Life Certification", 
                                   help="Indicates whether the certificate doesn't expire.")
     
-    # @api.depends('employee_id')    
-    # def _get_nik(self):
-    #     for line in self:
-    #         query =""" select nik from hr_employee where id = %s """
-    #         self.env.cr.execute((query)%(line.employee_id.id))
-    #         for x in self.env.cr.dictfetchall():
-    #             line.nik =  x['nik']
-                
+    def unlink(self):
+        return super(HrEmployeeCertification, self).unlink()
+    
     
     @api.depends('valid_to')
     def _compute_notification_date(self):

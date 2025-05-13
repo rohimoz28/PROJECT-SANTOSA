@@ -82,9 +82,10 @@
         <field name="context">{'search_default_Employee': 1}</field>
     </record>
     <!--    Creates a menu item for HR Employee Documents.-->
-    <menuitem id="hr_employee_document_menu"
-              name="Documents"
+    <!-- <menuitem id="hr_employee_document_menu"
+              name="Documents8"
+              sequence="70"
               parent="hr.menu_hr_employee_payroll"
               action="hr_employee_document_action"
-              groups="hr.group_hr_manager"/>
+              groups="hr.group_hr_manager"/> -->
 </odoo>

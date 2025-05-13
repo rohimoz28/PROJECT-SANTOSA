@@ -39,7 +39,7 @@
                                 <field name="jobtitle" readonly="1" force_save="1"/>
                                 <field name="empgroup" readonly="1" force_save="1"/>
                                 <field name="blacklist"/>
-                                <field name="end_of_contract" readonly="1"/>
+                                <!-- <field name="end_of_contract" readonly="1"/> -->
                             </group>
                     </group>
                 <footer>
@@ -56,10 +56,11 @@
         </record>
         
         <menuitem id="menu_hr_checking_id"
-                  name="Checking ID"
+                  name="ID Aktivasi"
                   parent="hr.menu_hr_employee_payroll"
-                  sequence="7"
+                  sequence="20"
                   action="action_view_hr_checking_id"/>
 
+                  <!-- active="False" -->
     </data>
 </openerp>

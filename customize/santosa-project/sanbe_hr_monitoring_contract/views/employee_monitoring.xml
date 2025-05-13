@@ -8,8 +8,9 @@
             <field name="name">Employee Certifications</field>
         </record>
         <record id="hr_skills.hr_employee_skill_report_menu" model="ir.ui.menu">
-            <field name="sequence">11</field> <!-- Change sequence value here -->
-            <field name="name">Employee Skills</field>
+            <field name="sequence">40</field> <!-- Change sequence value here -->
+            <field name="name">Keahlian Karyawan</field>
+            <field name="parent_id" ref="hr.menu_hr_employee_payroll"/>
         </record>
         <record id="hr_presence.menu_hr_presence_view" model="ir.ui.menu">
             <field name="sequence">90</field> <!-- Change sequence value here -->
@@ -18,5 +19,3 @@
         </record>
     </data>
 </odoo>
-
-

@@ -27,14 +27,18 @@ class HRCheckingID(models.Model):
     nik = fields.Char('NIK')
     nik_lama = fields.Char('NIK Lama')
     area = fields.Char('Area')
-    bisnis_unit = fields.Char('Business Unit')
+    bisnis_unit = fields.Char('Unit Bisinis')
+    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', related='employee_id.directorate_id')
+    hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen', related='employee_id.hrms_department_id')
+    division_id = fields.Many2one('sanhrms.division',string='Divisi', related='employee_id.division_id')
+    job_id = fields.Many2one('hr.job','Jabatan', related='employee_id.job_id', readonly=True)
     departmentid = fields.Char('Sub Department')
     jobstatus = fields.Char('Job Status')
     employementstatus = fields.Char('Employeement Status')
     jobtitle = fields.Char('Job Title')
     empgroup = fields.Char('Employee P Group')
     blacklist= fields.Boolean('Blacklist',default=False)
-    end_of_contract = fields.Boolean('End Of Contract', default=False)
+    end_of_contract = fields.Boolean('End Of Contract', default=False,store=True)
 
 
     def pencarian_data(self):

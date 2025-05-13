@@ -5,7 +5,7 @@
         <field name="name">hr.service.contract.view.tree</field>
         <field name="model">hr.service.contract</field>
         <field name="arch" type="xml">
-            <tree string="Kontrak Dinas">
+            <tree string="Kontrak Medis">
                 <field name="employee_id" optional="show"/>
                 <field name="sip_number" optional="show"/>
                 <field name="branch_id" optional="show"/>
@@ -27,7 +27,7 @@
     </record>
     <!-- action window -->
     <record id="hr_service_contract_action" model="ir.actions.act_window">
-        <field name="name">Kontrak Dinas</field>
+        <field name="name">Kontrak Medis</field>
         <field name="res_model">hr.service.contract</field>
         <field name="view_mode">tree,form</field>
     </record>
@@ -36,7 +36,7 @@
         <field name="name">hr.service.contract.form</field>
         <field name="model">hr.service.contract</field>
         <field name="arch" type="xml">
-            <form string="Form Kontrak Dinas">
+            <form string="Form Kontrak Medis">
                 <header>
                     <field name='state' widget='statusbar' options="{'clickable': '1'}"/>
                 </header>
@@ -114,9 +114,9 @@
     <!-- menuitem -->
     <menuitem 
         id="hr_service_contract_menu"
-        name="Kontrak Dinas"
+        name="Kontrak Medis"
         parent="hr.menu_hr_employee_payroll"
-        sequence="100"
+        sequence="60"
         action="hr_service_contract_action"
     />
 </odoo>

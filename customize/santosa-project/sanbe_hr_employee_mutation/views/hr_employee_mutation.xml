@@ -191,7 +191,7 @@
         </record>
 
         <record id="open_view_employee_mutation_tree" model="ir.actions.act_window">
-            <field name="name">Employees Mutation</field>
+            <field name="name">Mutasi Karyawan</field>
             <field name="res_model">hr.employee.mutations</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_hr_mutation_tree" />
@@ -200,7 +200,7 @@
         </record>
 
         <record id="open_view_employee_mutation_list" model="ir.actions.act_window">
-            <field name="name">Employees Mutation</field>
+            <field name="name">Mutasi Karyawan</field>
             <field name="res_model">hr.employee.mutations</field>
             <field name="view_mode">form,tree</field>
             <field name="view_id" eval="False" />
@@ -211,7 +211,7 @@
             id="menu_hr_mutation"
             name="Mutasi Karyawan"
             parent="hr.menu_hr_employee_payroll"
-            sequence="5"
+            sequence="70"
             action="open_view_employee_mutation_tree" />
 
     </data>

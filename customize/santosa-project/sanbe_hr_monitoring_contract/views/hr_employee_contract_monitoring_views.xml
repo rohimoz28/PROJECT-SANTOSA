@@ -44,7 +44,7 @@
 
     <!-- Action hr.employee.contract.monitoring -->
     <record id="action_hr_employee_contract_monitoring" model="ir.actions.act_window">
-        <field name="name">Monitoring Expired Contract</field>
+        <field name="name">Monitoring Kontrak Kadaluarsa</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">hr.employee.contract.monitoring</field>
         <field name="view_mode">tree</field>
@@ -181,7 +181,7 @@
 
     <!-- Action hr.employee.contract.monitoring -->
     <record id="action_hr_contract_monitoring" model="ir.actions.act_window">
-        <field name="name">Monitoring Contracts</field>
+        <field name="name">Monitoring Kontrak</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">hr.contract.monitoring</field>
         <field name="view_mode">tree,form</field>
@@ -194,6 +194,6 @@
         </field>
     </record>
 
-    <menuitem id="hr_contract_monitoring" name="Monitoring Contract" action="action_hr_contract_monitoring" parent="hr.hr_menu_hr_reports" sequence="21"/>
+    <menuitem id="hr_contract_monitoring" name="Monitoring Kontrak" action="action_hr_contract_monitoring" parent="hr.hr_menu_hr_reports" sequence="21"/>
 
 </odoo>

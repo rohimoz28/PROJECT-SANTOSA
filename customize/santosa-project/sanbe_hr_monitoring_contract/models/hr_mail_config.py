@@ -28,4 +28,8 @@ class HrMailConfig(models.Model):
     _sql_constraints = [
         ('name_monitoring_uniq', 'unique (branch_id,company_id)', "Receiver Per Business Unit")
     ]
-
+    
+    # @api.model
+    def unlink(self):
+        return super(HrMailConfig, self).unlink()
+    
