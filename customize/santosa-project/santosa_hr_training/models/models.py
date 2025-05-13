@@ -15,6 +15,7 @@ class HRTraining(models.Model):
 class HRTraining(models.Model):
     _name = 'hr.training'
     _description = 'Santosa HR Training'
+    _inherit = [ 'mail.thread', 'mail.activity.mixin', 'utm.mixin']
 
     name = fields.Char("Nama Pelatihan")
     branch_id = fields.Many2one('res.branch', default=lambda self: self.env.user.branch_id, required=True)
@@ -41,6 +42,9 @@ class HRTraining(models.Model):
         ('non_formal', 'Non Formal'),
         ('profesi', 'Profesi')
     ], string='Tipe Sertifikat', index=True, default='formal',
+        help="Defines the certification type.")
+    
+    certification_types_id = fields.Many2one('certification.type', string='Tipe Sertifikat', index=True,
         help="Defines the certification type.")
     date_start = fields.Date('Start Date Training', required=True)
     date_end = fields.Date('Finish Training', required=True)
@@ -75,9 +79,11 @@ class HRTraining(models.Model):
     date_start_bond = fields.Date('Start Bonding')
     date_end_bond = fields.Date('End Bonding')
     
-    @api.constrains('date_start_bond','date_end_bond')
+    @api.constrains('date_start','date_end','date_start_bond','date_end_bond')
     def _check_validation_training(self):
         for record in self:
+            if record.date_start > record.date_end :
+                raise UserError("harap masukan tangal peatihan yang sesuai")
             if record.date_start_bond > record.date_end_bond :
                 raise UserError("harap masukan tanggal ikatan dinas yang benar")
 
@@ -96,12 +102,11 @@ class HRTraining(models.Model):
             for att in rec.employee_attende:
                 if not att.results:
                     raise UserError('Harap inputkan Hasil Training')
-                if not att.date_start or not att.date_end:
-                    raise UserError('Harap inputkan Masa berlaku Sertipikat')
-                if not att.no_certivicate:
-                    raise UserError('Harap inputkan No Sertipikat')
-
                 if att.results == 'pass':
+                    if not att.date_start or not att.date_end:
+                        raise UserError('Harap inputkan Masa berlaku Sertipikat')
+                    if not att.no_certivicate:
+                        raise UserError('Harap inputkan No Sertipikat')
                     progres = {'basic': 25, 'intermediate': 60, 'advanced': 95}[rec.level_skill]
                     skill_level = self.env['hr.skill.level'].search([
                         ('skill_type_id', '=', rec.skill_id.skill_type_id.id),
@@ -126,6 +131,7 @@ class HRTraining(models.Model):
                         'valid_from': att.date_start,
                         'valid_to': att.date_end,
                         'skill_id': rec.skill_id.id,
+                        'certification_types_id' :rec.certification_types_id,
                         'is_dinas': att.is_bonding,
                         'date_from': rec.date_start_bond,
                         'date_to': rec.date_end_bond,
@@ -188,6 +194,10 @@ class HRTraining(models.Model):
             'readonly': True,
         })
     
+    
+    def unlink(self):
+        return super(HRTraining, self).unlink()
+    
 class HRTrainingAttendee(models.Model):
     _name = 'hr.training.attende'
     _description = 'Santosa HR Training Attendee'
@@ -206,7 +216,9 @@ class HRTrainingAttendee(models.Model):
     def _compute_periode(self):
         for record in self:
             record.periode = str(record.date_start.year) if record.date_start else ''
-            
+    
+    certification_types_id = fields.Many2one('certification.type', string='Tipe Sertifikat', index=True,
+        help="Defines the certification type.",related="order_id.certification_types_id")
      
     @api.constrains('date_start','date_end','date_start_bond','date_end_bond')
     def _check_validation_training(self):
@@ -262,6 +274,8 @@ class HRTrainingAttendee(models.Model):
         for rec in self:
             rec.name_institusi = rec.order_id
 
+    def unlink(self):
+        return super(HRTrainingAttendee, self).unlink()
 
 class HRSkill(models.Model):
     _inherit = 'hr.skill'    

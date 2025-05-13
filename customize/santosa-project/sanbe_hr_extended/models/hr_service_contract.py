@@ -82,6 +82,10 @@ class ServiceContract(models.Model):
     ], string='Status', tracking=True, help='Status Kontak Dinas'
     )
     
+    
+    def unlink(self):
+        return super(ServiceContract, self).unlink()
+    
     @api.onchange('state')
     def onchange_field(self):
         for line in self:

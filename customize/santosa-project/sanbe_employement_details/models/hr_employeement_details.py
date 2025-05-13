@@ -91,3 +91,5 @@ class HREmployeeAssets(models.Model):
     stock_lot_id = fields.Many2one(comodel_name="stock.lot", string="stock lot")
     product_template_id = fields.Many2one(comodel_name="product.template", string="product template")
 
+    def unlink(self):
+        return super(HREmployeeAssets, self).unlink()

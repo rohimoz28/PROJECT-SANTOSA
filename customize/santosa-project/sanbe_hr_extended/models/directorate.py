@@ -11,6 +11,15 @@ class Directorate(models.Model):
       default=lambda self: self.env.user.branch_id,required=True)
     department_ids = fields.Many2many("sanhrms.department", string="Department")
     active = fields.Boolean('Active', default=True )
+    
+    @api.depends('directorate_code','name')
+    def _compute_display_name(self):
+        for account in self:
+            account.display_name = f"{account.name}"
+            account.display_name = '%s-%s' % (account.directorate_code   or '', account.name)
+
+    def unlink(self):
+        return super(Directorate, self).unlink()
 
     @api.model
     def create(self, vals):

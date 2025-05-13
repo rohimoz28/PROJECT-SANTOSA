@@ -29,6 +29,8 @@ class HrEmployeeCertification(models.Model):
         ('profesi', 'Profesi')
     ], string='Tipe Sertifikat', index=True, default='formal',
         help="Defines the certification type.")
+    certification_types_id = fields.Many2one('certification.type', string='Tipe Sertifikat', index=True,
+        help="Defines the certification type.")
     must = fields.Boolean(string='Wajib',default=False)
     issuing_institution = fields.Char('Institusi Penerbit Sertifikat',required=True)
     valid_from = fields.Date(string='Berlaku mulai', default=fields.Date.today, required=True)
@@ -77,10 +79,6 @@ class HrEmployeeCertification(models.Model):
         ('valid', 'Valid'),
         ('expired', 'Expired')
     ], string="Certification Status", default='draft', compute="_compute_is_expired", store=True)
-    
-    
-    def unlink(self):
-        return super(HrEmployeeCertification, self).unlink()
     
     
     def unlink(self):

@@ -11,7 +11,7 @@
                         <button name="act_wip" string="Berlangsung" type="object" invisible="state != 'approve'" data-hotkey="b"/> -->
                         <button name="act_done" string="Selesai" type="object" invisible="state not in ['approve','wip','fin']" data-hotkey="s"/>
                         <!-- <button name="act_cancel" string="Batal" data-hotkey="x" invisible="state != 'draft'"/> -->
-                        <button name="act_cancel" string="Batal" type="object" data-hotkey="x" invisible="state not in ('cancel','done')"/>
+                        <button name="act_cancel" string="Batal" type="object" data-hotkey="x" invisible="state in ('cancel','done')"/>
 
                         <field name="state" widget="statusbar" statusbar_visible="draft,approve,done"/>
                     </header>
@@ -89,6 +89,11 @@
                             </page>
                         </notebook>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
                 </form>
             </field>
         </record>
