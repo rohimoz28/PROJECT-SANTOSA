@@ -12,6 +12,12 @@ class HrEmployeeMutation(models.Model):
     _description = 'HR Employee Mutation'
     _order = 'create_date desc'
 
+
+
+    def unlink(self):
+        return super(HrEmployeeMutation, self).unlink()
+
+
     @api.depends('name')
     def _isi_emps(self):
         context = self._context

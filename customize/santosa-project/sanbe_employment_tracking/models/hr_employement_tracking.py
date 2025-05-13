@@ -40,7 +40,8 @@ class HrEmployementTracking(models.TransientModel):
 
     tracking_ids = fields.One2many('hr.employment.trackingdetails','tracking_id',string='Employment Details',auto_join=True,index=True)
 
-
+    def unlink(self):
+        return super(HrEmployementTracking, self).unlink()
 
     def button_approve(self):
         return self.write()
@@ -145,6 +146,9 @@ class HrEmployementTrackingDetails(models.TransientModel):
                                    ('confirmed','Confirmed'),
                                    ('resigned','Resigned'),
                                    ('retired','Retired')],default='probation',string='Employement Status')
+
+    def unlink(self):
+        return super(HrEmployementTrackingDetails, self).unlink()
 
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)

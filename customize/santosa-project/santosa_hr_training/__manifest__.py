@@ -22,11 +22,18 @@ Long description of module's purpose
 
     # always loaded
     "data": [
+        "data/set_run_training_cron.xml",
         "views/hr_training_views.xml",
         "views/templates.xml",
         "views/views.xml",
         "security/ir.model.access.csv"
     ],
+    
+    'assets': {
+        'web.assets_backend': [
+            'santosa_hr_training/static/src/css/feature1.css',
+        ]
+    },
     # only loaded in demonstration mode
     'demo': [
         'demo/demo.xml',

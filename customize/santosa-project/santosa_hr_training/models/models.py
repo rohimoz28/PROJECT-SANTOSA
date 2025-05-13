@@ -15,6 +15,7 @@ class HRTraining(models.Model):
 class HRTraining(models.Model):
     _name = 'hr.training'
     _description = 'Santosa HR Training'
+    _inherit = [ 'mail.thread', 'mail.activity.mixin', 'utm.mixin']
 
     name = fields.Char("Nama Pelatihan")
     branch_id = fields.Many2one('res.branch', default=lambda self: self.env.user.branch_id, required=True)
@@ -42,8 +43,20 @@ class HRTraining(models.Model):
         ('profesi', 'Profesi')
     ], string='Tipe Sertifikat', index=True, default='formal',
         help="Defines the certification type.")
+    
+    certification_types_id = fields.Many2one('certification.type', string='Tipe Sertifikat', index=True,
+        help="Defines the certification type.")
     date_start = fields.Date('Start Date Training', required=True)
     date_end = fields.Date('Finish Training', required=True)
+    
+    @api.constrains('date_start','date_end','date_start_bond','date_end_bond')
+    def _check_validation_training(self):
+        for record in self:
+            if record.date_start > record.date_end :
+                raise UserError("harap masukan tangal peatihan yang sesuai")
+            if record.date_start_bond > record.date_end_bond :
+                raise UserError("harap masukan tanggal ikatan dinas yang benar")
+            
     invoiceable = fields.Boolean(default=False)
     type_payment = fields.Selection([
         ('person', 'Per Person'),
@@ -57,13 +70,22 @@ class HRTraining(models.Model):
         ('draft', 'Draft'),
         ('approve', 'Approve'),
         ('wip', 'Berlangsung'),
+        ('fin', 'Selesai'),
         ('hold', 'Hold'),
         ('cancel', 'Batal'),
-        ('done', 'Selesai')
-    ], default='draft')
+        ('done', 'Valid')
+    ], default='draft', tracking=True)
     descr = fields.Text("Description")
     date_start_bond = fields.Date('Start Bonding')
     date_end_bond = fields.Date('End Bonding')
+    
+    @api.constrains('date_start','date_end','date_start_bond','date_end_bond')
+    def _check_validation_training(self):
+        for record in self:
+            if record.date_start > record.date_end :
+                raise UserError("harap masukan tangal peatihan yang sesuai")
+            if record.date_start_bond > record.date_end_bond :
+                raise UserError("harap masukan tanggal ikatan dinas yang benar")
 
     @api.depends('invoiceable', 'type_payment', 'amount', 'employee_attende.amount')
     def _compute_total_amount(self):
@@ -80,12 +102,11 @@ class HRTraining(models.Model):
             for att in rec.employee_attende:
                 if not att.results:
                     raise UserError('Harap inputkan Hasil Training')
-                if not att.date_start or not att.date_end:
-                    raise UserError('Harap inputkan Masa berlaku Sertipikat')
-                if not att.no_certivicate:
-                    raise UserError('Harap inputkan No Sertipikat')
-
                 if att.results == 'pass':
+                    if not att.date_start or not att.date_end:
+                        raise UserError('Harap inputkan Masa berlaku Sertipikat')
+                    if not att.no_certivicate:
+                        raise UserError('Harap inputkan No Sertipikat')
                     progres = {'basic': 25, 'intermediate': 60, 'advanced': 95}[rec.level_skill]
                     skill_level = self.env['hr.skill.level'].search([
                         ('skill_type_id', '=', rec.skill_id.skill_type_id.id),
@@ -110,6 +131,7 @@ class HRTraining(models.Model):
                         'valid_from': att.date_start,
                         'valid_to': att.date_end,
                         'skill_id': rec.skill_id.id,
+                        'certification_types_id' :rec.certification_types_id,
                         'is_dinas': att.is_bonding,
                         'date_from': rec.date_start_bond,
                         'date_to': rec.date_end_bond,
@@ -117,16 +139,15 @@ class HRTraining(models.Model):
                         'is_expired': 'valid'
                     })
                     att.certivicate_id = certivicate.id
+                    self.env['hr.resume.line'].sudo().create({
+                        'employee_id': att.employee_id.id,
+                        'name': rec.name,
+                        'date_start': rec.date_start,
+                        'date_end': rec.date_end,
+                        'description': f"{att.employee_id.name} Telah LULUS dari Pelatihan {rec.name} /n yang diadakan {rec.name_institusi} dari tanggal {rec.date_start} hingga {rec.date_end}."
+                    })
             rec.readonly = True
                     # deliver to resume and skill employee
-                    # self.env['hr.resume.line'].sudo().create({
-                    #     'employee_id': att.employee_id.id,
-                    #     'name': rec.name,
-                    #     'date_start': rec.date_start,
-                    #     'date_end': rec.date_end,
-                    #     'description': f"{att.employee_id.name} {rec.name}"
-                    # })
-
                     # emp_skill = self.env['hr.employee.skill'].search([
                     #     ('employee_id', '=', att.employee_id.id),
                     #     ('skill_id', '=', rec.skill_id.id),
@@ -154,7 +175,11 @@ class HRTraining(models.Model):
         self.write({'state': 'hold'})
 
     def act_wip(self):
-        self.write({'state': 'wip'})
+        for training in self.env['hr.training'].search([]):
+            if training.state == 'approve' and fields.Date.today() == training.date_start:
+                training.write({'state': 'wip'})
+            if fields.Date.today() == training.date_end and training.state == 'wip':
+                training.write({'state': 'fin'})
 
     def act_approve(self):
         self.write({
@@ -169,6 +194,10 @@ class HRTraining(models.Model):
             'readonly': True,
         })
     
+    
+    def unlink(self):
+        return super(HRTraining, self).unlink()
+    
 class HRTrainingAttendee(models.Model):
     _name = 'hr.training.attende'
     _description = 'Santosa HR Training Attendee'
@@ -181,6 +210,24 @@ class HRTrainingAttendee(models.Model):
     results = fields.Selection([
         ('failed', 'Tidak Lulus'),
         ('pass', 'Lulus')])
+    periode = fields.Char(string='Periode', compute='_compute_periode', store=True)
+
+    @api.depends('date_start')
+    def _compute_periode(self):
+        for record in self:
+            record.periode = str(record.date_start.year) if record.date_start else ''
+    
+    certification_types_id = fields.Many2one('certification.type', string='Tipe Sertifikat', index=True,
+        help="Defines the certification type.",related="order_id.certification_types_id")
+     
+    @api.constrains('date_start','date_end','date_start_bond','date_end_bond')
+    def _check_validation_training(self):
+        for record in self:
+            if record.date_start > record.date_end :
+                raise UserError("harap masukan tangal peatihan yang sesuai")
+            if record.date_start_bond > record.date_end_bond :
+                raise UserError("harap masukan tanggal ikatan dinas yang benar")
+            
     certivicate_id = fields.Many2one('hr.employee.certification')
     no_certivicate = fields.Char('No Sertipikat')
     amount = fields.Float('Nominal', default=0.0,compute="_compute_type_payment")
@@ -194,6 +241,19 @@ class HRTrainingAttendee(models.Model):
     date_start_bond = fields.Date('Start Bonding',related="order_id.date_start_bond")
     date_end_bond = fields.Date('End Bonding',related="order_id.date_end_bond")
     state = fields.Selection(related='order_id.state')
+    
+    _sql_constraints = [
+        (
+            'constraint_unique_certification_training',
+            'unique(order_id, employee_id)',
+            'Tidak diperkenankan memasukan karyawan yang sama.'
+        ),
+        (
+            'constraint_unique_certification',
+            'unique(order_id, no_certivicate, name_institusi)',
+            'Tidak diperkenankan memasukan memasukkan nomor sertipikat sama.'
+        ),
+    ]
 
 
     @api.depends('order_id.type_payment')
@@ -214,6 +274,8 @@ class HRTrainingAttendee(models.Model):
         for rec in self:
             rec.name_institusi = rec.order_id
 
+    def unlink(self):
+        return super(HRTrainingAttendee, self).unlink()
 
 class HRSkill(models.Model):
     _inherit = 'hr.skill'    
@@ -228,3 +290,4 @@ class HRSkillType(models.Model):
     
     def unlink(self):
         return super(HRSkillType, self).unlink()
+

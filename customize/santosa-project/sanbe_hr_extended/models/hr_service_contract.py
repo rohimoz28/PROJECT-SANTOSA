@@ -50,8 +50,8 @@ class ServiceContract(models.Model):
                                 ('4','4'),
                                 ('5','5')],
                                 string='Nomor PKWT')    
-    start_date = fields.Date(string='Tanggal Mulai')
-    end_date = fields.Date(string='Tanggal Berakhir')
+    start_date = fields.Date(string='Tanggal Mulai', required=True)
+    end_date = fields.Date(string='Tanggal Berakhir', required=True)
     company_id = fields.Many2one('res.company', compute='_compute_employee_contract', 
                                  store=True, readonly=False,
                                  default=lambda self: self.env.company, required=True)
@@ -81,6 +81,26 @@ class ServiceContract(models.Model):
         ('cancel', 'Cancelled'),
     ], string='Status', tracking=True, help='Status Kontak Dinas'
     )
+    
+    
+    def unlink(self):
+        return super(ServiceContract, self).unlink()
+    
+    @api.onchange('state')
+    def onchange_field(self):
+        for line in self:
+            if line.state ==  'open':
+                line.employee_id.kontrak_medis = True
+                line.employee_id.kontrak_medis_id = line.id
+                line.employee_id.sip_number = line.sip_number
+                line.employee_id.sip_date_from = line.start_date
+                line.employee_id.sip_date_to = line.end_date
+            else:
+                line.employee_id.kontrak_medis = False
+                line.employee_id.kontrak_medis_id = False
+                line.employee_id.sip_number = False
+                line.employee_id.sip_date_from = False
+                line.employee_id.sip_date_to = False
 
 
     @api.depends('hrms_department_id')

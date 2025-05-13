@@ -12,6 +12,15 @@ class Department(models.Model):
     directorate_id = fields.Many2one('sanhrms.directorate',string='Directorate',required=True)
     division_ids = fields.Many2many('sanhrms.division',string='Division')
     active = fields.Boolean('Active', default=True )
+    
+    @api.depends('department_code','name')
+    def _compute_display_name(self):
+        for account in self:
+            account.display_name = f"{account.name}"
+            account.display_name = '%s-%s' % (account.department_code   or '', account.name)
+    
+    def unlink(self):
+        return super(Department, self).unlink()
 
     #Saat buat record baru dan milih direktorat maka di direktorat nya akan terpilih department nya
     @api.model

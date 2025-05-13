@@ -9,7 +9,7 @@
                 <xpath expr="//page[@name='personal_information']" position="after">
                     <page name="certificate_details" string="Sertipikasi">
                         <field name="certificate_ids">
-                            <tree>
+                            <tree  class="o_horizontal_scroll">
                                 <field name="employee_id" column_invisible="1" />
                                 <field name="name" optional="show"/>
                                 <field name="number" optional="show"/>
