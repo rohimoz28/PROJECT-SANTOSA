@@ -12,11 +12,15 @@ class Division(models.Model):
     department_id = fields.Many2one('sanhrms.department',string='Department',required=True)
     active = fields.Boolean('Active', default=True )
 
-    # @api.depends('department_code','name')
-    # def _compute_display_name(self):
-    #     for account in self:
-    #         account.display_name = f"{account.name}"
-            # account.display_name = '%s-%s' % (account.department_code   or '', account.name)
+    @api.depends('division_code','name')
+    def _compute_display_name(self):
+        for account in self:
+            account.display_name = f"{account.name}"
+            account.display_name = '%s-%s' % (account.division_code   or '', account.name)
+
+    def unlink(self):
+        return super(Division, self).unlink()
+
 
     @api.model
     def create(self, vals):
