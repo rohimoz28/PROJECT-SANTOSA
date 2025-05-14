@@ -21,17 +21,32 @@
             </xpath> -->
         </field>
     </record>
-    <!-- hide chatter and ad css -->
+    <!-- hide chatter and add css -->
     <record id="hide_chatter_invoice_form_detail" model="ir.ui.view">
         <field name="name">account.move.hide.chatter</field>
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@class='oe_chatter']" position="replace"/>
-            
+            <!-- css -->
             <xpath expr="//field[@name='line_ids']/tree" position="attributes">
                 <attribute name="class">o_horizontal_scroll</attribute>
-            </xpath>            
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/tree" position="attributes">
+                <attribute name="class">o_horizontal_scroll</attribute>
+            </xpath>
+            <!-- delete original chatter -->
+            <xpath expr="//div[@class='oe_chatter']" position="replace">
+                <!-- kosong = menghapus -->
+            </xpath>
+            <!-- chatter below the sheet -->
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter" role="complementary">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </xpath>
         </field>
     </record>
+
 </odoo>
