@@ -1,7 +1,4 @@
 stages:
-  - versioning
-  - build
-  - deploy
   - verify
   - notify
 
@@ -60,4 +57,24 @@ check_base_branch:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "production")'
       when: always
+    - when: never
+
+notify_check_base_branch_failed:
+  stage: notify
+  tags: [test4]
+  <<: *default_before_script
+  script:
+    - MR_TITLE="$CI_MERGE_REQUEST_TITLE"
+    - MR_URL="$CI_PROJECT_URL/-/merge_requests/$CI_MERGE_REQUEST_IID"
+    - MR_LINK="[$MR_TITLE]($MR_URL)"
+    - AUTHOR_NAME=$(echo "$CI_COMMIT_AUTHOR" | sed -E 's/^(.*) <.*>$/\1/')
+    - MR_AUTHOR="**$AUTHOR_NAME**"
+    - /tmp/scripts/send_notification.sh "❌ $MR_LINK Created by $MR_AUTHOR" "Error" 15158332 "Validation Base Branch Failed!" "$WEBHOOK_URL_TEST"
+  needs:
+    - job: check_base_branch
+      artifacts: false
+      optional: true
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "production")'
+      when: on_failure
     - when: never
