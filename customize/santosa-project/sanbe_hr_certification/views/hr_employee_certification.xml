@@ -46,7 +46,7 @@
                     <group>
                         <field name="employee_id" force_save="1"/>
                         <!-- <field name="certification_types"/> -->
-                        <field name="certification_types_id" required="1" readonly="is_expired != 'draft'"/>
+                        <field name="certification_types_id" options="{'no_create': True,'no_create_edit': True}" required="1" readonly="is_expired != 'draft'"/>
                         <field name="certification_code" 
                         invisible="1"
                         readonly="is_expired != 'draft'"/>
@@ -62,7 +62,13 @@
                         <field name="must" readonly="is_expired != 'draft'"/>
                         <field name="level_skill" string="Tingkatan" readonly="is_expired != 'draft'"/>
                         <field name="is_long_life" invisible="(certification_code != 'nf')" readonly="is_expired != 'draft'"/>
-                        <field name="issuing_institution" readonly="is_expired != 'draft'"/>
+                        <label for="issuing_institution" string="Institusi/Penerbit Sertipikat"/>
+                        <div class="o_row flex-grow-1">
+                            <field name="type_institution" options="{'no_create': True,'no_create_edit': True}" required="1" readonly="is_expired != 'draft'"/>
+                            <label for="valid_to" string="Nama Institusi"/>
+                            <field name="issuing_institution"  required="1" readonly="is_expired != 'draft'"/>
+                        </div>
+                        <field name="profesion_unit"/>
                         <label for="valid_from" string="Berlaku mulai" readonly="is_expired != 'draft'"/>
                         <div class="o_row flex-grow-1">
                             <field name="valid_from" readonly="is_expired != 'draft'"/>

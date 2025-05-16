@@ -43,10 +43,11 @@ class HRTraining(models.Model):
         ('profesi', 'Profesi')
     ], string='Tipe Sertifikat', index=True, default='formal',
         help="Defines the certification type.")
-    
+    type_institution = fields.Many2one('res.type.institution',required=True, domain="[('code', '!=', 'el')]")
     certification_types_id = fields.Many2one('certification.type', string='Tipe Sertifikat', index=True,
         help="Defines the certification type.")
-    date_start = fields.Date('Start Date Training', required=True)
+    certification_code = fields.Char(related='certification_types_id.code',store=True)
+    date_start = fields.Date('Start Date Training',  default=fields.Date.today, required=True)
     date_end = fields.Date('Finish Training', required=True)
     
     @api.constrains('date_start','date_end','date_start_bond','date_end_bond')
@@ -63,7 +64,8 @@ class HRTraining(models.Model):
         ('bulk', 'Bulking')
     ], string="Metode Pembayaran")
     amount = fields.Float('Nominal', default=0.0)
-    skill_id = fields.Many2one('hr.skill',)
+    skill_id = fields.Many2one('hr.skill',domain="('skill_type_id','=',skill_type_id.id)")
+    skill_type_id = fields.Many2one('skill_type_id',domain="('name','!=','language')")
     total_amount = fields.Float('Total Nominal', compute="_compute_total_amount", store=True)
     employee_attende = fields.One2many('hr.training.attende', 'order_id')
     state = fields.Selection([
@@ -76,7 +78,7 @@ class HRTraining(models.Model):
         ('done', 'Valid')
     ], default='draft', tracking=True)
     descr = fields.Text("Description")
-    date_start_bond = fields.Date('Start Bonding')
+    date_start_bond = fields.Date('Start Bonding', default=fields.Date.today)
     date_end_bond = fields.Date('End Bonding')
     
     @api.constrains('date_start','date_end','date_start_bond','date_end_bond')
@@ -121,55 +123,56 @@ class HRTraining(models.Model):
                             'level_progress': progres,
                             'default_level': True,
                         })
-
+                    must = False
+                    if rec.certification_code and rec.certification_code == 'pm':
+                        must = True
+                
                     certivicate = self.env['hr.employee.certification'].sudo().create({
                         'employee_id': att.employee_id.id,
                         'name': rec.certificate_name,
                         'number': att.no_certivicate,
                         'certification_types': rec.certification_types,
+                        'type_institution': rec.type_institution.id,
                         'issuing_institution': rec.name_institusi,
                         'valid_from': att.date_start,
                         'valid_to': att.date_end,
                         'skill_id': rec.skill_id.id,
-                        'certification_types_id' :rec.certification_types_id,
+                        'must': must,
+                        'certification_types_id' :rec.certification_types_id.id,
                         'is_dinas': att.is_bonding,
                         'date_from': rec.date_start_bond,
                         'date_to': rec.date_end_bond,
                         'active': True,
-                        'is_expired': 'valid'
-                    })
+                        'is_expired': 'valid',
+                        'remarks':  f"{att.employee_id.name} Telah LULUS dari Pelatihan {rec.name} dengan score {att.result_score} yang diadakan {rec.name_institusi} dari tanggal {rec.date_start} hingga {rec.date_end}."
+                        })
                     att.certivicate_id = certivicate.id
                     self.env['hr.resume.line'].sudo().create({
                         'employee_id': att.employee_id.id,
                         'name': rec.name,
                         'date_start': rec.date_start,
                         'date_end': rec.date_end,
-                        'description': f"{att.employee_id.name} Telah LULUS dari Pelatihan {rec.name} /n yang diadakan {rec.name_institusi} dari tanggal {rec.date_start} hingga {rec.date_end}."
+                        'description': f"{att.employee_id.name} Telah LULUS dari Pelatihan {rec.name} yang diadakan {rec.name_institusi} dari tanggal {rec.date_start} hingga {rec.date_end}."
                     })
-            rec.readonly = True
                     # deliver to resume and skill employee
-                    # emp_skill = self.env['hr.employee.skill'].search([
-                    #     ('employee_id', '=', att.employee_id.id),
-                    #     ('skill_id', '=', rec.skill_id.id),
-                    #     ('skill_type_id', '=', rec.skill_id.skill_type_id.id)
-                    # ], limit=1)
-
-                    # if not emp_skill:
-                    #     self.env['hr.employee.skill'].sudo().create({
-                    #         'employee_id': att.employee_id.id,
-                    #         'skill_id': rec.skill_id.id,
-                    #         'skill_type_id': rec.skill_id.skill_type_id.id,
-                    #         'skill_level_id': skill_level.id
-                    #     })
-                    # elif emp_skill.skill_level_id.level_progress < skill_level.level_progress:
-                    #     emp_skill.sudo().write({
-                    #         'skill_level_id': skill_level.id
-                    #     })
-
+                    emp_skill = self.env['hr.employee.skill'].search([
+                        ('employee_id', '=', att.employee_id.id),
+                        ('skill_id', '=', rec.skill_id.id),
+                        ('skill_type_id', '=', rec.skill_id.skill_type_id.id)
+                    ], limit=1)
+                    if not emp_skill:
+                        self.env['hr.employee.skill'].sudo().create({
+                            'employee_id': att.employee_id.id,
+                            'skill_id': rec.skill_id.id,
+                            'skill_type_id': rec.skill_id.skill_type_id.id,
+                            'skill_level_id': skill_level.id
+                        })
+                    elif emp_skill.skill_level_id.level_progress < skill_level.level_progress:
+                        emp_skill.sudo().write({
+                            'skill_level_id': skill_level.id
+                        })
+            rec.readonly = True
             rec.state = 'done'
-
-    # def act_cancel(self):
-    #     self.write({'state': 'cancel'})
 
     def act_hold(self):
         self.write({'state': 'hold'})
@@ -178,7 +181,7 @@ class HRTraining(models.Model):
         for training in self.env['hr.training'].search([]):
             if training.state == 'approve' and fields.Date.today() == training.date_start:
                 training.write({'state': 'wip'})
-            if fields.Date.today() == training.date_end and training.state == 'wip':
+            elif training.state == 'wip' and training.date_end and (training.date_end + timedelta(days=1)) == fields.Date.today():
                 training.write({'state': 'fin'})
 
     def act_approve(self):

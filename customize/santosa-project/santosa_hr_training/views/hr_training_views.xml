@@ -40,8 +40,13 @@
                                     <field name="date_end" readonly="state not in ('draft','hold')"/>
                                 </div>
                                 <!-- <field name="type" string="Tipe" readonly="state not in ('draft','hold')"/> -->
-                                <field name="location_training" string="Alamat" readonly="state not in ('draft','hold')"/>
-                                <field name="name_institusi" string="Nama Institusi/Penyelenggara" placeholder="Institusi" required="1" readonly="state not in ('draft','hold')"/>
+                                <field name="location_training" string="Alamat" placeholder="Alamat" readonly="state not in ('draft','hold')"/>
+                                <label for="name_institusi" string="Institusi/Lemaga Pelatihan"/>
+                                <div class="o_row flex-grow-1">
+                                    <field name="type_institution" options="{'no_create': True,'no_create_edit': True}" readonly="state not in ('draft','hold')" required="1" />
+                                    <label for="name_institusi" string="Nama Institusi"/>
+                                    <field name="name_institusi" placeholder="Institusi" required="1" readonly="state not in ('draft','hold')"/>
+                                </div>
                                 <field name="level_skill" readonly="state not in ('draft','hold')" string="Tingkatan"/>
                                 <field name="descr" string="Deskripsi" readonly="state not in ('draft','hold')"/>
                             </group>
@@ -58,7 +63,12 @@
                                     <field name="date_start_bond" required="is_bonding" readonly="state not in ('draft','hold')"/> s/d
                                     <field name="date_end_bond" required="is_bonding" readonly="state not in ('draft','hold')"/>
                                 </div>
-                                <field name="certification_types" required="1" readonly="state not in ('draft','hold')"/>
+                                <field name="certification_types" 
+                                invisible="1"
+                                 readonly="state not in ('draft','hold')"/>
+                                <field name="certification_types_id" required="1" options="{'no_create': True,'no_create_edit': True}" readonly="state not in ('draft','hold')"/>
+                                <field name="certification_code" invisible="1" readonly="state not in ('draft','hold')"/>
+                                <field name="approved_by" invisible="1" />
                                 <field name="approved_by" invisible="1" />
                                 <!-- <field name="invoiceable" readonly="state not in ('draft','hold')" string="Berbayar?"/> -->
                                 <field name="branch_id" invisible="1" />
