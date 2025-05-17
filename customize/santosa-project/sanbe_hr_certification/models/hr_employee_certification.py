@@ -14,26 +14,39 @@ import logging
 from datetime import date,datetime,timedelta
 _logger = logging.getLogger(__name__)
 
+class TypeInstitution(models.Model):
+    _name= 'res.type.institution'
+    _description = 'Type Institution'
+    
+    name = fields.Char(string='Name',required=True)
+    code = fields.Char(string='Code',required=True)
+    active = fields.Boolean(string='Active', default=True)
+        
+    def unlink(self):
+        return super(TypeInstitution, self).unlink()
+    
 class HrEmployeeCertification(models.Model):
     """Extended model for HR employees with additional features."""
     _name = 'hr.employee.certification'
     _description = 'HR Employee Certification'
 
     employee_id = fields.Many2one('hr.employee', string='Nama Karyawan', index=True, required=True)
-    name = fields.Char(string='Nama Sertifikasi',required=True)
+    name = fields.Char(string='Nama Sertipikasi',required=True)
     nik = fields.Char(string='Nik',compute="_get_nik", index=True)
-    number = fields.Char(string='Nomor Sertifikasi',required=True)
+    number = fields.Char(string='Nomor Sertipikasi',required=True)
     certification_types = fields.Selection([
         ('formal', 'Formal'),
         ('non_formal', 'Non Formal'),
         ('profesi', 'Profesi')
-    ], string='Tipe Sertifikat', index=True, default='formal',
+    ], string='Tipe Sertipikat', index=True, default='formal',
         help="Defines the certification type.")
     certification_types_id = fields.Many2one('certification.type', string='Tipe Sertifikat', index=True,
         help="Defines the certification type.")
     certification_code = fields.Char(related='certification_types_id.code',store=True)
     must = fields.Boolean(string='Wajib',default=False)
-    issuing_institution = fields.Char('Institusi Penerbit Sertifikat',required=True)
+    profesion_unit = fields.Char('Unit Profesi')
+    type_institution = fields.Many2one('res.type.institution',required=True)
+    issuing_institution = fields.Char('Institusi Penerbit Sertipikat',required=True)
     valid_from = fields.Date(string='Berlaku mulai', default=fields.Date.today, required=True)
     valid_to = fields.Date(string='Hingga', required=True)
     periode = fields.Char(string='Periode', compute='_compute_periode', store=True)
@@ -45,12 +58,13 @@ class HrEmployeeCertification(models.Model):
             
     notification_date = fields.Date(string='Date Notification', compute='_compute_notification_date',store=True)
     skill_id = fields.Many2one('hr.skill','Kompetensi')
+    level_skill_id = fields.Many2one('hr.skill.level', domain="('skill_type_id','=', skill_id.skill_type_id.id)", string="Level Skill")
     level_skill = fields.Selection([
         ('basic', 'Dasar'),
         ('intermediate', 'Menengah'),
         ('advanced', 'Lanjutan')], default='basic')
     is_dinas = fields.Boolean(string="Ikatan Dinas")
-    date_from = fields.Date(string="Ikatan Dinas Dari")
+    date_from = fields.Date(string="Ikatan Dinas Dari", default=fields.Date.today)
     date_to = fields.Date(string="Ikatan Dinas Hingga")
     remarks = fields.Text(string='Keterangan')
     certificate_attachmentids = fields.Many2many('ir.attachment', string='Lampiran',
@@ -59,21 +73,8 @@ class HrEmployeeCertification(models.Model):
     active = fields.Boolean(string="Active", default=True)
     # new_certivicate = fields.Boolean(string="Active", default=True)
     # New field: indicates whether the certificate has an expiration date or not
-    is_long_life = fields.Boolean(string="Long Life Certification", 
+    is_long_life = fields.Boolean(string="Seumur Hidup?", 
                                   help="Indicates whether the certificate doesn't expire.")
-    
-    def unlink(self):
-        return super(HrEmployeeCertification, self).unlink()
-    
-    
-    @api.depends('valid_to')
-    def _compute_notification_date(self):
-        for record in self:
-            if record.valid_to and not record.is_long_life:
-                # Calculate 30 days before the valid_to date
-                record.notification_date = record.valid_to - timedelta(days=30)
-
-    # Computed field to check if the certification is expired
     
     is_expired = fields.Selection([
         ('draft', 'Draft'),
@@ -84,6 +85,33 @@ class HrEmployeeCertification(models.Model):
     
     def unlink(self):
         return super(HrEmployeeCertification, self).unlink()
+
+    @api.depends('certification_code')
+    def _validattion_type_certivicate(self):
+        for record in self:
+            if record.valid_to and not record.is_long_life:
+                # Calculate 30 days before the valid_to date
+                record.notification_date = record.valid_to - timedelta(days=30)
+
+    @api.depends('type')
+    def _compute_name_institution(self):
+        for record in self:
+            if record.type == 'internal':
+                record.name_institusi = record.branch_id.name
+            else:
+                record.name_institusi = False
+    
+    @api.depends('certification_code')
+    def _compute_certification_code(self):
+        for record in self:
+            if record.certification_code and record.certification_code == 'pm':
+                record.must = True
+    
+    @api.depends('is_long_life')
+    def _compute_notification_date(self):
+        for record in self:
+            if record.is_long_life:
+                record.valid_to = '2999-12-31'
     
     
     @api.depends('certification_types')
