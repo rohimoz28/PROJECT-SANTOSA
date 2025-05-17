@@ -71,7 +71,7 @@ class ServiceContract(models.Model):
                                         tracking=True)
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True, store=True)
     salary_amount = fields.Monetary(string='Jumlah Gaji', currency_field='currency_id')
-    notes = fields.Html(string='Catatan')
+    notes = fields.Text(string='Catatan')
     state = fields.Selection([
         # related='contract_id.state',
         # string='Kontrak Status',

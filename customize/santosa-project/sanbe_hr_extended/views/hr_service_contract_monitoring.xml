@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Tree -->
+        <record id="hr_service_contract_monitoring_tree" model="ir.ui.view">
+            <field name="name">hr.service.contract.monitoring.tree</field>
+            <field name="model">hr.service.contract</field>
+            <field name="arch" type="xml">
+                <tree string="Monitoring Kontrak Medis" create="false" edit="false">
+                    <field name="employee_id" optional="show"/>
+                    <field name="sip_number" optional="show"/>
+                    <field name="branch_id" optional="show"/>
+                    <field name="directorate_id" optional="show"/>
+                    <field name="department_id" optional="show"/>
+                    <field name="division_id" optional="show"/>
+                    <field name="job_id" optional="show"/>
+                    <field name="start_date" optional="show"/>
+                    <field name="end_date" optional="show"/>
+                    <field name="contract_type_id" optional="show"/>
+                    <field name="state" widget="badge"
+                        decoration-info="state == 'draft'" 
+                        decoration-warning="state == 'close'" 
+                        decoration-success="state == 'open'"
+                        decoration-danger="state == 'cancel'"
+                        optional="show"/>
+                </tree>
+            </field>
+        </record>
+        <!-- Action Window -->
+        <record id="hr_service_contract_monitoring_action" model="ir.actions.act_window">
+            <field name="name">Monitoring Kontrak Medis</field>
+            <field name="res_model">hr.service.contract</field>
+            <field name="view_mode">tree</field>
+            <field name="views" eval="[
+                [ref('hr_service_contract_monitoring_tree'), 'tree'],
+            ]"/>
+            <field name="domain">[]</field>
+        </record>   
+        <!-- Menuitem -->
+        <menuitem 
+        id="hr_service_contract_monitoring_menu"
+        name="Monitoring Kontrak Medis"
+        parent="hr.hr_menu_hr_reports"
+        action="hr_service_contract_monitoring_action"
+        sequence="30"
+        />
+    </data>
+</odoo>
