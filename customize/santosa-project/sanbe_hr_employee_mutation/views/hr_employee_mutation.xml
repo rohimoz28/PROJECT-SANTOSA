@@ -98,9 +98,9 @@
                                 readonly="service_type != 'conf'" force_save="1" />
                             <field name="employee_levels" string="Level Karyawan" readonly="1" force_save="1" />
                             <field name="employee_group1s" string="Group Penggajian" readonly="1" force_save="1" />
-                            <field name="medic" options="{'no_create': True,'no_create_edit': True}" string = "Medis" required='1' readonly="1" force_save="1" />
-                            <field name="nurse" options="{'no_create': True,'no_create_edit': True}" string = "Perawat" required='1' readonly="1" force_save="1" />
-                            <field name="seciality" options="{'no_create': True,'no_create_edit': True}" string = "Keahlian Khusus" required="1" readonly="1" force_save="1" />                            
+                            <field name="medic" options="{'no_create': True,'no_create_edit': True}" string = "Profesi Medis" required='1' readonly="1" force_save="1" />
+                            <field name="nurse" options="{'no_create': True,'no_create_edit': True}" string = "Profesi Perawat" required='1' readonly="1" force_save="1" />
+                            <field name="seciality" options="{'no_create': True,'no_create_edit': True}" string = "Kategori Khusus" required="1" readonly="1" force_save="1" />                            
 
                         </group>
                         <group>
@@ -139,9 +139,9 @@
                             <field name="service_no_ktp" readonly="state in ['approved']" force_save="1" />
                             <field name="service_employee_levels" readonly="state in ['approved']"  invisible="service_type != 'prom'" required="service_type == 'prom'" options="{'no_create': True,'no_quick_create': True}" />
                             <field name="service_employee_group1s" string="Group Penggajian" force_save="1"  invisible="service_job_status_type !='pkwtt'"/>
-                            <field name="service_medic" options="{'no_create': True,'no_create_edit': True}" string = "Medis" required='1' force_save="1" domain="[('branch_id', '=', service_bisnisunit)]" />
-                            <field name="service_nurse" options="{'no_create': True,'no_create_edit': True}" string = "Perawat" required='1'  force_save="1" domain="[('branch_id', '=', service_bisnisunit)]" />
-                            <field name="service_seciality" options="{'no_create': True,'no_create_edit': True}" string = "Keahlian Khusus" required="1" force_save="1" domain="[('branch_id', '=', service_bisnisunit)]" />                      
+                            <field name="service_medic" options="{'no_create': True,'no_create_edit': True}" string = "Profesi Medis" required='1' force_save="1" domain="[('branch_id', '=', service_bisnisunit)]" />
+                            <field name="service_nurse" options="{'no_create': True,'no_create_edit': True}" string = "Profesi Perawat" required='1'  force_save="1" domain="[('branch_id', '=', service_bisnisunit)]" />
+                            <field name="service_seciality" options="{'no_create': True,'no_create_edit': True}" string = "Kategori Khusus" required="1" force_save="1" domain="[('branch_id', '=', service_bisnisunit)]" />                      
                             <field name="remarks" readonly="state in ['approved']" />
                             <field name="image" readonly="state in ['approved']" widget="many2many_binary" />
                         </group>
