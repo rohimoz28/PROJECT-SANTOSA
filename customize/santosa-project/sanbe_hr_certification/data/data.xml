@@ -11,9 +11,38 @@
             <field name="name">Non Formal</field>
         </record>
 
+        <record id="profesi_medic" model="certification.type">
+            <field name="code">pm</field>
+            <field name="name">Profesi Medis</field>
+        </record>
+
         <record id="formal" model="certification.type">
             <field name="code">fm</field>
             <field name="name">Formal</field>
+        </record>
+
+        <record id="univ" model="res.type.institution">
+            <field name="code">uni</field>
+            <field name="name">Universitas / Institut /Akademi</field>
+        </record>
+
+        <record id="elment" model="res.type.institution">
+            <field name="code">el</field>
+            <field name="name">SD / Menegah</field>
+        </record>
+
+        <record id="consil" model="res.type.institution">
+            <field name="code">cons</field>
+            <field name="name">KKI / KTKI</field>
+        </record>
+
+        <record id="dinkes" model="res.type.institution">
+            <field name="code">dinkes</field>
+            <field name="name">Dinas Kesehatan</field>
+        </record>
+        <record id="iu" model="res.type.institution">
+            <field name="code">iu</field>
+            <field name="name">Institusi Umum</field>
         </record>
     </data>
 </odoo>
