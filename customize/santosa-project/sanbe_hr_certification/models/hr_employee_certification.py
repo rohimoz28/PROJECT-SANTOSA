@@ -43,12 +43,13 @@ class HrEmployeeCertification(models.Model):
     certification_types_id = fields.Many2one('certification.type', string='Tipe Sertifikat', index=True,
         help="Defines the certification type.")
     certification_code = fields.Char(related='certification_types_id.code',store=True)
-    must = fields.Boolean(string='Wajib',default=False)
+    must = fields.Boolean(string='Wajib',default=False,compute="_compute_notification_date",inverse='_compute_inverse',)
     profesion_unit = fields.Char('Unit Profesi')
     type_institution = fields.Many2one('res.type.institution',required=True)
     issuing_institution = fields.Char('Institusi Penerbit Sertipikat',required=True)
     valid_from = fields.Date(string='Berlaku mulai', default=fields.Date.today, required=True)
-    valid_to = fields.Date(string='Hingga', required=True)
+    valid_to = fields.Date(string='Hingga', 
+    inverse='_compute_inverse', required=True)
     periode = fields.Char(string='Periode', compute='_compute_periode', store=True)
 
     @api.depends('valid_from')
@@ -56,7 +57,7 @@ class HrEmployeeCertification(models.Model):
         for record in self:
             record.periode = str(record.valid_from.year) if record.valid_from else ''
             
-    notification_date = fields.Date(string='Date Notification', compute='_compute_notification_date',store=True)
+    notification_date = fields.Date(string='Date Notification', compute="_compute_notification_date", store=True)
     skill_id = fields.Many2one('hr.skill','Kompetensi')
     level_skill_id = fields.Many2one('hr.skill.level', domain="('skill_type_id','=', skill_id.skill_type_id.id)", string="Level Skill")
     level_skill = fields.Selection([
@@ -73,7 +74,7 @@ class HrEmployeeCertification(models.Model):
     active = fields.Boolean(string="Active", default=True)
     # new_certivicate = fields.Boolean(string="Active", default=True)
     # New field: indicates whether the certificate has an expiration date or not
-    is_long_life = fields.Boolean(string="Seumur Hidup?", 
+    is_long_life = fields.Boolean(string="Seumur Hidup?", inverse='_compute_inverse', 
                                   help="Indicates whether the certificate doesn't expire.")
     
     is_expired = fields.Selection([
@@ -82,16 +83,40 @@ class HrEmployeeCertification(models.Model):
         ('expired', 'Expired')
     ], string="Certification Status", default='draft', compute="_compute_is_expired", store=True)
     
+
+    def _compute_inverse(self):
+        pass
     
     def unlink(self):
         return super(HrEmployeeCertification, self).unlink()
 
-    @api.depends('certification_code')
-    def _validattion_type_certivicate(self):
+    @api.depends('is_long_life', 'valid_to', 'certification_code')
+    def _compute_notification_date(self):
         for record in self:
-            if record.valid_to and not record.is_long_life:
-                # Calculate 30 days before the valid_to date
-                record.notification_date = record.valid_to - timedelta(days=30)
+            # Default values
+            notification_date = None
+            valid_to = record.valid_to
+
+            # Handle special certification codes first
+            if record.certification_code:
+                if record.certification_code == 'pm':
+                    record.is_long_life = False
+                    record.must = True
+                    valid_to = date.today() - timedelta(days=365)
+                elif record.certification_code != 'nf':
+                    record.is_long_life = False
+                    valid_to = date.today() - timedelta(days=365)
+
+            # Handle long-life logic
+            if record.is_long_life:
+                valid_to = date(2999, 12, 31)
+                notification_date = date(2999, 12, 31)
+            elif valid_to:
+                notification_date = valid_to - timedelta(days=30)
+
+            # Update fields
+            record.valid_to = valid_to
+            record.notification_date = notification_date
 
     @api.depends('type')
     def _compute_name_institution(self):
@@ -100,27 +125,6 @@ class HrEmployeeCertification(models.Model):
                 record.name_institusi = record.branch_id.name
             else:
                 record.name_institusi = False
-    
-    @api.depends('certification_code')
-    def _compute_certification_code(self):
-        for record in self:
-            if record.certification_code and record.certification_code == 'pm':
-                record.must = True
-    
-    @api.depends('is_long_life')
-    def _compute_notification_date(self):
-        for record in self:
-            if record.is_long_life:
-                record.valid_to = '2999-12-31'
-    
-    
-    @api.depends('certification_types')
-    def _certification_types(self):
-        for line in self:
-            if line.certification_types != 'non_formal':
-                line.is_long_life = False
-                line.valid_to = date.today()
-                
     
     def _compute_is_expired(self):
         """Compute if the certification is expired or has no expiration date."""

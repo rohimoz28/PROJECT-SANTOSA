@@ -61,6 +61,12 @@
                 <xpath expr="//field[@name='department_id']" position="attributes">
                     <attribute name="readonly">state not in ['draft']</attribute>
                 </xpath>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='country_id']" position="attributes">
+                    <attribute name="readonly">state not in ['draft']</attribute>
+                </xpath>
                 <xpath expr="//field[@name='job_id']" position="attributes">
                     <attribute name="readonly">state not in ['draft']</attribute>
                 </xpath>
