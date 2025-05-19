@@ -34,6 +34,7 @@
         "views/hr_profesion_views.xml",
         "views/job_status_views.xml",
         "views/hr_service_contract.xml",
+        "views/hr_service_contract_monitoring.xml",
     ],
     'assets': {
         'web.assets_backend': [
