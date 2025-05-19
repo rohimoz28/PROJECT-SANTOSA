@@ -161,6 +161,6 @@
         </record>
                 
         <menuitem id="hr_sanbe_certification" name="Setifikasi Karyawan" action="open_view_employee_certificate_tree" parent="hr.hr_menu_hr_reports" sequence="12"/> 
-        <menuitem id="hr_sanbe_certification_expired" name="Monitoring Sirtifikat Expired" action="open_view_employee_expired_list" parent="hr.hr_menu_hr_reports" sequence="17"/>
+        <menuitem id="hr_sanbe_certification_expired" name="Monitoring Kontrak Sertipikasi Kadaluarsa" action="open_view_employee_expired_list" parent="hr.hr_menu_hr_reports" sequence="40"/>
     </data>
 </openerp>

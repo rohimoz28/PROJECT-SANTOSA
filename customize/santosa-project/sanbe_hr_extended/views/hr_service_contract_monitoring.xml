@@ -42,7 +42,7 @@
         name="Monitoring Kontrak Medis"
         parent="hr.hr_menu_hr_reports"
         action="hr_service_contract_monitoring_action"
-        sequence="30"
+        sequence="20"
         />
     </data>
 </odoo>
