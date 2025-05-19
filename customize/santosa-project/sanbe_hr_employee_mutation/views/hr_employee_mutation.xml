@@ -98,9 +98,15 @@
                                 readonly="service_type != 'conf'" force_save="1" />
                             <field name="employee_levels" string="Level Karyawan" readonly="1" force_save="1" />
                             <field name="employee_group1s" string="Group Penggajian" readonly="1" force_save="1" />
+<<<<<<< HEAD
                             <field name="medic" options="{'no_create': True,'no_create_edit': True}" string = "Medis" required='1' readonly="1" force_save="1" />
                             <field name="nurse" options="{'no_create': True,'no_create_edit': True}" string = "Perawat" required='1' readonly="1" force_save="1" />
                             <field name="seciality" options="{'no_create': True,'no_create_edit': True}" string = "Keahlian Khusus" required="1" readonly="1" force_save="1" />                            
+=======
+                            <field name="medic" options="{'no_create': True,'no_create_edit': True}" string = "Profesi Medis"  readonly="1" force_save="1" />
+                            <field name="nurse" options="{'no_create': True,'no_create_edit': True}" string = "Profesi Perawat"  readonly="1" force_save="1" />
+                            <field name="seciality" options="{'no_create': True,'no_create_edit': True}" string = "Kategori Khusus"  readonly="1" force_save="1" />                            
+>>>>>>> 81b4077 ([FIX] PAM : Bugfix Error Approved ketika Job Status Dokter Mitra)
 
                         </group>
                         <group>
@@ -109,10 +115,10 @@
                             <field name="branch_ids" invisible="1" />
                             <field name="alldepartment" invisible="1" />
                             <field name="branch_id" options="{'no_create': True,'no_create_edit': True}" string = "Unit Bisnis" required="1" readonly="1" force_save="1" />
-                            <field name="directorate_id" options="{'no_create': True,'no_create_edit': True}" string = "Direktorat" required='1' readonly="1" force_save="1" />
-                            <field name="hrms_department_id" options="{'no_create': True,'no_create_edit': True}" string = "Departemen" required='1' readonly="1" force_save="1" />
-                            <field name="division_id" options="{'no_create': True,'no_create_edit': True}" string = "Divisi" required='1' readonly="1" force_save="1" />
-                            <field name="work_unit_id" options="{'no_create': True,'no_create_edit': True}" string = "Unit Kerja" required="1" readonly="1" force_save="1" />                            
+                            <field name="directorate_id" options="{'no_create': True,'no_create_edit': True}" string = "Direktorat"  readonly="1" force_save="1" />
+                            <field name="hrms_department_id" options="{'no_create': True,'no_create_edit': True}" string = "Departemen"  readonly="1" force_save="1" />
+                            <field name="division_id" options="{'no_create': True,'no_create_edit': True}" string = "Divisi" readonly="1" force_save="1" />
+                            <field name="work_unit_id" options="{'no_create': True,'no_create_edit': True}" string = "Unit Kerja" readonly="1" force_save="1" />                            
                             <field name="job_status_id" readonly="1" force_save="1" />    
                             <field name="job_status_type" invisible="1" />
                             <!-- <field name="job_status" readonly="1" force_save="1" /> -->
@@ -123,8 +129,8 @@
                         <group>
                             <field name="service_type" readonly="state in ['approved']"/>
                             <field name="emp_status" invisible="service_type not in ['corr']" readonly="state in ['approved']" force_save="1" />
-                            <field name="join_date" invisible="service_type not in ['corr']" required="job_status_type =='pkwtt'" readonly="state in ['approved']"/>
-                            <field name="marital" invisible="service_type not in ['corr']" required="job_status_type =='pkwtt'" readonly="state in ['approved']"/>
+                            <field name="join_date" invisible="service_type not in ['corr']"  readonly="state in ['approved']"/>
+                            <field name="marital" invisible="service_type not in ['corr']"  readonly="state in ['approved']"/>
                             <field name="emp_status_actv" invisible="service_type not in ['actv']" readonly="state in ['approved']" force_save="1" />
                             <field name="emp_status_other" invisible="service_type in ['actv','corr']" readonly="state in ['approved']" force_save="1" />
                             <field name="service_employee_levels" readonly="state in ['approved']" 
@@ -138,10 +144,17 @@
                             <field name="service_no_npwp" readonly="state in ['approved']" force_save="1" />
                             <field name="service_no_ktp" readonly="state in ['approved']" force_save="1" />
                             <field name="service_employee_levels" readonly="state in ['approved']"  invisible="service_type != 'prom'" required="service_type == 'prom'" options="{'no_create': True,'no_quick_create': True}" />
+<<<<<<< HEAD
                             <field name="service_employee_group1s" string="Group Penggajian" force_save="1"  invisible="service_job_status_type !='pkwtt'"/>
                             <field name="service_medic" options="{'no_create': True,'no_create_edit': True}" string = "Medis" required='1' force_save="1" domain="[('branch_id', '=', service_bisnisunit)]" />
                             <field name="service_nurse" options="{'no_create': True,'no_create_edit': True}" string = "Perawat" required='1'  force_save="1" domain="[('branch_id', '=', service_bisnisunit)]" />
                             <field name="service_seciality" options="{'no_create': True,'no_create_edit': True}" string = "Keahlian Khusus" required="1" force_save="1" domain="[('branch_id', '=', service_bisnisunit)]" />                      
+=======
+                            <field name="service_employee_group1s" string="Group Penggajian" force_save="1"  readonly="state in ['approved']"/>
+                            <field name="service_medic" options="{'no_create': True,'no_create_edit': True}" string = "Profesi Medis" force_save="1"  readonly="state in ['approved']" domain="[('branch_id', '=', service_bisnisunit)]" />
+                            <field name="service_nurse" options="{'no_create': True,'no_create_edit': True}" string = "Profesi Perawat" force_save="1"  readonly="state in ['approved']" domain="[('branch_id', '=', service_bisnisunit)]" />
+                            <field name="service_seciality" options="{'no_create': True,'no_create_edit': True}" string = "Kategori Khusus" force_save="1"  readonly="state in ['approved']" domain="[('branch_id', '=', service_bisnisunit)]" />                      
+>>>>>>> 81b4077 ([FIX] PAM : Bugfix Error Approved ketika Job Status Dokter Mitra)
                             <field name="remarks" readonly="state in ['approved']" />
                             <field name="image" readonly="state in ['approved']" widget="many2many_binary" />
                         </group>
@@ -166,9 +179,9 @@
                             <field name="service_empgroup1" readonly="state in ['approved']" force_save="1" />
                             <field name="company_id" invisible="1"/>
                             <!-- <field name="join_date" /> -->
-                            <field name="contract_no" invisible="service_type not in [('corr','actv')]" required="service_job_status_type =='pkwtt'"/>
-                            <field name="contract_from" invisible="service_type not in [('corr','actv')]" required="service_job_status_type =='pkwt'"/>
-                            <field name="contract_to" invisible="service_type not in [('corr','actv')]" required="service_job_status_type =='pkwt'"/>
+                            <field name="contract_no" invisible="service_type not in [('corr','actv')]" />
+                            <field name="contract_from" invisible="service_type not in [('corr','actv')]" />
+                            <field name="contract_to" invisible="service_type not in [('corr','actv')]" />
                         </group>
                     </group>
                 </sheet>
