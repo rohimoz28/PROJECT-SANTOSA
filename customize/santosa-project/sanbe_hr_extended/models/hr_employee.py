@@ -221,12 +221,15 @@ class HrEmployee(models.Model):
                 raise UserError("No. Kartu Keluarga harus Numerik")
             
     kontrak_medis_id = fields.Many2one('hr.service.contract')
-
-    sip_number = fields.Char(string="Nomor SIP")
-    sip_date_from = fields.Date(string="Masa Berlaku SIP Dari")
-    sip_date_to = fields.Date(string="Masa Berlaku SIP Hingga")
+    sip_number = fields.Char(string="Nomor SIP", invert='bypass_sip')
+    sip_date_from = fields.Date(string="Masa Berlaku SIP Dari", invert='bypass_sip')
+    sip_date_to = fields.Date(string="Masa Berlaku SIP Hingga", invert='bypass_sip')
     competence = fields.Text(string="Kompetensi")
     list_skill = fields.Text(string="Kompetensi", compute="result_skill", store=True)
+
+    def bypass_sip(self):
+        for line in self:
+            pass
 
     @api.depends('kontrak_medis_id')    
     def get_detail_sip(self):

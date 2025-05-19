@@ -101,13 +101,11 @@ class HrEmployeeMutation(models.Model):
                              string="Status", readonly=True,
                              copy=False, index=True,
                              tracking=3, default='draft')
-    job_status = fields.Selection([('permanent', 'Permanent'),
-                                   ('contract', 'Contract'),
-                                   ('outsource', 'Outsource'),
+    job_status = fields.Selection([('permanent', 'Karyawan Tetap (PKWTT)'),
+                                   ('contract', 'Karyawan Kontrak (PKWT)'),
+                                   ('partner_doctor', 'Dokter Mitra'),
                                    ('visitor', 'Visitor'),
-                                   ('mitra', 'Mitra'),
-                                   ('tka', 'TKA')],
-                                  default='contract', string='Job Status')
+                                   ], default='contract', tracking=True, related="emp_nos.job_status", string='Status Hubungan Kerja')
     job_status_id = fields.Many2one('sanhrms.job.status',required=True, string='Status Pekerjaan',related="emp_nos.job_status_id", store=True)
     job_status_type = fields.Selection(related='job_status_id.type',store=True)
     # employementstatus = fields.Char('Employment Status')
@@ -161,10 +159,11 @@ class HrEmployeeMutation(models.Model):
     service_hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen', default=lambda self:self.emp_nos.hrms_department_id.id)
     service_departmentid = fields.Many2one('hr.department', domain="[('branch_id','=',service_bisnisunit)]", string='Departemen', default=lambda self:self.emp_nos.department_id.id)
     service_identification = fields.Char('Identification Number')
-    service_jobstatus = fields.Selection([('permanent', 'Permanent'),
-                                          ('contract', 'Contract'),
-                                          ('outsource', 'Out Source')],
-                                         default='contract', string='Job Status')
+    service_jobstatus = fields.Selection([('permanent', 'Karyawan Tetap (PKWTT)'),
+                                   ('contract', 'Karyawan Kontrak (PKWT)'),
+                                   ('partner_doctor', 'Dokter Mitra'),
+                                   ('visitor', 'Visitor'),
+                                   ], default='contract', tracking=True, string='Status Hubungan Kerja')
     service_job_status_id = fields.Many2one('sanhrms.job.status',required=True, string='Status Pekerjaan', default=lambda self:self.emp_nos.job_status_id.id)
     service_job_status_type = fields.Selection(store=True, default=lambda self:self.emp_nos.job_status_type, related='service_job_status_id.type')
     service_employementstatus = fields.Selection([('probation', 'Probation'),
@@ -262,7 +261,41 @@ class HrEmployeeMutation(models.Model):
         if self.marital != self.employee_id.marital:
             self.employee_id.write({'marital': self.marital})
         if self.service_employee_levels != self.employee_id.employee_levels:
-            self.employee_id.write({'employee_levels': self.service_employee_levels})
+            self.employee_id.write({'employee_levels': self.service_employee_levels})            
+        if self.service_medic != self.employee_id.medic:
+            self.employee_id.write({'medic': self.service_medic})
+        if self.service_nurse != self.employee_id.nurse:
+            self.employee_id.write({'nurse': self.service_nurse})
+        if self.service_seciality != self.employee_id.seciality:
+            self.employee_id.write({'seciality': self.service_seciality})
+
+        # pencatatan di reume Pegawai pada dashboard pegawai
+        # if self.service_type == 'prom':
+        #     self.env['hr.resume.line'].sudo().create({
+        #                 'employee_id': att.employee_id.id,
+        #                 'name': rec.name,
+        #                 'date_start': rec.date_start,
+        #                 'date_end': rec.date_end,
+        #                 'description': f"{att.employee_id.name} Telah LULUS dari Pelatihan {rec.name} yang diadakan {rec.name_institusi} dari tanggal {rec.date_start} hingga {rec.date_end}."
+        #             })
+        # elif self.service_type == 'muta':
+        #     self.env['hr.resume.line'].sudo().create({
+        #                 'employee_id': att.employee_id.id,
+        #                 'name': rec.name,
+        #                 'date_start': rec.date_start,
+        #                 'date_end': rec.date_end,
+        #                 'description': f"{att.employee_id.name} Telah LULUS dari Pelatihan {rec.name} yang diadakan {rec.name_institusi} dari tanggal {rec.date_start} hingga {rec.date_end}."
+        #             })
+        # elif self.service_type == 'rota':
+        #     self.env['hr.resume.line'].sudo().create({
+        #         'employee_id': att.employee_id.id,
+        #         'name': rec.name,
+        #         'date_start': rec.date_start,
+        #         'date_end': rec.date_end,
+        #         'description': f"{att.employee_id.name} Telah LULUS dari Pelatihan {rec.name} yang diadakan {rec.name_institusi} dari tanggal {rec.date_start} hingga {rec.date_end}."
+        #     })
+            
+            
         # if self.service_nik_lama != self.employee_id.nik_lama:
         #     self.employee_id.write({'nik_lama': self.service_nik_lama})
         # if not mylogs:
