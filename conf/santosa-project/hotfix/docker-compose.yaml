@@ -1,0 +1,43 @@
+version: "3.8"
+services:
+  hotfix-odoo-santosa:
+    image: custom-odoo:17.0
+    build:
+      context: .  # Build from the current directory
+      dockerfile: Dockerfile  # Specify the Dockerfile name
+    container_name: hotfix-odoo-santosa
+    restart: unless-stopped
+    ports:
+      - "8600:8069"
+    depends_on:
+      - hotfix-postgres-santosa
+    env_file: .env
+    volumes:
+      - hotfix-odoo-santosa:/var/lib/odoo
+      - ./odoo.conf:/etc/odoo/odoo.conf
+      - ../../../customize/santosa-project:/mnt/addons-customize
+    networks:
+      - hotfix_santosa_project_network
+
+  hotfix-postgres-santosa:
+    image: postgres:15
+    container_name: hotfix-postgres-santosa
+    ports:
+      - "5435:5432"
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - hotfix-postgres-santosa:/var/lib/pgsql/data/pgdata
+    networks:
+      - hotfix_santosa_project_network
+
+volumes:
+  hotfix-odoo-santosa:
+    name: hotfix-odoo-santosa
+  hotfix-postgres-santosa:
+    name: hotfix-postgres-santosa
+
+networks:
+  hotfix_santosa_project_network:
+    name: hotfix_santosa_project_network
+    driver: bridge
