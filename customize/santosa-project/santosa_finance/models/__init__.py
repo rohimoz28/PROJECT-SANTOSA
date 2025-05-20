@@ -17,6 +17,8 @@ from . import mail_thread
 from . import product_type
 from . import stg_invoice_headers
 from . import stg_invoice_lines
+from . import stg_klaim_header
+from . import stg_klaim_detail
 from . import penjamin
 from . import akun_kategori
 from . import store_procedure
