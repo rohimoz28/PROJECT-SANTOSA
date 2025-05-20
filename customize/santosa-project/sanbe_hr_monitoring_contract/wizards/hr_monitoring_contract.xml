@@ -91,15 +91,15 @@
     </record>
 
     <record id="action_view_hr_monitoring_contract" model="ir.actions.act_window">
-        <field name="name">Monitoring Contract - Pension and Certification</field>
+        <field name="name">Monitoring Kontrak Pensiun - Sertipikasi</field>
         <field name="res_model">hr.monitoring.contract</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>
         <menuitem
             id="hr_menu_hr_monitoring_contract"
-            name="Monitoring Contract - Pension and Certification"
+            name="Monitoring Kontrak Pensiun - Sertipikasi"
                   parent="hr.hr_menu_hr_reports"
-                  sequence="23"
+                  sequence="30"
             action="action_view_hr_monitoring_contract"/>
 </odoo>

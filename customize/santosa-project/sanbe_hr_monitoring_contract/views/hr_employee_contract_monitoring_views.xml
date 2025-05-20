@@ -57,7 +57,7 @@
         </field>
     </record>
 
-    <menuitem id="hr_employee_contract_monitoring" name="Monitoring Expired Contracts" action="action_hr_employee_contract_monitoring" parent="hr.hr_menu_hr_reports" sequence="25"/>
+    <menuitem id="hr_employee_contract_monitoring" name="Monitoring Kontrak Kadaluarsa" action="action_hr_employee_contract_monitoring" parent="hr.hr_menu_hr_reports" sequence="10"/>
 
 
 
@@ -194,6 +194,6 @@
         </field>
     </record>
 
-    <menuitem id="hr_contract_monitoring" name="Monitoring Kontrak" action="action_hr_contract_monitoring" parent="hr.hr_menu_hr_reports" sequence="21"/>
+    <menuitem id="hr_contract_monitoring" name="Monitoring Kontrak" action="action_hr_contract_monitoring" parent="hr.hr_menu_hr_reports" sequence="1"/>
 
 </odoo>
