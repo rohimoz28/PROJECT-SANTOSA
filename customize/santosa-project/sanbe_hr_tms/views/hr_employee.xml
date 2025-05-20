@@ -7,10 +7,11 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form" />
             <field name="arch" type="xml">
+                <field name="state" invisible="1"/>
                 <xpath expr="//field[@name='nik_lama']" position="after">
                     <field name="badges_nos" widget="many2many_tags" 
                            required="1" context="{'employee_nik': nik}"
-                           string="Kode Absen"/>
+                           string="Kode Absen"   readonly="('state','!=','draft')" />
                 </xpath>
             </field>
         </record>
