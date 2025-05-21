@@ -71,6 +71,7 @@
         'web.assets_backend': [
             # 'inventory_laptop/static/src/css/custom_style.css',
             # 'sidb/static/src/scss/profildesa.scss',
+            'santosa_finance/static/src/css/feature1.css',
         ],
     },
     
