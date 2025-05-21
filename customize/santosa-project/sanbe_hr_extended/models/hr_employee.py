@@ -222,9 +222,9 @@ class HrEmployee(models.Model):
             
     kontrak_medis_id = fields.Many2one('hr.service.contract')
 
-    sip_number = fields.Char(string="Nomor SIP")
-    sip_date_from = fields.Date(string="Masa Berlaku SIP Dari")
-    sip_date_to = fields.Date(string="Masa Berlaku SIP Hingga")
+    sip_number = fields.Char(string="Nomor SIP / Sertipikasi", help="Isi nomor SIP lewat menu kontrak medis")
+    sip_date_from = fields.Date(string="Masa Berlaku SIP Dari", help="Isi nomor SIP lewat menu kontrak medis")
+    sip_date_to = fields.Date(string="Masa Berlaku SIP Hingga", help="Isi nomor SIP lewat menu kontrak medis")
     competence = fields.Text(string="Kompetensi")
     list_skill = fields.Text(string="Kompetensi", compute="result_skill", store=True)
 
@@ -302,6 +302,16 @@ class HrEmployee(models.Model):
     #    #myemployees = self.env['hr.employee'].search([])
     #    #for allemps in myemployees:
     #    #    allemps.write({'nik_lama': ''})
+
+    @api.onchange('job_status')
+    def _onchange_job_status(self):
+        if self.job_status == 'partner_doctor':
+            self.kontrak_medis = True
+        # elif self.job_status in ['permanent', 'contract']:
+        #     pass
+        else:
+            self.kontrak_medis = False
+
 
     @api.model
     def default_get(self, default_fields):
@@ -600,6 +610,7 @@ class HrEmployee(models.Model):
 
             employee.hours_last_month = round(hours, 2)
             employee.hours_last_month_display = "%g" % employee.hours_last_month
+
 
 
 class IrAttachment(models.Model):
