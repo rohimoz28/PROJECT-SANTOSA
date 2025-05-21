@@ -217,8 +217,8 @@
                             </div>
                         </div>
                         <field name="employee_levels" options="{'no_create': True,'no_quick_create': True}" string="Level"/>
-                        <field name="employee_group1s" string="Group Penggajian" required="1" />
-                        <field name="employee_group1" invisible ="1" string="Employee Group"/>
+                        <field name="employee_group1s" string="Group Penggajian" required="1"  readonly="(state !='draft')"/>
+                        <field name="employee_group1" invisible ="1" string="Employee Group"  readonly="(state !='draft')"/>
                         <field name="apoteker" invisible="employee_group1 !='group3'" />
                         <field name="attachment_contract" invisible="1" />
                     </group>
@@ -385,7 +385,7 @@
                     invisible="1"/>
                     <field name="emp_status" />
                     <field name="employee_levels"/>
-                    <field name="employee_group1s" readonly="(state !='draft')" />
+                    <field name="employee_group1s" />
                 </xpath>
                 <xpath expr="//field[@name='work_phone']" position="replace" />
                 <xpath expr="//field[@name='work_email']" position="replace" />
