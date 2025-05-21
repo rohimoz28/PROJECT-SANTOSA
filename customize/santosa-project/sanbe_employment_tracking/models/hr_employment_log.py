@@ -35,8 +35,7 @@ class HrEmployementlog(models.Model):
     job_status = fields.Selection([('permanent', 'Karyawan Tetap (PKWTT)'),
                                    ('contract', 'Karyawan Kontrak (PKWT)'),
                                    ('partner_doctor', 'Dokter Mitra'),
-                                   ('visitor', 'Visitor'),
-                                   ], default='contract', tracking=True, string='Status Hubungan Kerja')
+                                   ('visitor', 'Visitor')], default='contract', string='Job Status')
     emp_status = fields.Selection([('probation', 'Probation'),
                                    ('confirmed', 'Confirmed'),
                                    ('end_contract', 'End Of Contract'),

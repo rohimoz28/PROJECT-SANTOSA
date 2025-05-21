@@ -185,7 +185,7 @@
                         <field name="join_date" required="job_status =='permanent'" string="Tanggal Bergabung" />
                         <field name="contract_id" invisible="job_status !='contract'" options="{'no_create': True,'no_create_edit': True}" string="Nomor Kontrak"
                                context="{'is_employee': 1,'employee_name': name,'area': area,'branch': branch_id,'department': department_id,'job_id': job_id}" />
-                        <label for="contract_id" required="job_status !='contract'" string="Masa Kontrak"/>
+                        <label for="contract_id" required="job_status =='contract'" string="Masa Kontrak"/>
                         <div class="o_row" required="job_status !='contract'">
                             <field name="contract_datefrom" invisible="job_status !='contract'" 
                             required="job_status_type =='contract'" 
@@ -193,13 +193,10 @@
                             <field name="contract_dateto" invisible="job_status !='contract'" 
                             required="job_status_type =='contract'" />
                         </div> 
-                        <field name="kontrak_medis" invisible="job_status not in ('partner_doctor')" />
-                        <field name="sip_number" invisible="kontrak_medis == False"   />
-                        <label for="contract_id" invisible="kontrak_medis == False" string="Masa Berlaku SIP"/>
-                        <div class="o_row"  invisible="kontrak_medis == False">
-                            <field name="sip_date_from" invisible="kontrak_medis == False"/> s/d
-                            <field name="sip_date_to" invisible="kontrak_medis == False" />
-                        </div>
+                        <field name="kontrak_medis" invisible="job_status not in ('partner_doctor', 'contract', 'permanent')" readonly="job_status == 'partner_doctor'"/>
+                        <field name="sip_number" invisible="kontrak_medis == False" />
+                        <field name="sip_date_from" invisible="kontrak_medis == False"/>
+                        <field name="sip_date_to" invisible="kontrak_medis == False" />
                         <field name="competence" invisible="kontrak_medis == False" />
                         <label for="ws_day" string="Working Service" invisible="job_status !='permanent'" />
                         <div class="o_row" invisible="job_status !='permanent'">
