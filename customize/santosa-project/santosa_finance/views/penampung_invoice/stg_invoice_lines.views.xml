@@ -129,7 +129,7 @@
 
         </record>
        
-        <menuitem id="stg_invoice_lines" name="STG - Invoice Details" sequence='15' parent="stg_invoice_root" action="santosa_finance_stg_invoice_lines_action"/>
+        <menuitem id="stg_invoice_lines" name="Invoice Details" sequence='15' parent="stg_invoice_root_invoice" action="santosa_finance_stg_invoice_lines_action"/>
 
     </data>
 </odoo>

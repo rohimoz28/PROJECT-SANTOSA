@@ -61,6 +61,8 @@
         'views/sales_point_coa_config/spcc.action.views.xml',
         'views/master_data/menuitem_master.views.xml',
         'views/transaction/menu_transaction.views.xml',
+        'views/penampung_invoice/stg_claim_headers_views.xml',
+        'views/penampung_invoice/stg_claim_lines_views.xml',
         'data/sequence.xml',
         # 'views/master.views.xml',
     ],

@@ -228,6 +228,10 @@ class HrEmployee(models.Model):
     competence = fields.Text(string="Kompetensi")
     list_skill = fields.Text(string="Kompetensi", compute="result_skill", store=True)
 
+    def bypass_sip(self):
+        for line in self:
+            pass
+
     @api.depends('kontrak_medis_id')    
     def get_detail_sip(self):
         for record in self:
