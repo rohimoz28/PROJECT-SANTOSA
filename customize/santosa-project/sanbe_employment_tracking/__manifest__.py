@@ -17,7 +17,7 @@
     'website': "http://www.yourcompany.com",
     'category': 'Uncategorized',
     'version': '0.1',
-    'depends': ['base','hr','base_territory'],
+    'depends': ['base','hr','base_territory','sanbe_hr_extended'],
     'data': [
         'views/hr_employment_tracking.xml',
         'views/hr_emploment_log.xml',

@@ -62,8 +62,7 @@ class HrEmployeeMutation(models.Model):
     
     # ------------------------------------------------------------------------------------------------
      
-    alldepartment = fields.Many2many('hr.department', 'hr_department_rel', string='All Department',
-                                     compute='_isi_department_branch', store=False)                
+    alldepartment = fields.Many2many('hr.department', 'hr_department_rel', string='All Department',  store=False)                
     division_id = fields.Many2one('sanhrms.division',string='Divisi', related='emp_nos.division_id')
     directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', related='emp_nos.directorate_id')
     employee_group1s = fields.Many2one('emp.group',
@@ -75,7 +74,7 @@ class HrEmployeeMutation(models.Model):
     seciality = fields.Many2one('hr.profesion.special','Kategori Khusus', related='emp_nos.seciality')
     depart_id = fields.Many2one('hr.department', compute = '_find_department_id',  string='Departemen', store=True, related='emp_nos.department_id')
     hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen', related='emp_nos.hrms_department_id')
-    job_status_id = fields.Many2one('sanhrms.job.status',required=True, string='Status Pekerjaan', related='emp_nos.job_status_id')
+    job_status_id = fields.Many2one('sanhrms.job.status', string='Status Pekerjaan', related='emp_nos.job_status_id')
     
     employee_level = fields.Char('Employee Level', related="employee_levels.name")
     employee_levels = fields.Many2one('employee.level', string='Employee Level',related="emp_nos.employee_levels", store=True)
@@ -106,7 +105,7 @@ class HrEmployeeMutation(models.Model):
                                    ('partner_doctor', 'Dokter Mitra'),
                                    ('visitor', 'Visitor'),
                                    ], default='contract', tracking=True, related="emp_nos.job_status", string='Status Hubungan Kerja')
-    job_status_id = fields.Many2one('sanhrms.job.status',required=True, string='Status Pekerjaan',related="emp_nos.job_status_id", store=True)
+    job_status_id = fields.Many2one('sanhrms.job.status', string='Status Pekerjaan',related="emp_nos.job_status_id", store=True)
     job_status_type = fields.Selection(related='job_status_id.type',store=True)
     # employementstatus = fields.Char('Employment Status')
     emp_status = fields.Selection([('probation', 'Probation'),
@@ -163,8 +162,8 @@ class HrEmployeeMutation(models.Model):
                                    ('contract', 'Karyawan Kontrak (PKWT)'),
                                    ('partner_doctor', 'Dokter Mitra'),
                                    ('visitor', 'Visitor'),
-                                   ], default='contract', tracking=True, string='Status Hubungan Kerja')
-    service_job_status_id = fields.Many2one('sanhrms.job.status',required=True, string='Status Pekerjaan', default=lambda self:self.emp_nos.job_status_id.id)
+                                   ], tracking=True, string='Status Hubungan Kerja', default=lambda self:self.emp_nos.job_status )
+    service_job_status_id = fields.Many2one('sanhrms.job.status', string='Status Pekerjaan', default=lambda self:self.emp_nos.job_status_id.id)
     service_job_status_type = fields.Selection(store=True, default=lambda self:self.emp_nos.job_status_type, related='service_job_status_id.type')
     service_employementstatus = fields.Selection([('probation', 'Probation'),
                                                   ('confirmed', 'Confirmed'),
@@ -357,10 +356,10 @@ class HrEmployeeMutation(models.Model):
                 return
             myemp = existing.emp_nos
             empgroup = existing.emp_nos.employee_group1
-            if existing.state == 'draft':
-                myemp.write({'state': 'hold'})
-            else:
-                myemp.write({'state': 'approved'})
+            # if existing.state == 'draft':
+            #     myemp.write({'state': 'hold'})
+            # else:
+            #     myemp.write({'state': 'approved'})
             existing.service_identification = myemp.identification_id
             existing.emp_no = myemp.employee_id
             existing.nik = str(myemp.nik)
