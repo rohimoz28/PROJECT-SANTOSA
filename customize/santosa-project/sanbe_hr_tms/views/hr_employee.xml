@@ -11,7 +11,7 @@
                 <xpath expr="//field[@name='nik_lama']" position="after">
                     <field name="badges_nos" widget="many2many_tags" 
                            required="1" context="{'employee_nik': nik}"
-                           string="Kode Absen"   readonly="('state','!=','draft')" />
+                           string="Kode Absen"   readonly="(state != 'draft')" />
                 </xpath>
             </field>
         </record>
