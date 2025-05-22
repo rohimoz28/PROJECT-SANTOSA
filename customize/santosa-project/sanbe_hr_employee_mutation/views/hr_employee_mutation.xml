@@ -59,7 +59,7 @@
                         <field name="state" widget="statusbar"
                             statusbar_visible="draft,approved" invisible="service_type == 'muta'" />
                         <field name="state" widget="statusbar"
-                            statusbar_visible="draft,intransfer,accept,approved"
+                            statusbar_visible="draft,approved"
                             invisible="service_type != 'muta'" />
                     </header>
                     <group name="emp_mutation" string="Employee Mutation">
