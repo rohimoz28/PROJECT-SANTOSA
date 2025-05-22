@@ -35,11 +35,10 @@
                 <attribute name="class">o_horizontal_scroll</attribute>
             </xpath>
             <!-- delete original chatter -->
-            <xpath expr="//div[@class='oe_chatter']" position="replace">
-                <!-- kosong = menghapus -->
-            </xpath>
+            <xpath expr="//div[@class='oe_chatter']" position="replace"/>
+
             <!-- chatter below the sheet -->
-            <xpath expr="//sheet" position="after">
+            <xpath expr="//notebook" position="after">
                 <div class="oe_chatter" role="complementary">
                     <field name="message_follower_ids"/>
                     <field name="activity_ids"/>
