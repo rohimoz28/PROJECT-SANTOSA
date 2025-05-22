@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_stg_claim_lines_tree" model="ir.ui.view">
+        <field name="name">santosa_finance.stg_claim_lines.tree</field>
+        <field name="model">santosa_finance.stg_claim_lines</field>
+        <field name="arch" type="xml">
+            <tree string="Claim Lines"   class="o_horizontal_scroll">
+                <field name="TAGKlaimNo" optional='show'/>
+                <field name="TAGKlaimDate" optional='show'/>
+                <field name="TAGKlaimSent" optional='show'/>
+                <field name="TAGKlaimDueDate" optional='show'/>
+                <field name="TAGKlaimLastStatus" optional='show'/>
+                <field name="RefNo_FPKNo" optional='show'/>
+                <field name="EnteredDate" optional='show'/>
+                <field name="ModifiedDate" optional='show'/>
+                <field name="PopulatedTime" optional='show'/>
+                <field name="Binary_Checksum" optional='show'/>
+                <field name="Medrec" optional='hide'/>
+                <field name="PatientName" optional='hide'/>
+                <field name="SEPNo" optional='hide'/>
+                <field name="PenjaminCode" optional='hide'/>
+                <field name="PenjaminName" optional='hide'/>
+                <field name="COBName" optional='hide'/>
+                <field name="PayorCode" optional='hide'/>
+                <field name="PayorName" optional='hide'/>
+                <field name="AmountKlaim" optional='hide'/>
+                <field name="Description" optional='hide'/>
+                <field name="IsCetak" optional='hide'/>
+                <field name="PrintDate" optional='hide'/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_stg_claim_lines_form" model="ir.ui.view">
+        <field name="name">santosa_finance.stg_claim_lines.form</field>
+        <field name="model">santosa_finance.stg_claim_lines</field>
+        <field name="arch" type="xml">
+            <form string="Claim Line">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="TAGKlaimNo"/>
+                            <field name="TAGKlaimDate"/>
+                            <field name="TAGKlaimSent"/>
+                            <field name="TAGKlaimDueDate"/>
+                            <field name="TAGKlaimLastStatus"/>
+                            <field name="RefNo_FPKNo"/>
+                            <field name="EnteredDate"/>
+                            <field name="ModifiedDate"/>
+                            <field name="PopulatedTime"/>
+                            <field name="Binary_Checksum"/>
+                        </group>
+                        <group string="Patient Info">
+                            <field name="Medrec"/>
+                            <field name="PatientName"/>
+                            <field name="SEPNo"/>
+                            <field name="PenjaminCode"/>
+                            <field name="PenjaminName"/>
+                            <field name="COBName"/>
+                            <field name="PayorCode"/>
+                            <field name="PayorName"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                        </group>
+                        <group>
+                            <field name="AmountKlaim"/>
+                            <field name="Description"/>
+                            <field name="IsCetak"/>
+                            <field name="PrintDate"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="santosa_finance_stg_claim_detail_action" model="ir.actions.act_window">
+        <field name="name">Klaim Detail</field>
+        <field name="res_model">santosa_finance.stg_claim_lines</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="stg_claim_detail"
+              name="Klaim Detail"
+              parent="stg_invoice_root_claim"
+              action="santosa_finance_stg_claim_detail_action"/>
+</odoo>

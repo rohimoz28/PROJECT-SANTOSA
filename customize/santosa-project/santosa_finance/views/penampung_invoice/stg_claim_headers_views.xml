@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_tree_stg_claim_headers" model="ir.ui.view">
+        <field name="name">santosa_finance.stg_claim_headers.tree</field>
+        <field name="model">santosa_finance.stg_claim_headers</field>
+        <field name="arch" type="xml">
+            <tree string="Claim Headers"  class="o_horizontal_scroll">
+                <field name="PayorCode" optional='show'/>
+                <field name="PayorName"  optional='show'/>
+                <field name="TAGKlaimNo" optional='show'/>
+                <field name="TAGKlaimDate" optional='show'/>
+                <field name="TAGKlaimSent" optional='show'/>
+                <field name="TAGKlaimDueDate" optional='show'/>
+                <field name="StatusRecord" optional='show'/>
+                <field name="TAGCountDetail" optional='show'/>
+                <field name="TotalAmountKlaim" optional='hide'/>
+                <field name="PeriodeAwal" optional='hide'/>
+                <field name="PeriodeAkhir" optional='hide'/>
+                <field name="TableInfo" optional='hide'/>
+                <field name="RowKey" optional='hide'/>
+                <field name="EnteredDate"  optional='hide'/>
+                <field name="ModifiedDate" optional='hide'/>
+                <field name="PopulatedTime" optional='hide'/>
+                <field name="Binary_Checksum" optional='hide'/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_form_stg_claim_headers" model="ir.ui.view">
+        <field name="name">santosa_finance.stg_claim_headers.form</field>
+        <field name="model">santosa_finance.stg_claim_headers</field>
+        <field name="arch" type="xml">
+            <form string="Claim Header">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="PayorCode"/>
+                            <field name="PayorName"/>
+                            <field name="TAGKlaimNo"/>
+                            <field name="TAGKlaimDate"/>
+                            <field name="TAGKlaimSent"/>
+                            <field name="TAGKlaimDueDate"/>
+                            <field name="StatusRecord"/>
+                            <field name="TAGCountDetail"/>
+                            <field name="TotalAmountKlaim"/>
+                        </group>
+                        <group>
+                            <field name="PeriodeAwal"/>
+                            <field name="PeriodeAkhir"/>
+                            <field name="TableInfo"/>
+                            <field name="RowKey"/>
+                            <field name="EnteredDate"/>
+                            <field name="ModifiedDate"/>
+                            <field name="PopulatedTime"/>
+                            <field name="Binary_Checksum"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="santosa_finance_stg_claim_headers_action" model="ir.actions.act_window">
+        <field name="name">Claim Headers</field>
+        <field name="res_model">santosa_finance.stg_claim_headers</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_tree_stg_claim_headers"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first claim header
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="stg_claim_headers" name="Klaim Headers" parent="stg_invoice_root_claim" action="santosa_finance_stg_claim_headers_action"/>
+</odoo>

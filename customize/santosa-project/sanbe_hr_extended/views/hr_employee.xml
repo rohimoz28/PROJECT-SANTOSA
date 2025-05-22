@@ -20,15 +20,15 @@
                 <xpath expr="//field[@name='work_phone']" position="before">
 
                     <field name="state" invisible="1"/>
-                    <field name="area" options="{'no_create': True,'no_create_edit': True}" required="1" readonly="('state','!=','draft')" />
-                    <field name="branch_ids" invisible="1"  readonly="('state','!=','draft')" />
-                    <field name="alldepartment" invisible="1"  readonly="('state','!=','draft')" />
-                    <field name="branch_id" options="{'no_create': True,'no_create_edit': True}" string = "Unit Bisnis" required="1"  readonly="('state','!=','draft')" />
-                    <field name="directorate_id" options="{'no_create': True,'no_create_edit': True}" domain="[('branch_id','=',branch_id)]"  string = "Direktorat" required='1'  readonly="('state','!=','draft')" />
-                    <field name="hrms_department_id" options="{'no_create': True,'no_create_edit': True}" domain="[('directorate_id','=',directorate_id)]" string = "Departemen" required='1'  readonly="('state','!=','draft')" />
-                    <field name="division_id" options="{'no_create': True,'no_create_edit': True}" domain="[('department_id','=',hrms_department_id)]" string = "Divisi" required='1'  readonly="('state','!=','draft')" />
-                    <field name="job_id" options="{'no_create': True,'no_create_edit': True}" domain="[('division_id','=',division_id)]"  required="1" string="Jabatan" readonly="('state','!=','draft')" />
-                    <field name="parent_id" options="{'no_create': True,'no_create_edit': True}" domain="[('id', '!=', id),('branch_id','=',branch_id)]" string="Atasan Langsung"  readonly="('state','!=','draft')" />
+                    <field name="area" options="{'no_create': True,'no_create_edit': True}" required="1" readonly="(state != 'draft')" />
+                    <field name="branch_ids" invisible="1"  readonly="(state != 'draft')" />
+                    <field name="alldepartment" invisible="1"  readonly="(state != 'draft')" />
+                    <field name="branch_id" options="{'no_create': True,'no_create_edit': True}" string = "Unit Bisnis" required="1"  readonly="( state != 'draft')" />
+                    <field name="directorate_id" options="{'no_create': True,'no_create_edit': True}" domain="[('branch_id','=',branch_id)]"  string = "Direktorat" required='1'  readonly="(state != 'draft')" />
+                    <field name="hrms_department_id" options="{'no_create': True,'no_create_edit': True}" domain="[('directorate_id','=',directorate_id)]" string = "Departemen" required='1'  readonly="(state != 'draft')" />
+                    <field name="division_id" options="{'no_create': True,'no_create_edit': True}" domain="[('department_id','=',hrms_department_id)]" string = "Divisi" required='1'  readonly="(state != 'draft')" />
+                    <field name="job_id" options="{'no_create': True,'no_create_edit': True}" domain="[('division_id','=',division_id)]"  required="1" string="Jabatan" readonly="(state != 'draft')" />
+                    <field name="parent_id" options="{'no_create': True,'no_create_edit': True}" domain="[('id', '!=', id),('branch_id','=',branch_id)]" string="Atasan Langsung"  readonly="(state != 'draft')" />
                 </xpath>
                 <xpath expr="//field[@name='work_phone']" position="attributes">
                     <attribute name="invisible">1</attribute>
@@ -57,8 +57,8 @@
                 </xpath>
                 
                 <xpath expr="//field[@name='coach_id']" position="before">
-                    <field name="work_unit" string="Unit Kerja"  readonly="('state','!=','draft')" />
-                    <field name="work_unit_id" string="Posisi Unit Kerja" options="{'no_create': True,'no_create_edit': True}"  readonly="('state','!=','draft')" />
+                    <field name="work_unit" string="Unit Kerja"  readonly="(state !='draft')" />
+                    <field name="work_unit_id" string="Posisi Unit Kerja" options="{'no_create': True,'no_create_edit': True}"  readonly="(state != 'draft')" />
                 </xpath>
                 <xpath expr="//field[@name='coach_id']" position="attributes">
                     <attribute name="string">Atasan Unit Kerja</attribute>
@@ -67,9 +67,9 @@
                     <attribute name="readonly">state not in ['draft']</attribute>
                 </xpath>
                 <xpath expr="//field[@name='coach_id']" position="after">
-                    <field name="medic" options="{'no_create': True,'no_create_edit': True}"  readonly="('state','!=','draft')" />
-                    <field name="nurse" options="{'no_create': True,'no_create_edit': True}"  readonly="('state','!=','draft')" />
-                    <field name="seciality" options="{'no_create': True,'no_create_edit': True}"  readonly="('state','!=','draft')" />
+                    <field name="medic" options="{'no_create': True,'no_create_edit': True}"   readonly="(state !='draft')" />
+                    <field name="nurse" options="{'no_create': True,'no_create_edit': True}"   readonly="(state !='draft')" />
+                    <field name="seciality" options="{'no_create': True,'no_create_edit': True}"   readonly="(state !='draft')" />
                 </xpath>
                 <xpath expr="//field[@name='work_email']" position="attributes">
                     <attribute name="invisible">1</attribute>
@@ -103,13 +103,13 @@
                     <attribute name="readonly">0</attribute>
                 </xpath> 
                 <xpath expr="//field[@name='identification_id']" position="after">
-                    <field name="nik" required="1" force_save="1" readonly="('state','!=','draft')" />
-                    <field name="nik_lama" force_save="1" readonly="('state','!=','draft')" />
-                    <field name="no_ktp" required="1" readonly="('state','!=','draft')" />
-                    <field name="doc_ktp" widget="many2many_binary" string="Dokumen KTP" readonly="('state','!=','draft')"/>
-                    <field name="no_npwp" required="1" string="No. NPWP"  readonly="('state','!=','draft')" />
-                    <field name="doc_npwp" widget="many2many_binary" string="Dokumen NPWP" readonly="('state','!=','draft')"/>
-                    <field name="nama_pekerjaans" invisible="1" readonly="('state','!=','draft')"/>
+                    <field name="nik" required="1" force_save="1"  readonly="(state !='draft')" />
+                    <field name="nik_lama" force_save="1"  readonly="(state !='draft')" />
+                    <field name="no_ktp" required="1"  readonly="(state !='draft')" />
+                    <field name="doc_ktp" widget="many2many_binary" string="Dokumen KTP"  readonly="(state !='draft')" />
+                    <field name="no_npwp" required="1" string="No. NPWP"   readonly="(state !='draft')" />
+                    <field name="doc_npwp" widget="many2many_binary" string="Dokumen NPWP"  readonly="(state !='draft')" />
+                    <field name="nama_pekerjaans" invisible="1"  readonly="(state !='draft')" />
                     <field name="no_sim" required="nama_pekerjaans =='Driver'" string="Nomor SIM"   />
                 </xpath>
                 <xpath expr="//field[@name='children']" position="attributes">
@@ -136,9 +136,9 @@
                             </div>
 
                             <field name="name" placeholder="Nama karyawan" required="True"
-                                style="font-size: min(4vw, 2.6rem);" readonly="('state','!=','draft')"/>
+                                style="font-size: min(4vw, 2.6rem);" readonly="(state !='draft')" />
                         </h1>
-                        <field name="initial" placeholder="Inisial"  />
+                        <field name="initial" placeholder="Inisial"  readonly="(state !='draft')" />
                     </div>
                 </xpath>
                 <xpath expr="//page[@name='personal_information']/group/group[1]"
@@ -185,7 +185,7 @@
                         <field name="join_date" required="job_status =='permanent'" string="Tanggal Bergabung" />
                         <field name="contract_id" invisible="job_status !='contract'" options="{'no_create': True,'no_create_edit': True}" string="Nomor Kontrak"
                                context="{'is_employee': 1,'employee_name': name,'area': area,'branch': branch_id,'department': department_id,'job_id': job_id}" />
-                        <label for="contract_id" required="job_status !='contract'" string="Masa Kontrak"/>
+                        <label for="contract_id" required="job_status =='contract'" string="Masa Kontrak"/>
                         <div class="o_row" required="job_status !='contract'">
                             <field name="contract_datefrom" invisible="job_status !='contract'" 
                             required="job_status_type =='contract'" 
@@ -193,13 +193,10 @@
                             <field name="contract_dateto" invisible="job_status !='contract'" 
                             required="job_status_type =='contract'" />
                         </div> 
-                        <field name="kontrak_medis" invisible="job_status not in ('partner_doctor')" />
-                        <field name="sip_number" invisible="kontrak_medis == False"   />
-                        <label for="contract_id" invisible="kontrak_medis == False" string="Masa Berlaku SIP"/>
-                        <div class="o_row"  invisible="kontrak_medis == False">
-                            <field name="sip_date_from" invisible="kontrak_medis == False"/> s/d
-                            <field name="sip_date_to" invisible="kontrak_medis == False" />
-                        </div>
+                        <field name="kontrak_medis" invisible="job_status not in ('partner_doctor', 'contract', 'permanent')" readonly="job_status == 'partner_doctor'"/>
+                        <field name="sip_number" invisible="kontrak_medis == False" />
+                        <field name="sip_date_from" invisible="kontrak_medis == False"/>
+                        <field name="sip_date_to" invisible="kontrak_medis == False" />
                         <field name="competence" invisible="kontrak_medis == False" />
                         <label for="ws_day" string="Working Service" invisible="job_status !='permanent'" />
                         <div class="o_row" invisible="job_status !='permanent'">
@@ -217,8 +214,8 @@
                             </div>
                         </div>
                         <field name="employee_levels" options="{'no_create': True,'no_quick_create': True}" string="Level"/>
-                        <field name="employee_group1s" string="Group Penggajian" required="1" />
-                        <field name="employee_group1" invisible ="1" string="Employee Group"/>
+                        <field name="employee_group1s" string="Group Penggajian" required="1"  readonly="(state !='draft')"/>
+                        <field name="employee_group1" invisible ="1" string="Employee Group"  readonly="(state !='draft')"/>
                         <field name="apoteker" invisible="employee_group1 !='group3'" />
                         <field name="attachment_contract" invisible="1" />
                     </group>
@@ -308,21 +305,21 @@
                     <page name="Tunjangan dan Manfaat" class="o_hr_contract_salary_information">
                         <group name="salary_info">
                             <group string="Tunjangan">
-                                <field name="attende_premie"  readonly="('state','!=','draft')" />
-                                <field name="allowance_jemputan"  readonly="('state','!=','draft')" />
-                                <field name="allowance_ot"  readonly="('state','!=','draft')" />
-                                <field name="allowance_transport"  readonly="('state','!=','draft')" />
-                                <field name="allowance_meal"  readonly="('state','!=','draft')" />
-                                <field name="allowance_night_shift" readonly="('state','!=','draft')" />
+                                <field name="attende_premie"   readonly="(state !='draft')" />
+                                <field name="allowance_jemputan"  readonly="(state !='draft')" />
+                                <field name="allowance_ot"   readonly="(state !='draft')" />
+                                <field name="allowance_transport"   readonly="(state !='draft')" />
+                                <field name="allowance_meal"   readonly="(state !='draft')" />
+                                <field name="allowance_night_shift"  readonly="(state !='draft')" />
                                 <field name="allowance_nightshift_amount" invisible="allowance_night_shift == False"/>
                             </group>
                             <group string="Manfaat">
                                 <field name="attende_premie_amount" invisible="attende_premie == False" required="attende_premie == True"/>
-                                <field name="jemputan_remarks"  readonly="('state','!=','draft')" />
-                                <field name="ot_remarks"  readonly="('state','!=','draft')" />
-                                <field name="transport_remarks"  readonly="('state','!=','draft')" />
-                                <field name="meal_remarks"  readonly="('state','!=','draft')" />
-                                <field name="allowance_nightshift_remarks"  readonly="('state','!=','draft')" />
+                                <field name="jemputan_remarks"   readonly="(state !='draft')" />
+                                <field name="ot_remarks"   readonly="(state !='draft')" />
+                                <field name="transport_remarks"  readonly="(state !='draft')" />
+                                <field name="meal_remarks"  readonly="(state !='draft')" />
+                                <field name="allowance_nightshift_remarks"  readonly="(state !='draft')" />
                             </group>
                         </group>
                     </page>
@@ -385,7 +382,7 @@
                     invisible="1"/>
                     <field name="emp_status" />
                     <field name="employee_levels"/>
-                    <field name="employee_group1s"/>
+                    <field name="employee_group1s" />
                 </xpath>
                 <xpath expr="//field[@name='work_phone']" position="replace" />
                 <xpath expr="//field[@name='work_email']" position="replace" />

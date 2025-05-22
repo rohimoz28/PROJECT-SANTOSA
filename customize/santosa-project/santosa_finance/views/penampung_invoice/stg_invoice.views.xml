@@ -1,5 +1,9 @@
 <odoo>
     <data>
-        <menuitem id="stg_invoice_root" name="STG - Invoice" sequence="99" groups="santosa_finance.group_admin_sanfi"/>
+        <menuitem id="stg_invoice_root" name="STG" sequence="99" groups="santosa_finance.group_admin_sanfi"/>
+        <menuitem id="stg_invoice_root_invoice" name="Invoice" sequence="10" parent="stg_invoice_root" groups="santosa_finance.group_admin_sanfi"/>
+        <menuitem id="stg_invoice_root_claim" name="Tagihan Klaim" sequence="20" parent="stg_invoice_root"  groups="santosa_finance.group_admin_sanfi"/>
+        <menuitem id="stg_invoice_root_pay" name="Pay" sequence="30" parent="stg_invoice_root" groups="santosa_finance.group_admin_sanfi"/>
+        <menuitem id="stg_invoice_root_master" name="Master" sequence="99" parent="stg_invoice_root" groups="santosa_finance.group_admin_sanfi"/>
     </data>
 </odoo>
