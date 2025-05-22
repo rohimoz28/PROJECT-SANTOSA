@@ -106,7 +106,7 @@
 
         </record>
 
-        <menuitem id="stg_invoice_headers" name="STG - Invoice Headers" parent="stg_invoice_root" action="santosa_finance_stg_invoice_headers_action"/>
+        <menuitem id="stg_invoice_headers" name="Invoice Headers" parent="stg_invoice_root_invoice" action="santosa_finance_stg_invoice_headers_action"/>
     </data>
 </odoo>
 

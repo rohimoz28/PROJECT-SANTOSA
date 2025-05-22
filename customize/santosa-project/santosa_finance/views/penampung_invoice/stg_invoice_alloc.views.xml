@@ -64,7 +64,7 @@
 
         </record>
 
-        <menuitem id="stg_invoice_alloc" name="STG - Invoice Alloc" parent="stg_invoice_root" action="santosa_finance_stg_invoice_alloc_action"/>
+        <menuitem id="stg_invoice_alloc" name="Invoice Alloc"  sequence="20" parent="stg_invoice_root_invoice" action="santosa_finance_stg_invoice_alloc_action"/>
     </data>
 </odoo>
 
