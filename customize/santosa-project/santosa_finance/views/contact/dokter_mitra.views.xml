@@ -17,6 +17,9 @@
                     <div />
                     <label for="is_supplier" string="Supplier?&#160;&#160;" invisible="is_dokter_mitra or is_customer "/>
                     <field name="is_supplier" string="Supplier?" invisible="is_dokter_mitra or is_customer "/>
+                    <div />
+                    <label for="external_id" string="External ID&#160;&#160;&#160;&#160;&#160;&#160;"/>
+                    <field name="external_id" string="External ID" placeholder="External ID"/>
                 </xpath>
                 <xpath expr="(//group)[1]" position="attributes">
                     <attribute name="invisible">1</attribute>

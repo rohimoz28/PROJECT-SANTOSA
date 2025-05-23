@@ -21,6 +21,7 @@ class ResPartner(models.Model):
     is_customer = fields.Boolean(string="Is Customer", compute="_compute_is_customer", inverse="_set_is_customer", store=True)
     is_supplier = fields.Boolean(string="Is Vendor", compute="_compute_is_supplier", inverse="_set_is_supplier", store=True)
     penjamin_code = fields.Integer()
+    external_id = fields.Char(string="External ID", )
 
     @api.depends('customer_rank')
     def _compute_is_customer(self):
