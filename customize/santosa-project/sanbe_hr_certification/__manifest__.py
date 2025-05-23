@@ -8,7 +8,7 @@
 	'category': 'Human Resources',
 	'version': '17.1.1',
 	'license': 'OPL-1',
-	'depends': ['base', 'hr'],
+	'depends': ['base', 'hr','sanbe_hr_menu'],
 	'price': 25.00,
 	'currency': 'EUR',
 	'support': 'xabre0010@gmail.com',

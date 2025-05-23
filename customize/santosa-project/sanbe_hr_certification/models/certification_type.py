@@ -15,9 +15,16 @@ _logger = logging.getLogger(__name__)
 class CertificationType(models.Model):
     _name = 'certification.type'
     _description = 'HR Employee Certification Type'
+    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin', 'utm.mixin']
+
 
     code = fields.Char(string='Kode',size=3,required=True)
-    name = fields.Char(string='Nama' ,required=True)
+    name = fields.Char(string='Nama' ,required=True, tracking=True)
+    active = fields.Boolean(string='Active' , default=True, tracking=True)
+    
+    _sql_constraints = [
+        ('code_unique', 'unique(code)', 'The certification Type must be unique.')
+    ]
 
 #     def _get_view(self, view_id=None, view_type='form', **options):
 #         arch, view = super()._get_view(view_id, view_type, **options)
@@ -31,8 +38,18 @@ class CertificationType(models.Model):
 #                           node.set('invisible', 'True')
 #         return arch, view
  
+    @api.model
+    def create(self, vals):
+        if 'code' in vals and vals['code']:
+            vals['code'] = vals['code'].upper()
+        return super(CertificationType, self).create(vals)
 
-    @api.depends('code','name')
+    def write(self, vals):
+        if 'code' in vals and vals['code']:
+            vals['code'] = vals['code'].upper()
+        return super(CertificationType, self).write(vals)
+
+    @api.depends('code', 'name')
     def _compute_display_name(self):
         for account in self:
-            account.display_name = f"[{account.code or ''}] {account.name}"
+            account.display_name = f"{account.name}"
