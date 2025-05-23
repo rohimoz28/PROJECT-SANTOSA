@@ -69,3 +69,8 @@ class AkunKategori(models.Model):
             CREATE INDEX IF NOT EXISTS idx_account_category 
             ON santosa_finance_akun_kategori (name, "SalesPoint", tipe);
         """)
+
+    def unlink(self):
+        for rec in self:
+            pass
+        return super().unlink()

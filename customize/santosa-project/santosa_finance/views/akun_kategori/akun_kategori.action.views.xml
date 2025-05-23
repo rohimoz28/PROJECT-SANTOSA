@@ -76,7 +76,7 @@
         <record id="santosa_finance_akun_kategori_action" model="ir.actions.act_window">
             <field name="name">Akun Kategori</field>
             <field name="res_model">santosa_finance.akun_kategori</field>
-            <field name="view_mode">tree,form,graph,pivot</field>
+            <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="akun_kategori_search"/>
             <field name="domain"></field>
 
