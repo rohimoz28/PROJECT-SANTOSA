@@ -194,7 +194,10 @@
                             <field name="contract_dateto" invisible="job_status !='contract'" 
                             required="job_status_type =='contract'" />
                         </div> 
-                        <field name="kontrak_medis" invisible="job_status not in ('partner_doctor', 'contract', 'permanent')" readonly="job_status == 'partner_doctor'"/>
+                        <field name="kontrak_medis" 
+                               invisible="job_status not in ('partner_doctor', 'contract', 'permanent')" 
+                               readonly="job_status == 'partner_doctor'" 
+                               force_save="1"/>
                         <field name="sip_number" invisible="kontrak_medis == False" />
                         <field name="sip_date_from" invisible="kontrak_medis == False"/>
                         <field name="sip_date_to" invisible="kontrak_medis == False" />
