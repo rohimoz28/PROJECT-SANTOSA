@@ -185,9 +185,37 @@ class HrEmployee(models.Model):
         default='draft')
     nama_pekerjaans = fields.Char(related='job_id.name', store=True)
     initial = fields.Char('Inisial')
+    
+    gender_selection = fields.Selection([('male', 'Laki-Laki'),
+                            ('female', 'Perempuan'),],compute="_get_gender_status",
+                            inverse='onchange_gender_selection', string='Status Pernikahan')
     marital = fields.Selection([('single', 'Single'),
                             ('married', 'Married'),
                             ('seperate', 'Seperate')], string='Status Pernikahan')
+    
+    marital_status = fields.Selection([('single', 'Belum Menikah'),
+                            ('married', 'Menikah'),
+                            ('seperate', 'Bercerai')],compute="_get_marital_status",
+                            inverse='onchange_marital_status',
+                             string='Status Pernikahan')
+
+    
+    @api.onchange('marital_status')        
+    def onchange_marital_status(self):
+        self.marital = self.marital_status
+    
+    @api.depends('marital')    
+    def _get_marital_status(self):
+        self.marital_status = self.marital
+
+    @api.onchange('gender_selection')    
+    def onchange_gender_selection(self):
+        self.gender = self.gender_selection
+    
+    @api.depends('gender')    
+    def _get_gender_status(self):
+        self.gender_selection = self.gender
+    
     work_unit = fields.Char('Work Unit')
     work_unit_id = fields.Many2one('hr.work.unit','Work Unit',tracking=True, )
     berat_badan = fields.Integer('Berat Badan (Kg)')
