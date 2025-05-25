@@ -8,7 +8,10 @@
             <field name="priority">1000</field>
             <field name="arch" type="xml">
                 <tree string="Certificated Type">
+                    <field name="code" />
                     <field name="name" />
+                    <field name="create_date" />
+                    <field name="write_date" />
                 </tree>
             </field>
         </record>
@@ -20,17 +23,21 @@
             <field name="priority" eval="8" />
             <field name="arch" type="xml">
                 <form string="Certificated Type">
-                    <div class="oe_title">
-                        <h1>
-                            <field name="name" readonly="1" />
-                        </h1>
+                    <group>
+                        <field name="name" placeholder="Tipe Sertipikat" /> 
+                        <field name="code" placeholder="Code" />
+                    </group>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
                     </div>
                 </form>
             </field>
         </record>
 
         <record model="ir.actions.act_window" id="act_open_certificated_type_view">
-            <field name="name">Certificated Type</field>
+            <field name="name">Tipe Sertipikat</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">certification.type</field>
             <field name="view_mode">tree,form</field>
@@ -63,5 +70,8 @@
             </field>
         </record>
 
+        <record id="sanbe_hr_menu.menu_certificate_type" model="ir.ui.menu">
+            <field name="name">Tipe Sertipikat</field>
+        </record>
     </data>
 </openerp>
