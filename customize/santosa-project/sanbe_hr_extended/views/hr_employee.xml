@@ -80,16 +80,17 @@
                     <attribute name="string">Nomor Kartu Keluarga</attribute>
                 </xpath>
                 <xpath expr="//field[@name='marital']" position="replace">
-                    <field name="marital" required="1" string="Status Perkawinan"/>
+                    <field name="marital" invisible="1" string="Status Perkawinan"/>
+                    <field name="marital_status" required="1" string="Status Perkawinan"/>
                 </xpath>
                 <xpath expr="//field[@name='birthday']" position="attributes">
                     <attribute name="required">1</attribute>
                 </xpath>
-                <xpath expr="//field[@name='gender']" position="attributes">
+                <!-- <xpath expr="//field[@name='gender']" position="attributes">
                     <attribute name="string">Jenis Kelamin</attribute>
                     <attribute name="required">1</attribute>
                     <attribute name="readonly">0</attribute>
-                </xpath>
+                </xpath> -->
                 <xpath expr="//field[@name='job_id']" position="attributes">
                     <attribute name="string">Jabatan</attribute>
                     <attribute name="options">{'no_create': True, 'no_open': True}</attribute>
@@ -228,7 +229,14 @@
                     <attribute name="string">Telepon</attribute>
                 </xpath>
                 <xpath expr="//field[@name='private_phone']" position="before">
-                    <field name="gender" string="Jenis Kelamin"/>
+                    <field name="gender" string="Jenis Kelamin" invisible="1" />
+                    <field name="gender_selection" string="Jenis Kelamin" required="1" />
+                </xpath>
+                <xpath expr="//field[@name='spouse_complete_name']" position="attributes">
+                    <attribute name="string">Nama Pasangan</attribute>
+                </xpath>
+                <xpath expr="//field[@name='spouse_birthdate']" position="attributes">
+                    <attribute name="string">Tanggal Lahir Pasangan</attribute>
                 </xpath>
                 <xpath expr="//field[@name='lang']" position="attributes">
                     <attribute name="string">Bahasa</attribute>
