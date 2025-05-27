@@ -50,13 +50,17 @@ class HRTraining(models.Model):
     date_start = fields.Date('Start Date Training',  default=fields.Date.today, required=True)
     date_end = fields.Date('Finish Training', required=True)
     
-    @api.constrains('date_start','date_end','date_start_bond','date_end_bond')
+    @api.constrains('date_start','date_end','is_bonding','date_start_bond','date_end_bond')
     def _check_validation_training(self):
         for record in self:
             if record.date_start > record.date_end :
                 raise UserError("harap masukan tangal peatihan yang sesuai")
-            if record.date_start_bond > record.date_end_bond :
-                raise UserError("harap masukan tanggal ikatan dinas yang benar")
+            if record.is_bonding:
+                if record.date_start_bond > record.date_end_bond :
+                    raise UserError("harap masukan tanggal ikatan dinas yang benar")
+            # else:
+            #     record.date_start_bond = False
+            #     record.date_end_bond = False
             
     invoiceable = fields.Boolean(default=False)
     type_payment = fields.Selection([
@@ -78,16 +82,8 @@ class HRTraining(models.Model):
         ('done', 'Valid')
     ], default='draft', tracking=True)
     descr = fields.Text("Description")
-    date_start_bond = fields.Date('Start Bonding', default=fields.Date.today)
+    date_start_bond = fields.Date('Start Bonding')
     date_end_bond = fields.Date('End Bonding')
-    
-    @api.constrains('date_start','date_end','date_start_bond','date_end_bond')
-    def _check_validation_training(self):
-        for record in self:
-            if record.date_start > record.date_end :
-                raise UserError("harap masukan tangal peatihan yang sesuai")
-            if record.date_start_bond > record.date_end_bond :
-                raise UserError("harap masukan tanggal ikatan dinas yang benar")
 
     @api.depends('invoiceable', 'type_payment', 'amount', 'employee_attende.amount')
     def _compute_total_amount(self):
@@ -154,23 +150,24 @@ class HRTraining(models.Model):
                         'date_end': rec.date_end,
                         'description': f"{att.employee_id.name} Telah LULUS dari Pelatihan {rec.name} yang diadakan {rec.name_institusi} dari tanggal {rec.date_start} hingga {rec.date_end}."
                     })
-                    # deliver to resume and skill employee
-                    emp_skill = self.env['hr.employee.skill'].search([
-                        ('employee_id', '=', att.employee_id.id),
-                        ('skill_id', '=', rec.skill_id.id),
-                        ('skill_type_id', '=', rec.skill_id.skill_type_id.id)
-                    ], limit=1)
-                    if not emp_skill:
-                        self.env['hr.employee.skill'].sudo().create({
-                            'employee_id': att.employee_id.id,
-                            'skill_id': rec.skill_id.id,
-                            'skill_type_id': rec.skill_id.skill_type_id.id,
-                            'skill_level_id': skill_level.id
-                        })
-                    elif emp_skill.skill_level_id.level_progress < skill_level.level_progress:
-                        emp_skill.sudo().write({
-                            'skill_level_id': skill_level.id
-                        })
+                    if rec.skill_id:
+                        # deliver to resume and skill employee
+                        emp_skill = self.env['hr.employee.skill'].search([
+                            ('employee_id', '=', att.employee_id.id),
+                            ('skill_id', '=', rec.skill_id.id),
+                            ('skill_type_id', '=', rec.skill_id.skill_type_id.id)
+                        ], limit=1)
+                        if not emp_skill:
+                            self.env['hr.employee.skill'].sudo().create({
+                                'employee_id': att.employee_id.id,
+                                'skill_id': rec.skill_id.id,
+                                'skill_type_id': rec.skill_id.skill_type_id.id,
+                                'skill_level_id': skill_level.id
+                            })
+                        elif emp_skill.skill_level_id.level_progress < skill_level.level_progress:
+                            emp_skill.sudo().write({
+                                'skill_level_id': skill_level.id
+                            })
             rec.readonly = True
             rec.state = 'done'
 
@@ -222,14 +219,16 @@ class HRTrainingAttendee(models.Model):
     
     certification_types_id = fields.Many2one('certification.type', string='Tipe Sertifikat', index=True,
         help="Defines the certification type.",related="order_id.certification_types_id")
+
      
-    @api.constrains('date_start','date_end','date_start_bond','date_end_bond')
+    @api.constrains('date_start','date_end','is_bonding','date_start_bond','date_end_bond')
     def _check_validation_training(self):
         for record in self:
             if record.date_start > record.date_end :
                 raise UserError("harap masukan tangal peatihan yang sesuai")
-            if record.date_start_bond > record.date_end_bond :
-                raise UserError("harap masukan tanggal ikatan dinas yang benar")
+            if record.is_bonding:
+                if record.date_start_bond > record.date_end_bond :
+                    raise UserError("harap masukan tanggal ikatan dinas yang benar")
             
     certivicate_id = fields.Many2one('hr.employee.certification')
     no_certivicate = fields.Char('No Sertipikat')
