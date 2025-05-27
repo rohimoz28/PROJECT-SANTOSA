@@ -74,7 +74,6 @@ class HrEmployeeMutation(models.Model):
     seciality = fields.Many2one('hr.profesion.special','Kategori Khusus', related='emp_nos.seciality')
     depart_id = fields.Many2one('hr.department', compute = '_find_department_id',  string='Departemen', store=True, related='emp_nos.department_id')
     hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen', related='emp_nos.hrms_department_id')
-    job_status_id = fields.Many2one('sanhrms.job.status', string='Status Pekerjaan', related='emp_nos.job_status_id')
     
     employee_level = fields.Char('Employee Level', related="employee_levels.name")
     employee_levels = fields.Many2one('employee.level', string='Employee Level',related="emp_nos.employee_levels", store=True)
