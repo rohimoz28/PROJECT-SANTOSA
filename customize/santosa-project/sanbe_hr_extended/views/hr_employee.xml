@@ -24,11 +24,11 @@
                     <field name="branch_ids" invisible="1"  readonly="(state != 'draft')" />
                     <field name="alldepartment" invisible="1"  readonly="(state != 'draft')" />
                     <field name="branch_id" options="{'no_create': True,'no_create_edit': True}" string = "Unit Bisnis" required="1"  readonly="( state != 'draft')" />
-                    <field name="directorate_id" options="{'no_create': True,'no_create_edit': True}" domain="[('branch_id','=',branch_id)]"  string = "Direktorat" required='1'  readonly="(state != 'draft')" />
+                    <field name="directorate_id" options="{'no_create': True,'no_create_edit': True}" domain="['|',('branch_id','=',branch_id),('branch_id','=',False)]"  string = "Direktorat" required='1'  readonly="(state != 'draft')" />
                     <field name="hrms_department_id" options="{'no_create': True,'no_create_edit': True}" domain="[('directorate_id','=',directorate_id)]" string = "Departemen" required='1'  readonly="(state != 'draft')" />
                     <field name="division_id" options="{'no_create': True,'no_create_edit': True}" domain="[('department_id','=',hrms_department_id)]" string = "Divisi" required='1'  readonly="(state != 'draft')" />
                     <field name="job_id" options="{'no_create': True,'no_create_edit': True}" domain="[('division_id','=',division_id)]"  required="1" string="Jabatan" readonly="(state != 'draft')" />
-                    <field name="parent_id" options="{'no_create': True,'no_create_edit': True}" domain="[('id', '!=', id),('branch_id','=',branch_id)]" string="Atasan Langsung"  readonly="(state != 'draft')" />
+                    <field name="parent_id" options="{'no_create': True,'no_create_edit': True}" domain="[('id', '!=', id),'|',('branch_id','=',branch_id),('branch_id','=',False)]" string="Atasan Langsung"  readonly="(state != 'draft')" />
                 </xpath>
                 <xpath expr="//field[@name='work_phone']" position="attributes">
                     <attribute name="invisible">1</attribute>
@@ -387,10 +387,8 @@
                 <xpath expr="//field[@name='department_id']" position="after">
                     <field name="alldepartment" column_invisible="1" />
                     <field name="job_id" />
-                    <field name="job_status"
-                    />
-                    <field name="job_status_id" 
-                    invisible="1"/>
+                    <field name="job_status" />
+                    <field name="job_status_id" invisible="1"/>
                     <field name="emp_status" />
                     <field name="employee_levels"/>
                     <field name="employee_group1s" />
