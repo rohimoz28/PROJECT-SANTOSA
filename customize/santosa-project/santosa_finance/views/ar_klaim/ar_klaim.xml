@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- view tree -->
+        <record id="ar_klaim_view_tree" model="ir.ui.view">
+            <field name="name">ar.klaim.view.tree</field>
+            <field name="model">ar.klaim</field>
+            <field name="arch" type="xml">
+                <tree string="AR Klaim" create="0">
+                    <field name="currency_id" column_invisible="1" />
+                    <field name="claim_date" optional="show" />
+                    <field name="claim_number" optional="show" />
+                    <field name="bill_number" optional="show" />
+                    <field name="guarantor" optional="show" />
+                    <field name="claim_value" optional="show" />
+                    <field name="payer" optional="show" />
+                    <field name="state" widget="badge"
+                        decoration-info="state == 'partial_settled'"
+                        decoration-warning="state == 'close'"
+                        decoration-success="state == 'in_process'"
+                        decoration-danger="state == 'cancel'"
+                        optional="show"
+                    />
+                </tree>
+            </field>
+        </record>
+        <!-- action window -->
+        <record id="ar_klaim_action" model="ir.actions.act_window">
+            <field name="name">AR Klaim</field>
+            <field name="res_model">ar.klaim</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <!-- form view -->
+        <record id="ar_klaim_form_view" model="ir.ui.view">
+            <field name="name">ar.klaim.form.view</field>
+            <field name="model">ar.klaim</field>
+            <field name="arch" type="xml">
+                <form string="Form AR Klaim">
+                    <header>
+                        <field name="state" widget="statusbar" options="{'clickable': '1'}" />
+                    </header>
+                    <group name="header">
+                        <field name="claim_date" />
+                        <field name="claim_number" />
+                        <field name="bill_number" />
+                        <field name="guarantor" />
+                        <field name="claim_value" />
+                        <field name="payer" />
+                        <field name="currency_id" invisible="1" />
+                    </group>
+                    <notebook>
+                        <page name="ar_klaim_detail" string="Details">
+                            <field name="ar_klaim_ids">
+                                <tree editable="bottom" class="o_horizontal_scroll">
+                                    <field name="currency_id" column_invisible="1" />
+                                    <field name="trx_number" optional="show"/>
+                                    <field name="invoice_id" optional="show"/>
+                                    <field name="Invoice_number" optional="show"/>
+                                    <field name="billing_date" optional="show"/>
+                                    <field name="sep_number" optional="show"/>
+                                    <field name="mr_number" optional="show"/>
+                                    <field name="invoice_amount" optional="show"/>
+                                    <button 
+                                        name="ar_klaim_invoice_detail_button" 
+                                        type="object" 
+                                        string="Detail"
+                                        class="fa fa-eye"
+                                    />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <!-- tracking log -->
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" />
+                        <field name="activity_ids" />
+                        <field name="message_ids" widget="mail_thread" />
+                    </div>
+                </form>
+            </field>
+        </record>
+        <menuitem
+            id="ar_klaim_menu"
+            name="AR Klaim"
+            parent="santosa_finance.transaction_sanfi_root"
+            sequence="20"
+            action="ar_klaim_action"
+        />
+    </data>
+</odoo>

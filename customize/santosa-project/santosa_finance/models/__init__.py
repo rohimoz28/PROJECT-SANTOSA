@@ -26,3 +26,4 @@ from . import stg_invoice_alloc
 from . import sales_point_coa_config
 from . import product_detail
 from . import report
+from . import ar_klaim
