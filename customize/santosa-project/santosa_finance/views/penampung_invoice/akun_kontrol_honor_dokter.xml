@@ -6,13 +6,19 @@
         <field name="name">view.santosa_finance.akun_kontrol_honor_dokter.tree</field>
         <field name="model">santosa_finance.akun_kontrol_honor_dokter</field>
         <field name="arch" type="xml">
-            <tree>
+            <!-- <tree> -->
+        <tree js_class="owl_export_controller" 
+        create="false" 
+        delete="false"
+        edit="false"
+        >
                 <field name="idTrx" column_invisible="1"/>
                 <field name="TrxDate"/>
                 <field name="TrxNo"/>
                 <field name="Invoice_date"/>
                 <field name="Invoice_No"/>
                 <field name="PenjaminName"/>
+                <field name="Penjaminid" column_invisible="1"/>
                 <field name="PiutangUsaha"/>
                 <field name="NoTrxKlaim"/>
                 <field name="PiutangKlaim"/>
@@ -25,7 +31,7 @@
             </tree>
         </field>
     </record>
-
+    
     <!-- View santosa_finance.akun_kontrol_honor_dokter form -->
     <record id="view_santosa_finance_akun_kontrol_honor_dokter_form" model="ir.ui.view">
         <field name="name">view.santosa_finance.akun_kontrol_honor_dokter.form</field>
@@ -47,6 +53,9 @@
                             <field name="TolakanKlaim"/>
                             <field name="FeeDokter"/>
                             <field name="BebanBiaya"/>
+                            <field name="PenjaminName"/>
+                            <field name="PiutangUsaha"/>
+                            <field name="Penjaminid" invisible="1"/>
                             <field name="invoice_id" invisible="1"/>
                             <field name="partner_id" invisible="1"/>
                         </group>

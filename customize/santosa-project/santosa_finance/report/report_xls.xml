@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+
+        <record id="rekap_honor_dokter_xlsx" model="ir.actions.report">
+            <field name="name">Rekap Honor Dokter</field>
+            <field name="model">santosa_finance.akun_kontrol_honor_dokter</field>
+            <field name="report_type">xlsx</field>
+            <field name="report_name">santosa_finance.rekap_honor_docter_xlsx</field>
+            <field name="report_file">santosa_finance.rekap_honor_docter_xlsx</field>
+            <field name="print_report_name">"akun_kontrol_honor_dokter"</field>
+            <field name="binding_model_id" ref="model_santosa_finance_akun_kontrol_honor_dokter"/>
+            <field name="binding_type">report</field>
+        </record>
+
+    </data>
+
+
+</odoo>

@@ -13,12 +13,12 @@ class Akun_kontrol_honor_dokter(models.Model):
 
     name = fields.Char('Name')
     idTrx = fields.Integer()
-    TrxDate = fields.Date('Tanggal TRX',related='invoice_id.transaction_date')
-    TrxNo = fields.Char('Nomor TRX',related='invoice_id.name')
-    Invoice_date = fields.Date('Tanggal Invoice',related='invoice_id.invoice_date')
-    Invoice_No = fields.Char('Nomor Invoice',related='invoice_id.temp_invoice_no')
-    PenjaminName = fields.Char('Nama Penjamin', related='invoice_id.penjamin_name_id.name')
-    Penjaminid = fields.Many2one('res.partner','Nama Penjamin', related='invoice_id.penjamin_name_id')
+    TrxDate = fields.Date('Tanggal TRX',related='invoice_id.invoice_date', store=True)
+    TrxNo = fields.Char('Nomor TRX',related='invoice_id.name', store=True)
+    Invoice_date = fields.Date('Tanggal Invoice',related='invoice_id.invoice_date' , store=True)
+    Invoice_No = fields.Char('Nomor Invoice',related='invoice_id.temp_invoice_no', store=True)
+    PenjaminName = fields.Char('Nama Penjamin', related='invoice_id.penjamin_name_id.name' , store=True)
+    Penjaminid = fields.Many2one('res.partner','Nama Penjamin', related='invoice_id.penjamin_name_id', store=True)
     PiutangUsaha = fields.Float('Piutang Usaha')
     NoTrxKlaim = fields.Char('Nomor Klaim')
     PiutangKlaim = fields.Float('Piutang Klaim')
@@ -42,6 +42,9 @@ class Akun_kontrol_honor_dokter(models.Model):
             }
         else:
             raise ValidationError("Invoice Belum Terisi!!!")
+        
+    def unlink(self):
+        return super(Akun_kontrol_honor_dokter, self).unlink()
                 
     def open_view_invoice(self):
         self.ensure_one()
