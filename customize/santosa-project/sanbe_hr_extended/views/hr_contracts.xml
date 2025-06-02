@@ -219,7 +219,8 @@
                     <field name="nik_lama"/>
                 </xpath>
                 <xpath expr="//field[@name='employee_id']" position="replace">
-                    <field name="employee_id" options="{'no_create': True,'no_create_edit': True}" context="{'search_by': 'No','search_by_name': False}" />
+                    <field name="employee_id" 
+                           options="{'no_create': True,'no_create_edit': True}"/>
                 </xpath>
                 <xpath expr="//field[@name='name']" position="attributes">
                     <attribute name="readonly">state in ['open','close']</attribute>
@@ -264,7 +265,7 @@
                     <attribute name="readonly">state in ['open','close']</attribute>
                 </xpath>
                 <xpath expr="//field[@name='employee_id']" position="after">
-                    <field name="emp_name"/>
+                    <field name="emp_id"/>
                 </xpath>
             </field>
         </record>

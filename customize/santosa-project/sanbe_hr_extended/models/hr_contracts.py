@@ -35,7 +35,14 @@ class HrContract(models.Model):
     alldepartment = fields.Many2many('hr.department', 'hr_department_rel', string='All Department',
                                      compute='_isi_department_branch', store=False)
     branch_id = fields.Many2one('res.branch', string='Business Unit', domain="[('id','in',branch_ids)]", tracking=True, default=lambda self: self.env.user.branch_id, required=True)
-                     
+    employee_id = fields.Many2one(
+        'hr.employee', 
+        string='Nama Karyawan', 
+        required=True, 
+        tracking=True, 
+        domain="[('state','not in',['hold']),('job_status','=','contract')]", 
+        index=True
+    )                 
     division_id = fields.Many2one('sanhrms.division',string='Divisi', related='employee_id.division_id')
     directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', related='employee_id.directorate_id')
     employee_group1s = fields.Many2one('emp.group',
@@ -45,7 +52,7 @@ class HrContract(models.Model):
     nurse = fields.Many2one('hr.profesion.nurse','Profesi Perawat', related='employee_id.nurse')
     job_id = fields.Many2one('hr.job','Jabatan', related='employee_id.job_id', readonly=True)
     seciality = fields.Many2one('hr.profesion.special','Kategori Khusus', related='employee_id.seciality')
-    employee_id = fields.Many2one('hr.employee', string='Karyawan', required=True, tracking=True, domain="[('state','not in',['hold']),('job_status','=','contract')]", index=True)
+    
     department_id = fields.Many2one('hr.department', compute = '_find_department_id',  string='Departemen', store=True, related='employee_id.department_id')
     hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen', related='employee_id.hrms_department_id')
     
@@ -76,7 +83,7 @@ class HrContract(models.Model):
     sallary_amount = fields.Monetary('Sallary Amount')
     nik = fields.Char('Nik')
     nik_lama = fields.Char('Nik Lama')
-    emp_id = fields.Char('Employee ID',related='employee_id.employee_id',readonly=True)
+    emp_id = fields.Char('ID Karyawan',related='employee_id.employee_id',readonly=True)
     emp_name = fields.Char('Nama Karyawan',related='employee_id.name',readonly=True)
     no_pkwt = fields.Selection([('1','1'),
                                 ('2','2'),
