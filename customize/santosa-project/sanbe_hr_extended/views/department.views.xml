@@ -8,6 +8,7 @@
                 <form multi_edit="1">
                     <sheet>
                         <div class="oe_title">
+                            <label for="name" string="Departemen" />
                             <h1>
                                 <field name="name" placeholder="Nama..." nolabel="1"/>
                             </h1>
@@ -20,7 +21,8 @@
                             <field name="department_code" string="Kode" required='1'/>
                             <field name="name" string="Nama"/>
                             <field name="branch_id" string="Unit Bisnis"/>
-                            <field name="directorate_id" string="Direktorat" domain=""  required='1'/>
+                            <field name="directorate_id" string="Direktorat" domain="['|',('branch_id','=',branch_id),('branch_id','=',False)]" required='1'/>
+                            <field name="directorate_code" string="Direktorat Kode" invisible="1"/>
                             <field name="division_ids" string="Divisi" widget='many2many_tags'/>
                             
                         </group>
@@ -41,6 +43,8 @@
                     <field name="department_code" required='1'/>
                     <field name="name" string="Nama" />
                     <field name="directorate_id" string="Direktorat"/>   
+                    <field name="directorate_code" string="Direktorat Kode" column_invisible="1"/>
+                    <field name="division_ids" string="Divisi" widget='many2many_tags'/>
                     <!-- <field name="division_ids" string="Divisi"/> -->
                 </tree>
                 
