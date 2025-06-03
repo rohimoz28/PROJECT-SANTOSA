@@ -74,9 +74,14 @@ class HRJob(models.Model):
     branch_ids = fields.Many2many('res.branch','res_branch_rel',string='AllBranch',compute='_isi_semua_branch',store=False)
     branch_id = fields.Many2one('res.branch',domain="[('id','in',branch_ids)]", string='Bisnis Unit')
     directorate_id = fields.Many2one('sanhrms.directorate', tracking=True, string='Direktorat')
+    directorate_code = fields.Char('Directorate Code',related='directorate_id.directorate_code')
+
     department_id = fields.Many2one('hr.department', compute = '_find_department_id',  string='Departemen', store=True, required=False)
     hrms_department_id = fields.Many2one('sanhrms.department', tracking=True, string='Departemen')
+    department_code = fields.Char('Departemen Code', related='hrms_department_id.department_code')
     division_id = fields.Many2one('sanhrms.division', tracking=True, string='Divisi')
+    division_code = fields.Char('Divisi Code', related='division_id.division_code')
+
 
     _sql_constraints = [
         ('name_company_uniq', 'check(1=1)', 'The name of the job position must be unique per department in company!'),

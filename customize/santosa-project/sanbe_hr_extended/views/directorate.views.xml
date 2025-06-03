@@ -8,6 +8,7 @@
                 <form multi_edit="1">
                     <sheet>
                         <div class="oe_title">
+                            <label for="name" string="Direktorat" />
                             <h1>
                                 <field name="name" placeholder="Nama..." nolabel="1" required='1'/>
                             </h1>
@@ -16,7 +17,7 @@
                             </h3>
                         </div>
                         <group>
-                            <field name="branch_id" string="Bisnis Unit" required='1'/>
+                            <field name="branch_id" string="Bisnis Unit" />
                             <field name="department_ids" string="Department" widget='many2many_tags'/>
                         </group>
                     </sheet>
@@ -34,13 +35,14 @@
                     <field name="branch_id" string="Unit Bisnis"/>
                     <field name="directorate_code" required='1'/>
                     <field name="name" string="Nama"/>
+                    <field name="department_ids" string="Department" widget='many2many_tags'/>
                 </tree>
             </field>
         </record>
         
 
         <record id="san_hrms_directorate_action" model="ir.actions.act_window">
-            <field name="name">Directorate</field>
+            <field name="name">Direktorat</field>
             <field name="res_model">sanhrms.directorate</field>
             <field name="view_mode">tree,form,graph,pivot</field>
             <field name="domain"></field>

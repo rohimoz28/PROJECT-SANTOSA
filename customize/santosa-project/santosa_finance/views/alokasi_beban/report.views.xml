@@ -77,6 +77,6 @@
             ]</field>
 
         </record>
-        <menuitem id="report_data" name="Report Journal" sequence='0' parent="santosa_finance.transaction_sanfi_root" action="santosa_finance_report_action"/>
+        <menuitem id="report_data" name="Report Journal" sequence='30' parent="santosa_finance.transaction_sanfi_root" action="santosa_finance_report_action"/>
     </data>
 </odoo>
