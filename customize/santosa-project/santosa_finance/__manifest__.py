@@ -15,7 +15,7 @@
     'category': 'Uncategorized',
     'version': '0.1',
 
-    'depends': ['base','mail','base_accounting_kit','base_account_budget','purchase','contacts','stock'],
+    'depends': ['base','mail', 'report_xlsx', 'account','base_accounting_kit','base_account_budget','purchase','contacts','stock'],
 
 		# Include ALL XML Code in Here be mindful of order
     'data': [
@@ -24,6 +24,8 @@
         'security/ir.model.access.csv',
         'security/access_group.xml',
         'views/menuitems.views.xml',
+        'wizards/export_honor_dokter.xml',
+        'report/report_xls.xml',
         'views/matrix_posting/matrix_posting_master.views.xml',
         'views/offset/offset_transaction_master.views.xml',
         'views/matrix_posting/matrix_posting_key.views.xml',
@@ -64,6 +66,7 @@
         'views/penampung_invoice/stg_claim_headers_views.xml',
         'views/penampung_invoice/stg_claim_lines_views.xml',
         'views/ar_klaim/ar_klaim.xml',
+        'views/penampung_invoice/akun_kontrol_honor_dokter.xml',
         'data/sequence.xml',
         # 'views/master.views.xml',
     ],
@@ -72,6 +75,12 @@
         'web.assets_backend': [
             # 'inventory_laptop/static/src/css/custom_style.css',
             # 'sidb/static/src/scss/profildesa.scss',
+            'hr_holidays/static/src/**/*',
+            # 'sanbe_hr_tms/static/src/**/*',
+            'santosa_finance/static/src/js/report_esm.js',
+            'santosa_finance/static/src/js/report_action.js',
+            'santosa_finance/static/src/js/export_button.js',
+            'santosa_finance/static/src/xml/export_button.xml',
             'santosa_finance/static/src/css/feature1.css',
         ],
     },
