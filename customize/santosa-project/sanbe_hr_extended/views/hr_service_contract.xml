@@ -13,6 +13,8 @@
                 <field name="department_id" optional="show"/>
                 <field name="division_id" optional="show"/>
                 <field name="job_id" optional="show"/>
+                <field name="competence" optional="hide"/>
+                <field name="kontrak_medis" optional="hide"/>
                 <field name="start_date" optional="show"/>
                 <field name="end_date" optional="show"/>
                 <field name="contract_type_id" optional="show"/>
@@ -68,6 +70,8 @@
                             <field name='division_id' force_save="1"/>
                             <field name='branch_id' string='Unit Bisnis' force_save="1"/>
                             <field name='job_id' force_save="1"/>
+                            <field name='kontrak_medis' force_save="1"/>
+                            <field name='competence'/>
                         </group>
                         <group name="top_info_right">
                             <field name="start_date" />
@@ -114,11 +118,11 @@
         </field>
     </record>
     <!-- menuitem -->
-    <menuitem 
+    <!-- <menuitem 
         id="hr_service_contract_menu"
         name="Kontrak Medis"
         parent="hr.menu_hr_employee_payroll"
         sequence="60"
         action="hr_service_contract_action"
-    />
+    /> -->
 </odoo>

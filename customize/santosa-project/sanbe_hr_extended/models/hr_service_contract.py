@@ -1,4 +1,5 @@
 from dateutil.relativedelta import relativedelta
+from odoo.exceptions import UserError
 from odoo import fields, models, api
 
 class ServiceContract(models.Model):
@@ -7,7 +8,7 @@ class ServiceContract(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
 
-    sip_number = fields.Char(string='Nomor SIP')
+    sip_number = fields.Char(string='Nomor SIP / Sertipikasi')
     contract_type_id = fields.Many2one('hr.contract.type', "Tipe Kontrak", tracking=True)
     employee_id = fields.Many2one(comodel_name='hr.employee',
                                            string='Nama Karyawan',
@@ -50,14 +51,14 @@ class ServiceContract(models.Model):
                                 ('4','4'),
                                 ('5','5')],
                                 string='Nomor PKWT')    
-    start_date = fields.Date(string='Tanggal Mulai', required=True)
-    end_date = fields.Date(string='Tanggal Berakhir', required=True)
+    start_date = fields.Date(string='Masa Berlaku SIP Dari', required=True)
+    end_date = fields.Date(string='Masa Berlaku SIP Hingga', required=True)
     company_id = fields.Many2one('res.company', compute='_compute_employee_contract', 
                                  store=True, readonly=False,
                                  default=lambda self: self.env.company, required=True)
-    kd_day = fields.Integer(string='Hari Kontrak Dinas', compute='_compute_kontrak_dinas', readonly=True)
-    kd_month = fields.Integer(string='Bulan Kontrak Dinas', compute='_compute_kontrak_dinas', readonly=True)
-    kd_year = fields.Integer(string='Tahun Kontrak Dinas', compute='_compute_kontrak_dinas', readonly=True)
+    kd_day = fields.Integer(string='Hari Kontrak Medis', compute='_compute_kontrak_dinas', readonly=True)
+    kd_month = fields.Integer(string='Bulan Kontrak Medis', compute='_compute_kontrak_dinas', readonly=True)
+    kd_year = fields.Integer(string='Tahun Kontrak Medis', compute='_compute_kontrak_dinas', readonly=True)
     contract_counts = fields.Integer(string='Jumlah Kontrak')
     attachment_contract =  fields.Many2many('ir.attachment',
                                             string='Dokumen Kontrak',
@@ -73,34 +74,60 @@ class ServiceContract(models.Model):
     salary_amount = fields.Monetary(string='Jumlah Gaji', currency_field='currency_id')
     notes = fields.Text(string='Catatan')
     state = fields.Selection([
-        # related='contract_id.state',
-        # string='Kontrak Status',
         ('draft', 'New'),
         ('open', 'Running'),
         ('close', 'Expired'),
         ('cancel', 'Cancelled'),
-    ], string='Status', tracking=True, help='Status Kontak Dinas'
+    ], 
+    string='Status', 
+    tracking=True, 
+    default="draft",
+    help='Status Kontrak Medis'
     )
-    
+    kontrak_medis = fields.Boolean(related="employee_id.kontrak_medis", string="kontrak medis", store=True)
+    competence = fields.Text(string="Kompetensi")
+
     
     def unlink(self):
         return super(ServiceContract, self).unlink()
+
+    # kondisi kontrak medis bernilai False di tabsheet form employee
+    @api.model
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        employee_id = self.env.context.get('default_employee_id')
+        if employee_id:
+            employee = self.env['hr.employee'].browse(employee_id)
+            if not employee.kontrak_medis:
+                raise UserError("Kontrak medis hanya bisa diisi jika flag kontrak medis bernilai True / dicentang.")
+        return res
     
-    @api.onchange('state')
-    def onchange_field(self):
-        for line in self:
-            if line.state ==  'open':
-                line.employee_id.kontrak_medis = True
-                line.employee_id.kontrak_medis_id = line.id
-                line.employee_id.sip_number = line.sip_number
-                line.employee_id.sip_date_from = line.start_date
-                line.employee_id.sip_date_to = line.end_date
-            else:
-                line.employee_id.kontrak_medis = False
-                line.employee_id.kontrak_medis_id = False
-                line.employee_id.sip_number = False
-                line.employee_id.sip_date_from = False
-                line.employee_id.sip_date_to = False
+    # kondisi kontrak medis bernilai False di form kontrak medis
+    @api.model
+    def create(self, vals):
+        employee_id = vals.get('employee_id')
+        if employee_id:
+            employee = self.env['hr.employee'].browse(employee_id)
+            if not employee.kontrak_medis:
+                raise UserError("Kontrak medis hanya bisa diisi jika flag kontrak medis bernilai True / dicentang.")     
+        return super().create(vals)
+
+    
+    # @api.onchange('state')
+    # def onchange_field(self):
+    #     for line in self:
+    #         if line.state ==  'open':
+    #             line.employee_id.kontrak_medis = True
+    #             line.employee_id.kontrak_medis_id = line.id
+    #             line.employee_id.sip_number = line.sip_number
+    #             line.employee_id.sip_date_from = line.start_date
+    #             line.employee_id.sip_date_to = line.end_date
+    #         else:
+    #             line.employee_id.kontrak_medis = False
+    #             line.employee_id.kontrak_medis_id = False
+    #             line.employee_id.sip_number = False
+    #             line.employee_id.sip_date_from = False
+    #             line.employee_id.sip_date_to = False
 
 
     @api.depends('hrms_department_id')
