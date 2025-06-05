@@ -74,7 +74,7 @@
                         <field name="directorate_id" options="{'no_create': True,'no_create_edit': True}" string = "Direktorat" required='1'/>
                         <field name="hrms_department_id" options="{'no_create': True,'no_create_edit': True}" string = "Departemen" required='1'/>
                         <field name="division_id" options="{'no_create': True,'no_create_edit': True}" string = "Divisi" required='1'/>
-                        <field name="work_unit_id" options="{'no_create': True,'no_create_edit': True}" string = "Unit Kerja" required="1"/>
+                        <field name="work_unit_id" options="{'no_create': True,'no_create_edit': True}" string = "Unit Kerja"/>
                         <field name="job_id" options="{'no_create': True,'no_create_edit': True}" string = "Jabatan" required='1' readonly="1" />
                         <label for="ws_day" string="Periode Kontrak"
                                 />
@@ -196,11 +196,9 @@
             <field name="inherit_id" ref="hr_payroll_account_community.hr_contract_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='journal_id']" position="after">
-                    <h5><strong>Profesi</strong></h5>
-                    <br/>
-                    <field name="medic" string="Medis"/>
-                    <field name="nurse" string="Perawat"/>
-                    <field name="seciality" string="Khusus"/>
+                    <field name="medic" string="Profesi Medis"/>
+                    <field name="nurse" string="Profesi Perawat"/>
+                    <field name="seciality" string="Kategori Khusus"/>
                 </xpath>
             </field>
         </record>
