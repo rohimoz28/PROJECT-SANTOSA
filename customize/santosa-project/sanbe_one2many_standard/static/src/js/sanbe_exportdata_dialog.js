@@ -234,6 +234,6 @@ patch(ExportDataDialog,{
         download: { type: Function },
         getExportedFields: { type: Function },
         root: { type: Object },
-        list: { type: Object },
+        list: { type: Object, optional: true },
     },
 });
