@@ -198,10 +198,10 @@
                                invisible="job_status not in ('partner_doctor', 'contract', 'permanent')" 
                                readonly="job_status == 'partner_doctor'" 
                                force_save="1"/>
-                        <field name="sip_number" invisible="kontrak_medis == False" />
+                        <!-- <field name="sip_number" invisible="kontrak_medis == False" />
                         <field name="sip_date_from" invisible="kontrak_medis == False"/>
-                        <field name="sip_date_to" invisible="kontrak_medis == False" />
-                        <field name="competence" invisible="kontrak_medis == False" />
+                        <field name="sip_date_to" invisible="kontrak_medis == False" /> -->
+                        <!-- <field name="competence" /> -->
                         <label for="ws_day" string="Working Service" invisible="job_status !='permanent'" />
                         <div class="o_row" invisible="job_status !='permanent'">
                             <label for="ws_year" string="Tahun" />
@@ -337,7 +337,7 @@
                 </xpath>
 
                 <xpath expr="//page[@name='hr_settings']" position="attributes">
-                    <attribute name="string">Pengaturan HR</attribute>
+                    <attribute name="invisible">1</attribute>
                 </xpath>
                 <xpath expr="//page[@name='hr_settings']//group[@name='active_group']//field[@name='employee_type']" position="attributes">
                     <attribute name="string">Jenis Karyawan</attribute>
@@ -359,7 +359,30 @@
                 </xpath>      
                 <xpath expr="//page[@name='hr_settings']//group[@name='application_group']" position="attributes">
                     <attribute name="string">Pengaturan Lamaran</attribute>
-                </xpath>                      
+                </xpath>
+                <!-- kontrak medis -->
+                <xpath expr="//page[@name='hr_settings']" position="before">
+                    <page name="medical_contract_tab" string="Kontrak Medis">
+                        <field name="medical_contract_ids" 
+                               mode="tree,form" 
+                               context="{'default_employee_id': active_id}">
+                            <tree>
+                                <field name="employee_id" optional="show"/>
+                                <field name="sip_number" optional="show"/>
+                                <field name="branch_id" optional="show"/>
+                                <field name="start_date" optional="show"/>
+                                <field name="end_date" optional="show"/>
+                                <field name="contract_type_id" optional="show"/>
+                                <field name="state" widget="badge"
+                                    decoration-info="state == 'draft'" 
+                                    decoration-warning="state == 'close'" 
+                                    decoration-success="state == 'open'"
+                                    decoration-danger="state == 'cancel'"
+                                    optional="show"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
             </field>
         </record>       
         <record id="view_employee_form" model="ir.ui.view">

@@ -234,7 +234,7 @@ class HrEmployee(models.Model):
         string='Jumlah Hari kerja',
         help='Jumlah Hari Kerja Dalam Satu Bulan',
         required=False)
-    kontrak_medis = fields.Boolean(string="Kontrak Medis")
+    kontrak_medis = fields.Boolean(string="Kontrak Medis", tracking=True)
     
     @api.constrains('no_ktp','no_sim','no_npwp','identification_id')
     def _check_numeric_reference(self):
@@ -249,29 +249,17 @@ class HrEmployee(models.Model):
                 raise UserError("No. Kartu Keluarga harus Numerik")
             
     kontrak_medis_id = fields.Many2one('hr.service.contract')
+    
+    medical_contract_ids = fields.One2many(
+        comodel_name='hr.service.contract',
+        inverse_name='employee_id',
+        string='Service Contract',
+    )
 
-    sip_number = fields.Char(string="Nomor SIP / Sertipikasi", help="Isi nomor SIP lewat menu kontrak medis")
-    sip_date_from = fields.Date(string="Masa Berlaku SIP Dari", help="Isi nomor SIP lewat menu kontrak medis")
-    sip_date_to = fields.Date(string="Masa Berlaku SIP Hingga", help="Isi nomor SIP lewat menu kontrak medis")
-    competence = fields.Text(string="Kompetensi")
-    list_skill = fields.Text(string="Kompetensi", compute="result_skill", store=True)
 
     def bypass_sip(self):
         for line in self:
             pass
-
-    @api.depends('kontrak_medis_id')    
-    def get_detail_sip(self):
-        for record in self:
-            skill_names = [skill.name for skill in record.skills_ids if skill.name]
-            record.competence = ', '.join(skill_names)
-
-
-    @api.depends('skill_ids')    
-    def result_skill(self):
-        for record in self:
-            skill_names = [skill.name for skill in record.skills_ids if skill.name]
-            record.competence = ', '.join(skill_names)
 
 
     # wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.", group_operator="avg")
