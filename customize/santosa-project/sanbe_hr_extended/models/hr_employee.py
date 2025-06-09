@@ -6,7 +6,7 @@
 # youtube   => https://www.youtube.com/channel/UCCtgLDIfqehJ1R8cohMeTXA
 #################################################################################
 import pytz
-from odoo import api, fields, models, _, Command
+from odoo import api, fields, models, _, Command, tools
 from odoo.exceptions import UserError
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -70,7 +70,7 @@ class HrEmployee(models.Model):
                                   store=False)
     alldepartment = fields.Many2many('hr.department', 'hr_department_rel', string='All Department',
                                      compute='_isi_department_branch', store=False)
-    branch_id = fields.Many2one('res.branch', string='Business Unit', domain="[('id','in',branch_ids)]", tracking=True, default=lambda self: self.env.user.branch_id, required=True)
+    branch_id = fields.Many2one('res.branch', string='unit Bisnis', domain="[('id','in',branch_ids)]", tracking=True, default=lambda self: self.env.user.branch_id, required=True)
     medic = fields.Many2one('hr.profesion.medic', 'Profesi Medis',tracking=True, )
     nurse = fields.Many2one('hr.profesion.nurse', 'Profesi Perawat',tracking=True, )
     seciality = fields.Many2one('hr.profesion.special', 'Kategori Khusus',tracking=True, )
@@ -80,7 +80,7 @@ class HrEmployee(models.Model):
     state_id = fields.Char(related='branch_id.state_id')
     zip = fields.Char(related='branch_id.zip')
     country_id = fields.Many2one(related='branch_id.country_id')
-    department_id = fields.Many2one('hr.department', compute = '_find_department_id',  string='Departemen', store=True, required=False)
+    department_id = fields.Many2one('hr.department', compute = '_find_department_id',  string='Old Departemen', store=True, required=False)
     hrms_department_id = fields.Many2one('sanhrms.department', tracking=True, string='Departemen')
     medic_finish_date = fields.Date('SPK Date',store=True)
     @api.depends('hrms_department_id')
@@ -101,10 +101,10 @@ class HrEmployee(models.Model):
     division_id = fields.Many2one('sanhrms.division', tracking=True, string='Divisi')
     directorate_id = fields.Many2one('sanhrms.directorate', tracking=True, string='Direktorat')
     employee_id = fields.Char('Employee ID', default='New')
-    nik = fields.Char('NIK')
+    nik = fields.Char('NIK', index=True, tracking=True)
     nik_lama = fields.Char('NIK Lama')
     no_ktp = fields.Char('No KTP')
-    spk = fields.Char('No. SPK',store=True)
+    spk = fields.Char('No. SPK', tracking=True, store=True)
     spk_start = fields.Date('SPK Date',store=True)
     spk_finish = fields.Date('SPK Finish',store=True)
     skills_ids = fields.Many2many('hr.skill','hr_skills_emp_rel')
@@ -121,10 +121,9 @@ class HrEmployee(models.Model):
                                  ('hindu', 'Hindu'),
                                  ('budha', 'Budha')],
                                 default='islam', string='Religion')
-
     join_date = fields.Date('Join Date',tracking=True, )
     job_status_id = fields.Many2one('sanhrms.job.status', string='Status Pekerjaan')
-    job_status_type = fields.Selection(related='job_status_id.type',store=True)
+    job_status_type = fields.Selection(related='job_status_id.type', store=True)
     job_status = fields.Selection([('permanent', 'Karyawan Tetap (PKWTT)'),
                                    ('contract', 'Karyawan Kontrak (PKWT)'),
                                    ('partner_doctor', 'Dokter Mitra'),
@@ -143,7 +142,7 @@ class HrEmployee(models.Model):
     ws_month = fields.Integer('Working Service Month', compute="_compute_service_duration_display", readonly=True)
     ws_year = fields.Integer('Working Service Year', compute="_compute_service_duration_display", readonly=True)
     ws_day = fields.Integer('Working Service Day', compute="_compute_service_duration_display", readonly=True)
-    contract_id = fields.Many2one('hr.contract', string='Contract', index=True)
+    contract_id = fields.Many2one('hr.contract', string='Contract', index=True, tracking=True)
     contract_datefrom = fields.Date('Contract Date From', related='contract_id.date_start', tracking=True,  store=True)
     contract_dateto = fields.Date('Contract Date To', related='contract_id.date_end', tracking=True, store=True)
     attachment_contract = fields.Binary(string='Contract Document', attachment=True)
@@ -151,7 +150,9 @@ class HrEmployee(models.Model):
                                        string='Employee P Group')
     employee_group1 = fields.Selection(selection=_selection1,
                                        default='Group2',
-                                       string='Employee P Group')
+                                       string='Old Employee P Group')
+    parent_id = fields.Many2one('parent.hr.employee', tracking=True, string='Atasan Langsung')
+    coach_id = fields.Many2one('parent.hr.employee', tracking=True, string='Atasan Unit Kerja')
     employee_levels = fields.Many2one('employee.level', string='Employee Level', index=True, store=True)
     insurance = fields.Char('BPJS No')
     jamsostek = fields.Char('Jamsostek')
@@ -185,7 +186,6 @@ class HrEmployee(models.Model):
         default='draft')
     nama_pekerjaans = fields.Char(related='job_id.name', store=True)
     initial = fields.Char('Inisial')
-    
     gender_selection = fields.Selection([('male', 'Laki-Laki'),
                             ('female', 'Perempuan'),],compute="_get_gender_status",
                             inverse='onchange_gender_selection', string='Status Pernikahan')
@@ -696,3 +696,69 @@ class ResPartner(models.Model):
                 for node in arch.xpath("//button"):
                     node.set('invisible', 'True')
         return arch, view
+
+
+class ParentEmployee(models.Model):
+    _name = 'parent.hr.employee'
+    _description = 'Employee parent'
+    _order = 'nik, name'
+    _rec_name = 'display_name'
+    _auto = False
+
+    id = fields.Many2one('hr.employee', required=True)
+    employee_id = fields.Many2one('hr.employee', string='Employee', required=True)
+    name = fields.Char('Nama Karyawan', required=True)
+    nik = fields.Char('NIK Karyawan', required=True)
+    company_id = fields.Many2one('res.company', string='Company')
+    branch_id = fields.Many2one('res.branch', string='Unit Bisnis')
+    directorate_id = fields.Many2one('sanhrms.directorate', tracking=True, string='Direktorat')
+    division_id = fields.Many2one('sanhrms.division', tracking=True, string='Divisi')
+    hrms_department_id = fields.Many2one('sanhrms.department', tracking=True, string='Departemen')
+    job_id = fields.Many2one('hr.job','Jabatan')
+    active = fields.Boolean()
+    user_id = fields.Many2one('res.users')
+    state = fields.Selection([
+        ('draft', "Draft"),
+        ('req_approval', 'Request For Approval'),
+        ('rejected', 'Rejected'),
+        ('approved', 'Approved'),
+        ('inactive', 'Inactive'),
+        ('hold', 'Hold'),
+    ],
+        string="Status",
+        readonly=True, copy=False, index=True,
+        tracking=3,store=True)
+    
+    def init(self):
+        tools.drop_view_if_exists(self.env.cr, self._table)
+        self.env.cr.execute("""
+            CREATE OR REPLACE VIEW %s AS (
+                SELECT id,id employee_id,
+                name, 
+                nik,
+                company_id,
+                branch_id,
+                active,
+                state,
+                job_id,
+                directorate_id,
+                hrms_department_id,user_id,
+                division_id from hr_employee
+        )
+        """ % (self._table, ))
+        
+    @api.depends('nik','name')
+    def _compute_display_name(self):
+        for account in self:
+            account.display_name = '%s-%s' % (account.nik   or '', account.name)
+
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        args = args or []
+        if name:
+            return self.search([
+                '|',
+                ('nik', operator, name),
+                ('name', operator, name)
+            ] + args, limit=limit).name_get()
+        return self.search(args, limit=limit).name_get()
