@@ -59,6 +59,8 @@
         <record id="hr.menu_view_hr_job" model="ir.ui.menu">
             <field name="name">Jabatan</field>
             <field name="sequence">50</field>
+            <field name="parent_id" ref="hierarchy_id"/>
+
         </record>
         <!-- <record id="hr.menu_config_employee" model="ir.ui.menu">
             <field name="name">Riwayat Pegawai</field>
