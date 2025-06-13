@@ -27,7 +27,6 @@
                     <!-- <field name="service_job_status_id" optional="show" /> -->
                     <field name="service_employementstatus" optional="show" />
                     <field name="service_employee_levels" optional="show" />
-                    <field name="job_status_id" optional="show" />
                     <field name="employee_group1" force_save="1" optional="show" />
                     <field name="service_jobtitle" optional="show" />
                     <field name="service_start" required="1" optional="show" />
@@ -112,8 +111,6 @@
                             <field name="hrms_department_id" options="{'no_create': True,'no_create_edit': True}" string = "Departemen"  readonly="1" force_save="1" />
                             <field name="division_id" options="{'no_create': True,'no_create_edit': True}" string = "Divisi" readonly="1" force_save="1" />
                             <field name="work_unit_id" options="{'no_create': True,'no_create_edit': True}" string = "Unit Kerja" readonly="1" force_save="1" />                            
-                            <field name="job_status_id" readonly="1" force_save="1" invisible="1" /> 
-                            <field name="job_status_type" invisible="1" />
                             <field name="job_status" readonly="1" force_save="1" string='Status Hubungan Kerja'/>
                             <field name="job_title" readonly="1" force_save="1" string='Jabatan'/>
                             <!-- <label for='job_title' string='Atasan'/>
