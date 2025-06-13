@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <tree string="Monitoring Kontrak Medis" create="false" edit="false">
                     <field name="employee_id" optional="show"/>
-                    <field name="sip_number" optional="show"/>
+                    <field name="medical_contract_number" optional="show"/>
                     <field name="branch_id" optional="show"/>
                     <field name="directorate_id" optional="show"/>
                     <field name="department_id" optional="show"/>

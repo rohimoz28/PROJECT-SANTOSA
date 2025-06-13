@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <tree string="Kontrak Medis">
                 <field name="employee_id" optional="show"/>
-                <field name="sip_number" optional="show"/>
+                <field name="medical_contract_number" optional="show"/>
                 <field name="branch_id" optional="show"/>
                 <field name="directorate_id" optional="show"/>
                 <field name="department_id" optional="show"/>
@@ -47,7 +47,7 @@
                 <sheet>
                     <div class="oe_title pe-0 w-100 mw-100" name="title">
                         <h1 class="d-flex flex-row justify-content-between">
-                            <field name="sip_number" class="text-truncate" placeholder="Nomor SIP"/>
+                            <field name="medical_contract_number" class="text-truncate" placeholder="Nomor Kontrak Medis"/>
                         </h1>
                         <h2>
                             <field name="contract_type_id" placeholder="Tipe Kontrak" options="{'no_create': True,'no_create_edit': True}" nolabel="1"/>

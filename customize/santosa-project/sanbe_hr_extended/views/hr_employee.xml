@@ -198,6 +198,10 @@
                                invisible="job_status not in ('partner_doctor', 'contract', 'permanent')" 
                                readonly="job_status == 'partner_doctor'" 
                                force_save="1"/>
+                        <field name="sip"
+                               invisible="job_status not in ('partner_doctor', 'contract', 'permanent')"
+                               readonly="job_status == 'partner_doctor'"
+                               force_save="1"/>
                         <!-- <field name="sip_number" invisible="kontrak_medis == False" />
                         <field name="sip_date_from" invisible="kontrak_medis == False"/>
                         <field name="sip_date_to" invisible="kontrak_medis == False" /> -->
@@ -368,8 +372,29 @@
                                context="{'default_employee_id': active_id}">
                             <tree>
                                 <field name="employee_id" optional="show"/>
+                                <field name="medical_contract_number" optional="show"/>
+                                <field name="start_date" optional="show"/>
+                                <field name="end_date" optional="show"/>
+                                <field name="contract_type_id" optional="show"/>
+                                <field name="state" widget="badge"
+                                    decoration-info="state == 'draft'" 
+                                    decoration-warning="state == 'close'" 
+                                    decoration-success="state == 'open'"
+                                    decoration-danger="state == 'cancel'"
+                                    optional="show"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+                <!-- sip -->
+                <xpath expr="//page[@name='medical_contract_tab']" position="after">
+                    <page name="surat_izin_praktek" string="SIP">
+                        <field name="sip_ids" 
+                               mode="tree,form" 
+                               context="{'default_employee_id': active_id}">
+                            <tree>
+                                <field name="employee_id" optional="show"/>
                                 <field name="sip_number" optional="show"/>
-                                <field name="branch_id" optional="show"/>
                                 <field name="start_date" optional="show"/>
                                 <field name="end_date" optional="show"/>
                                 <field name="contract_type_id" optional="show"/>

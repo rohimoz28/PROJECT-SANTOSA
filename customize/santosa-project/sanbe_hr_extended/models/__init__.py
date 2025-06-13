@@ -18,3 +18,4 @@ from . import emp_group
 from . import hr_profesion
 from . import job_status
 from . import hr_service_contract
+from . import hr_sip
