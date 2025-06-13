@@ -8,12 +8,13 @@ class ServiceContract(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
 
-    sip_number = fields.Char(string='Nomor SIP / Sertipikasi')
+    medical_contract_number = fields.Char(string='Nomor SIP / Sertipikasi')
     contract_type_id = fields.Many2one('hr.contract.type', "Tipe Kontrak", tracking=True)
     employee_id = fields.Many2one(comodel_name='hr.employee',
                                            string='Nama Karyawan',
                                            #domain="[('state','not in',['hold']),('job_status','=','contract')]",
-                                           store=True)
+                                           store=True,
+                                           tracking=True)
     emp_selected_id = fields.Char(related='employee_id.employee_id', 
                                   string='ID Karyawan', 
                                   readonly=True,
@@ -50,10 +51,11 @@ class ServiceContract(models.Model):
                                 ('3','3'),
                                 ('4','4'),
                                 ('5','5')],
-                                string='Nomor PKWT')    
-    start_date = fields.Date(string='Masa Berlaku SIP Dari', required=True)
-    end_date = fields.Date(string='Masa Berlaku SIP Hingga', required=True)
-    company_id = fields.Many2one('res.company', compute='_compute_employee_contract', 
+                                string='Nomor PKWT',
+                                store=True)    
+    start_date = fields.Date(string='Masa Berlaku Kontrak Medis Dari', required=True)
+    end_date = fields.Date(string='Masa Berlaku Kontrak Medis Hingga', required=True)
+    company_id = fields.Many2one(comodel_name='res.company', 
                                  store=True, readonly=False,
                                  default=lambda self: self.env.company, required=True)
     kd_day = fields.Integer(string='Hari Kontrak Medis', compute='_compute_kontrak_dinas', readonly=True)

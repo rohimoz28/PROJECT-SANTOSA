@@ -249,13 +249,17 @@ class HrEmployee(models.Model):
                 raise UserError("No. Kartu Keluarga harus Numerik")
             
     kontrak_medis_id = fields.Many2one('hr.service.contract')
-    
     medical_contract_ids = fields.One2many(
         comodel_name='hr.service.contract',
         inverse_name='employee_id',
         string='Service Contract',
     )
-
+    sip = fields.Boolean(string="SIP", tracking=True)
+    sip_ids = fields.One2many(
+        comodel_name='hr.sip',
+        inverse_name='employee_id',
+        string='SIP'
+    )
 
     def bypass_sip(self):
         for line in self:
@@ -327,10 +331,11 @@ class HrEmployee(models.Model):
     def _onchange_job_status(self):
         if self.job_status == 'partner_doctor':
             self.kontrak_medis = True
-        # elif self.job_status in ['permanent', 'contract']:
-        #     pass
+            self.sip = True
         else:
             self.kontrak_medis = False
+            self.sip = False 
+
 
 
     @api.model

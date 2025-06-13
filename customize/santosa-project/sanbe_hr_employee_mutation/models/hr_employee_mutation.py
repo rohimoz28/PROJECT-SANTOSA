@@ -67,7 +67,7 @@ class HrEmployeeMutation(models.Model):
     directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', related='emp_nos.directorate_id')
     employee_group1s = fields.Many2one('emp.group', string='Employee P Group', related='emp_nos.employee_group1s')
     work_unit_id = fields.Many2one('hr.work.unit','Work Unit', related='emp_nos.work_unit_id')
-    parent_id = fields.Many2one('hr.employee','Atasan langsung', related='emp_nos.parent_id',store=True)
+    parent_id = fields.Many2one(related='emp_nos.parent_id', string='Atasan langsung', store=True)
     parent_nik = fields.Char('NIK Atasan', related='parent_id.nik', store=True)
     medic = fields.Many2one('hr.profesion.medic','Profesi Medis', related='emp_nos.medic')
     nurse = fields.Many2one('hr.profesion.nurse','Profesi Perawat', related='emp_nos.nurse')
