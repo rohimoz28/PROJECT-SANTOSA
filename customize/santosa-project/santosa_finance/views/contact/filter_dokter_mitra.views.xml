@@ -6,6 +6,7 @@
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='customer']" position="after">
                 <filter string="Dokter Mitra" name="filter_dokter_mitra" domain="[('is_dokter_mitra', '=', True)]"/>
+                <filter string="Asuransi" name="filter_asuransi" domain="[('tipe_customer', '=', 'Asuransi')]"/>
             </xpath>
         </field>
     </record>

@@ -35,6 +35,9 @@ class TransactionTracking(models.Model):
     offset_id = fields.Many2one('account.move')
     offset_amt = fields.Monetary()
 
+    klaim_id = fields.Many2one('ar.klaim')
+    klaim_amt = fields.Monetary()
+    
     def ambil_view(self):
         self.ensure_one()  # Ensure this method is called on a single record
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
@@ -49,6 +52,21 @@ class TransactionTracking(models.Model):
         else:
             raise ValidationError("Account Move ID Belum Terisi!!!")
 
+    def ambil_view_klaim(self):
+        self.ensure_one()  # Ensure this method is called on a single record
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        target_url = f"{base_url}/web#id={self.klaim_id.id}&model=ar.klaim&view_type=form"
+        print(target_url)
+        if self.klaim_id:
+            return {
+                'type': 'ir.actions.act_url',
+                'url': target_url,
+                'target': 'self',
+            }
+        else:
+            raise ValidationError("Klaim !!!")
+
+
     @api.depends('transaction_no', 'document_no')
     def _compute_display_name(self):
         for emp in self:
@@ -61,3 +79,15 @@ class TransactionTracking(models.Model):
                 emp.display_name = name
             else:
                 emp.display_name = emp.document_no
+                
+    def ambil_view_klaim(self):
+        self.ensure_one()  # Ensure this method is called on a single record
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        target_url = f"{base_url}/web#id={self.account_move_id.id}&model=ar.klaim&view_type=form"
+        print(target_url)
+        if self.klaim_id:
+            return {
+                'type': 'ir.actions.act_url',
+                'url': target_url,
+                'target': 'self',
+            }
