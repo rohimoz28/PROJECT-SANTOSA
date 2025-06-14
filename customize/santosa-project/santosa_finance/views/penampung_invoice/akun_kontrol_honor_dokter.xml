@@ -94,5 +94,5 @@
             </p>
         </field>
     </record>
-    <menuitem id="control_fee_doctor" name="Akun Kontrol Honor Dokter" sequence='15' parent="account.menu_finance_reports" action="action_santosa_finance_akun_kontrol_honor_dokter"/>
+    <menuitem id="control_fee_doctor" name="Akun Kontrol Honor Dokter" sequence='-100' parent="account.menu_finance_reports" action="action_santosa_finance_akun_kontrol_honor_dokter"/>
 </odoo>
