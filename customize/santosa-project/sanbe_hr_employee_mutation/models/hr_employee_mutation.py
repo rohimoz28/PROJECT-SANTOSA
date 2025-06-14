@@ -105,8 +105,6 @@ class HrEmployeeMutation(models.Model):
                                    ('partner_doctor', 'Dokter Mitra'),
                                    ('visitor', 'Visitor'),
                                    ], default='contract', tracking=True, related="emp_nos.job_status", string='Status Hubungan Kerja')
-    job_status_id = fields.Many2one('sanhrms.job.status', string='Status Pekerjaan',related="emp_nos.job_status_id", store=True)
-    job_status_type = fields.Selection(related='job_status_id.type',store=True)
     # employementstatus = fields.Char('Employment Status')
     emp_status = fields.Selection([('probation', 'Probation'),
                                    ('confirmed', 'Confirmed'),

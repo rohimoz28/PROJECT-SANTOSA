@@ -179,8 +179,6 @@
                         <!-- <field name="kpi_kategory" /> -->
                         <field name="state" invisible="1"/>
                         <field name="job_status"  invisible="0"  />
-                        <field name="job_status_id" options="{'no_create': True,'no_create_edit': True}" string="Status Hubungan Kerja" invisible="1" />
-                        <field name="job_status_type" string="Type Status Hubungan Kerja" invisible="1"  />
                         <field name="emp_status" readonly="'|',('emp_status', 'not in', ['probation','confirmed'])"  />
                         <field name="first_date_join" string="Tanggal Pertama bergabung"  />
                         <field name="join_date" required="job_status =='permanent'" string="Tanggal Bergabung" />
@@ -189,10 +187,10 @@
                         <label for="contract_id" required="job_status =='contract'" string="Masa Kontrak"/>
                         <div class="o_row" required="job_status !='contract'">
                             <field name="contract_datefrom" invisible="job_status !='contract'" 
-                            required="job_status_type =='contract'" 
+                            required="job_status =='contract'" 
                             /> s/d 
                             <field name="contract_dateto" invisible="job_status !='contract'" 
-                            required="job_status_type =='contract'" />
+                            required="job_status =='contract'" />
                         </div> 
                         <field name="kontrak_medis" 
                                invisible="job_status not in ('partner_doctor', 'contract', 'permanent')" 
@@ -438,7 +436,6 @@
                     <field name="alldepartment" column_invisible="1" />
                     <field name="job_id" />
                     <field name="job_status" />
-                    <field name="job_status_id" invisible="1"/>
                     <field name="emp_status" />
                     <field name="employee_levels"/>
                     <field name="employee_group1s" />
