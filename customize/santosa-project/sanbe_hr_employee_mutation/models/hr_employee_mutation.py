@@ -160,8 +160,8 @@ class HrEmployeeMutation(models.Model):
                                    ('partner_doctor', 'Dokter Mitra'),
                                    ('visitor', 'Visitor'),
                                    ], tracking=True, string='Status Hubungan Kerja', default=lambda self:self.employee_id.job_status )
-    service_job_status_id = fields.Many2one('sanhrms.job.status', string='Status Pekerjaan', default=lambda self:self.employee_id.job_status_id.id)
-    service_job_status_type = fields.Selection(store=True, default=lambda self:self.emp_nos.job_status_type, related='service_job_status_id.type')
+    service_job_status_id = fields.Many2one('sanhrms.job.status', string='Status Pekerjaan', default=lambda self:self.employee_id.job_status)
+    service_job_status_type = fields.Selection(store=True, default=lambda self:self.emp_nos.job_status, related='service_job_status_id.type')
     service_employementstatus = fields.Selection([('probation', 'Probation'),
                                                   ('confirmed', 'Confirmed'),],
                                                  string='Employment Status')
