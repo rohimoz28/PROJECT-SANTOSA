@@ -476,6 +476,21 @@
             </field>
         </record>
 
+        <!-- search panel -->
+        <record id="hr_employee_extended_filter" model="ir.ui.view">
+            <field name="name">hr.employee.extended.filter</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//searchpanel/field[@name='company_id']" position="attributes">
+                    <attribute name="string">Perusahaan</attribute>
+                </xpath>
+                <xpath expr="//searchpanel/field[@name='department_id']" position="replace">
+                    <field name="hrms_department_id" string="Departemen"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="hr_jobs_extended_tree" model="ir.ui.view">
             <field name="name">hr.jobs.tree</field>
             <field name="model">hr.job</field>
@@ -533,7 +548,6 @@
             </field>
         </record>      
 
-
         <record id="coach_manager_tree" model="ir.ui.view">
             <field name="name">Manager/Coach</field>
             <field name="model">parent.hr.employee</field>
@@ -578,8 +592,5 @@
                 </form>
             </field>
         </record>
-        
-        
-
     </data>
 </odoo>
