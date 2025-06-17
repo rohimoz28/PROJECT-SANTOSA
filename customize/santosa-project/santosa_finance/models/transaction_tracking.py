@@ -34,7 +34,7 @@ class TransactionTracking(models.Model):
     currency_id = fields.Many2one('res.currency', string="Currency")
     offset_id = fields.Many2one('account.move')
     offset_amt = fields.Monetary()
-
+    klaim_ids = fields.Many2many('ar.klaim.detail','klaim_detaul_invoice_rel','klaim_id')
     klaim_id = fields.Many2one('ar.klaim')
     klaim_amt = fields.Monetary()
     

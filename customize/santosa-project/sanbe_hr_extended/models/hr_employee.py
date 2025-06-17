@@ -576,18 +576,18 @@ class HrEmployee(models.Model):
                 raise UserError('Cannot Delete Employee not in draft')
         return super().unlink()
 
-    @api.depends('name', "employee_id")
-    def _compute_display_name(self):
-        for account in self:
-            myctx = self._context.get('search_by')
-            sbn = self._context.get('search_by_name')
-            if myctx and sbn == False:
-                if myctx == 'No':
-                    account.display_name = f"{account.employee_id}"
-                else:
-                    account.display_name = f"{account.name}"
-            else:
-                account.display_name = f"{account.name}"
+    # @api.depends('name', "nik")
+    # def _compute_display_name(self):
+    #     for account in self:
+    #         myctx = self._context.get('search_by')
+    #         sbn = self._context.get('search_by_name')
+    #         if myctx and sbn == False:
+    #             if myctx == 'No':
+    #                 account.display_name = f"{account.name}"
+    #             else:
+    #                 account.display_name = f"{account.name}"
+    #         else:
+    #             account.display_name = f"{account.name}"
 
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)
@@ -608,10 +608,10 @@ class HrEmployee(models.Model):
             if len(parts) == 2:
                 emp_id = parts[0][1:]
                 emp_name = parts[1]
-                name_domain = ['|',('employee_id', operator, emp_id), ('name', operator, emp_name)]
+                name_domain = ['|','|',('nik', operator, emp_id),('employee_id', operator, emp_id), ('name', operator, emp_name)]
                 return self._search(expression.AND([name_domain, domain]), limit=limit, order=order)
             else:
-                name_domain = ['|',('employee_id', operator, name), ('name', operator, name)]
+                name_domain = ['|','|',('nik', operator, name),('employee_id', operator, name), ('name', operator, name)]
                 return self._search(expression.AND([name_domain, domain]), limit=limit, order=order)
         return super()._name_search(name, domain, operator, limit, order)
 

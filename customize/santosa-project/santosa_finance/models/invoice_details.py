@@ -80,10 +80,26 @@ class AccountMoveLine(models.Model):
     binary_checksum = fields.Char()
     need_to_calculate = fields.Boolean()
     flag = fields.Integer()
-
+    rowkey = fields.Char()
+    is_pelayanan = fields.Boolean('Pelayanan', default="False")
+    pelayanan = fields.Selection([('services','Pelayanan'),('non services','Non Pelayanan')],'Pelayanan', default=lambda self:self._get_default_pelayanan())
     formatted_datetime = fields.Char(string='Formatted Datetime', compute='_compute_formatted_datetime')
-
     CostPrice_AVG = fields.Float()
+
+    def _get_default_pelayanan(self):
+        for line in self:
+            if line.is_pelayanan:
+                line.pelayanan = 'services'
+            else:
+                line.pelayanan = 'non services'
+
+    @api.onchange(pelayanan)
+    def set_is_pelayaanan(self):
+        for line in self:
+            if line.pelayanan == 'services':
+                line.is_pelayanan = True
+            else:
+                line.is_pelayanan = False
 
     @api.depends('product_id', 'product_uom_id')
     def _compute_price_unit(self):

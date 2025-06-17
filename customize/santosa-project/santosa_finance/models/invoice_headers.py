@@ -43,6 +43,7 @@ class AccountMove(models.Model):
     cost_price_last_based = fields.Char(string = "Cost Price Last Based", help="Menjelaskan nilai cost price terakhir ini didapat dari metode apa, misalnya LastBuy atau LastHNA")
 
     #AR
+    klaim_ids = fields.Many2many('ar.klaim.detail','klaim_detaul_invoice_rel','klaim_id',string='')
     tgl_klaim = fields.Date()
     amount_tagihan = fields.Monetary()
     status_ar_klaim = fields.Char()
@@ -111,7 +112,9 @@ class AccountMove(models.Model):
         'account.move',
         )
     list_trans_offset = fields.One2many('santosa_finance.transaction_tracking','offset_id', domain="[('partner_id','=',partner_id)]")
-    
+    is_pelayanan = fields.Boolean('Pelayanan', default="False")
+    pelayanan = fields.Selection([('pelayanan','AR Pelayanan'),('non pelayanan','AR Non Pelayanan')],'Pelayanan', default=lambda self:self._get_default_pelayanan())
+
     list_invoice_offsets = fields.Many2many(
         'account.move', 
         'account_move_link_rel',  # Relation table
@@ -121,6 +124,23 @@ class AccountMove(models.Model):
         # domain=[('status_invoice','=','open')]
         
     )
+
+    def _get_default_pelayanan(self):
+        for line in self:
+            if line.is_pelayanan:
+                line.pelayanan = 'pelayanan'
+            elif line.pelayanan == False:
+                line.pelayanan = 'non pelayanan'
+            else:
+                line.pelayanan = 'non pelayanan'
+
+    @api.onchange(pelayanan)
+    def set_is_pelayaanan(self):
+        for line in self:
+            if line.pelayanan == 'pelayanan':
+                line.is_pelayanan = True
+            else:
+                line.is_pelayanan = False
 
     @api.depends('status_invoice', 'sales_point', 'penjamin_name')
     def _compute_temp_invoice_no(self):

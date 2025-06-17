@@ -43,6 +43,9 @@
                     </group>
                 </group>
             </xpath>
+            <xpath expr="//h1" position="after">
+                <field name="pelayanan" nolabel="1" widget="radio" options="{'horizontal': true}" readonly="state not in ['draft']"/> 
+            </xpath>
             <xpath expr="//field[@name='invoice_date']" position="after">
                 <field name="status_invoice" readonly='1'/>
                 <field name="amount_total_signed" string="Total" readonly='1'/>
@@ -51,6 +54,10 @@
                 <field name="sales_point" readonly='1'/>
                 <field name="penjamin_name_id" readonly='1'/>
                 <field name="patient_name" readonly='1'/>
+                
+                <!-- <button name="change_services" string="Pelayanan" type="object" class="btn btn-danger"/>
+                <button name="change_non_services" string="Non Pelayanan" type="object" class="btn btn-success"/> -->
+
             </xpath>
             <xpath expr="//notebook/page[@id='invoice_tab']" position="attributes">
                 <attribute name="invisible">0</attribute>
@@ -70,7 +77,6 @@
                 <field name="invoice_date" string="Invoice Date"/>
                 <field name="temp_invoice_no" string="Invoice No"/>
                 <field name="transaction_no"/>
-
             </xpath>
             <xpath expr="//tree/field[@name='name']" position="after">
                 <field name="sales_point" string="Sales Point"/>
