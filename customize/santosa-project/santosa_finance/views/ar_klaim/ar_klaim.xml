@@ -50,7 +50,7 @@
                             <group>
                                 <field name="claim_value" />
                                 <field name="payer" />
-                                <field name="PopulatedTime" name="Populated Time"/>
+                                <field name="PopulatedTime" string="Populated Time"/>
                                 <field name="guarantor" invisible="1"/>
                                 <field name="currency_id" invisible="1" />
                             </group>
@@ -66,8 +66,8 @@
                                 <field name="mr_number" optional="show"  string="No MR"/>
                                 <field name="guarantor" optional="show"  string="Penjamin"/>
                                 <field name="PopulatedTime" optional="show"  string="Populated Time"/>
-                                <field name="invoice_amount" string="Invoice Amount" optional="show" sum="Total Invoice"/>
-                                <field name="amt_klaim" string="Klaim Amount" optional="show" sum="Total Klaim"/>
+                                <field name="invoice_amount" string="Amount Invoice" optional="show" sum="Total Invoice"/>
+                                <field name="amt_klaim" string="AR Amount Klaim" optional="show" sum="Total Klaim"/>
                                 <field name="diff_amt" string="Selisih" optional="show" sum="Total Selisih"/>
                                 <field name="status_invoice" string="Status" widget="badge" decoration-success="status_invoice == 'Closed'" decoration-danger="status_invoice == 'Open'" on_change="1" field_id="pelayanan_0"/> 
                                 <button 

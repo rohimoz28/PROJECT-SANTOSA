@@ -43,6 +43,7 @@ class AccountMove(models.Model):
     cost_price_last_based = fields.Char(string = "Cost Price Last Based", help="Menjelaskan nilai cost price terakhir ini didapat dari metode apa, misalnya LastBuy atau LastHNA")
 
     #AR
+    klaim_ids = fields.Many2many('ar.klaim.detail','klaim_detaul_invoice_rel','klaim_id',string='')
     tgl_klaim = fields.Date()
     amount_tagihan = fields.Monetary()
     status_ar_klaim = fields.Char()
