@@ -11,13 +11,13 @@
                     <field name="claim_date" optional="show" />
                     <field name="claim_number" optional="show" />
                     <field name="bill_number" optional="show" />
-                    <field name="guarantor" optional="show" />
-                    <field name="claim_value" optional="show" />
+                    <field name="amt_claim_value" string="Total Invoice" optional="show" sum="Total Invoice"/>
+                    <field name="claim_value" string="Total Klaim" optional="show" sum="Total Klaim"/>
                     <field name="payer" optional="show" />
                     <field name="state" widget="badge"
-                        decoration-info="state == 'partial_settled'"
-                        decoration-warning="state == 'close'"
-                        decoration-success="state == 'in_process'"
+                        decoration-warning="state == 'partial_settled'"
+                        decoration-success="state == 'close'"
+                        decoration-info="state == 'in_process'"
                         decoration-danger="state == 'cancel'"
                         optional="show"
                     />
@@ -37,7 +37,8 @@
             <field name="arch" type="xml">
                 <form string="Form AR Klaim">
                     <header>
-                        <field name="state" widget="statusbar" options="{'clickable': '1'}" />
+                        <button string="Cancel" name="button_cancel" type="object" invisible="state in ['close','cancel']"/>
+                        <field name="state" widget="statusbar" options="{'clickable': '1'}" statusbar_visible="in_process,partial_settled,close" />
                     </header>
                     <sheet>
                         <group name="header">

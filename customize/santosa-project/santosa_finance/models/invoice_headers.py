@@ -13,7 +13,7 @@ class AccountMove(models.Model):
     no_trx_base = fields.Char()
     transaction_date = fields.Date()
     invoice_no = fields.Char()
-    tanggal_invoice = fields.Datetime()
+    tanggal_invoice = fields.Datetime('Tanggal TRX', default=lambda self: fields.Date.context_today(self))
     registration_date = fields.Datetime()
     registration_no = fields.Char()
     sales_point = fields.Char()
@@ -87,8 +87,23 @@ class AccountMove(models.Model):
     offset_amt = fields.Monetary()
     jurnal_name = fields.Char(related='journal_id.name',store=True)
     status_record = fields.Char()
-    populated_time = fields.Datetime()
+    accounting_time_periode = fields.Datetime(string="Accounting Periode", default=lambda self: fields.Datetime.now())
+    accounting_date_periode = fields.Date('Accounting Periode')
+    populated_time = fields.Datetime(string="Populated Time", default=lambda self: fields.Datetime.now())
     populated_date = fields.Date(string="Populated Date", compute='_compute_populated_date', store=True)
+    journal_periode = fields.Date('Jurnal Date', default=lambda self: fields.Date.context_today(self))
+    journal_ajp = fields.Char('Jurnal No')
+    journal_ajp_id = fields.Many2one('journal.ajp','Jurnal No')
+    journal_type = fields.Char('Tipe Jurnal', default='JUM')
+    journal_type_id = fields.Many2one('journa.ajp.type','Tipe Jurnal')
+    journal_code = fields.Char('Kode Jurnal', default='AR')
+    branch_id = fields.Many2one('res.branch','Branch')
+
+    @api.model
+    def create(self, vals):
+        vals['journal_type'] = 'JUM'
+        vals['journal_type'] = 'AR'
+        return super(AccountMove, self).create(vals)
 
     @api.depends('populated_time')
     def _compute_populated_date(self):
@@ -112,8 +127,7 @@ class AccountMove(models.Model):
         'account.move',
         )
     list_trans_offset = fields.One2many('santosa_finance.transaction_tracking','offset_id', domain="[('partner_id','=',partner_id)]")
-    is_pelayanan = fields.Boolean('Pelayanan', default="False")
-    pelayanan = fields.Selection([('pelayanan','AR Pelayanan'),('non pelayanan','AR Non Pelayanan')],'Pelayanan', default=lambda self:self._get_default_pelayanan())
+    pelayanan = fields.Selection([('pelayanan','AR Pelayanan'),('non pelayanan','AR Non Pelayanan')],'type AR',default='non pelayanan')
 
     list_invoice_offsets = fields.Many2many(
         'account.move', 
@@ -125,22 +139,9 @@ class AccountMove(models.Model):
         
     )
 
-    def _get_default_pelayanan(self):
-        for line in self:
-            if line.is_pelayanan:
-                line.pelayanan = 'pelayanan'
-            elif line.pelayanan == False:
-                line.pelayanan = 'non pelayanan'
-            else:
-                line.pelayanan = 'non pelayanan'
-
-    @api.onchange(pelayanan)
-    def set_is_pelayaanan(self):
-        for line in self:
-            if line.pelayanan == 'pelayanan':
-                line.is_pelayanan = True
-            else:
-                line.is_pelayanan = False
+    @api.onchange('partner_id')
+    def _onchange_field(self):
+        self.penjamin_name_id = self.partner_id.id
 
     @api.depends('status_invoice', 'sales_point', 'penjamin_name')
     def _compute_temp_invoice_no(self):

@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    
+    <!-- <record id="view_move_form_inherit_delete_branch" model="ir.ui.view">
+        <field name="name">account.move.form.custom</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="view_move_form_inherit_branch"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='branch_id']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//div[@class='d-flex']" position="attributes"
+                ><attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='branch_id']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+        </field>
+    </record> -->
+
     <record id="view_move_form_custom" model="ir.ui.view">
         <field name="name">account.move.form.custom</field>
         <field name="model">account.move</field>
@@ -46,18 +64,58 @@
             <xpath expr="//h1" position="after">
                 <field name="pelayanan" nolabel="1" widget="radio" options="{'horizontal': true}" readonly="state not in ['draft']"/> 
             </xpath>
-            <xpath expr="//field[@name='invoice_date']" position="after">
+            <xpath expr="//group[@id='header_right_group']/label[@for='invoice_date']" position="replace"/>            
+            <xpath expr="//field[@name='invoice_date']" position="before">
+                <field name="transaction_date" string="Tanggal TRX" readonly="state != 'draft'"/>
+            </xpath>    
+            <xpath expr="//field[@name='invoice_date']" position="replace">
+                <field name="invoice_no" readonly="state != 'draft' or pelayanan == 'pelayanan'" string="No. Invoice"/>
+                <field name="invoice_date" string="Tanggal Invoice" readonly="state not in ['draft']"/>
                 <field name="status_invoice" readonly='1'/>
                 <field name="amount_total_signed" string="Total" readonly='1'/>
             </xpath>
-            <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="sales_point" readonly='1'/>
-                <field name="penjamin_name_id" readonly='1'/>
-                <field name="patient_name" readonly='1'/>
-                
-                <!-- <button name="change_services" string="Pelayanan" type="object" class="btn btn-danger"/>
-                <button name="change_non_services" string="Non Pelayanan" type="object" class="btn btn-success"/> -->
-
+            <xpath expr="//label[@for='partner_id' and contains(@invisible, 'out_invoice')]" position="replace"/>
+            <xpath expr="//label[@for='partner_id' and contains(@invisible, 'in_invoice')]" position="replace"/>
+            <xpath expr="//group[@id='header_left_group']/div[@class='o_col']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='payment_reference']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>           
+            
+            <xpath expr="//div[@class='o_td_label']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>           
+            
+            <xpath expr="//div[@name='due_date']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>           
+            
+            <xpath expr="//label[@for='journal_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>           
+            
+            <xpath expr="//div[@name='journal_div']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            
+            <xpath expr="//field[@name='partner_shipping_id']" position="before">
+                <field name="sales_point" string="Sales Point" readonly="state != 'draft' or pelayanan == 'pelayanan'" invisible="pelayanan == 'non pelayanan'" />
+                <field name="penjamin_name_id" string="Penjamin" readonly="state != 'draft' or pelayanan == 'pelayanan'" invisible="pelayanan == 'non pelayanan'"/>
+                <field name="patient_name" string="Patient" readonly="state != 'draft' or pelayanan == 'pelayanan'" invisible="pelayanan == 'non pelayanan'"/>
+                <field name="accounting_date_periode" readonly="state != 'draft' or pelayanan == 'pelayanan'" string="Accounting Periode"/>
+                <!-- <label for="journal_id"  invisible="context.get('default_journal_id') and context.get('move_type', 'entry') != 'entry'"/>
+                <div name="journal_div" class="d-flex"  invisible="context.get('default_journal_id') and context.get('move_type', 'entry') != 'entry'">
+                    <field name="journal_id" options="{'no_create': True, 'no_open': True}" readonly="posted_before"/>
+                    <span class="oe_inline o_form_label mx-3"  invisible="move_type == 'entry'"> in </span>
+                    <field name="currency_id"  invisible="move_type == 'entry'" readonly="state != 'draft'" options="{'no_create': True}" context="{'search_default_active': 1, 'search_default_inactive': 1}"/>
+                </div> -->
+                <field name="journal_ajp" readonly="state != 'draft' or pelayanan == 'pelayanan'" string="Jurnal References"/>
+                <field name="journal_periode" readonly="state != 'draft' or pelayanan == 'pelayanan'"/>
+                <field name="journal_type" readonly="1"/>
+                <field name="journal_code" readonly="1"/>
+                <field name="partner_id"  string="Customer" invisible="pelayanan == 'pelayanan'" readonly="state != 'draft' or pelayanan == 'pelayanan'" options="{'no_create': True}" />
+                <field name="branch_id" readonly="state != 'draft' or pelayanan == 'pelayanan'"/>
             </xpath>
             <xpath expr="//notebook/page[@id='invoice_tab']" position="attributes">
                 <attribute name="invisible">0</attribute>
@@ -80,7 +138,6 @@
             </xpath>
             <xpath expr="//tree/field[@name='name']" position="after">
                 <field name="sales_point" string="Sales Point"/>
-
             </xpath>
             <xpath expr="//tree/field[@name='state']" position="after">
                 <field name="status_invoice" widget="badge" decoration-success="status_invoice == 'Closed'" decoration-danger="status_invoice == 'Open'"/>
