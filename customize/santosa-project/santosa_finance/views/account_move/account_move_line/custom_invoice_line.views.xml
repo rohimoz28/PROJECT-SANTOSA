@@ -30,7 +30,8 @@
                 <field name="cost_price_avg" optional="hide"/>
                 <field name="cost_price_last_date" optional="hide"/>
                 <field name="cost_price_last_based" optional="hide"/>
-                <field name="pelayanan" widget="badge" decoration-success="pelayanan == 'non pelayanan'" decoration-danger="pelayanan == 'pelayanan'" on_change="1" field_id="pelayanan_0"/>
+                <field name="is_pelayanan" column_invisible="1"/>
+                <field name="pelayanan" widget="badge" decoration-success="pelayanan == 'non services'" decoration-danger="pelayanan == 'services'" on_change="1" field_id="pelayanan_0"/>
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='discount']" position="replace">
                 <field name="discount_subtotal" optional="hide" string="Discount Subtotal"/>

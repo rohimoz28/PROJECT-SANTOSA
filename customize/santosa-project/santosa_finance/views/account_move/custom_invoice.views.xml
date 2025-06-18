@@ -103,7 +103,7 @@
                 <field name="sales_point" string="Sales Point" readonly="state != 'draft' or pelayanan == 'pelayanan'" invisible="pelayanan == 'non pelayanan'" />
                 <field name="penjamin_name_id" string="Penjamin" readonly="state != 'draft' or pelayanan == 'pelayanan'" invisible="pelayanan == 'non pelayanan'"/>
                 <field name="patient_name" string="Patient" readonly="state != 'draft' or pelayanan == 'pelayanan'" invisible="pelayanan == 'non pelayanan'"/>
-                <field name="accounting_date_periode" readonly="1" string="Accounting Periode"/>
+                <field name="accounting_date_periode" readonly="state != 'draft' or pelayanan == 'pelayanan'" string="Accounting Periode"/>
                 <!-- <label for="journal_id"  invisible="context.get('default_journal_id') and context.get('move_type', 'entry') != 'entry'"/>
                 <div name="journal_div" class="d-flex"  invisible="context.get('default_journal_id') and context.get('move_type', 'entry') != 'entry'">
                     <field name="journal_id" options="{'no_create': True, 'no_open': True}" readonly="posted_before"/>
@@ -112,7 +112,7 @@
                 </div> -->
                 <field name="journal_ajp" readonly="state != 'draft' or pelayanan == 'pelayanan'" string="Jurnal References"/>
                 <field name="journal_periode" readonly="state != 'draft' or pelayanan == 'pelayanan'"/>
-                <field name="journal_type_id" options="{'no_create': True}" readonly="state != 'draft' or pelayanan == 'pelayanan'"/>
+                <field name="journal_type" readonly="1"/>
                 <field name="journal_code" readonly="1"/>
                 <field name="partner_id"  string="Customer" invisible="pelayanan == 'pelayanan'" readonly="state != 'draft' or pelayanan == 'pelayanan'" options="{'no_create': True}" />
                 <field name="branch_id" readonly="state != 'draft' or pelayanan == 'pelayanan'"/>
