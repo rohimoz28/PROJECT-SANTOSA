@@ -103,10 +103,17 @@ class AccountMove(models.Model):
         jurnal_umum = self.env['account.journal'].search([('code', 'ilike', 'jum')], limit=1)
         return jurnal_umum.id if jurnal_umum else False
 
+    @api.onchange('state')
+    def _update_accounting_date(self):
+        for line in self:
+            if line.state != 'draft':
+                line.accounting_date_periode = fields.Date.context_today(self)
+
     @api.model
     def create(self, vals):
-        vals['journal_type'] = 'JUM'
+        vals['invoice_date_due'] = 'JUM'
         vals['journal_type'] = 'AR'
+        vals['invoice_date_due'] = fields.Date.context_today(self) + timedelta(days=30)
         return super(AccountMove, self).create(vals)
 
     @api.depends('populated_time')
