@@ -11,7 +11,7 @@
                 <page string="Piutang Usaha" invisible="is_dokter_mitra or is_supplier or context.get('default_is_customer', False) != 1">
                     <group>
                         <field name="transaction_tracking_ids" string="" readonly='1'>
-                                <tree delete='0' default_order='id asc'>
+                                <tree delete='0' create="0" default_order='id asc'>
                                     <field name="id" string="id" optional='hide'/>
                                     <field name="transaction_date" string="Transaction Date" optional='hide'/>
                                     <field name="populate_date" string="Populate Date" optional='hide'/>
@@ -33,33 +33,31 @@
                 </page>
                 <page string="Piutang Klaim" invisible="is_dokter_mitra or is_supplier or context.get('default_is_customer', False) != 1">
                     <group>
-                        <field name="transaction_tracking_ids" string="" readonly='1' domain="[('klaim_id', '!=', False)]">
-                                <tree delete='0' default_order='id asc'>
-                                    <field name="id" string="id" optional='hide'/>
-                                    <field name="transaction_date" string="Transaction Date" optional='hide'/>
-                                    <field name="populate_date" string="Populate Date" optional='hide'/>
-                                    <field name="account_move_id" string="Transaction Number" optional='show'/>
-                                    <field name="document_date" string="Document Date" optional='hide'/>
-                                    <field name="entered_date" string="Entered Date" optional='show'/>
-                                    <field name="document_no" string="Document Number" optional='show'/>
-                                    <field name="description" string="Description" optional='show'/>
-                                    <field name="transaction_class" string="Transaction Class" optional='hide'/>
-                                    <field name="beginning_balance" string="Beginning Balance" optional='show'/>
-                                    <field name="amount_debit" string="Amount Debit" optional='show'/>
-                                    <field name="amount_credit" string="Amount Credit" optional='show'/>
-                                    <field name="ending_balance" string="Ending Balance" optional='show'/>
-                                    <field name="journal_number" string="Journal Number" optional='hide'/>
-                                    <field name="klaim_id" string="Klaim" optional='show'/>
-                                    <button name="ambil_view" type="object" string="Detail Invoice" class="fa fa-eye"/>
-                                    <button name="ambil_view_klaim" type="object" string="Detail Klaim" class="fa fa-eye"/>
-                                </tree>
-                            </field>
+                        <field name="transaction_tracking_ids" string="" readonly='1'>
+                            <tree delete="0" create="0" default_order="id asc">
+                                <field name="id" string="ID" optional="hide"/>
+                                <field name="transaction_date" string="Transaction Date" optional="hide"/>
+                                <field name="populate_date" string="Populate Date" optional="hide"/>
+                                <field name="account_move_id" string="Transaction Number" optional="show"/>
+                                <field name="document_date" string="Document Date" optional="hide"/>
+                                <field name="entered_date" string="Entered Date" optional="show"/>
+                                <field name="document_no" string="Document Number" optional="show"/>
+                                <field name="description" string="Description" optional="show"/>
+                                <field name="transaction_class" string="Transaction Class" optional="hide"/>
+                                <field name="beginning_balance" string="Beginning Balance" optional="show"/>
+                                <field name="amount_debit" string="Amount Debit" optional="show"/>
+                                <field name="amount_credit" string="Amount Credit" optional="show"/>
+                                <field name="ending_balance" string="Ending Balance" optional="show"/>
+                                <field name="journal_number" string="Journal Number" optional="hide"/>
+                                <button name="ambil_view" type="object" string="Detail Invoice" class="fa fa-eye"/>
+                            </tree>
+                        </field>
                     </group>
                 </page>
                 <page string="Hutang Usaha" invisible="not is_supplier">
                     <group>
                         <field name="transaction_tracking_ids" string="" readonly='1'>
-                                <tree delete='0' default_order='id asc'>
+                                <tree delete='0' create="0" default_order='id asc'>
                                     <field name="id" string="id" optional='hide'/>
                                     <field name="transaction_date" string="Transaction Date" optional='hide'/>
                                     <field name="populate_date" string="Populate Date" optional='hide'/>
