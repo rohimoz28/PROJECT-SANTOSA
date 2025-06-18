@@ -93,28 +93,16 @@ class AccountMove(models.Model):
     populated_date = fields.Date(string="Populated Date", compute='_compute_populated_date', store=True)
     journal_periode = fields.Date('Jurnal Date', default=lambda self: fields.Date.context_today(self))
     journal_ajp = fields.Char('Jurnal No')
-    journal_ajp_id = fields.Many2one('journal.ajp','Jurnal No') #Un-Used
-    journal_type = fields.Char('Tipe Jurnal',) #Un-Used
-    journal_type_id = fields.Many2one('account.journal','Tipe Jurnal', default=lambda self: self._get_journal())
-    journal_code = fields.Char('Kode Jurnal', related='journal_type_id.code')
+    journal_ajp_id = fields.Many2one('journal.ajp','Jurnal No')
+    journal_type = fields.Char('Tipe Jurnal', default='JUM')
+    journal_type_id = fields.Many2one('journa.ajp.type','Tipe Jurnal')
+    journal_code = fields.Char('Kode Jurnal', default='AR')
     branch_id = fields.Many2one('res.branch','Branch')
 
     @api.model
-    def _get_journal(self):
-        jurnal_umum = self.env['account.journal'].search([('code', 'ilike', 'jum')], limit=1)
-        return jurnal_umum.id if jurnal_umum else False
-
-    @api.onchange('state')
-    def _update_accounting_date(self):
-        for line in self:
-            if line.state != 'draft':
-                line.accounting_date_periode = fields.Date.context_today(self)
-
-    @api.model
     def create(self, vals):
-        vals['invoice_date_due'] = 'JUM'
+        vals['journal_type'] = 'JUM'
         vals['journal_type'] = 'AR'
-        vals['invoice_date_due'] = fields.Date.context_today(self) + timedelta(days=30)
         return super(AccountMove, self).create(vals)
 
     @api.depends('populated_time')
