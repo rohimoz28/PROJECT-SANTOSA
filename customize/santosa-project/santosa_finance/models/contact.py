@@ -16,6 +16,8 @@ class ResPartner(models.Model):
         ('Asuransi', 'Asuransi'),
         ('Umum', 'Umum'),
         ('Korporasi', 'Korporasi'),
+        ('penjamin', 'Penjamin'),
+        ('payer', 'Pembayar'),
         ('Sanbe Group', 'Sanbe Group')
     ])
     is_customer = fields.Boolean(string="Is Customer", compute="_compute_is_customer", inverse="_set_is_customer", store=True)
