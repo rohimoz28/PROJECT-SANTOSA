@@ -491,41 +491,6 @@
             </field>
         </record>
 
-        <record id="hr_jobs_extended_tree" model="ir.ui.view">
-            <field name="name">hr.jobs.tree</field>
-            <field name="model">hr.job</field>
-            <field name="inherit_id" ref="hr.view_hr_job_tree" />
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='name']" position="replace"/>
-                <xpath expr="//field[@name='department_id']" position="before">
-                    <field name="area" column_invisible="1"/>
-                    <field name="branch_id" string="Unit Bisnis"/>
-                    <field name="directorate_id" string = "Direktorat"/>
-                    <field name="hrms_department_id" string = "Departemen"/>
-                    <field name="division_id" string = "Divisi"/>
-                </xpath>
-                <xpath expr="//field[@name='department_id']" position="replace"/>
-            </field>
-        </record>
-
-        <record id="hr_jobs_branch_extended_form" model="ir.ui.view">
-            <field name="name">hr.jobs.branch.form</field>
-            <field name="model">hr.job</field>
-            <field name="inherit_id" ref="hr.view_hr_job_form" />
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='department_id']" position="before">
-                    <field name="area" options="{'no_create': True, 'no_open': True}"/>
-                    <field name="branch_ids" invisible="1"/>
-                    <field name="branch_id" options="{'no_create': True, 'no_open': True}"/>
-                </xpath>
-                <xpath expr="//field[@name='department_id']" position="replace">
-                    <field name="directorate_id" options="{'no_create': True,'no_create_edit': True}" domain="['|',('branch_id','=',branch_id),('branch_id','=',False)]"  string = "Direktorat" required='1'/>
-                    <field name="hrms_department_id" options="{'no_create': True,'no_create_edit': True}" domain="[('directorate_id','=',directorate_id)]" string = "Departemen" required='1'/>
-                    <field name="division_id" options="{'no_create': True,'no_create_edit': True}" domain="[('department_id','=',hrms_department_id)]" string = "Divisi" required='1'/>
-                </xpath>
-            </field>
-        </record>
-
         <record id="view_hr_certificated_tree_editable" model="ir.ui.view">
             <field name="name">certificate.tree.editable</field>
             <field name="model">hr.employee.certification</field>
