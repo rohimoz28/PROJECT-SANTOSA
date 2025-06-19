@@ -67,10 +67,17 @@
             <xpath expr="//group[@id='header_right_group']/label[@for='invoice_date']" position="replace"/>            
             <xpath expr="//field[@name='invoice_date']" position="before">
                 <field name="transaction_date" string="Tanggal TRX" readonly="state != 'draft'"/>
+                <label for="invoice_date_due" string="Due Date"/>
+                <div class="d-flex" invisible="0" name="due_dates">
+                    <field name="invoice_date_due" force_save="1" placeholder="Date" readonly="state != 'draft' or pelayanan == 'pelayanan'"/>
+                     or
+                    <field name="invoice_payment_term_id" context="{'example_date': invoice_date, 'example_amount': tax_totals['amount_total']}" placeholder="Payment Terms" options="{'no_quick_create':True,'no_reate':True}" readonly="state in ['cancel', 'posted'] or pelayanan == 'pelayanan'"/>
+                </div>
+                
             </xpath>    
             <xpath expr="//field[@name='invoice_date']" position="replace">
-                <field name="invoice_no" readonly="state != 'draft' or pelayanan == 'pelayanan'" string="No. Invoice"/>
                 <field name="invoice_date" string="Tanggal Invoice" readonly="state not in ['draft']"/>
+                <field name="invoice_no" readonly="state != 'draft' or pelayanan == 'pelayanan'" string="No. Invoice"/>
                 <field name="status_invoice" readonly='1'/>
                 <field name="amount_total_signed" string="Total" readonly='1'/>
             </xpath>

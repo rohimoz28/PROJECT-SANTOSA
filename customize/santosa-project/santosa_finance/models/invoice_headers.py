@@ -153,6 +153,18 @@ class AccountMove(models.Model):
     @api.onchange('partner_id')
     def _onchange_field(self):
         self.penjamin_name_id = self.partner_id.id
+    
+    def action_post(self):
+        # Call the original method first (important)
+        res = super(AccountMove, self).action_post()
+        for move in self:
+            move.accounting_date_periode = fields.Date.context_today(move)
+            move.accounting_time_periode = fields.Datetime.now()
+            if not move.transaction_date:
+                move.transaction_date = fields.Date.context_today(move)
+            if not move.invoice_date:
+                move.invoice_date = fields.Date.context_today(move)
+        return res
 
     @api.depends('status_invoice', 'sales_point', 'penjamin_name')
     def _compute_temp_invoice_no(self):
