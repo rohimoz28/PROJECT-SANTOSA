@@ -74,7 +74,7 @@
                 <attribute name="create">true</attribute>
                 <attribute name="editable">bottom</attribute>
                 <attribute name="group_by">entered_date</attribute>
-                <attribute name="decoration-danger">not is_pelayanan</attribute>
+                <!-- <attribute name="decoration-danger">not is_pelayanan</attribute> -->
                 <attribute name="decoration-success"></attribute>
             </xpath>
 
