@@ -5,9 +5,7 @@
         <field name="name">account.move.form.custom</field>
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
-        <field name="arch" type="xml">
-
-            
+        <field name="arch" type="xml">            
             <xpath expr="//field[@name='invoice_line_ids']/tree" position="inside">
                 <field name="transaction_date" optional="hide"/>
                 <field name="transaction_class" optional="hide"/>
@@ -32,7 +30,7 @@
                 <field name="cost_price_avg" optional="hide"/>
                 <field name="cost_price_last_date" optional="hide"/>
                 <field name="cost_price_last_based" optional="hide"/>
-
+                <field name="pelayanan" widget="badge" decoration-success="pelayanan == 'non pelayanan'" decoration-danger="pelayanan == 'pelayanan'" on_change="1" field_id="pelayanan_0"/>
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='discount']" position="replace">
                 <field name="discount_subtotal" optional="hide" string="Discount Subtotal"/>
@@ -62,7 +60,7 @@
                 <field name="cost_price" optional="show"/>
                 <field name="cost_price_avg" optional="show"/>
                 <field name="dokter_name" optional="hide"/>
-                <field name="quantity" optional='hide'/>
+                <field name="quantity" optional='hide'/>                
             </xpath>
             <xpath expr="//field[@name='line_ids']/tree" position="attributes">
                 <attribute name="default_order">entered_date,account_id asc</attribute>
@@ -76,6 +74,8 @@
                 <attribute name="create">true</attribute>
                 <attribute name="editable">bottom</attribute>
                 <attribute name="group_by">entered_date</attribute>
+                <attribute name="decoration-danger">not is_pelayanan</attribute>
+                <attribute name="decoration-success"></attribute>
             </xpath>
 
 
