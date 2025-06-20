@@ -78,11 +78,12 @@ class AccountMoveLine(models.Model):
     last_update = fields.Datetime()
     populated_time = fields.Datetime()
     binary_checksum = fields.Char()
+    accounting_time_periode = fields.Datetime(related='move_id.accounting_time_periode')
+    accounting_date_periode = fields.Date(related='move_id.accounting_date_periode')
     need_to_calculate = fields.Boolean()
     flag = fields.Integer()
-
+    pelayanan = fields.Selection([('pelayanan','AR Pelayanan'),('non pelayanan','AR Non Pelayanan')], 'type AR',store=True, default='non pelayanan', related='move_id.pelayanan')
     formatted_datetime = fields.Char(string='Formatted Datetime', compute='_compute_formatted_datetime')
-
     CostPrice_AVG = fields.Float()
 
     @api.depends('product_id', 'product_uom_id')
@@ -168,3 +169,19 @@ class AccountMoveLine(models.Model):
             print(record.product_id.categ_id.property_account_income_categ_id.id, "ini akun bener nya")
             print(record.account_id.id, "ini akun salah nya")
             record.account_id = record.product_id.categ_id.property_account_income_categ_id.id
+
+    @api.constrains('account_id', 'display_type')
+    def _check_payable_receivable(self):
+        for line in self:
+            pass
+            # account_type = line.account_id.account_type
+            # if line.move_id.is_sale_document(include_receipts=True):
+            #     if account_type == 'liability_payable':
+            #         raise UserError(_("Account %s is of payable type, but is used in a sale operation.", line.account_id.code))
+                # if (line.display_type == 'payment_term') ^ (account_type == 'asset_receivable'):
+                #     raise UserError(_("Any journal item on a receivable account must have a due date and vice versa."))
+            # if line.move_id.is_purchase_document(include_receipts=True):
+            #     if account_type == 'asset_receivable':
+            #         raise UserError(_("Account %s is of receivable type, but is used in a purchase operation.", line.account_id.code))
+                # if (line.display_type == 'payment_term') ^ (account_type == 'liability_payable'):
+                #     raise UserError(_("Any journal item on a payable account must have a due date and vice versa."))
