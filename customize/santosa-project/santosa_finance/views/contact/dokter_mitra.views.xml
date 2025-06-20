@@ -8,21 +8,21 @@
             <field name="inherit_id" ref="base.view_partner_form"/> <!-- Adjust to the correct base form view ID -->
             <field name="arch" type="xml">
                 <xpath expr="(//group)[1]" position="after">
-                    <label for="is_dokter_mitra" string="Dokter Mitra?&#160;&#160;" invisible="is_customer or is_supplier or context.get('default_is_customer', False) or context.get('default_is_supplier', False)"/>
-                    <field name="is_dokter_mitra" string="Dokter Mitra?" invisible="is_customer or is_supplier or context.get('default_is_customer', False) or context.get('default_is_supplier', False)"/>
+                    <label for="is_dokter_mitra" string="Dokter Mitra?&#160;&#160;"/>
+                    <field name="is_dokter_mitra" string="Dokter Mitra?" />
                     <div />
-                    <label for="is_customer" string="Customer?&#160;&#160;" invisible="is_dokter_mitra or is_supplier or context.get('default_is_customer', False) != 1"/>
-                    <field name="is_customer" string="Customer?" invisible="is_dokter_mitra or context.get('default_is_customer', False) != 1"/>
-                    <field name="tipe_customer" string="Customer Type" invisible="not is_customer or is_dokter_mitra or is_supplier or context.get('default_is_customer', False) != 1"/>
+                    <label for="is_customer" string="Customer?&#160;&#160;" invisible="is_dokter_mitra"/>
+                    <field name="is_customer" string="Customer?" invisible="is_dokter_mitra"/>
+                    <field name="tipe_customer" string="Customer Type" invisible="not is_customer or is_dokter_mitra or is_supplier"/>
                     <div />
-                    <label for="is_supplier" string="Supplier?&#160;&#160;" invisible="is_dokter_mitra or is_customer or context.get('default_is_supplier', False) != 1"/>
-                    <field name="is_supplier" string="Supplier?" invisible="is_dokter_mitra or is_customer or context.get('default_is_supplier', False) != 1"/>
+                    <label for="is_supplier" string="Supplier?&#160;&#160;" invisible="is_dokter_mitra or is_customer "/>
+                    <field name="is_supplier" string="Supplier?" invisible="is_dokter_mitra or is_customer "/>
                     <div />
                     <label for="external_id" string="External ID&#160;&#160;&#160;&#160;&#160;&#160;"/>
                     <field name="external_id" string="External ID" placeholder="External ID"/>
                 </xpath>
                 <xpath expr="(//group)[1]" position="attributes">
-                    <attribute name="invisible">is_dokter_mitra</attribute>
+                    <attribute name="invisible">1</attribute>
                 </xpath>
                 <xpath expr="//notebook/page[@name='contact_addresses']" position="attributes">
                     <attribute name="invisible">['|','|','|',('is_dokter_mitra','=',True),('is_customer','=',True),('is_company','=',True)]</attribute>
@@ -43,7 +43,7 @@
                 
                 
                 <xpath expr="//notebook" position="inside">
-                    <page string="Hutang Dokter" invisible="is_customer or is_supplier or context.get('default_is_customer', False) or context.get('default_is_supplier', False)">
+                    <page string="Hutang Dokter">
                         <group>
                             <field name="transaction_tracking_ids" readonly="1">
                                 <tree delete="0" default_order="id asc">
@@ -70,14 +70,15 @@
         </record>
 
         <!-- Action for Dokter Mitra -->
-        <!-- <record id="action_dokter_mitra" model="ir.actions.act_window">
-            <field name="name">Dokter Mitra</field>
+        <record id="action_dokter_mitra" model="ir.actions.act_window">
+            <field name="name">Dokter</field>
             <field name="res_model">res.partner</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('is_dokter_mitra', '=', True)]</field>
+            <!-- <field name="domain">[('is_dokter_mitra', '=', True)]</field> -->
             <field name="context">{'default_is_dokter_mitra': 1, 'search_default_filter_dokter_mitra': 1}</field>
         </record>
 
-        <menuitem id="menu_dokter_mitra" name="Dokter Mitra" sequence="99" action="action_dokter_mitra"/> -->
+        <!-- Menu item for Dokter Mitra -->
+        <menuitem id="menu_dokter_mitra" name="Dokter" sequence="99" action="action_dokter_mitra"/>
     </data>
 </odoo>

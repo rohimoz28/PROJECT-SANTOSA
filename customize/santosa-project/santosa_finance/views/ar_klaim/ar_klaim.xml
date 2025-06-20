@@ -11,13 +11,13 @@
                     <field name="claim_date" optional="show" />
                     <field name="claim_number" optional="show" />
                     <field name="bill_number" optional="show" />
-                    <field name="amt_claim_value" string="Total Invoice" optional="show" sum="Total Invoice"/>
-                    <field name="claim_value" string="Total Klaim" optional="show" sum="Total Klaim"/>
+                    <field name="guarantor" optional="show" />
+                    <field name="claim_value" optional="show" />
                     <field name="payer" optional="show" />
                     <field name="state" widget="badge"
-                        decoration-warning="state == 'partial_settled'"
-                        decoration-success="state == 'close'"
-                        decoration-info="state == 'in_process'"
+                        decoration-info="state == 'partial_settled'"
+                        decoration-warning="state == 'close'"
+                        decoration-success="state == 'in_process'"
                         decoration-danger="state == 'cancel'"
                         optional="show"
                     />
@@ -37,48 +37,40 @@
             <field name="arch" type="xml">
                 <form string="Form AR Klaim">
                     <header>
-                        <button string="Cancel" name="button_cancel" type="object" invisible="state in ['close','cancel']"/>
-                        <field name="state" widget="statusbar" options="{'clickable': '1'}" statusbar_visible="in_process,partial_settled,close" />
+                        <field name="state" widget="statusbar" options="{'clickable': '1'}" />
                     </header>
-                    <sheet>
-                        <group name="header">
-                            <group>                        
-                                <field name="claim_date" />
-                                <field name="claim_number" string= "No. Klaim"/>
-                                <field name="bill_number" string= "No. Tagihan"/>
-                            </group>
-                            <group>
-                                <field name="claim_value" />
-                                <field name="payer" />
-                                <field name="PopulatedTime" string="Populated Time"/>
-                                <field name="guarantor" invisible="1"/>
-                                <field name="currency_id" invisible="1" />
-                            </group>
-                        </group>
-                        <field name="ar_klaim_ids">
-                            <tree editable="bottom" create="0" class="o_horizontal_scroll">
-                                <field name="currency_id" column_invisible="1" />
-                                <field name="trx_number" column_invisible="1"/>
-                                <field name="invoice_id" optional="show"/>
-                                <field name="Invoice_number" optional="show" string="Invoice No"/>
-                                <field name="billing_date" optional="show" string="Tanggal Invoice"/>
-                                <field name="sep_number" optional="show" string="No SEP"/>
-                                <field name="mr_number" optional="show"  string="No MR"/>
-                                <field name="guarantor" optional="show"  string="Penjamin"/>
-                                <field name="PopulatedTime" optional="show"  string="Populated Time"/>
-                                <field name="invoice_amount" string="Amount Invoice" optional="show" sum="Total Invoice"/>
-                                <field name="amt_klaim" string="AR Amount Klaim" optional="show" sum="Total Klaim"/>
-                                <field name="diff_amt" string="Selisih" optional="show" sum="Total Selisih"/>
-                                <field name="status_invoice" string="Status" widget="badge" decoration-success="status_invoice == 'Closed'" decoration-danger="status_invoice == 'Open'" on_change="1" field_id="pelayanan_0"/> 
-                                <button 
-                                    name="ar_klaim_invoice_detail_button" 
-                                    type="object" 
-                                    string="Detail"
-                                    class="fa fa-eye"
-                                />
-                            </tree>
-                        </field>
-                    </sheet>
+                    <group name="header">
+                        <field name="claim_date" />
+                        <field name="claim_number" />
+                        <field name="bill_number" />
+                        <field name="guarantor" />
+                        <field name="claim_value" />
+                        <field name="payer" />
+                        <field name="currency_id" invisible="1" />
+                    </group>
+                    <notebook>
+                        <page name="ar_klaim_detail" string="Details">
+                            <field name="ar_klaim_ids">
+                                <tree editable="bottom" class="o_horizontal_scroll">
+                                    <field name="currency_id" column_invisible="1" />
+                                    <field name="trx_number" optional="show"/>
+                                    <field name="invoice_id" optional="show"/>
+                                    <field name="Invoice_number" optional="show"/>
+                                    <field name="billing_date" optional="show"/>
+                                    <field name="sep_number" optional="show"/>
+                                    <field name="mr_number" optional="show"/>
+                                    <field name="invoice_amount" optional="show"/>
+                                    <button 
+                                        name="ar_klaim_invoice_detail_button" 
+                                        type="object" 
+                                        string="Detail"
+                                        class="fa fa-eye"
+                                    />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <!-- tracking log -->
                     <div class="oe_chatter">
                         <field name="message_follower_ids" />
                         <field name="activity_ids" />
