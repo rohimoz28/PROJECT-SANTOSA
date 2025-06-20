@@ -83,9 +83,7 @@
             <field name="domain"></field>
 
         </record>
-
-
-       
+        <menuitem id="offset_transaction_data_trans" name="Offset Transaction" sequence='21' parent="santosa_finance.transaction_sanfi_root" action="santosa_finance_offset_transaction_action"/>
         <menuitem id="offset_transaction_data" name="Offset Transaction" sequence='15' parent="santosa_finance.offset_root" action="santosa_finance_offset_transaction_action"/>
 
     </data>
