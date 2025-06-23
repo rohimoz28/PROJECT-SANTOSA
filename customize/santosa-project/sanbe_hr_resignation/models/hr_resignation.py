@@ -21,18 +21,6 @@ class HrResignation(models.Model):
         """ Print report FKPD """
         return self.env.ref('sanbe_hr_resignation.fkpd_report').report_action(self)
 
-    @api.onchange('name')
-    @api.depends('name')
-    def _isi_emps(self):
-        context = self._context
-        current_uid = context.get('uid')
-        user = self.env['res.users'].browse(current_uid)
-        # print(user.branch_id.name)
-        for allrecs in self:
-            allemps = self.env['hr.employee'].sudo().search(
-                [('state', '=', 'approved'), ('active', '=', True), ('branch_id','=',user.branch_id.id)])
-            allrecs.emp_nos_ids= [Command.set(allemps.ids)]
-
     @api.depends('area')
     def _isi_semua_branch(self):
         for allrecs in self:
@@ -56,18 +44,17 @@ class HrResignation(models.Model):
         index='trigram',
         default=lambda self: _('New'))
     letter_no = fields.Char('Reference Number')
-    area = fields.Many2one('res.territory',string='Area',tracking=True,)
+    area = fields.Many2one('res.territory',string='Area', tracking=True, store=True)
     branch_ids = fields.Many2many('res.branch','res_branch_rel',string='AllBranch',compute='_isi_semua_branch',store=False)
     alldepartment = fields.Many2many('hr.department','hr_department_rel', string='All Department',compute='_isi_department_branch',store=False)
-    branch_id = fields.Many2one('res.branch',string='Business Units',domain="[('id','in',branch_ids)]",tracking=True,)
-    department_id = fields.Many2one('hr.department',domain="[('id','in',alldepartment)]",string='Sub Department')
-    emp_no = fields.Char(string='Employee Nos', index=True, required=False, tracking=True)
-    emp_nos_ids = fields.Many2many('hr.employee', 'res_emp_nos_resign_rel', string='AllEmpNos',
-                                  compute='_isi_emps', store=False)
-    emp_nos = fields.Many2one('hr.employee',string='Employee No',index=True,required=False,tracking=True, domain="[('id','in',emp_nos_ids)]")
-    employee_name = fields.Char('Employee Name')
-    emp_nik = fields.Char('NIK',index=True)
-    # resignation_code = fields.Char('Resignation Code')
+    branch_id = fields.Many2one('res.branch', string='unit Bisnis',  related='employee_id.branch_id', store=True)
+    directorate_id = fields.Many2one('sanhrms.directorate', string='Direktorat', related='employee_id.directorate_id', store=True)
+    hrms_department_id = fields.Many2one('sanhrms.department', string='Departemen', related='employee_id.hrms_department_id', store=True)
+    division_id = fields.Many2one('sanhrms.division', string='Divisi', related='employee_id.division_id', store=True)
+    job_id = fields.Many2one('hr.job', string='Jabatan', related='employee_id.job_id', store=True)
+    parent_id = fields.Many2one('parent.hr.employee', string='Atasan Langsung', related="employee_id.parent_id", store=True)
+    emp_id = fields.Char('ID Karyawan',related='employee_id.employee_id')
+    emp_nik = fields.Char(related='employee_id.nik', string='NIK')
     trans_date= fields.Date('Transaction Date',default= fields.Date.today())
     trans_status = fields.Char('Trx Status')
     is_penalty = fields.Boolean('Penalty',default=False)
@@ -77,7 +64,6 @@ class HrResignation(models.Model):
     bondservice_from = fields.Date('Bond Services From')
     bondservice_to = fields.Date('To')
     effective_date = fields.Date('Effective Date')
-    #penalty = fields.Char('Penalty')
     remarks = fields.Text('Remarks')
     images = fields.Many2many('ir.attachment', 'hr_resoignation_rel',string='Images',
                                           help="You may attach files to with this")
@@ -98,17 +84,44 @@ class HrResignation(models.Model):
     contract_id = fields.Many2one('hr.contract',compute='hitung_masa_contract',string='Contract',index=True,store=False)
     contract_datefrom = fields.Date('Contract Date From',related='contract_id.date_start')
     contract_dateto = fields.Date('Contract Date To',related='contract_id.date_end')
-    job_status = fields.Selection(related='emp_nos.job_status',default='contract',string='Job Status')
+    job_status = fields.Selection(related='employee_id.job_status',default='contract',string='Job Status')
     keterangan = fields.Text('Keterangan')
-    ws_month = fields.Integer('Working Service Month', related='emp_nos.ws_month',readonly=True)
-    ws_year  = fields.Integer('Working Service Year', related='emp_nos.ws_year',readonly=True)
-    ws_day = fields.Integer('Working Service Day', related='emp_nos.ws_day',readonly=True)
-
+    ws_month = fields.Integer('Working Service Month', compute="_compute_working_duration",readonly=True)
+    ws_year  = fields.Integer('Working Service Year', compute="_compute_working_duration",readonly=True)
+    ws_day = fields.Integer('Working Service Day', compute="_compute_working_duration",readonly=True)
     cs_month = fields.Integer('Contract Service Month', compute='hitung_masa_contract',readonly=True,store=False)
     cs_year  = fields.Integer('Contract Service Year', compute='hitung_masa_contract',readonly=True,store=False)
     cs_day = fields.Integer('Contract Service Day', compute='hitung_masa_contract',readonly=True,store=False)
-    # end_contract = fields.Boolean(string="Flag End of Contract", default=False)
-    end_contract = fields.Boolean(string="Rehire", default=False)
+    end_contract = fields.Boolean(string="Akhir Kontrak", default=False)
+
+
+    @api.depends('hrms_department_id')
+    def _find_department_id(self):
+        for line in self:
+            if line.hrms_department_id:
+                Department = self.env['hr.department'].search([('name', 'ilike', line.division_id.name)], limit=1)
+                if Department:
+                    line.department_id = Department.id
+                else:
+                    Department = self.env['hr.department'].sudo().create({
+                        'name': line.hrms_department_id.name,
+                        'active': True,
+                        'company_id': self.env.user.company_id.id,
+                    })
+                    line.department_id = Department.id
+
+
+    @api.depends('employee_id','state')
+    @api.onchange('employee_id')
+    def _compute_employee_exit(self):
+        for record in self.filtered('employee_id'):
+            record.job_id = record.employee_id.job_id
+            record.hrms_department_id = record.employee_id.hrms_department_id
+            record.company_id = record.employee_id.company_id
+            record.area = record.employee_id.area.id
+            record.branch_id = record.employee_id.branch_id.id
+            record.emp_nik = record.employee_id.nik
+
 
     @api.depends('employee_contract','state','employee_id','job_status')
     def hitung_masa_contract(self):
@@ -140,16 +153,6 @@ class HrResignation(models.Model):
                 record.cs_day = 0
                 record.contract_id  = False
 
-    @api.onchange('employee_id')
-    def _onchange_employee_id(self):
-        res = super(HrResignation,self)._onchange_employee_id()
-        if self.employee_id:
-            self.notice_period = self.employee_id.resign_notice
-            self.bondservice_to = self.employee_id.service_to
-            self.bondservice_from = self.employee_id.service_from
-            self.joined_date = self.employee_id.join_date or self.emp_nos.joining_date
-
-        return res
 
     @api.onchange('employee_contract','employee_id','state')
     def isi_kontrak(self):
@@ -176,33 +179,6 @@ class HrResignation(models.Model):
         for resignation in self:
             return True
 
-    @api.onchange('emp_nos')
-    def isi_asset(self):
-        for allrec in self:
-            if not allrec.emp_nos:
-                return
-            allrec.resignation_asset_ids = [Command.set([])]
-            allasset = self.env['hr.resignation.asset']
-            allrec.emp_no = allrec.emp_nos.employee_id
-            allrec.joined_date = allrec.emp_nos.join_date
-            allrec.emp_nik = allrec.emp_nos.nik
-            allrec.employee_id = allrec.emp_nos.id
-            allrec.employee_name = allrec.emp_nos.name
-            allrec.area = allrec.emp_nos.area.id
-            allrec.branch_id = allrec.emp_nos.branch_id.id
-            allrec.department_id = allrec.emp_nos.department_id.id
-            allrec.bondservice_from = allrec.emp_nos.service_from
-            allrec.bondservice_to = allrec.emp_nos.service_to
-            allrec.trans_status = "draft"
-
-            for allemp in allrec.emp_nos.asset_ids:
-                allasset |= self.env['hr.resignation.asset'].sudo().create({
-                                'asset_benefit_type':allemp.asset_name,
-                                'aset_benefit_number': allemp.asset_number,
-                                'product_uom_id': allemp.uom.id,
-                                'product_qty': allemp.asset_qty,
-                                'keterangan': allemp.keterangan})
-            allrec.resignation_asset_ids = allasset.ids
 
     def action_confirm_resignation(self):
         res = super(HrResignation,self).action_confirm_resignation()
@@ -210,13 +186,6 @@ class HrResignation(models.Model):
             alldata.trans_status ='confirm'
         return res
 
-    @api.model
-    def create(self, vals):
-        res = super(HrResignation, self).create(vals)
-        for allres in res:
-            employee = self.env['hr.employee'].sudo().browse(allres.emp_nos.id)
-            employee.write({'state': 'hold'})
-        return res
 
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)
@@ -229,34 +198,52 @@ class HrResignation(models.Model):
                    for node in arch.xpath("//button"):
                           node.set('invisible', 'True')
         return arch, view
+
+    def write(self,vals_list):
+        res = super(HrResignation,self).write(vals_list)
+        for allrec in self:
+            if allrec.state =='open':
+                empstatus = allrec.employee_id.emp_status
+                allrec.employee_id.contract_id = allrec.id
+                allrec.employee_id.contract_datefrom = allrec.date_start
+                allrec.employee_id.contract_dateto = allrec.date_end
+                mycari = self.env['hr.employment.log'].sudo().search([('employee_id','=',allrec.employee_id.id),('job_status','=','contract'),('service_type','=', allrec.contract_type_id.code),('start_date','=',allrec.date_start),('end_date','=', allrec.date_end)])
+                if not mycari:
+                    self.env['hr.employment.log'].sudo().create({'employee_id': allrec.employee_id.id,
+                                                                 'service_type': allrec.contract_type_id.code,
+                                                                 'start_date': allrec.date_start,
+                                                                 'end_date': allrec.date_end,
+                                                                 'bisnis_unit': allrec.branch_id.id,
+                                                                 'department_id': allrec.hrms_department_id.id,
+                                                                 'job_title': allrec.job_id.name,
+                                                                 'job_status': 'contract',
+                                                                 'emp_status': empstatus,
+                                                                 'model_name': 'hr.contract',
+                                                                 'model_id': allrec.id,
+                                                                 'doc_number': allrec.name,
+                                                                 })
+
+    @api.depends("contract_datefrom","contract_dateto")
+    def _compute_working_duration(self):
+        for record in self:
+            if record.contract_datefrom and record.contract_dateto:
+                service_until = record.contract_dateto
+                if record.contract_datefrom and service_until > record.contract_datefrom:
+                    service_duration = relativedelta(
+                        service_until, record.contract_datefrom
+                    )
+                    record.ws_year = service_duration.years
+                    record.ws_month = service_duration.months
+                    record.ws_day = service_duration.days
+                else:
+                    record.ws_year = 0
+                    record.ws_month = 0
+                    record.ws_day = 0
+            else:
+                record.ws_year = 0
+                record.ws_month = 0
+                record.ws_day = 0
     
-    # def action_approve_resignation(self):
-    #     res = super(HrResignation,self).action_approve_resignation()
-    #     self.env['hr.employment.log'].sudo().create({'employee_id': self.emp_nos.id,
-    #                                                  'service_type': self.resignation_type[1].upper(),
-    #                                                  'start_date': self.trans_date or fields.Datetime.today(),
-    #                                                  'end_date': self.approved_revealing_date or fields.Datetime.today(),
-    #                                                  'bisnis_unit': self.branch_id.id,
-    #                                                  'department_id': self.emp_nos.department_id.id,
-    #                                                  'job_title': self.emp_nos.job_id.name,
-    #                                                  'job_status': self.emp_nos.jobs_tatus,
-    #                                                  'emp_status': self.emp_nos.emp_status,
-    #                                                  'model_name': 'hr.resignation',
-    #                                                  'model_id': self.id,
-    #                                                  'trx_number': self.name,
-    #                                                  'doc_number': self.name,
-    #                                                  'end_contract': self.end_contract,
-    #                                                  })
-    #     self.emp_nos.write({'state': 'hold'})
-    #     return res
-            
-    
-    def init(self):
-        mycari = self.env['hr.resignation'].sudo().search([('effective_date','=',False)])
-        for allcari in mycari:
-            if allcari.emp_nos.job_status =='contract':
-                allcari.effective_date= allcari.emp_nos.contract_id.date_end
-                allcari.env.cr.commit()
 
 class HrResignationAsset(models.Model):
     _name = 'hr.resignation.asset'
