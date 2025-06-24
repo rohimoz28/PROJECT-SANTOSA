@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    
+    <data>
     <!-- <record id="view_move_form_inherit_delete_branch" model="ir.ui.view">
         <field name="name">account.move.form.custom</field>
         <field name="model">account.move</field>
@@ -25,7 +25,7 @@
         <field name="arch" type="xml">
             <!-- Tambahkan Tab Baru -->
             <xpath expr="//page[@name='other_info']/group" position="before">
-                <group string="Invoice Headers Custom">
+                <group string="Invoice Headers Custom" invisible="is_klaim">
                     <group>
                         <field name="status_sinkronisasi" readonly='1'/>
                         <field name="is_not_first_calculate" readonly='1'/>
@@ -33,6 +33,8 @@
                         <field name="transaction_date" readonly='1'/>
                         <field name="invoice_no" invisible='1'/>
                         <field name="temp_invoice_no" string="Invoice No" readonly='1'/>
+                        <field name="is_klaim" invisible='1' readonly='1'/>
+                        <!-- <field name="company_id" invisible='1'/> -->
 
                         <field name="registration_date" readonly='1'/>
                         <field name="registration_no" readonly='1'/>
@@ -71,15 +73,45 @@
                 <div class="d-flex" invisible="0" name="due_dates">
                     <field name="invoice_date_due" force_save="1" placeholder="Date" readonly="state != 'draft' or pelayanan == 'pelayanan'"/>
                      or
-                    <field name="invoice_payment_term_id" context="{'example_date': invoice_date, 'example_amount': tax_totals['amount_total']}" placeholder="Payment Terms" options="{'no_quick_create':True,'no_reate':True}" readonly="state in ['cancel', 'posted'] or pelayanan == 'pelayanan'"/>
+                    <field name="invoice_payment_term_id" context="{'example_date': invoice_date, 'example_amount': tax_totals['amount_total']}" placeholder="Payment Terms" options="{'no_quick_create':True,'no_create':True}" readonly="state in ['cancel', 'posted'] or pelayanan == 'pelayanan'"/>
                 </div>
                 
             </xpath>    
+
+            <xpath expr="//group[@id='header_right_group']" position="after">
+                <group id="header_left_claim_group" invisible="not is_klaim">
+                        <field name="transaction_date" string= "Tanggal Klaim" readonly="state != 'draft'"/> 
+                        <field name="name" string = "No. Klaim" readonly="state != 'draft'"/> 
+                        <field name="no_bill" string = "No. Tagihan" readonly="state != 'draft'"/> 
+                </group>
+                <group id="header_right_claim_group" invisible="not is_klaim">
+                        <field name="total_amt_claim" string = "Nilai Klaim" readonly='1' style="font-weight: bold;" />
+                        <field name="partner_id" string = "Payor" readonly="state != 'draft'"/> 
+                        <field name="populated_date" string = "Populate Date" readonly='1'/>
+                </group>
+            </xpath>
+            <!-- Make 'header_left_group' and 'header_right_group' invisible when 'is_klaim' is True -->
+            <xpath expr="//div[@class='oe_title']" position="attributes">
+                <attribute name="invisible">is_klaim</attribute>
+            </xpath>
+            
+            <xpath expr="//page[@name='other_info']" position="attributes">
+                <attribute name="invisible">is_klaim</attribute>
+            </xpath>
+            
+            <xpath expr="//group[@id='header_left_group']" position="attributes">
+                <attribute name="invisible">is_klaim</attribute>
+            </xpath>
+
+            <xpath expr="//group[@id='header_right_group']" position="attributes">
+                <attribute name="invisible">is_klaim</attribute>
+            </xpath>
+            
             <xpath expr="//field[@name='invoice_date']" position="replace">
                 <field name="invoice_date" string="Tanggal Invoice" readonly="state not in ['draft']"/>
                 <field name="invoice_no" readonly="state != 'draft' or pelayanan == 'pelayanan'" string="No. Invoice"/>
                 <field name="status_invoice" readonly='1'/>
-                <field name="amount_total_signed" string="Total" readonly='1'/>
+                <field name="total_amt_claim" string="Total Claim" readonly='1' sum="Total Klaim" invisible="not is_klaim"/>
             </xpath>
             <xpath expr="//label[@for='partner_id' and contains(@invisible, 'out_invoice')]" position="replace"/>
             <xpath expr="//label[@for='partner_id' and contains(@invisible, 'in_invoice')]" position="replace"/>
@@ -162,4 +194,47 @@
 
         </field>
     </record>
+        
+            <record id="view_ar_klaim_inherit" model="ir.ui.view">
+                <field name="name">account.move.filter.inherit</field>
+                <field name="model">account.move</field>
+                <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+                <field name="arch" type="xml">
+                    <xpath expr="//filter[@name='to_check']" position="after">
+                        <filter string="AR Klaim" name="filter_klaim" domain="[('is_klaim', '=', True)]"/>
+                    </xpath>
+                </field>
+            </record>
+        
+        
+        
+        <record id="view_move_tree_klaim" model="ir.ui.view">
+            <field name="name">account.move.tree.klaim</field>
+            <field name="model">account.move</field>
+            <field name="arch" type="xml">
+                <tree string="AR Klaim">
+                    <field name="populated_date" string="Populate Date"/>
+                    <field name="transaction_date" string="Tanggal Klaim"/>
+                    <field name="name" string="No. Klaim"/>
+                    <field name="no_bill" string="No Tagihan"/>
+                    <field name="partner_id" string="Payor"/>
+                    <field name="total_amt_claim" string="Nilai Klaim"/>
+                    <field name="state" string="Status" widget="badge" decoration-success="state != 'draft'" decoration-danger="state == 'draft'"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Action for AR Klaim -->
+        <record id="action_ar_klaim2" model="ir.actions.act_window">
+            <field name="name">AR Klaim</field>
+            <field name="res_model">account.move</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'default_is_klaim': 1, 'search_default_filter_klaim': 1}</field>
+            <field name="view_id" ref="view_move_tree_klaim"/>
+        </record>
+        
+        <menuitem id="menu_ar_klaim2" name="AR Klaim" action="action_ar_klaim2" parent="santosa_finance.transaction_sanfi_root" sequence="20"/>
+
+
+    </data>
 </odoo>

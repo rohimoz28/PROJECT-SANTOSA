@@ -32,7 +32,9 @@
                 <field name="cost_price_avg" optional="hide"/>
                 <field name="cost_price_last_date" optional="hide"/>
                 <field name="cost_price_last_based" optional="hide"/>
-                <field name="pelayanan" widget="badge" decoration-success="pelayanan == 'non pelayanan'" decoration-danger="pelayanan == 'pelayanan'" on_change="1" field_id="pelayanan_0"/>
+                <!-- <field name="pelayanan" widget="badge" decoration-success="pelayanan == 'non pelayanan'" decoration-danger="pelayanan == 'pelayanan'" on_change="1" field_id="pelayanan_0"/> -->
+                <field name="is_klaim" column_invisible="1"/>
+
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='discount']" position="replace">
                 <field name="discount_subtotal" optional="hide" string="Discount Subtotal"/>
@@ -63,6 +65,7 @@
                 <field name="cost_price_avg" optional="show"/>
                 <field name="dokter_name" optional="hide"/>
                 <field name="quantity" optional='hide'/>
+                <field name="is_klaim" column_invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='line_ids']/tree" position="attributes">
                 <attribute name="default_order">entered_date,account_id asc</attribute>
@@ -70,14 +73,86 @@
             <!-- <xpath expr="//field[@name='line_ids']" position="attributes">
                 <attribute name="invisible">[('amount_total_signed', '=', 0)]</attribute>
             </xpath> -->
-            
-
+            <xpath expr="//page[@name='invoice_tab']" position="after">
+                <page id="klaim_invoice_tab" name="klaim_tab" string="Detail Klaim" invisible="not is_klaim">
+                    <field name="invoice_line_ids" context="{
+                                           'default_move_type': context.get('default_move_type'),
+                                           'default_currency_id': currency_id or company_currency_id,
+                                           'default_display_type': 'product',
+                                           'quick_encoding_vals': quick_encoding_vals,
+                                       }" readonly="state != 'draft'"> 
+                        <tree editable="bottom" create="1" string="Detail Klaim" group_by="entered_date" default_order="sequence, id" >
+                            <field name="create_date" optional="show" string="Create Date"/>
+                            <field name="company_id" column_invisible="1"/>
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="populate_date" optional='show'/>
+                            <!-- <field name="account_id" optional='hide' options="{'no_create': True, 'no_quick_create': True}" string="Account" column_invisible="1"/> -->
+                            <field name="invoice_id" string="No. TRX" options="{'no_create': True, 'no_quick_create': True}" optional="show"/>  
+                            <field name="nomor_invoice" string="No. Invoice" optional='show' readonly="1" />
+                            <field name="amount_total_signed" optional='show' readonly="1" />
+                            <field name="no_sep_ref_no" optional='show' string="No. SEP "/>
+                            <field name="med_rec_number" optional='show' string="Med. Rec Number"/>
+                            <field name="partner_id" optional='hide' string="Penjamin"/>
+                            <field name="invoice_amount" string="Invoice Amount" optional='show' sum="Total Invoice"/>
+                            <field name="invoice_amount_claim" string="Claim Amount" optional='show' sum="Total Klaim"/>
+                            <field name="amount_diff" string="Selisih" optional='show' sum="Total Selisih"/>
+                            <field name="status_invoice" string="Invoice Status" widget="badge" optional='show' decoration-success="status_invoice == 'Closed'" decoration-danger="status_invoice != 'Closed'" on_change="1" field_id="status_invoice_0"/>
+                            <button name="ar_klaim_invoice_detail_button" type="object" string="Detail" class="fa fa-eye" />
+                        </tree>
+                    </field>
+                    <group col="12" class="oe_invoice_lines_tab" name="klaim_line_tab">
+                        <group colspan="8">
+                            <field name="narration" placeholder="Terms and Conditions" colspan="2" nolabel="1"/>
+                        </group>
+                        <group class="oe_klaim_subtotal_footer" colspan="4">
+                            <field name="total_invoice" placeholder="Total Invoice" colspan="2" readonly="1" style="font-weight: bold;" />
+                            <field name="total_amt_claim" placeholder="Total Klaim" colspan="2" readonly="1" style="font-weight: bold;" />
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//page[@name='invoice_tab']" position="attributes">
+                <attribute name="invisible">is_klaim</attribute>
+            </xpath>
+            <xpath expr="//page[@name='aml_tab']" position="after">
+                <page id="journal_klaim_tab" name="journal_klaim_tab" string="Journal Klaim" invisible="not is_klaim">
+                    <field name="line_ids" context="{
+                                           'default_move_type': context.get('default_move_type'),
+                                           'line_ids': line_ids,
+                                           'default_currency_id': currency_id or company_currency_id,
+                                       }" readonly="state != 'draft'"> 
+                        <tree editable="bottom" create="1" string="Journal Klaim" group_by="entered_date" default_order="sequence, id">
+                            <field name="create_date" optional="show" string="Create Date" column_invisible="1"/>
+                            <field name="populate_date" optional='show'/>
+                            <field name="flag" optional='show'/>
+                            <field name="account_id" optional='show' string="Account" readonly="1" />
+                            <field name="name" string="Label" optional='show'/>
+                            <field name="company_id" column_invisible="1"/>
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="debit" string="Debit" optional='show' sum="Total Debit"/>
+                            <field name="credit" string="Credit" optional='show' sum="Total Credit"/>
+                        </tree>
+                    </field>
+                    <group col="12" class="oe_invoice_lines_tab" name="klaim_journal_line_tab">
+                        <group colspan="8">
+                        </group>
+                        <group class="oe_klaim_subtotal_footer" colspan="4">
+                            <field name="total_debit" placeholder="Total Debit" colspan="2" readonly="1" style="font-weight: bold;" />
+                            <field name="total_credit" placeholder="Total Credit" colspan="2" readonly="1" style="font-weight: bold;" />
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//page[@name='aml_tab']" position="attributes">
+                <attribute name="invisible">is_klaim</attribute>
+            </xpath>
+         
             <xpath expr="//field[@name='invoice_line_ids']/tree" position="attributes">
                 <attribute name="create">true</attribute>
                 <attribute name="editable">bottom</attribute>
                 <attribute name="group_by">entered_date</attribute>
                 <!-- <attribute name="decoration-danger">not is_pelayanan</attribute> -->
-                <attribute name="decoration-success"></attribute>
+                <!-- <attribute name="decoration-success"></attribute> -->
             </xpath>
 
 

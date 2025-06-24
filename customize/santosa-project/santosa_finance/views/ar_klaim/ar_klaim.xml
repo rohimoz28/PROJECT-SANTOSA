@@ -85,6 +85,7 @@
             parent="santosa_finance.transaction_sanfi_root"
             sequence="20"
             action="ar_klaim_action"
+            active="0"
         />
     </data>
 </odoo>

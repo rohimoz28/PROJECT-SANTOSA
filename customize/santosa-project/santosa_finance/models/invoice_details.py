@@ -8,28 +8,29 @@ class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
     transaction_date = fields.Datetime()
-    no_trx = fields.Char()
-    document_trx_date = fields.Datetime()
+    no_trx = fields.Char(related='invoice_id.transaction_no',store=True)
+    document_trx_date = fields.Date(related='invoice_id.transaction_date',store=True)
     transaction_class = fields.Char()
     group = fields.Char()
     item = fields.Char()
     no_invoice_farmasi = fields.Char()
-    nomor_invoice = fields.Char()
+    nomor_invoice = fields.Char(related='invoice_id.invoice_no', store=True)
     dokter_code = fields.Char()
     dokter_name = fields.Char()
     unit_code = fields.Char()
     unit_name = fields.Char()
     idTrx = fields.Integer()
 
-    med_rec_number = fields.Char()
-    no_sep_ref_no = fields.Char()
+    med_rec_number = fields.Char(string="Med. Record", related='invoice_id.med_rec_number', store=True)
+    no_sep_ref_no = fields.Char(string="No. SEP", related='invoice_id.no_sep_ref_no', store=True)
     registration_no = fields.Char()
 
     patient_name = fields.Char()
-    penjamin_name_id = fields.Many2one('res.partner')
+    penjamin_name_id = fields.Many2one('res.partner', related='invoice_id.penjamin_name_id')
     concat_field = fields.Char(string='Transaksi')
-    invoice_amount_claim = fields.Monetary()
-    invoice_amount = fields.Monetary()
+    invoice_amount_claim = fields.Monetary(string="Amount Klaim ",default=0)
+    amount_total_signed = fields.Monetary(string="Amount Invoice ", related='invoice_id.amount_total_signed', store=True)
+    invoice_amount = fields.Monetary(string="Amount Invoice ", related='invoice_id.amount_total_signed', store=True)
     amount_bank_masuk = fields.Monetary()
     jumlah_alokasi = fields.Monetary()
     sisa_amount_claim = fields.Monetary()
@@ -38,7 +39,7 @@ class AccountMoveLine(models.Model):
     no_alokasi = fields.Char()
     tgl_alokasi = fields.Date()
     tgl_transaksi_alokasi = fields.Date()
-    status_invoice = fields.Char()
+    status_invoice = fields.Char(related='invoice_id.status_invoice',string="Status",store=True)
     is_revisi = fields.Boolean()
     cost_price = fields.Monetary(string = "Cost Price",help="Nilai dari CostPrice terakhir (mengacu pada metode LastBuy atau LastHNA", default=0.0)
     cost_price_avg= fields.Monetary(string = "Cost Price AVG", default=0.0)
@@ -73,10 +74,16 @@ class AccountMoveLine(models.Model):
     coa_patient_key = fields.Char()
     coa_patient_name = fields.Char()
     status_record = fields.Char()
-    populate_date = fields.Datetime()
+    populated_time = fields.Datetime()
+    populate_date = fields.Datetime(string="Populated Date", compute='_compute_populated_date', store=True)
+
+    @api.depends('populated_time')
+    def _compute_populated_date(self):
+        for rec in self:
+            rec.populate_date = rec.populated_time.date() if rec.populated_time else False
+            
     entered_date = fields.Datetime()
     last_update = fields.Datetime()
-    populated_time = fields.Datetime()
     binary_checksum = fields.Char()
     accounting_time_periode = fields.Datetime(related='move_id.accounting_time_periode')
     accounting_date_periode = fields.Date(related='move_id.accounting_date_periode')
@@ -85,6 +92,36 @@ class AccountMoveLine(models.Model):
     pelayanan = fields.Selection([('pelayanan','AR Pelayanan'),('non pelayanan','AR Non Pelayanan')], 'type AR',store=True, default='non pelayanan', related='move_id.pelayanan')
     formatted_datetime = fields.Char(string='Formatted Datetime', compute='_compute_formatted_datetime')
     CostPrice_AVG = fields.Float()
+    
+    #claim purpose
+    
+    is_klaim = fields.Boolean(related="move_id.is_klaim",string='AR Klaim')
+    invoice_id = fields.Many2one('account.move',string="No TRX", domain="[('is_klaim', '=',False),('state', '!=','draft')]",)
+    invoice_date = fields.Date(related='invoice_id.invoice_date',store=True)
+    amount_klaim = fields.Float(string="Amount Klaim ",default=0)
+    amount_diff = fields.Float(string="Selisih",compute="_get_selisih",store=True)
+    invoice_state = fields.Selection(related='invoice_id.state',string="Status",store=True)
+    
+    @api.depends('invoice_id','invoice_amount_claim','invoice_amount')
+    def _get_selisih(self):
+        for line in self:
+            if line.invoice_id:
+                line.name = line.invoice_id.name
+                line.currency_id = line.invoice_id.currency_id.id
+                line.account_id = self.env['account.account'].search([('account_type','=','liability_payable')],limit=1).id
+                line.compute_all_tax = False
+                line.partner_id =line.invoice_id.penjamin_name_id.id
+                line.amount_diff = line.invoice_amount - line.invoice_amount_claim
+                line.sisa_amount_claim = line.invoice_amount - line.invoice_amount_claim
+                line.price_unit = line.invoice_amount_claim
+                line.price_subtotal = line.invoice_amount_claim
+                line.patient_name = line.invoice_id.patient_name
+                
+        
+    @api.onchange('invoice_id','invoice_amount_claim','invoice_amount')
+    def _set_default_claim_val(self):
+        for line in self:
+            line._get_selisih()
 
     @api.depends('product_id', 'product_uom_id')
     def _compute_price_unit(self):
@@ -162,6 +199,24 @@ class AccountMoveLine(models.Model):
                 #         "You cannot delete a payable/receivable line as it would not be consistent "
                 #         "with the payment terms"
                 #     ))
+
+
+    # button eye
+    def ar_klaim_invoice_detail_button(self):
+        self.ensure_one()
+        
+        if not self.invoice_id:
+            raise ValidationError("Invoice belum dipilih")
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Invoice',
+            'res_model': 'account.move',
+            'view_mode': 'form',
+            'res_id': self.invoice_id.id,
+            # 'view_id': self.env.ref('account.view_move_form').id if self.env.ref('account.view_move_form') else False,
+            'target': 'current'
+        }
 
     def update_account_id(self):
         am = self.env['account.move.line'].search([])
