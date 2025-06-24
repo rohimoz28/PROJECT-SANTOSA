@@ -95,9 +95,9 @@
                 <attribute name="invisible">is_klaim</attribute>
             </xpath>
             
-            <xpath expr="//page[@name='other_info']" position="attributes">
+            <!-- <xpath expr="//page[@name='other_info']" position="attributes">
                 <attribute name="invisible">is_klaim</attribute>
-            </xpath>
+            </xpath> -->
             
             <xpath expr="//group[@id='header_left_group']" position="attributes">
                 <attribute name="invisible">is_klaim</attribute>
