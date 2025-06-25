@@ -64,7 +64,7 @@
                 </group>
             </xpath>
             <xpath expr="//h1" position="after">
-                <field name="pelayanan" nolabel="1" widget="radio" options="{'horizontal': true}" readonly="state not in ['draft']"/> 
+                <field name="pelayanan" nolabel="1" widget="radio" options="{'horizontal': true}" readonly="1"/> 
             </xpath>
             <xpath expr="//group[@id='header_right_group']/label[@for='invoice_date']" position="replace"/>            
             <xpath expr="//field[@name='invoice_date']" position="before">
@@ -83,6 +83,10 @@
                         <field name="transaction_date" string= "Tanggal Klaim" readonly="state != 'draft'"/> 
                         <field name="name" string = "No. Klaim" readonly="state != 'draft'"/> 
                         <!-- <field name="no_bill" string = "No. Tagihan" readonly="state != 'draft'"/>  -->
+                        <field name="no_bill" string = "No. Tagihan" readonly="state != 'draft'"/> 
+                        <field name="journal_type_id" options="{'no_create': True}" invisible="1"/>
+                        <field name="journal_code" readonly="1" invisible="1"/>
+                        <field name="journal_id" options="{'no_create': True, 'no_open': True}" readonly="posted_before" invisible="1"/>
                 </group>
                 <group id="header_right_claim_group" invisible="not is_klaim">
                         <field name="amount_total_signed" string = "Nilai Klaim" readonly="state != 'draft'" style="font-weight: bold;" />
@@ -97,13 +101,14 @@
                 <attribute name="invisible">is_klaim</attribute>
             </xpath>
             
-            <!-- <xpath expr="//page[@name='other_info']" position="attributes">
-                <attribute name="invisible">is_klaim</attribute>
-            </xpath> -->
-            
             <xpath expr="//group[@id='header_left_group']" position="attributes">
                 <attribute name="invisible">is_klaim</attribute>
             </xpath>
+                
+            <!-- ========================================== -->
+                
+            <xpath expr="//widget[@name='web_ribbon']" position="replace"/>
+            <!-- ========================================== -->
 
             <xpath expr="//group[@id='header_right_group']" position="attributes">
                 <attribute name="invisible">is_klaim</attribute>
@@ -145,15 +150,10 @@
                 <field name="penjamin_name_id" string="Penjamin" readonly="state != 'draft' or pelayanan == 'pelayanan'" invisible="pelayanan == 'non pelayanan'"/>
                 <field name="patient_name" string="Patient" readonly="state != 'draft' or pelayanan == 'pelayanan'" invisible="pelayanan == 'non pelayanan'"/>
                 <field name="accounting_date_periode" readonly="1" string="Accounting Periode"/>
-                <!-- <label for="journal_id"  invisible="context.get('default_journal_id') and context.get('move_type', 'entry') != 'entry'"/>
-                <div name="journal_div" class="d-flex"  invisible="context.get('default_journal_id') and context.get('move_type', 'entry') != 'entry'">
-                    <field name="journal_id" options="{'no_create': True, 'no_open': True}" readonly="posted_before"/>
-                    <span class="oe_inline o_form_label mx-3"  invisible="move_type == 'entry'"> in </span>
-                    <field name="currency_id"  invisible="move_type == 'entry'" readonly="state != 'draft'" options="{'no_create': True}" context="{'search_default_active': 1, 'search_default_inactive': 1}"/>
-                </div> -->
                 <field name="journal_ajp" readonly="state != 'draft' or pelayanan == 'pelayanan'" string="Jurnal References"/>
                 <field name="journal_periode" readonly="state != 'draft' or pelayanan == 'pelayanan'"/>
-                <field name="journal_type_id" options="{'no_create': True}" readonly="state != 'draft' or pelayanan == 'pelayanan'"/>
+                <field name="journal_id" string="TIpe Jurnal" options="{'no_create': True, 'no_open': True}" readonly="posted_before or pelayanan == 'pelayanan'"/> <!-- auto filter by py just show tobe sale-->
+                <field name="journal_type_id" options="{'no_create': True, 'no_open': True}" invisible="1" readonly="state != 'draft' or pelayanan == 'pelayanan'"/>
                 <field name="journal_code" readonly="1"/>
                 <field name="partner_id"  string="Customer" invisible="pelayanan == 'pelayanan'" readonly="state != 'draft' or pelayanan == 'pelayanan'" options="{'no_create': True}" />
                 <field name="branch_id" readonly="state != 'draft' or pelayanan == 'pelayanan'"/>
@@ -233,8 +233,12 @@
             <field name="name">AR Klaim</field>
             <field name="res_model">account.move</field>
             <field name="view_mode">tree,form</field>
+<<<<<<< HEAD
             <field name="domain">[('is_klaim', '=', True)]</field>
             <field name="context">{'default_is_klaim': 1, 'search_default_filter_klaim': 1, 'is_ar_klaim': True}</field>
+=======
+            <field name="context" eval="{'default_is_klaim': 1, 'search_default_filter_klaim': 1,'default_journal_id': ref('id_ar_claim')}"/>
+>>>>>>> ab2f163 ([IMP]AJP : Perbaikan Form Invoice)
             <field name="view_id" ref="view_move_tree_klaim"/>
         </record>
         
