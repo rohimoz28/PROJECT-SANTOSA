@@ -82,6 +82,7 @@
                             <field name="create_date" optional="show" string="Create Date"/>
                             <field name="populate_date" column_invisible="1"/>
                             <field name="entered_date" optional="show"/>
+                            <field name="product_id" optional="show"/>
                             <field name="name" widget="section_and_note_text" optional="show"/>
                             <field string="Asset Category" column_invisible="parent.move_type != 'in_invoice'" name="asset_category_id" domain="[('type','=','purchase')]" context="{'default_type':'purchase'}" can_create="True" can_write="True"/>
                             <field name="account_id" context="{'partner_id': partner_id, 'move_type': parent.move_type}" options="{'no_quick_create': True}" domain="[('deprecated', '=', False), ('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance')), ('company_id', 'parent_of', parent.company_id)]" required="display_type not in ('line_note', 'line_section')" on_change="1" can_create="True" can_write="True"/>
@@ -153,12 +154,7 @@
                             <field name="med_rec_number" optional='show' string="Med. Rec Number"/>
                             <field name="amount_total_signed" optional='show' readonly="1" string="Invoice Amount" />
                             <field name="partner_id" optional='hide' string="Penjamin"/>
-<<<<<<< HEAD
                             <!-- <field name="invoice_amount" string="Invoice Amount" optional='show' sum="Total Invoice"/> -->
-=======
-                            <field name="amount_total_signed" string="Invoice Amount" optional='show' sum="Total Invoice" readonly="1" />
-                            <field name="invoice_amount" column_invisible="1"/>
->>>>>>> ab2f163 ([IMP]AJP : Perbaikan Form Invoice)
                             <field name="invoice_amount_claim" string="Claim Amount" optional='show' sum="Total Klaim"/>
                             <field name="amount_diff" string="Selisih" optional='show'/>
                             <field name="status_invoice" string="Invoice Status" widget="badge" optional='show' decoration-success="status_invoice == 'Closed'" decoration-danger="status_invoice != 'Closed'" on_change="1" field_id="status_invoice_0"/>

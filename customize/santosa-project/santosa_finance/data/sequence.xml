@@ -12,10 +12,6 @@
             <field name="code">ARCLAIM</field> 
             <field name="active">True</field>
             <field name="currency_id" ref="base.IDR"/>
-<<<<<<< HEAD
-=======
-            <field name="company_id" ref="base.main_company"/>
->>>>>>> ab2f163 ([IMP]AJP : Perbaikan Form Invoice)
         </record>
     </data>
 </odoo>

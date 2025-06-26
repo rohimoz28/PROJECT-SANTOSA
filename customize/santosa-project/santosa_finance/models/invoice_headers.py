@@ -135,10 +135,10 @@ class AccountMove(models.Model):
         for line in self:
             pass
         
-    @api.onchange('journal_type_id')
-    def _set_journal_id(self):
-        for line in self:
-            line.journal_id = line.journal_type_id.id
+    # @api.onchange('journal_type_id')
+    # def _set_journal_id(self):
+    #     for line in self:
+    #         line.journal_id = line.journal_type_id.id
         
     @api.depends('is_klaim')    
     def _set_journal_id_klaim(self):
@@ -167,8 +167,6 @@ class AccountMove(models.Model):
 
     @api.model
     def create(self, vals):
-        vals['invoice_date_due'] = 'JUM'
-        vals['journal_type'] = 'AR'
         vals['invoice_date_due'] = fields.Date.context_today(self) + timedelta(days=30)
         return super(AccountMove, self).create(vals)
 
