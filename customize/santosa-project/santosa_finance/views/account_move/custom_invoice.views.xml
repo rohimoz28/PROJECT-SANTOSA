@@ -82,7 +82,7 @@
                 <group id="header_left_claim_group" invisible="not is_klaim">
                         <field name="transaction_date" string= "Tanggal Klaim" readonly="state != 'draft'"/> 
                         <field name="name" string = "No. Klaim" readonly="state != 'draft'"/> 
-                        <field name="no_bill" string = "No. Tagihan" readonly="state != 'draft'"/> 
+                        <!-- <field name="no_bill" string = "No. Tagihan" readonly="state != 'draft'"/>  -->
                 </group>
                 <group id="header_right_claim_group" invisible="not is_klaim">
                         <field name="amount_total_signed" string = "Nilai Klaim" readonly="state != 'draft'" style="font-weight: bold;" />
@@ -218,7 +218,7 @@
                     <field name="populated_date" string="Populate Date"/>
                     <field name="transaction_date" string="Tanggal Klaim"/>
                     <field name="name" string="No. Klaim"/>
-                    <field name="no_bill" string="No Tagihan"/>
+                    <!-- <field name="no_bill" string="No Tagihan"/> -->
                     <field name="partner_id" string="Payor"/>
                     <field name="amount_total_signed" string="Nilai Klaim"/>
                     <field name="amount_claim_aloc" string="Nilai Teralokasi"/>

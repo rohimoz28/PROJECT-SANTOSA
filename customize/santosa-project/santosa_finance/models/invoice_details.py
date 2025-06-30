@@ -100,7 +100,7 @@ class AccountMoveLine(models.Model):
     invoice_id = fields.Many2one('account.move',string="No TRX", domain="[('is_klaim', '=',False),('state', '!=','draft')]",)
     invoice_date = fields.Date(related='invoice_id.invoice_date',store=True)
     amount_klaim = fields.Float(string="Amount Klaim ",default=0)
-    amount_diff = fields.Float(string="Selisih",compute="_get_selisih",store=True)
+    amount_diff = fields.Float(string="Selisih")
     invoice_state = fields.Selection(related='invoice_id.state',string="Status",store=True)
     
     @api.depends('invoice_id','invoice_amount_claim','invoice_amount')
@@ -112,11 +112,11 @@ class AccountMoveLine(models.Model):
                 line.account_id = self.env['account.account'].search([('account_type','=','liability_payable')],limit=1).id
                 line.compute_all_tax = False
                 line.partner_id =line.invoice_id.penjamin_name_id.id
-                line.amount_diff = line.invoice_amount - line.invoice_amount_claim
-                line.sisa_amount_claim = line.invoice_amount - line.invoice_amount_claim
-                line.price_unit = line.invoice_amount_claim
-                line.price_subtotal = line.invoice_amount_claim
-                line.patient_name = line.invoice_id.patient_name
+                # line.amount_diff = line.invoice_amount - line.invoice_amount_claim
+                # line.sisa_amount_claim = line.invoice_amount - line.invoice_amount_claim
+                # line.price_unit = line.invoice_amount_claim
+                # line.price_subtotal = line.invoice_amount_claim
+                # line.patient_name = line.invoice_id.patient_name
                 
         
     @api.onchange('invoice_id','invoice_amount_claim','invoice_amount')
