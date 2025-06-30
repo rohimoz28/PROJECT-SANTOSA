@@ -23,7 +23,7 @@ class AccountMove(models.Model):
     med_rec_number = fields.Char()
     patient_name = fields.Char()
     no_sep_ref_no = fields.Char()
-    total_invoice = fields.Monetary(string='Total Amount',compute="_compute_total_klaim", inverse='_reset_values')
+    total_invoice = fields.Monetary(string='Total Amount',store = True)
     total_diskon = fields.Monetary()
     unit_code = fields.Char()
     unit_name = fields.Char()
@@ -93,7 +93,9 @@ class AccountMove(models.Model):
     populated_time = fields.Datetime(string="Populated Time", default=lambda self: fields.Datetime.now())
     is_klaim = fields.Boolean(default=False, string='AR Klaim')
     invoice_amount_claim = fields.Monetary(string="Amount Klaim ",default=0)
-    total_amt_claim = fields.Monetary(string='Total Amount Claim',compute="_compute_total_klaim",)
+    amount_claim_aloc = fields.Monetary(string="Nilai Teralokasi",default=0)
+    amount_claim_paids = fields.Monetary(string="Nilai Terbayar",default=0)
+    total_amt_claim = fields.Monetary(string='Total Amount Claim',store=True)
     no_bill = fields.Char(string='No. Tagihan')
     populated_date = fields.Date(string="Populated Date", compute='_compute_populated_date', store=True)
     journal_periode = fields.Date('Jurnal Date', default=lambda self: fields.Date.context_today(self))
@@ -113,14 +115,14 @@ class AccountMove(models.Model):
         for line in self:
             line.journal_id = self.env['account.journal'].search([('name','=','AR Klaim')],limit=1).id or False
 
-    @api.depends('invoice_line_ids.invoice_amount', 'invoice_line_ids.invoice_amount_claim')
-    def _compute_total_klaim(self):
-        for line in self:
-            line.total_invoice = sum(line.invoice_line_ids.mapped('invoice_amount')) or 0
-            line.total_amt_claim = sum(line.invoice_line_ids.mapped('invoice_amount_claim')) or 0
-            line.total_debit = sum(line.invoice_line_ids.mapped('debit')) or 0
-            line.total_credit = sum(line.invoice_line_ids.mapped('credit')) or 0
-            line.amount_total_signed = sum(line.invoice_line_ids.mapped('invoice_amount_claim')) or 0
+    # @api.depends('invoice_line_ids.invoice_amount', 'invoice_line_ids.invoice_amount_claim')
+    # def _compute_total_klaim(self):
+    #     for line in self:
+            # line.total_invoice = sum(line.invoice_line_ids.mapped('invoice_amount')) or 0
+            # line.total_amt_claim = sum(line.invoice_line_ids.mapped('invoice_amount_claim')) or 0
+            # line.total_debit = sum(line.invoice_line_ids.mapped('debit')) or 0
+            # line.total_credit = sum(line.invoice_line_ids.mapped('credit')) or 0
+            # line.amount_total_signed = sum(line.invoice_line_ids.mapped('invoice_amount_claim')) or 0
 
     @api.model
     def _get_journal(self):

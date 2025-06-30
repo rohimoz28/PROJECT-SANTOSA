@@ -94,6 +94,7 @@ class AccountMoveLine(models.Model):
     CostPrice_AVG = fields.Float()
     
     #claim purpose
+    paid_state_klaim = fields.Boolean(default=False, string='Status Bayar')
     
     is_klaim = fields.Boolean(related="move_id.is_klaim",string='AR Klaim')
     invoice_id = fields.Many2one('account.move',string="No TRX", domain="[('is_klaim', '=',False),('state', '!=','draft')]",)

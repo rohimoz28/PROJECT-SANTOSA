@@ -97,6 +97,7 @@
                             <field name="invoice_amount_claim" string="Claim Amount" optional='show' sum="Total Klaim"/>
                             <field name="amount_diff" string="Selisih" optional='show' sum="Total Selisih"/>
                             <field name="status_invoice" string="Invoice Status" widget="badge" optional='show' decoration-success="status_invoice == 'Closed'" decoration-danger="status_invoice != 'Closed'" on_change="1" field_id="status_invoice_0"/>
+                            <field name="paid_state_klaim"/>
                             <button name="ar_klaim_invoice_detail_button" type="object" string="Detail" class="fa fa-eye" />
                         </tree>
                     </field>
@@ -105,8 +106,8 @@
                             <field name="narration" placeholder="Terms and Conditions" colspan="2" nolabel="1"/>
                         </group>
                         <group class="oe_klaim_subtotal_footer" colspan="4">
-                            <field name="total_invoice" placeholder="Total Invoice" colspan="2" readonly="1" style="font-weight: bold;" />
-                            <field name="total_amt_claim" placeholder="Total Klaim" colspan="2" readonly="1" style="font-weight: bold;" />
+                            <field name="total_invoice" string="Total Amount" placeholder="Total Amount Invoice" colspan="2" readonly="state !='draft'" style="font-weight: bold;" />
+                            <field name="amount_total_signed" string="Total Amount Claim" placeholder="Total Amount Claim" colspan="2" readonly="state !='draft'" style="font-weight: bold;" />
                         </group>
                     </group>
                 </page>
