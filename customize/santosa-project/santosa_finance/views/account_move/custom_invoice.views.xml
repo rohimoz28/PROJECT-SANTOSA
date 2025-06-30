@@ -234,7 +234,7 @@
             <field name="res_model">account.move</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('is_klaim', '=', True)]</field>
-            <field name="context">{'default_is_klaim': 1, 'search_default_filter_klaim': 1}</field>
+            <field name="context">{'default_is_klaim': 1, 'search_default_filter_klaim': 1, 'is_ar_klaim': True}</field>
             <field name="view_id" ref="view_move_tree_klaim"/>
         </record>
         

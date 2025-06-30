@@ -1,9 +1,30 @@
 from odoo import models, fields, api
 from datetime import date, datetime, timedelta
 from contextlib import ExitStack, contextmanager
+from textwrap import shorten
+from odoo.tools import (
+    date_utils,
+    email_re,
+    email_split,
+    float_compare,
+    float_is_zero,
+    float_repr,
+    format_amount,
+    format_date,
+    formatLang,
+    frozendict,
+    get_lang,
+    groupby,
+    index_exists,
+    is_html_empty,
+    create_index,
+)
+from odoo import _
 from collections import defaultdict
 from itertools import groupby
 from operator import itemgetter
+
+
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
@@ -105,6 +126,10 @@ class AccountMove(models.Model):
     journal_type_id = fields.Many2one('account.journal','Tipe Jurnal', default=lambda self: self._get_journal())
     journal_code = fields.Char('Kode Jurnal', related='journal_type_id.code')
     branch_id = fields.Many2one('res.branch','Branch')
+    move_type = fields.Selection(
+        selection_add=[('ar_klaim', 'AR Klaim')],
+        ondelete={'ar_klaim': 'set default'}
+    )
 
     def _reset_values(self):
         for line in self:
@@ -200,11 +225,47 @@ class AccountMove(models.Model):
             else:
                 record.temp_invoice_no = ''
 
+    # overriding method bawaan odoo di account_move.py
+    def _get_move_display_name(self, show_ref=False):
+        ''' Helper to get the display name of an invoice depending on its type.
+        :param show_ref:    A flag indicating if the display name must include the journal entry reference.
+        :return:            A string representing the invoice.
+        '''
+        self.ensure_one()
+        name = ''
+        if self.state == 'draft':
+            name += {
+                'out_invoice': _('Draft Invoice'),
+                'out_refund': _('Draft Credit Note'),
+                'in_invoice': _('Draft Bill'),
+                'in_refund': _('Draft Vendor Credit Note'),
+                'out_receipt': _('Draft Sales Receipt'),
+                'in_receipt': _('Draft Purchase Receipt'),
+                'entry': _('Draft Entry'),
+                'ar_klaim': _('Draft AR Klaim'),  # ✅ Tambahan move_type 'ar_klaim'
+            }.get(self.move_type, _('Draft Move'))  # fallback untuk safety
+            name += ' '
+        if not self.name or self.name == '/':
+            if self.id:
+                name += '(* %s)' % str(self.id)
+        else:
+            name += self.name
+            if self.env.context.get('input_full_display_name'):
+                if self.partner_id:
+                    name += f', {self.partner_id.name}'
+                if self.date:
+                    name += f', {format_date(self.env, self.date)}'
+        return name + (f" ({shorten(self.ref, width=50)})" if show_ref and self.ref else '')
+
     @api.model_create_multi
     def create(self, vals_list):
+        # Override move_type sebelum create
+        for vals in vals_list:
+            if self.env.context.get('is_ar_klaim'):
+                vals['move_type'] = 'ar_klaim'  # override jadi 'ar_klaim'
+
         # Panggil metode bawaan terlebih dahulu
         moves = super(AccountMove, self).create(vals_list)
-
         # Fungsionalitas tambahan untuk nomor transaksi
         for move, vals in zip(moves, vals_list):
             if 'odoo_transaction_no' not in vals or not vals['odoo_transaction_no']:
