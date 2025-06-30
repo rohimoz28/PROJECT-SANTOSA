@@ -6,12 +6,12 @@
             <field name="padding">6</field>
         </record>
         
-        <!-- <record id="id_ar_claim" model="account.journal">
+        <record id="id_ar_claim" model="account.journal">
             <field name="name">AR Klaim</field>
             <field name="type">general</field>
             <field name="code">ARCLAIM</field> 
             <field name="active">True</field>
             <field name="currency_id" ref="base.IDR"/>
-        </record> -->
+        </record>
     </data>
 </odoo>
