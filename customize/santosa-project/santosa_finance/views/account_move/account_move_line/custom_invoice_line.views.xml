@@ -89,13 +89,13 @@
                             <!-- <field name="account_id" optional='hide' options="{'no_create': True, 'no_quick_create': True}" string="Account" column_invisible="1"/> -->
                             <field name="invoice_id" string="No. TRX" options="{'no_create': True, 'no_quick_create': True}" optional="show"/>  
                             <field name="nomor_invoice" string="No. Invoice" optional='show' readonly="1" />
-                            <field name="amount_total_signed" optional='show' readonly="1" />
                             <field name="no_sep_ref_no" optional='show' string="No. SEP "/>
                             <field name="med_rec_number" optional='show' string="Med. Rec Number"/>
+                            <field name="amount_total_signed" optional='show' readonly="1" string="Invoice Amount" />
                             <field name="partner_id" optional='hide' string="Penjamin"/>
-                            <field name="invoice_amount" string="Invoice Amount" optional='show' sum="Total Invoice"/>
+                            <!-- <field name="invoice_amount" string="Invoice Amount" optional='show' sum="Total Invoice"/> -->
                             <field name="invoice_amount_claim" string="Claim Amount" optional='show' sum="Total Klaim"/>
-                            <field name="amount_diff" string="Selisih" optional='show' sum="Total Selisih"/>
+                            <field name="amount_diff" string="Selisih" optional='show'/>
                             <field name="status_invoice" string="Invoice Status" widget="badge" optional='show' decoration-success="status_invoice == 'Closed'" decoration-danger="status_invoice != 'Closed'" on_change="1" field_id="status_invoice_0"/>
                             <field name="paid_state_klaim"/>
                             <button name="ar_klaim_invoice_detail_button" type="object" string="Detail" class="fa fa-eye" />
