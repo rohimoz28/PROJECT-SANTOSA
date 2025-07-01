@@ -108,6 +108,9 @@
             <!-- ========================================== -->
                 
             <xpath expr="//widget[@name='web_ribbon']" position="replace"/>
+            <xpath expr="//field[@name='l10n_id_replace_invoice_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
             <!-- ========================================== -->
 
             <xpath expr="//group[@id='header_right_group']" position="attributes">
@@ -118,7 +121,7 @@
                 <field name="invoice_date" string="Tanggal Invoice" readonly="state not in ['draft']"/>
                 <field name="invoice_no" readonly="state != 'draft' or pelayanan == 'pelayanan'" string="No. Invoice"/>
                 <field name="status_invoice" readonly='1'/>
-                <field name="amount_total_signed" string="Total" readonly='1' invisible="not is_klaim"/>
+                <field name="amount_total_signed" string="Total" readonly='1' invisible="is_klaim"/>
             </xpath>
             <xpath expr="//label[@for='partner_id' and contains(@invisible, 'out_invoice')]" position="replace"/>
             <xpath expr="//label[@for='partner_id' and contains(@invisible, 'in_invoice')]" position="replace"/>
