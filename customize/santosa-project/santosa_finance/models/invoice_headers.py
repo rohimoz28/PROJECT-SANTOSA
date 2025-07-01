@@ -124,7 +124,7 @@ class AccountMove(models.Model):
     journal_ajp_id = fields.Many2one('journal.ajp','Jurnal No') #Un-Used
     journal_type = fields.Char('Tipe Jurnal',) #Un-Used
     journal_type_id = fields.Many2one('account.journal','Tipe Jurnal', default=lambda self: self._get_journal())
-    journal_code = fields.Char('Kode Jurnal', related='journal_type_id.code')
+    journal_code = fields.Char('Kode Jurnal', related='journal_id.code')
     branch_id = fields.Many2one('res.branch','Branch')
     move_type = fields.Selection(
         selection_add=[('ar_klaim', 'AR Klaim')],
@@ -134,6 +134,11 @@ class AccountMove(models.Model):
     def _reset_values(self):
         for line in self:
             pass
+        
+    # @api.onchange('journal_type_id')
+    # def _set_journal_id(self):
+    #     for line in self:
+    #         line.journal_id = line.journal_type_id.id
         
     @api.depends('is_klaim')    
     def _set_journal_id_klaim(self):
@@ -162,8 +167,6 @@ class AccountMove(models.Model):
 
     @api.model
     def create(self, vals):
-        vals['invoice_date_due'] = 'JUM'
-        vals['journal_type'] = 'AR'
         vals['invoice_date_due'] = fields.Date.context_today(self) + timedelta(days=30)
         return super(AccountMove, self).create(vals)
 
