@@ -95,6 +95,7 @@ class AccountMoveLine(models.Model):
     
     #claim purpose
     paid_state_klaim = fields.Boolean(default=False, string='Status Bayar')
+    
     is_klaim = fields.Boolean(related="move_id.is_klaim",string='AR Klaim')
     invoice_id = fields.Many2one('account.move',string="No TRX", domain="[('is_klaim', '=',False),('state', '!=','draft')]",)
     invoice_date = fields.Date(related='invoice_id.invoice_date',store=True)
