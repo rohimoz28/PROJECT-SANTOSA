@@ -42,8 +42,8 @@ class HrEmployeeMutation(models.Model):
     hrms_department_id = fields.Many2one('sanhrms.department', string='Departemen', tracking=True)
     employee_levels = fields.Many2one('employee.level', string='Employee Level', tracking=True)
     state = fields.Selection(selection=[('draft', "Draft"),
-                                        ('intransfer', "In Transfer"),
-                                        ('accept', "Accept"),
+                                        # ('intransfer', "In Transfer"),
+                                        # ('accept', "Accept"),
                                         ('approved', "Approved")],
                              string="Status", readonly=True,
                              copy=False, index=True,
@@ -93,8 +93,8 @@ class HrEmployeeMutation(models.Model):
     service_medic = fields.Many2one('hr.profesion.medic','Profesi Medis', default=lambda self:self.employee_id.medic.id)
     service_nurse = fields.Many2one('hr.profesion.nurse','Profesi Perawat', default=lambda self:self.employee_id.nurse.id)
     service_speciality = fields.Many2one('hr.profesion.special','Kategori Khusus', default=lambda self:self.employee_id.seciality.id)
-    service_hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen', default=lambda self:self.employee_id.hrms_department_id.id)
-    service_departmentid = fields.Many2one('hr.department', domain="[('branch_id','=',service_bisnisunit)]", string='Departemen', default=lambda self:self.employee_id.hrms_department_id.id)
+    # service_hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen', default=lambda self:self.employee_id.hrms_department_id.id)
+    service_departmentid = fields.Many2one('sanhrms.department', domain="[('branch_id','=',service_bisnisunit)]", string='Departemen', default=lambda self:self.employee_id.hrms_department_id.id)
     service_identification = fields.Char(related='employee_id.identification_id', string='Nomor Kartu Keluarga', store=True)
     service_jobstatus = fields.Selection([('permanent', 'Karyawan Tetap (PKWTT)'),
                                    ('contract', 'Karyawan Kontrak (PKWT)'),
@@ -106,7 +106,7 @@ class HrEmployeeMutation(models.Model):
     service_employementstatus = fields.Selection([('probation', 'Probation'),
                                                   ('confirmed', 'Confirmed'),],
                                                  string='Status Kekaryawanan')
-    service_jobtitle = fields.Many2one('hr.job', domain="[('department_id','=',service_departmentid)]", string='Jabatan', index=True, default=lambda self:self.employee_id.job_id.id)
+    service_jobtitle = fields.Many2one('hr.job', domain="[('hrms_department_id','=',service_departmentid)]", string='Jabatan', index=True, default=lambda self:self.employee_id.job_id.id)
     service_empgroup1 = fields.Selection(selection=[('Group1', 'Group 1 - Harian(pak Deni)'),
                                                     ('Group2', 'Group 2 - bulanan pabrik(bu Felisca)'),
                                                     ('Group3', 'Group 3 - Apoteker and Mgt(pak Ryadi)'),
@@ -138,16 +138,16 @@ class HrEmployeeMutation(models.Model):
     def _find_department_id(self):
         for line in self:
             if line.hrms_department_id:
-                Department = self.env['hr.department'].search([('name', 'ilike', line.division_id.name)], limit=1)
+                Department = self.env['sanhrms.department'].search([('name', 'ilike', line.division_id.name)], limit=1)
                 if Department:
-                    line.department_id = Department.id
+                    line.hrms_department_id = Department.id
                 else:
                     Department = self.env['hr.department'].sudo().create({
                         'name': line.hrms_department_id.name,
                         'active': True,
                         'company_id': self.env.user.company_id.id,
                     })
-                    line.department_id = Department.id
+                    line.hrms_department_id = Department.id
 
     @api.depends('service_area')
     def _isi_semua_branch(self):
@@ -162,19 +162,18 @@ class HrEmployeeMutation(models.Model):
     def unlink(self):
         return super(HrEmployeeMutation, self).unlink()
 
-
     def button_approve(self):
         self.ensure_one()
-        # for rec in self:
-        #     if rec.service_end == False:
-        #         raise UserError('Effective Date To Still Empty')
         self._update_employee_status()
         self.env['hr.employment.log'].sudo().create({'employee_id': self.employee_id.id,
                                                      'service_type': self.service_type.upper(),
                                                      'start_date': self.service_start,
                                                      'end_date': self.service_end,
+                                                     'area': self.service_area.id,
                                                      'bisnis_unit': self.service_bisnisunit.id,
-                                                     'department_id': self.service_departmentid.id,
+                                                     'directorate_id': self.service_directorate_id.id,
+                                                     'hrms_department_id': self.service_departmentid.id,
+                                                     'division_id': self.service_division_id.id,
                                                      'job_title': self.service_jobtitle.name,
                                                      'job_status': self.service_jobstatus,
                                                      'emp_status': self.service_employementstatus,
@@ -184,22 +183,24 @@ class HrEmployeeMutation(models.Model):
                                                      'doc_number': self.letter_no,
                                                      })
 
-        # self.employee_id.write({'state': 'hold'})
         
         if self.service_area.id != self.employee_id.area.id:
             self.employee_id.write({'area': self.service_area.id})
-
-        # if self.employee_id.area and not self.service_area:
-        #     self.service_area = self.employee_id.area
         
         if self.service_bisnisunit and self.service_bisnisunit.id != self.employee_id.branch_id.id:
             self.employee_id.write({'branch_id': self.service_bisnisunit.id})
         elif not self.service_bisnisunit:
             raise UserError("Unit Bisnis (branch_id) wajib diisi sebelum approval.")
 
-        if self.service_departmentid.id != self.employee_id.department_id.parent_id.id:
-            self.employee_id.write({'department_id': self.service_departmentid.id})
-            
+        if self.service_directorate_id != self.employee_id.directorate_id.id:
+            self.employee_id.write({'directorate_id': self.service_directorate_id.id})
+
+        if self.service_departmentid.id != self.employee_id.hrms_department_id.id:
+            self.employee_id.write({'hrms_department_id': self.service_departmentid.id})
+
+        if self.service_division_id.id != self.employee_id.division_id.id:
+            self.employee_id.write({'division_id': self.service_division_id.id})
+
         if self.service_jobstatus != self.employee_id.job_status:
             self.employee_id.write({'job_status': self.service_jobstatus})
 
@@ -259,9 +260,6 @@ class HrEmployeeMutation(models.Model):
 
         if self.service_birthday !=  self.employee_id.birthday:
             self.employee_id.write({'birthday': self.service_birthday})
-
-        if self.service_name != self.employee_id.name:
-            self.employee_id.write({'name': self.service_name})
             
         self.employee_id.write({'state': 'approved'})
 
@@ -277,14 +275,15 @@ class HrEmployeeMutation(models.Model):
             # data header
             record.emp_id = employee.employee_id
             record.nik = employee.nik
+            record.nik_lama = employee.nik_lama
             record.area = employee.area
             record.branch_id = employee.branch_id
             record.directorate_id = employee.directorate_id
-            record.hrms_department_id = employee.hrms_department_id
+            record.hrms_department_id = employee.hrms_department_id or False
             record.division_id = employee.division_id
             record.job_id = employee.job_id
             record.parent_id = employee.parent_id
-            record.work_unit = employee.work_unit_id.id
+            record.work_unit = employee.work_unit
             record.employee_group1s = employee.employee_group1s.id
             record.parent_nik = employee.parent_id.nik
             record.medic = employee.medic
@@ -299,7 +298,12 @@ class HrEmployeeMutation(models.Model):
             record.service_previous_name = employee.name
             record.service_area = employee.area.id
             record.service_bisnisunit = employee.hrms_department_id.branch_id.id or employee.branch_id.id
+            record.service_directorate_id = employee.directorate_id.id
             record.service_departmentid = employee.hrms_department_id.id
+            record.service_division_id = employee.division_id.id
+            record.service_medic = employee.medic.id
+            record.service_nurse = employee.nurse.id
+            record.service_speciality = employee.seciality.id
             record.service_jobstatus = employee.job_status
             record.service_employementstatus = 'confirmed'
             record.service_jobtitle = employee.job_id.id
@@ -315,13 +319,13 @@ class HrEmployeeMutation(models.Model):
             record.service_status = 'Draft'
 
 
-    def button_intransfer(self):
-        self.write({'state': 'intransfer'})
-        return True
+    # def button_intransfer(self):
+    #     self.write({'state': 'intransfer'})
+    #     return True
 
-    def button_accept(self):
-        self.write({'state': 'accept'})
-        return True
+    # def button_accept(self):
+    #     self.write({'state': 'accept'})
+    #     return True
     
     def print_fkpm_action_button(self):
         """ Print report FKPM """
