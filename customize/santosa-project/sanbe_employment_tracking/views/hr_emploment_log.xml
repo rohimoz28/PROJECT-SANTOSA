@@ -10,8 +10,12 @@
                     <field name="service_type" string="Tipe Transaksi" optional="show"/>
                     <field name="start_date" string="Tanggal Mulai" optional="show"/>
                     <field name="end_date" string="Tanggal Akhir" optional="show"/>
+                    <field name="area" optional="show"/>
                     <field name="bisnis_unit" string="Unit Bisnis" optional="show"/>
-                    <field name="department_id" string="Sub Departemen" optional="show"/>
+                    <field name="directorate_id" optional="show"/>
+                    <!-- <field name="department_id" string="Sub Departemen" optional="show"/> -->
+                    <field name="hrms_department_id" optional="show"/>
+                    <field name="division_id" optional="show"/>
                     <field name="nik" optional="show"/>
                     <field name="job_title" optional="show"/>
                     <field name="job_status" optional="show"/>
@@ -40,8 +44,12 @@
                         <field name="service_type"/>
                         <field name="start_date"/>
                         <field name="end_date"/>
+                        <fiedl name="area"/>
                         <field name="bisnis_unit"/>
-                        <field name="department_id"/>
+                        <field name="directorate_id"/>
+                        <!-- <field name="department_id"/> -->
+                        <field name="hrms_department_id"/>
+                        <field name="division_id"/>
                         <field name="nik"/>
                         <field name="job_title"/>
                         <field name="job_status"/>
