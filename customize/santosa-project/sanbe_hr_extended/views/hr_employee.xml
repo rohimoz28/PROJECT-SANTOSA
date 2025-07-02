@@ -219,7 +219,7 @@
                                 <field name="ws_day" readonly="1" force_save="1" />
                             </div>
                         </div>
-                        <field name="employee_levels" options="{'no_create': True,'no_quick_create': True}" string="Level"/>
+                        <field name="employee_levels" options="{'no_create': True,'no_quick_create': True}" string="Level Karyawan"/>
                         <field name="employee_group1s" string="Group Penggajian" required="1"  readonly="(state !='draft')"/>
                         <field name="employee_group1" invisible ="1" string="Employee Group"  readonly="(state !='draft')"/>
                         <field name="apoteker" invisible="employee_group1 !='group3'" />
