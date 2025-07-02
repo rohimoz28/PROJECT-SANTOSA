@@ -186,11 +186,8 @@
                                context="{'is_employee': 1,'employee_name': name,'area': area,'branch': branch_id,'department': department_id,'job_id': job_id}" />
                         <label for="contract_id" required="job_status =='contract'" string="Masa Kontrak"/>
                         <div class="o_row" required="job_status !='contract'">
-                            <field name="contract_datefrom" invisible="job_status !='contract'" 
-                            required="job_status =='contract'" 
-                            /> s/d 
-                            <field name="contract_dateto" invisible="job_status !='contract'" 
-                            required="job_status =='contract'" />
+                            <field name="contract_datefrom" invisible="job_status !='contract'" /> s/d 
+                            <field name="contract_dateto" invisible="job_status !='contract'" />
                         </div> 
                         <field name="kontrak_medis" 
                                invisible="job_status not in ('partner_doctor', 'contract', 'permanent')" 
