@@ -242,7 +242,7 @@
             <field name="model_id" ref="model_hr_employee_mutations" />
             <field name="global" eval="True" />
             <field name="domain_force">
-                ['|',('bisnis_unit','=',False),('bisnis_unit','=',user.branch_id.name)]</field>
+                ['|',('branch_id','=',False),('branch_id','=',user.branch_id.name)]</field>
             <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]" />
         </record>
 
