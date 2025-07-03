@@ -29,7 +29,7 @@ class HrEmployee(models.Model):
                                         ('K3', "K3"),],
                                     string="PTKP", default='TK0')
     exp_sim_no = fields.Date('License Expiration Date')
-    emp_status_id = fields.Many2one('hr.emp.status', string='Employment Status', domain=lambda self: self._get_domain_emp_status_id(), tracking=True)
+    emp_status_id = fields.Many2one('hr.emp.status', string='Employment Status', domain=lambda self: self._get_domain_emp_status_id())
     status = fields.Char(related='emp_status_id.status')
     allowance_ot_flat = fields.Boolean('OT Flat')
     allowance_ot1 = fields.Boolean('OT 1')
