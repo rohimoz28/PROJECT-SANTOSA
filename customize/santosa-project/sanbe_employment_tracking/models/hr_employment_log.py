@@ -29,12 +29,8 @@ class HrEmployementlog(models.Model):
     service_type = fields.Char('Service Type')
     start_date = fields.Date('Start Date')
     end_date = fields.Date('End date')
-    area = fields.Many2one('res.territory', string='Area')
     bisnis_unit = fields.Many2one('res.branch', string='Business Units')
-    directorate_id = fields.Many2one('sanhrms.directorate', string='Direktorat')
     department_id = fields.Many2one('hr.department', string='Sub Department')
-    hrms_department_id = fields.Many2one('sanhrms.department', string='Departemen')
-    division_id = fields.Many2one('sanhrms.division', string='Divisi')
     job_title = fields.Char('Job Title')
     job_status = fields.Selection([('permanent', 'Karyawan Tetap (PKWTT)'),
                                    ('contract', 'Karyawan Kontrak (PKWT)'),

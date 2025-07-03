@@ -103,14 +103,14 @@ class HrEmployee(models.Model):
     employee_id = fields.Char('Employee ID', default='New')
     nik = fields.Char('NIK', index=True, tracking=True)
     nik_lama = fields.Char('NIK Lama')
-    no_ktp = fields.Char('No KTP', tracking=True)
+    no_ktp = fields.Char('No KTP')
     spk = fields.Char('No. SPK', tracking=True, store=True)
     spk_start = fields.Date('SPK Date',store=True)
     spk_finish = fields.Date('SPK Finish',store=True)
     skills_ids = fields.Many2many('hr.skill','hr_skills_emp_rel')
     doc_ktp = fields.Many2many('ir.attachment', 'hr_employee_rel', string='KTP Document',
                                help="You may attach files to with this")
-    no_npwp = fields.Char('No NPWP', tracking=True)
+    no_npwp = fields.Char('No NPWP')
     doc_npwp = fields.Many2many('ir.attachment', 'hr_employee_rel', string='NPWP Document',
                                 help="You may attach files to with this")
     title = fields.Char('Title')
@@ -121,7 +121,7 @@ class HrEmployee(models.Model):
                                  ('hindu', 'Hindu'),
                                  ('budha', 'Budha')],
                                 default='islam', string='Religion')
-    join_date = fields.Date(string='Join Date', tracking=True)
+    join_date = fields.Date('Join Date',tracking=True, )
     job_status = fields.Selection([('permanent', 'Karyawan Tetap (PKWTT)'),
                                    ('contract', 'Karyawan Kontrak (PKWT)'),
                                    ('partner_doctor', 'Dokter Mitra'),
@@ -144,13 +144,14 @@ class HrEmployee(models.Model):
     contract_datefrom = fields.Date('Contract Date From', related='contract_id.date_start', tracking=True,  store=True)
     contract_dateto = fields.Date('Contract Date To', related='contract_id.date_end', tracking=True, store=True)
     attachment_contract = fields.Binary(string='Contract Document', attachment=True)
-    employee_group1s = fields.Many2one('emp.group', string='Employee P Group', tracking=True)
+    employee_group1s = fields.Many2one('emp.group',
+                                       string='Employee P Group')
     employee_group1 = fields.Selection(selection=_selection1,
                                        default='Group2',
                                        string='Old Employee P Group')
     parent_id = fields.Many2one('parent.hr.employee', tracking=True, string='Atasan Langsung')
     coach_id = fields.Many2one('parent.hr.employee', tracking=True, string='Atasan Unit Kerja')
-    employee_levels = fields.Many2one('employee.level', string='Employee Level', index=True, store=True, tracking=True)
+    employee_levels = fields.Many2one('employee.level', string='Employee Level', index=True, store=True)
     insurance = fields.Char('BPJS No')
     jamsostek = fields.Char('Jamsostek')
     ptkp = fields.Char('PTKP')
@@ -716,7 +717,7 @@ class ParentEmployee(models.Model):
     directorate_id = fields.Many2one('sanhrms.directorate', tracking=True, string='Direktorat')
     division_id = fields.Many2one('sanhrms.division', tracking=True, string='Divisi')
     hrms_department_id = fields.Many2one('sanhrms.department', tracking=True, string='Departemen')
-    job_id = fields.Many2one('hr.job', string='Jabatan', tracking=True)
+    job_id = fields.Many2one('hr.job','Jabatan')
     active = fields.Boolean()
     user_id = fields.Many2one('res.users')
     state = fields.Selection([
