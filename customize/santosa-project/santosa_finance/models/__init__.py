@@ -28,4 +28,5 @@ from . import product_detail
 from . import report
 from . import ar_klaim
 from . import journal_ajp
+from . import acc_opening_closing
 from . import akun_kontrol_honor_dokter

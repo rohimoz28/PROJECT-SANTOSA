@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tree View for acc.opening.closing -->
+    <record id="view_acc_opening_closing_tree" model="ir.ui.view">
+        <field name="name">view.acc.opening.closing.tree</field>
+        <field name="model">acc.opening.closing</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="id" invisible="1"/>
+                <field name="name" readonly="1"/>
+                <field name="area_id" optional="show"/>
+                <field name="branch_id"/>
+                <field name="open_periode_from" string="Date From"/>
+                <field name="open_periode_to" string="Date To"/>
+                <field name="isopen" column_invisible="1"/>
+                <field name="state_process" readonly="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View for acc.opening.closing -->
+    <record id="view_acc_opening_closing_form" model="ir.ui.view">
+        <field name="name">view.acc.opening.closing.form</field>
+        <field name="model">acc.opening.closing</field>
+        <field name="arch" type="xml">
+            <form string="Acc Opening Closing">
+                <header>
+                    <field name="isopen" invisible="1"/>
+                    <button name="action_opening_periode" invisible="isopen == True or state_process == 'done'" string="Open" type="object" class="btn-primary"/>
+                    <button name="action_reproses" string="Process" type="object" class="btn-primary" invisible="state_process != 'running'"/>
+                    <button name="action_closing_periode" invisible="state_process != 'running'" string="Close" type="object" class="btn-primary" />
+                    <field name="state_process" widget="statusbar" statusbar_visible="draft,running,done" readonly="1"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="area_id" readonly="isopen == True" options="{'no_create': True,'no_create_edit': True}"/>
+                            <field name="branch_ids" invisible="1"/>
+                            <field name="branch_id" readonly="isopen == True" options="{'no_create': True,'no_create_edit': True}"/>
+                        </group>
+                    </group>
+                    <group col="2">
+                        <group>
+                            <group>
+                                <field name="open_periode_from" readonly="isopen == True" string="Date From"/>
+                            </group>
+                            <group>
+                                <field name="open_periode_to" readonly="isopen == True" string="Date To"/>
+                            </group>
+                        </group>
+                    </group>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View for acc.opening.closing -->
+    <record id="view_acc_opening_closing_search" model="ir.ui.view">
+        <field name="name">view.acc.opening.closing.search</field>
+        <field name="model">acc.opening.closing</field>
+        <field name="arch" type="xml">
+            <search>
+                <group expand="1" string="Group By">
+                    <filter string="Name" name="group_by_name" context="{'group_by':'name'}"/>
+                    <filter string="State" name="group_by_state" context="{'group_by':'state_process'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Window Action for acc.opening.closing -->
+    <record id="action_acc_opening_closing" model="ir.actions.act_window">
+        <field name="name">Accounting Periode And Closing</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">acc.opening.closing</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                There are no records yet. Click here to add a new Accounting Period and Closing.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="act_acc_closing_process" name="Accounting Periode" sequence="1" parent="store_procedure" action="action_acc_opening_closing"/>
+
+</odoo>
