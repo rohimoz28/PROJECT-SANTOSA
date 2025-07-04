@@ -27,6 +27,7 @@
         'views/menuitems.views.xml',
         'wizards/export_honor_dokter.xml',
         'report/report_xls.xml',
+        'db/calculate_acc.sql',
         'views/matrix_posting/matrix_posting_master.views.xml',
         'views/offset/offset_transaction_master.views.xml',
         'views/matrix_posting/matrix_posting_key.views.xml',
@@ -68,6 +69,7 @@
         'views/penampung_invoice/stg_claim_lines_views.xml',
         'views/ar_klaim/ar_klaim.xml',
         'views/penampung_invoice/akun_kontrol_honor_dokter.xml',
+        'views/penampung_invoice/acc_opening_closing_views.xml',
         # 'views/master.views.xml',
     ],
 
