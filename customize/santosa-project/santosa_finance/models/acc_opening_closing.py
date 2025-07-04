@@ -20,7 +20,7 @@ chari = {'0':6,'1':0,'2':1,'3':2,'4':3,'5':4,'6':5}
 
 
 class AccOpeningClosing(models.Model):
-    _name = 'acc.opening.closing'
+    _name = 'acc.periode.closing'
     _description = 'HR TMS Open And Close'
     _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin', 'utm.mixin']
     _order = 'id DESC'
@@ -104,7 +104,7 @@ class AccOpeningClosing(models.Model):
         return res
 
     def init(self):
-       dat = self.env['acc.opening.closing'].sudo().search([])
+       dat = self.env['acc.periode.closing'].sudo().search([])
        for rec in dat:
     #        pass
            if rec.branch_id and rec.open_periode_from and rec.open_periode_to:
@@ -118,7 +118,7 @@ class AccOpeningClosing(models.Model):
         for rec in self:
         #     pass
             if rec.branch_id and rec.open_periode_from and rec.open_periode_to:
-                open_close_data = self.env['acc.opening.closing'].sudo().search([('id', '=', rec.id)])
+                open_close_data = self.env['acc.periode.closing'].sudo().search([('id', '=', rec.id)])
                 br = self.env['res.branch'].sudo().search([('id', '=', rec.branch_id.id)])
 
         #         # Convert date object to string before strptime

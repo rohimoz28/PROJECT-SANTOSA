@@ -29,4 +29,4 @@ access_ar_klaim,access.ar.klaim,model_ar_klaim,base.group_user,1,1,1,1
 access_ar_klaim_detail,access.ar.klaim.detail,model_ar_klaim_detail,base.group_user,1,1,1,1
 access_santosa_finance_akun_kontrol_honor_dokter,access_santosa_finance_akun_kontrol_honor_dokter,model_santosa_finance_akun_kontrol_honor_dokter,base.group_user,1,1,1,1
 access_export_honor_dokter,access_export_honor_dokter,model_export_honor_dokter,base.group_user,1,1,1,1,
-access_acc_opening_closing,access_acc_opening_closing,model_acc_opening_closing,base.group_user,1,1,1,1
+access_acc_periode_closing,access_acc_periode_closing,model_acc_periode_closing,base.group_user,1,1,1,1
