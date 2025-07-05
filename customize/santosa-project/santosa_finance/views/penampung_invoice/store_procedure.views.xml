@@ -59,7 +59,8 @@
             <field name="domain"></field>
         </record>
 
-        <menuitem id="store_procedure" name="Processing" sequence="99" parent="account.menu_finance" action="santosa_finance_store_procedure_action"/>
+        <menuitem id="store_procedure" name="Processing" sequence="99" parent="account.menu_finance"/>
+            <menuitem id="store_procedure_inv" name="Invoice Periode" sequence="2" parent="store_procedure" action="santosa_finance_store_procedure_action"/>
     </data>
 </odoo>
 
