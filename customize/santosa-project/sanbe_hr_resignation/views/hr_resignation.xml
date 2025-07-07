@@ -52,9 +52,9 @@
                                 groups="base.group_user" class="btn btn-info" icon="fa-print"/>    
                         <!-- paklaring buttons -->
                         <button name="%(action_report_paklaring)d" string="Print Paklaring" type="action" icon="fa-print"
-                                invisible="not (state == 'approved' and branch_id == 1)" groups="base.group_user" class="oe_highlight" />
+                                invisible="not (state == 'approved' and branch_id == 26)" groups="base.group_user" class="oe_highlight" />
                         <button name="%(action_report_paklaring_steril)d" string="Print Paklaring" type="action" icon="fa-print"
-                                invisible="not (state == 'approved' and branch_id == 6)" groups="base.group_user" class="oe_highlight" />
+                                invisible="not (state == 'approved' and branch_id == 27)" groups="base.group_user" class="oe_highlight" />
                 </xpath>
                 <xpath expr="//div[hasclass('oe_title')]" position="replace">
                     <div class="oe_title">
