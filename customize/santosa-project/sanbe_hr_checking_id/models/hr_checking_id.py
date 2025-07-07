@@ -54,12 +54,12 @@ class HRCheckingID(models.Model):
             if emp:
                 mut_id = mut.create({
                     'employee_id' : emp.id,
-                    'emp_nos' : emp.id,
+                    'emp_id' : emp.employee_id,
                     'service_type' : 'actv',
                     'service_start' : fields.Date.today(),
                 })
                 
-                mut_id.isi_data_employee()
+                mut_id._onchange_employee_id()
                 mut_id.env.cr.commit()
         if mut_id:
             return mut_id.id
