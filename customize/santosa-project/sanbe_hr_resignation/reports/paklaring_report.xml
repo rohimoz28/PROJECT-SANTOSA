@@ -19,7 +19,7 @@
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">sanbe_hr_resignation.paklaring_report</field>
             <field name="report_file">sanbe_hr_resignation.paklaring_report</field>
-            <field name="print_report_name">('Paklaring - %s' % (object.emp_nos.name))</field>
+            <field name="print_report_name">('Paklaring - %s' % (object.employee_id.name))</field>
             <field name="binding_model_id" ref="model_hr_resignation" />
             <field name="binding_type">report</field>
             <field name="paperformat_id" ref="sanbe_hr_resignation.paperformat_parklaring_report" />
@@ -171,8 +171,8 @@
                                     </td>
                                     <td style="width: 15px; padding: 0; margin: 0; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">:</td>
                                     <td style="width: 300px; padding: 0; margin: 0; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">
-                                        <t t-if="doc.emp_nos.name">
-                                            <t t-esc="doc.emp_nos.name" />
+                                        <t t-if="doc.employee_id.name">
+                                            <t t-esc="doc.employee_id.name" />
                                         </t>
                                     </td>
                                 </tr>
@@ -182,8 +182,8 @@
                                     </td>
                                     <td style="width: 15px; padding: 0; margin: 0; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">:</td>
                                     <td style="width: 300px; padding: 0; margin: 0; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">
-                                        <t t-if="doc.emp_nos.job_id.name">
-                                            <t t-esc="doc.emp_nos.job_id.name" />
+                                        <t t-if="doc.employee_id.job_id.name">
+                                            <t t-esc="doc.employee_id.job_id.name" />
                                         </t>
                                     </td>
                                 </tr>
@@ -201,8 +201,8 @@
                                     </td>
                                     <td style="width: 15px; padding: 0; margin: 0; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">:</td>
                                     <td style="width: 300px; padding: 0; margin: 0; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">
-                                        <t t-if="doc.emp_nos.name">
-                                            <t t-esc="doc.emp_nos.name" />
+                                        <t t-if="doc.employee_id.name">
+                                            <t t-esc="doc.employee_id.name" />
                                         </t>
                                     </td>
                                 </tr>
@@ -212,8 +212,8 @@
                                     </td>
                                     <td style="width: 15px; padding: 0; margin: 0; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">:</td>
                                     <td style="width: 300px; padding: 0; margin: 0; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">
-                                        <t t-if="doc.emp_nos.private_street">
-                                            <t t-esc="doc.emp_nos.private_street" />
+                                        <t t-if="doc.employee_id.private_street">
+                                            <t t-esc="doc.employee_id.private_street" />
                                         </t>
                                     </td>
                                 </tr>
@@ -223,8 +223,8 @@
                                     </td>
                                     <td style="width: 15px; padding: 0; margin: 0; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">:</td>
                                     <td style="width: 300px; padding: 0; margin: 0; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">
-                                        <t t-if="doc.emp_nos.job_id.name">
-                                            <t t-esc="doc.emp_nos.job_id.name" />
+                                        <t t-if="doc.employee_id.job_id.name">
+                                            <t t-esc="doc.employee_id.job_id.name" />
                                         </t>
                                     </td>
                                 </tr>
@@ -234,8 +234,8 @@
                                     </td>
                                     <td style="width: 15px; padding: 0; margin: 0; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">:</td>
                                     <td style="width: 300px; padding: 0; margin: 0; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;">
-                                        <t t-if="doc.emp_nos.nik">
-                                            <t t-esc="doc.emp_nos.nik" />
+                                        <t t-if="doc.employee_id.nik">
+                                            <t t-esc="doc.employee_id.nik" />
                                         </t>
                                     </td>
                                 </tr>
@@ -245,14 +245,14 @@
                                 <div class="col-12">
                                     <p style="line-height: 1; margin: 1; font-size:16px; font-family: 'Tahoma', Trebuchet MS, sans-serif;"> 
                                         Adalah benar pernah bekerja pada <span t-field="company.name" /> dari tanggal 
-                                        <t t-if="doc.emp_nos.job_status == 'permanent'">
+                                        <t t-if="doc.employee_id.job_status == 'permanent'">
                                             <t t-if="doc.joined_date">
                                                 <t t-esc="doc.joined_date.strftime('%d-%m-%Y')" /></t>
                                             <t t-else="">.....</t>
                                         </t>
-                                        <t t-elif="doc.emp_nos.job_status == 'contract'">
-                                            <t t-if="doc.emp_nos.contract_datefrom">
-                                                <t t-esc="doc.emp_nos.contract_datefrom.strftime('%d-%m-%Y')" /></t>
+                                        <t t-elif="doc.employee_id.job_status == 'contract'">
+                                            <t t-if="doc.employee_id.contract_datefrom">
+                                                <t t-esc="doc.employee_id.contract_datefrom.strftime('%d-%m-%Y')" /></t>
                                             <t t-else="">.....</t>
                                         </t>
                                         <t t-else="">.....</t> 
