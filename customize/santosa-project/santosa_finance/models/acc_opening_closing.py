@@ -109,9 +109,9 @@ class AccOpeningClosing(models.Model):
     #        pass
            if rec.branch_id and rec.open_periode_from and rec.open_periode_to:
                br = self.env['res.branch'].sudo().search([('id','=',rec.branch_id.id)])
-               rec.name = br.name + '/' +str(datetime.strptime(str(rec.open_periode_from), "%d-%m-%Y").date())+'-'+str(datetime.strptime(str(rec.open_periode_to), "%d-%m-%Y").date())
+               rec.name = br.name + '/' +str(datetime.strptime(str(rec.open_periode_from), "%Y-%m-%d").date())+'-'+str(datetime.strptime(str(rec.open_periode_to), "%Y-%m-%d").date())
                if br:
-                   rec.write({'name': br.name + '/' + str((datetime.strptime(str(rec.open_periode_from), "%Y-%m-%d").date()).strftime('%d-%m-%Y'))+'-'+str((datetime.strptime(str(rec.open_periode_to), "%Y-%m-%d").date()).strftime('%d-%m-%Y'))})
+                   rec.write({'name': br.name + '/' + str((datetime.strptime(str(rec.open_periode_from), "%Y-%m-%d").date()).strftime('%Y-%m-%d'))+'-'+str((datetime.strptime(str(rec.open_periode_to), "%Y-%m-%d").date()).strftime('%Y-%m-%d'))})
                    rec.env.cr.commit()
 
     def write(self, vals):
