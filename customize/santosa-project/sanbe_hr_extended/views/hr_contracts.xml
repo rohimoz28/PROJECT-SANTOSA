@@ -70,12 +70,12 @@
                         <field name="area" options="{'no_create': True,'no_create_edit': True}" required="1"/>
                         <field name="branch_ids" invisible="1" />
                         <field name="alldepartment" invisible="1" />
-                        <field name="branch_id" options="{'no_create': True,'no_create_edit': True}" string = "Unit Bisnis" required="1"/>
-                        <field name="directorate_id" options="{'no_create': True,'no_create_edit': True}" string = "Direktorat" required='1'/>
-                        <field name="hrms_department_id" options="{'no_create': True,'no_create_edit': True}" string = "Departemen" required='1'/>
-                        <field name="division_id" options="{'no_create': True,'no_create_edit': True}" string = "Divisi" required='1'/>
+                        <field name="branch_id" options="{'no_create': True,'no_create_edit': True}" string = "Unit Bisnis"/>
+                        <field name="directorate_id" options="{'no_create': True,'no_create_edit': True}" string = "Direktorat"/>
+                        <field name="hrms_department_id" options="{'no_create': True,'no_create_edit': True}" string = "Departemen" force_save="1"/>
+                        <field name="division_id" options="{'no_create': True,'no_create_edit': True}" string = "Divisi"/>
                         <field name="work_unit_id" options="{'no_create': True,'no_create_edit': True}" string = "Unit Kerja"/>
-                        <field name="job_id" options="{'no_create': True,'no_create_edit': True}" string = "Jabatan" required='1' readonly="1" />
+                        <field name="job_id" options="{'no_create': True,'no_create_edit': True}" string = "Jabatan" readonly="1" />
                         <label for="ws_day" string="Periode Kontrak"
                                 />
                         <div class="o_row" >
@@ -278,6 +278,34 @@
                 </xpath>
                 <xpath expr="//field[@name='department_id']" position="replace">
                     <field name="hrms_department_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- search view -->
+        <record id="hr_contract_view_search_inherit"  model="ir.ui.view">
+            <field name="name">hr.contract.view.search.inherit</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='group_by_department']" position="replace">
+                    <filter 
+                    string="HRMS Departemen" 
+                    name="hrms_department_id" 
+                    context="{'group_by': 'hrms_department_id'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- kanban view -->
+        <record id="hr_contract_view_kanban_inherit" model="ir.ui.view">
+            <field name="name">hr.contract.view.kanban.inherit</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@class='o_hr_contract_state']/strong/field[@name='name']" position="after">
+                    <br/>
+                    <field name="employee_id"/>
                 </xpath>
             </field>
         </record>
