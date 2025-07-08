@@ -13,5 +13,22 @@
             <field name="active">True</field>
             <field name="currency_id" ref="base.IDR"/>
         </record>
+        
+        <!-- Sequences for purchase.order -->
+        <record id="seq_kas_bank_kas" model="ir.sequence">
+            <field name="name">Cash Bank (kas)</field>
+            <field name="code">cash.bank.kas</field>
+            <field name="prefix">CB/Kas/%(year)s/%(month)s/</field>
+            <field name="padding">5</field>
+        </record>
+        
+        <!-- Sequences for purchase.order -->
+        <record id="seq_kas_bank_bank" model="ir.sequence">
+            <field name="name">Cash Bank (Bank)</field>
+            <field name="code">cash.bank.bank</field>
+            <field name="prefix">CB/Bank/%(year)s/%(month)s/</field>
+            <field name="padding">5</field>
+        </record>
+
     </data>
 </odoo>

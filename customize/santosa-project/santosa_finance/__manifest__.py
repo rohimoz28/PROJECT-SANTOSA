@@ -67,9 +67,10 @@
         'views/transaction/menu_transaction.views.xml',
         'views/penampung_invoice/stg_claim_headers_views.xml',
         'views/penampung_invoice/stg_claim_lines_views.xml',
-        'views/ar_klaim/ar_klaim.xml',
+        # 'views/ar_klaim/ar_klaim.xml',
         'views/penampung_invoice/akun_kontrol_honor_dokter.xml',
         'views/penampung_invoice/acc_opening_closing_views.xml',
+        'views/cash_bank/cash_bank_views.xml',
         # 'views/master.views.xml',
     ],
 
