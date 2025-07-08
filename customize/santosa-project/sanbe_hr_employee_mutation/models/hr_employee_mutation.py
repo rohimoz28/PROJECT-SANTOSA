@@ -104,7 +104,11 @@ class HrEmployeeMutation(models.Model):
     service_job_status_id = fields.Many2one('sanhrms.job.status', string='Status Pekerjaan', default=lambda self:self.employee_id.job_status)
     service_job_status_type = fields.Selection(store=True, default=lambda self:self.employee_id.job_status, related='service_job_status_id.type')
     service_employementstatus = fields.Selection([('probation', 'Probation'),
-                                                  ('confirmed', 'Confirmed'),],
+                                                  ('confirmed', 'Confirmed'),
+                                                  ('end_contract', 'End Of Contract'),
+                                                  ('resigned', 'Resigned'),
+                                                  ('retired', 'Retired'),
+                                                  ('terminated', 'Terminated')],
                                                  string='Status Kekaryawanan')
     service_jobtitle = fields.Many2one('hr.job', domain="[('hrms_department_id','=',service_departmentid)]", string='Jabatan', index=True, default=lambda self:self.employee_id.job_id.id)
     service_empgroup1 = fields.Selection(selection=[('Group1', 'Group 1 - Harian(pak Deni)'),
