@@ -54,7 +54,7 @@ class HrContract(models.Model):
     seciality = fields.Many2one('hr.profesion.special','Kategori Khusus', related='employee_id.seciality')
     
     department_id = fields.Many2one('hr.department', compute = '_find_department_id',  string='Departemen', store=True, related='employee_id.department_id')
-    hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen', related='employee_id.hrms_department_id')
+    hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen', related='employee_id.hrms_department_id', store=True)
     
     @api.depends('hrms_department_id')
     def _find_department_id(self):
