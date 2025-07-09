@@ -20,7 +20,7 @@
     'depends': ['base','hr','base_territory','sanbe_hr_extended'],
     'data': [
         'views/hr_employment_tracking.xml',
-        'views/hr_emploment_log.xml',
+        'views/hr_employment_log.xml',
         'views/hr_employee.xml',
         'security/ir.model.access.csv'
     ],
