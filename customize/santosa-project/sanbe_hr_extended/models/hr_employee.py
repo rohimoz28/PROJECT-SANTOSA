@@ -707,6 +707,8 @@ class ParentEmployee(models.Model):
     _rec_name = 'display_name'
     _auto = False
 
+
+    display_name = fields.Char(string='Cari', compute="_compute_display_name", store=True)
     id = fields.Many2one('hr.employee', required=True)
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True)
     name = fields.Char('Nama Karyawan', required=True)
@@ -735,19 +737,25 @@ class ParentEmployee(models.Model):
         tools.drop_view_if_exists(self.env.cr, self._table)
         self.env.cr.execute("""
             CREATE OR REPLACE VIEW %s AS (
-                SELECT id,id employee_id,
-                name, 
-                nik,
-                company_id,
-                branch_id,
-                active,
-                state,
-                job_id,
-                directorate_id,
-                hrms_department_id,user_id,
-                division_id from hr_employee
-        )
-        """ % (self._table, ))
+                SELECT
+                    id,
+                    id AS employee_id,
+                    name,
+                    nik,
+                    company_id,
+                    branch_id,
+                    active,
+                    state,
+                    job_id,
+                    directorate_id,
+                    hrms_department_id,
+                    user_id,
+                    division_id,
+                    (nik || ' - ' || name) AS display_name  -- Tambahkan ini
+                FROM hr_employee
+            )
+        """ % self._table)
+
         
     @api.depends('nik','name')
     def _compute_display_name(self):
