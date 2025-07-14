@@ -150,6 +150,7 @@ class HrEmployee(models.Model):
                                        string='Old Employee P Group')
     parent_id = fields.Many2one('parent.hr.employee', tracking=True, string='Atasan Langsung')
     coach_id = fields.Many2one('parent.hr.employee', tracking=True, string='Atasan Unit Kerja')
+    coor_unit_id = fields.Many2one('parent.hr.employee', string='Atasan Unit Koordinasi', tracking=True)
     employee_levels = fields.Many2one('employee.level', string='Employee Level', index=True, store=True, tracking=True)
     insurance = fields.Char('BPJS No')
     jamsostek = fields.Char('Jamsostek')
@@ -185,16 +186,16 @@ class HrEmployee(models.Model):
     initial = fields.Char('Inisial')
     gender_selection = fields.Selection([('male', 'Laki-Laki'),
                             ('female', 'Perempuan'),],compute="_get_gender_status",
-                            inverse='onchange_gender_selection', string='Status Pernikahan')
+                            inverse='onchange_gender_selection', string='Jenis Kelamin')
     marital = fields.Selection([('single', 'Single'),
                             ('married', 'Married'),
-                            ('seperate', 'Seperate')], string='Status Pernikahan')
+                            ('seperate', 'Seperate')], string='Status Pernikahan', default=False)
     
     marital_status = fields.Selection([('single', 'Belum Menikah'),
                             ('married', 'Menikah'),
                             ('seperate', 'Bercerai')],compute="_get_marital_status",
                             inverse='onchange_marital_status',
-                             string='Status Pernikahan')
+                             string='Status Perkawinan')
 
     
     @api.onchange('marital_status')        
@@ -258,9 +259,6 @@ class HrEmployee(models.Model):
         string='SIP'
     )
 
-    def bypass_sip(self):
-        for line in self:
-            pass
 
 
     # wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.", group_operator="avg")
@@ -760,7 +758,7 @@ class ParentEmployee(models.Model):
     @api.depends('nik','name')
     def _compute_display_name(self):
         for account in self:
-            account.display_name = '%s-%s' % (account.nik   or '', account.name)
+            account.display_name = '%s - %s' % (account.nik   or '', account.name)
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
