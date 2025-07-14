@@ -2,36 +2,33 @@ version: "3.8"
 services:
   prod-odoo-santosa:
     image: custom-odoo:17.0
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: prod-odoo-santosa
+    container_name: ${ODOO_CONTAINER_NAME:-prod-odoo-santosa-container}
     restart: unless-stopped
     ports:
-      - "8076:8069"
-      - "8096:8072"
+      - "${ODOO_WEB_HOST_PORT:-8076}:8069"
+      - "${ODOO_LONGPOLLING_HOST_PORT:-8072}:8072"
     depends_on:
       - prod-postgres-santosa
     env_file: .env
     volumes:
       - sanfi_data:/var/lib/odoo
       - ./odoo.conf:/etc/odoo/odoo.conf
-      - ../../../customize/santosa-project:/mnt/addons-customize
+      - ${CUSTOM_ADDONS_PATH:-./customize/santosa-project}:/mnt/addons-customize
     networks:
-      - prod_santosa_project_network
+      - prod_santosa_network
 
   prod-postgres-santosa:
-    image: postgres:latest
-    container_name: prod-postgres-santosa
+    image: postgres:16-alpine
+    container_name: ${POSTGRES_CONTAINER_NAME:-prod-postgres-santosa-container}
     ports:
-      - "5444:5432"
+      - "${POSTGRES_HOST_PORT:-5444}:5432"
     restart: unless-stopped
     env_file: .env
     shm_size: '6gb'
     volumes:
-      - sanfi_postgresql:/var/lib/pgsql/data/pgdata
+      - sanfi_db:/var/lib/postgresql/data/pgdata
     networks:
-      - prod_santosa_project_network
+      - prod_santosa_network
     command: >
       postgres
       -c max_connections=300
@@ -63,11 +60,12 @@ services:
 
 volumes:
   sanfi_data:
-    external: true
-  sanfi_postgresql:
-    external: true
+    name: "${ODOO_VOLUME_NAME}"
+    # external: true # Uncomment jika volume ini dikelola secara eksternal
+  sanfi_db:
+    name: "${POSTGRES_VOLUME_NAME}"
+    # external: true # Uncomment jika volume ini dikelola secara eksternal
 
 networks:
-  prod_santosa_project_network:
-    name: prod_santosa_project_network
+  prod_santosa_network:
     driver: bridge
