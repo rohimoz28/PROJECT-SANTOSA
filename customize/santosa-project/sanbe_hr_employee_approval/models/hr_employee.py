@@ -31,6 +31,16 @@ class HrEmployee(models.Model):
         tracking=3,store=True,
         default='draft')
 
+    hold_allowed_user = fields.Boolean(
+        compute='_compute_hold_allowed_user',
+        store=False
+    )
+
+    def _compute_hold_allowed_user(self):
+        for rec in self:
+            user = self.env.user
+            rec.hold_allowed_user = user.login == 'gurnita' or user.has_group('base.group_system')
+
     def request_for_approval(self):
         return self.write({'state': 'req_approval'})
 
