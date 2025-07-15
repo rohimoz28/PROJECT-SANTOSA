@@ -19,3 +19,4 @@ from . import hr_profesion
 from . import job_status
 from . import hr_service_contract
 from . import hr_sip
+from . import mst_group_unit
