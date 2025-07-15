@@ -1,77 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <data>
+        <!-- View emp.group View Tree -->
+        <record id="view_emp_group_tree" model="ir.ui.view">
+            <field name="name">view.emp.group.tree</field>
+            <field name="model">emp.group</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" string="Nama"/>
+                    <field name="responsible_id" string="Penanggung Jawab"/>
+                </tree>
+            </field>
+        </record>
 
-    <!-- View emp.group View Tree -->
-    <record id="view_emp_group_tree" model="ir.ui.view">
-        <field name="name">view.emp.group.tree</field>
-        <field name="model">emp.group</field>
-        <field name="arch" type="xml">
-            <tree>
-                <field name="name" string="Nama"/>
-                <field name="responsible_id" string="Penanggung Jawab"/>
-            </tree>
-        </field>
-    </record>
-
-    <!-- View emp.group form -->
-    <record id="view_emp_group_form" model="ir.ui.view">
-        <field name="name">view.emp.group.form</field>
-        <field name="model">emp.group</field>
-        <field name="arch" type="xml">
-            <form string="Emp Group">
-                <sheet>
-                    <div class="oe_title">
-                        <label for="name" string="Nama"/>
-                        <h1>
-                            <field name="name" placeholder="Nama..."/>
-                        </h1>
-                        <h3>
-                            <field name="code" placeholder="Kode..."/>
-                        </h3>
-                    </div>
-                    <group>
+        <!-- View emp.group form -->
+        <record id="view_emp_group_form" model="ir.ui.view">
+            <field name="name">view.emp.group.form</field>
+            <field name="model">emp.group</field>
+            <field name="arch" type="xml">
+                <form string="Emp Group">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" string="Nama"/>
+                            <h1>
+                                <field name="name" placeholder="Nama..."/>
+                            </h1>
+                            <h3>
+                                <field name="code" placeholder="Kode..."/>
+                            </h3>
+                        </div>
                         <group>
-                            <field name="responsible_id" string="Penanggung Jawab" />
+                            <group>
+                                <field name="responsible_id" string="Penanggung Jawab" />
+                            </group>
                         </group>
+                        <notebook>
+                            <page string="Daftar Karyawan">
+                                <field name="employee_ids"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- View emp.group search -->
+        <record id="view_emp_group_search" model="ir.ui.view">
+            <field name="name">view.emp.group.search</field>
+            <field name="model">emp.group</field>
+            <field name="arch" type="xml">
+                <search>
+                    <group expand="1" string="Group By">
+                        <filter string="Nama" name="name" domain="[]" context="{'group_by':'name'}"/>
+                        <filter string="Penanggung Jawab" name="responsible_id" domain="[]" context="{'group_by':'responsible_id'}"/>
                     </group>
-                    <notebook>
-                        <page string="Daftar Karyawan">
-                            <field name="employee_ids"/>
-                        </page>
-                    </notebook>
-                </sheet>
-            </form>
-        </field>
-    </record>
+                </search>
+            </field>
+        </record>
 
-    <!-- View emp.group search -->
-    <record id="view_emp_group_search" model="ir.ui.view">
-        <field name="name">view.emp.group.search</field>
-        <field name="model">emp.group</field>
-        <field name="arch" type="xml">
-            <search>
-                <group expand="1" string="Group By">
-                    <filter string="Nama" name="name" domain="[]" context="{'group_by':'name'}"/>
-                    <filter string="Penanggung Jawab" name="responsible_id" domain="[]" context="{'group_by':'responsible_id'}"/>
-                </group>
-            </search>
-        </field>
-    </record>
-
-    <!-- Action emp.group -->
-    <record id="action_emp_group" model="ir.actions.act_window">
-        <field name="name">Grup</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">emp.group</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">[]</field>
-        <field name="context">{}</field>
-        <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                There is no examples click here to add new Emp Group.
-            </p>
-        </field>
-    </record>
+        <!-- Action emp.group -->
+        <record id="action_emp_group" model="ir.actions.act_window">
+            <field name="name">Grup</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">emp.group</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    There is no examples click here to add new Emp Group.
+                </p>
+            </field>
+        </record>
+        
+        <menuitem id="emp_group" name="Group Pegawai" sequence='20' parent="hr.menu_human_resources_configuration" action="action_emp_group"/>
+        
     
-    <menuitem id="emp_group" name="Group Pegawai" sequence='20' parent="hr.menu_human_resources_configuration" action="action_emp_group"/>
+        <record id="view_emp_group_service_tree" model="ir.ui.view">
+            <field name="name">view.emp.group.tree</field>
+            <field name="model">mst.group.pelayanan</field>
+            <field name="arch" type="xml">
+                <tree delete="false" duplicate="false" editable="bottom">
+                    <field name="code" string="Kode Group Pelayanan"/>
+                    <field name="name" string="Group Pelayanan"/>
+                    <field name="write_uid" string="Write User"/>
+                    <field name="write_date" string="Write Date"/>
+                    <field name="active" string="Active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_emp_group_service_form" model="ir.ui.view">
+            <field name="name">view.emp.group.form</field>
+            <field name="model">mst.group.pelayanan</field>
+            <field name="arch" type="xml">
+                <form string="Emp Group">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" string="Group Pelayanan"/>
+                            <h1>
+                                <field name="name" placeholder="Nama..."/>
+                            </h1>
+                            <label for="code" string="Kode Group Pelayanan"/>
+                            <h3>
+                                <field name="code" placeholder="Kode..."/>
+                            </h3>
+                        </div>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_emp_group_service_search" model="ir.ui.view">
+            <field name="name">view.emp.group.search</field>
+            <field name="model">mst.group.pelayanan</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" string="Name" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Nama" name="name" domain="[]" context="{'group_by':'name'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_emp_group_service" model="ir.actions.act_window">
+            <field name="name">Group Pelayanan</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mst.group.pelayanan</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                        There is no examples click here to add new Emp Group.
+                </p>
+            </field>
+        </record>
+        
+        <menuitem id="emp_group_service" name="Group Pelayanan" sequence='21' parent="hr.menu_human_resources_configuration" action="action_emp_group_service"/>
+    </data>
 </odoo>
