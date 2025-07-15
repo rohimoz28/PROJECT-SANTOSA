@@ -1,48 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!-- View emp.group View Tree -->
-        <record id="view_emp_group_tree" model="ir.ui.view">
-            <field name="name">view.emp.group.tree</field>
-            <field name="model">emp.group</field>
-            <field name="arch" type="xml">
-                <tree>
-                    <field name="name" string="Nama"/>
-                    <field name="responsible_id" string="Penanggung Jawab"/>
-                </tree>
-            </field>
-        </record>
-
-        <!-- View emp.group form -->
-        <record id="view_emp_group_form" model="ir.ui.view">
-            <field name="name">view.emp.group.form</field>
-            <field name="model">emp.group</field>
-            <field name="arch" type="xml">
-                <form string="Emp Group">
-                    <sheet>
-                        <div class="oe_title">
-                            <label for="name" string="Nama"/>
-                            <h1>
-                                <field name="name" placeholder="Nama..."/>
-                            </h1>
-                            <h3>
-                                <field name="code" placeholder="Kode..."/>
-                            </h3>
-                        </div>
-                        <group>
-                            <group>
-                                <field name="responsible_id" string="Penanggung Jawab"/>
-                            </group>
-                        </group>
-                        <notebook>
-                            <page string="Daftar Karyawan">
-                                <field name="employee_ids"/>
-                            </page>
-                        </notebook>
-                    </sheet>
-                </form>
-            </field>
-        </record>
+    <!-- View emp.group View Tree -->
+    <record id="view_emp_group_tree" model="ir.ui.view">
+        <field name="name">view.emp.group.tree</field>
+        <field name="model">emp.group</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" string="Nama"/>
+                <field name="responsible_id" string="Penanggung Jawab"/>
+            </tree>
+        </field>
+    </record>
 
         <!-- View emp.group search -->
         <record id="view_emp_group_search" model="ir.ui.view">
@@ -83,9 +52,11 @@
                 <tree delete="false" duplicate="false" editable="bottom">
                     <field name="code" string="Kode Group Pelayanan"/>
                     <field name="name" string="Group Pelayanan"/>
+                    <field name="create_date" string="Create Date"/>
+                    <field name="write_date" string="Last Update"/>
                     <field name="write_uid" string="Write User"/>
-                    <field name="write_date" string="Write Date"/>
                     <field name="active" string="Active"/>
+                    <!-- <field name="sub_ids" string="Sub Group Pelayanan" widget="many2many_tags"/> -->
                 </tree>
             </field>
         </record>
@@ -94,7 +65,7 @@
             <field name="name">view.emp.group.form</field>
             <field name="model">mst.group.pelayanan</field>
             <field name="arch" type="xml">
-                <form string="Emp Group">
+                <form string="Mst Group Pelayanan">
                     <sheet>
                         <div class="oe_title">
                             <label for="name" string="Group Pelayanan"/>
@@ -106,28 +77,18 @@
                                 <field name="code" placeholder="Kode..."/>
                             </h3>
                         </div>
+                        <group>
+                            <field name="sub_ids" invisible ="not sub_ids" string="Sub Group Pelayanan" widget="many2many_tags"/>
+                        </group>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids"/>
                         <field name="activity_ids"/>
                         <field name="message_ids"/>
                     </div>
-                </form>
-            </field>
-        </record>
-
-        <record id="view_emp_group_service_search" model="ir.ui.view">
-            <field name="name">view.emp.group.search</field>
-            <field name="model">mst.group.pelayanan</field>
-            <field name="arch" type="xml">
-                <search>
-                    <field name="name" string="Name" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
-                    <group expand="1" string="Group By">
-                        <filter string="Nama" name="name" domain="[]" context="{'group_by':'name'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
+            </form>
+        </field>
+    </record>
 
         <record id="action_emp_group_service" model="ir.actions.act_window">
             <field name="name">Group Pelayanan</field>
@@ -138,11 +99,86 @@
             <field name="context">{}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                        There is no examples click here to add new Emp Group.
+                        There is no examples click here to add new Emp Group Service.
                 </p>
             </field>
         </record>
         
         <menuitem id="emp_group_service" name="Group Pelayanan" sequence='21' parent="hr.menu_human_resources_configuration" action="action_emp_group_service"/>
+        
+         <record id="view_emp_sub_group_service_tree" model="ir.ui.view">
+            <field name="name">view.emp.group.tree</field>
+            <field name="model">mst.sub.group.pelayanan</field>
+            <field name="arch" type="xml">
+                <tree delete="false" duplicate="false" editable="bottom">
+                    <field name="mst_id" string="Mst Group Pelayanan" options="{'no_create': True,'no_create_edit':True}" column_invisible="1"/>
+                    <field name="code" string="Kode Sub Grup Pelayanan"/>
+                    <field name="name" string="Sub Group Pelayanan"/>
+                    <field name="create_date" string="Create Date"/>
+                    <field name="write_date" string="Last Update"/>
+                    <field name="write_uid" string="Write User"/>
+                    <field name="active" string="Active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_emp_sub_group_service_form" model="ir.ui.view">
+            <field name="name">view.emp.group.form</field>
+            <field name="model">mst.sub.group.pelayanan</field>
+            <field name="arch" type="xml">
+                <form string="Sub Group Pelayanan">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" string="Group Pelayanan"/>
+                            <h1>
+                                <field name="name" placeholder="Nama..."/>
+                            </h1>
+                            <label for="code" string="Kode Group Pelayanan"/>
+                            <h3>
+                                <field name="code" placeholder="Kode..."/>
+                            </h3>
+                        </div>
+                        <!-- <group>
+                            <field name="mst_id" string="Mst Group Pelayanan"/>
+                        </group> -->
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_emp_sub_group_service_search" model="ir.ui.view">
+            <field name="name">view.emp.group.search</field>
+            <field name="model">mst.sub.group.pelayanan</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" string="Name" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Nama" name="name" domain="[]" context="{'group_by':'name'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_emp_sub_group_service" model="ir.actions.act_window">
+            <field name="name">Sub Group Pelayanan</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mst.sub.group.pelayanan</field>
+            <field name="view_mode">tree</field>
+            <!-- <field name="view_mode">tree,form</field> -->
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                        There is no examples click here to add new Sub Group Employee Service.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="emp_sub_group_service" name="Sub Group Pelayanan" sequence='22' parent="hr.menu_human_resources_configuration" action="action_emp_sub_group_service"/> 
     </data>
 </odoo>
