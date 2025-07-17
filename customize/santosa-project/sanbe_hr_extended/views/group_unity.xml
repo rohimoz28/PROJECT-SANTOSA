@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        
+        <record id="view_emp_group_unit_tree" model="ir.ui.view">
+            <field name="name">view.mst.group.unit.tree</field>
+            <field name="model">mst.group.unit</field>
+            <field name="arch" type="xml">
+                <tree delete="false" duplicate="false" editable="bottom">
+                    <field name="code" string="Kode Group Unit"/>
+                    <field name="name" string="Group Unit"/>
+                    <field name="create_date" string="Create Date"/>
+                    <field name="write_uid" string="Write User"/>
+                    <field name="write_date" string="Write Date"/>
+                    <field name="active" string="Active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_emp_group_unit_form" model="ir.ui.view">
+            <field name="name">view.mst.group.unit.form</field>
+            <field name="model">mst.group.unit</field>
+            <field name="arch" type="xml">
+                <form string="Sub Group Pelayanan">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" string="Group Unit"/>
+                            <h1>
+                                <field name="name" placeholder="Nama..."/>
+                            </h1>
+                            <label for="code" string="Kode Group Unit"/>
+                            <h3>
+                                <field name="code" placeholder="Kode..."/>
+                            </h3>
+                        </div>
+                        <!-- <group>
+                                    <field name="mst_id" string="Mst Group Pelayanan"/>
+                                </group> -->
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_emp_group_unit_search" model="ir.ui.view">
+            <field name="name">view.mst.group.unit.search</field>
+            <field name="model">mst.group.unit</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" string="Name" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Nama" name="name" domain="[]" context="{'group_by':'name'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_emp_group_unit" model="ir.actions.act_window">
+            <field name="name">Group Unit</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mst.group.unit</field>
+            <field name="view_mode">tree</field>
+            <!-- <field name="view_mode">tree,form</field> -->
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                                There is no examples click here to add new Sub Group Employee Service.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="emp_group_unit_service" name="Group Unit" sequence='23' parent="hr.menu_human_resources_configuration" action="action_emp_group_unit"/>
+ </data>
+</odoo>

@@ -174,7 +174,7 @@ def _create(self, data_list):
     return records
 
 
-@api.model
+
 def unlink(self):
     """ unlink()
 
@@ -304,4 +304,4 @@ def unlink(self):
 
 
 BaseModel._create = _create
-BaseModel.unlink = unlink
+# BaseModel.unlink = unlink
