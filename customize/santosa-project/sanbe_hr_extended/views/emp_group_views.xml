@@ -42,11 +42,11 @@
             </field>
         </record>
         
-        <menuitem id="emp_group" name="Group Pegawai" sequence='20' parent="hr.menu_human_resources_configuration" action="action_emp_group"/>
+        <menuitem id="emp_group" name="Group Pegawai" sequence='20' parent="hierarchy_id" action="action_emp_group"/>
         
     
         <record id="view_emp_group_service_tree" model="ir.ui.view">
-            <field name="name">view.emp.group.tree</field>
+            <field name="name">view.mst.group.pelayanan.tree</field>
             <field name="model">mst.group.pelayanan</field>
             <field name="arch" type="xml">
                 <tree delete="false" duplicate="false" editable="bottom">
@@ -62,7 +62,7 @@
         </record>
 
         <record id="view_emp_group_service_form" model="ir.ui.view">
-            <field name="name">view.emp.group.form</field>
+            <field name="name">view.mst.group.pelayanan.form</field>
             <field name="model">mst.group.pelayanan</field>
             <field name="arch" type="xml">
                 <form string="Mst Group Pelayanan">
@@ -103,11 +103,11 @@
                 </p>
             </field>
         </record>
-        
-        <menuitem id="emp_group_service" name="Group Pelayanan" sequence='21' parent="hr.menu_human_resources_configuration" action="action_emp_group_service"/>
+        <menuitem id="empoyee_group" name="Pelayanan" sequence='16' parent="hr.menu_human_resources_configuration"/>        
+        <menuitem id="emp_group_service" name="Group Pelayanan" sequence='21' parent="empoyee_group" action="action_emp_group_service"/>
         
          <record id="view_emp_sub_group_service_tree" model="ir.ui.view">
-            <field name="name">view.emp.group.tree</field>
+            <field name="name">view.mst.sub.group.pelayanan.tree</field>
             <field name="model">mst.sub.group.pelayanan</field>
             <field name="arch" type="xml">
                 <tree delete="false" duplicate="false" editable="bottom">
@@ -123,7 +123,7 @@
         </record>
 
         <record id="view_emp_sub_group_service_form" model="ir.ui.view">
-            <field name="name">view.emp.group.form</field>
+            <field name="name">view.mst.sub.group.pelayanan.form</field>
             <field name="model">mst.sub.group.pelayanan</field>
             <field name="arch" type="xml">
                 <form string="Sub Group Pelayanan">
@@ -152,7 +152,7 @@
         </record>
 
         <record id="view_emp_sub_group_service_search" model="ir.ui.view">
-            <field name="name">view.emp.group.search</field>
+            <field name="name">view.mst.sub.group.pelayanan.search</field>
             <field name="model">mst.sub.group.pelayanan</field>
             <field name="arch" type="xml">
                 <search>
@@ -179,6 +179,6 @@
             </field>
         </record>
 
-        <menuitem id="emp_sub_group_service" name="Sub Group Pelayanan" sequence='22' parent="hr.menu_human_resources_configuration" action="action_emp_sub_group_service"/> 
+        <menuitem id="emp_sub_group_service" name="Sub Group Pelayanan" sequence='22' parent="empoyee_group" action="action_emp_sub_group_service"/> 
     </data>
 </odoo>
