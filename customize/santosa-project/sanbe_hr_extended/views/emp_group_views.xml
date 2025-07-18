@@ -42,7 +42,7 @@
             </field>
         </record>
         
-        <menuitem id="emp_group" name="Group Pegawai" sequence='20' parent="hr.menu_human_resources_configuration" action="action_emp_group"/>
+        <menuitem id="emp_group" name="Group Pegawai" sequence='20' parent="hierarchy_id" action="action_emp_group"/>
         
     
         <record id="view_emp_group_service_tree" model="ir.ui.view">
@@ -104,7 +104,7 @@
             </field>
         </record>
         
-        <menuitem id="emp_group_service" name="Group Pelayanan" sequence='21' parent="hr.menu_human_resources_configuration" action="action_emp_group_service"/>
+        <menuitem id="emp_group_service" name="Group Pelayanan" sequence='21' parent="empoyee_group" action="action_emp_group_service"/>
         
          <record id="view_emp_sub_group_service_tree" model="ir.ui.view">
             <field name="name">view.emp.group.tree</field>
@@ -179,6 +179,6 @@
             </field>
         </record>
 
-        <menuitem id="emp_sub_group_service" name="Sub Group Pelayanan" sequence='22' parent="hr.menu_human_resources_configuration" action="action_emp_sub_group_service"/> 
+        <menuitem id="emp_sub_group_service" name="Sub Group Pelayanan" sequence='22' parent="empoyee_group" action="action_emp_sub_group_service"/> 
     </data>
 </odoo>
