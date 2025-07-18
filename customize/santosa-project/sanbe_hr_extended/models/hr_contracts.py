@@ -91,6 +91,9 @@ class HrContract(models.Model):
                                 ('4','4'),
                                 ('5','5')],string='# of PKWT',ondelete='cascade')
 
+    user_id = fields.Many2one(comodel_name='res.users', string="User", 
+                              default=lambda self: self.env.user, readonly=True)
+
     _sql_constraints = [
         ('contract_code_unique', 'UNIQUE(name)', 'A Contract must have a unique name.'),
     ]

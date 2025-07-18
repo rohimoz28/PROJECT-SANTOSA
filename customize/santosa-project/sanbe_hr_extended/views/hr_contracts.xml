@@ -108,7 +108,7 @@
                 </xpath>
                 <xpath expr="//group[@name='top_info_right']" position="before">
                     <group name="notes_groups" string="Catatan">
-                        <field name="notes" nolabel="1" colspan="2" placeholder="Type in notes about this contract..."/>
+                        <field name="notes" widget="text" nolabel="1" colspan="2" placeholder="Type in notes about this contract..."/>
                     </group>
                 </xpath>
                 <xpath expr="//div[hasclass('oe_title')]" position="replace">
@@ -279,6 +279,11 @@
                 <xpath expr="//field[@name='department_id']" position="replace">
                     <field name="hrms_department_id"/>
                 </xpath>
+                <xpath expr="//field[@name='company_id']" position="before">
+                    <field name="user_id" column_invisible="True"/>
+                    <field name="branch_ids" column_invisible="True"/>
+                    <field name="branch_id" domain="[('id','in',user_id.branch_id.id)]"/>
+                </xpath>
             </field>
         </record>
 
@@ -293,6 +298,14 @@
                     string="HRMS Departemen" 
                     name="hrms_department_id" 
                     context="{'group_by': 'hrms_department_id'}"/>
+                </xpath>
+                <xpath expr="//filter[@name='hrms_department_id']" position="after">
+                    <field name="user_id" column_invisible="True"/>
+                    <filter 
+                    string="Unit bisnis"
+                    name="branch_id"
+                    context="{'group_by': 'branch_id'}"
+                    domain="[('branch_id', '=', user_id.branch_id.id)]"/>
                 </xpath>
             </field>
         </record>
