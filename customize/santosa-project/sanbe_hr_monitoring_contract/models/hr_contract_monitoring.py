@@ -3,6 +3,10 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from odoo.exceptions import ValidationError, UserError
 from itertools import groupby
+import logging
+
+_logger = logging.getLogger(__name__)
+
 
 table_header = """
 <br/>
@@ -73,7 +77,7 @@ class HrEmployeeContractMonitoring(models.Model):
     status_employee = fields.Char(string='Employee Status', required=True)
     company_id = fields.Many2one('res.company', string='Company', required=True)
     company_name = fields.Char('Company Name', required=True)
-    branch_id = fields.Many2one('res.branch', string='Business Unit', required=True)
+    branch_id = fields.Many2one('res.branch', string='Business Unit', required=True, default=lambda self: self.env.company)
     branch_name = fields.Char('Business Unit', required=True)
     territory_id = fields.Many2one('res.territory', string='Area', required=True)
     territory_name = fields.Char('Territory Name', required=True)
@@ -91,7 +95,7 @@ class HrEmployeeContractMonitoring(models.Model):
     notice_days = fields.Integer('Notice Days', required=True)
     start_notice = fields.Date('Start of Notice Period')
     rehire = fields.Boolean('Rehire', default=False)
-    
+
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
         self.env.cr.execute("""
@@ -225,6 +229,7 @@ class HrContractMonitoring(models.Model):
     _sql_constraints = [
         ('name_monitoring_uniq', 'unique (name)', "Just Once time Proccess")
     ]
+
 
     def waiting_expired(self):
         for line in self:

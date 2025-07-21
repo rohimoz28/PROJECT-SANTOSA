@@ -105,7 +105,7 @@
                         </group>
                     </group>
                     <group name="notes_group2" string="Catatan">
-                        <field name="notes" nolabel="1" colspan="2" placeholder="Ketik catatan tentang kontrak ini..."/>
+                        <field name="notes" widget="text" nolabel="1" colspan="2" placeholder="Ketik catatan tentang kontrak ini..."/>
                     </group>
                 </sheet>
                 <!-- tracking log -->

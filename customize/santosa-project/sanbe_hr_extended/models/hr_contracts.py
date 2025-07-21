@@ -5,6 +5,7 @@ from odoo.exceptions import UserError
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
+
 class HrContract(models.Model):
     _inherit = 'hr.contract'
 
@@ -34,7 +35,7 @@ class HrContract(models.Model):
                                   store=False)
     alldepartment = fields.Many2many('hr.department', 'hr_department_rel', string='All Department',
                                      compute='_isi_department_branch', store=False)
-    branch_id = fields.Many2one('res.branch', string='Business Unit', domain="[('id','in',branch_ids)]", tracking=True, default=lambda self: self.env.user.branch_id, required=True)
+    branch_id = fields.Many2one('res.branch', string='Business Unit', tracking=True,  default=lambda self: self.env.company, required=True)
     employee_id = fields.Many2one(
         'hr.employee', 
         string='Nama Karyawan', 
@@ -90,6 +91,9 @@ class HrContract(models.Model):
                                 ('3','3'),
                                 ('4','4'),
                                 ('5','5')],string='# of PKWT',ondelete='cascade')
+
+    # user_id = fields.Many2one(comodel_name='res.users', string="User", 
+    #                           default=lambda self: self.env.user, readonly=True)
 
     _sql_constraints = [
         ('contract_code_unique', 'UNIQUE(name)', 'A Contract must have a unique name.'),
