@@ -67,6 +67,7 @@
                     <attribute name="readonly">state not in ['draft']</attribute>
                 </xpath>
                 <xpath expr="//field[@name='coach_id']" position="after">
+                    <field name="coor_unit_id" options="{'no_create': True,'no_create_edit': True}" readonly="(state !='draft')" context="{'display_nik_name': True}"/>
                     <field name="medic" options="{'no_create': True,'no_create_edit': True}"   readonly="(state !='draft')" />
                     <field name="nurse" options="{'no_create': True,'no_create_edit': True}"   readonly="(state !='draft')" />
                     <field name="seciality" options="{'no_create': True,'no_create_edit': True}"   readonly="(state !='draft')" />
@@ -81,7 +82,7 @@
                 </xpath>
                 <xpath expr="//field[@name='marital']" position="replace">
                     <field name="marital" invisible="1" string="Status Perkawinan"/>
-                    <field name="marital_status" required="1" string="Status Perkawinan"/>
+                    <field name="marital_status" required="1"/>
                 </xpath>
                 <xpath expr="//field[@name='birthday']" position="attributes">
                     <attribute name="required">1</attribute>
@@ -229,7 +230,7 @@
                 </xpath>
                 <xpath expr="//field[@name='private_phone']" position="before">
                     <field name="gender" string="Jenis Kelamin" invisible="1" />
-                    <field name="gender_selection" string="Jenis Kelamin" required="1" />
+                    <field name="gender_selection"/>
                 </xpath>
                 <xpath expr="//field[@name='spouse_complete_name']" position="attributes">
                     <attribute name="string">Nama Pasangan</attribute>
