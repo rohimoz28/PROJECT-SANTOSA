@@ -74,7 +74,6 @@ class HrEmployee(models.Model):
     medic = fields.Many2one('hr.profesion.medic', 'Profesi Medis',tracking=True, )
     nurse = fields.Many2one('hr.profesion.nurse', 'Profesi Perawat',tracking=True, )
     seciality = fields.Many2one('hr.profesion.special', 'Kategori Khusus',tracking=True, )
-    group_unit_id = fields.Many2one('mst.group.unit.pelayanan',tracking=True, )
     street = fields.Char(related='branch_id.street')
     street2 = fields.Char(related='branch_id.street2')
     city = fields.Char(related='branch_id.city')
