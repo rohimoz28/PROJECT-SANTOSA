@@ -60,15 +60,6 @@
             <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]"/>
         </record>
         <!-- HR Contract -->
-        <!-- <record id="ir_rule_hr_contract_employee_manager" model="ir.rule">
-            <field name="name">HR Contract: Employee Manager (Branch Restriction)</field>
-            <field name="model_id" ref="model_hr_contract"/>
-            <field name="groups" eval="[(4, ref('hr_contract.group_hr_contract_employee_manager'))]"/>
-            <field name="domain_force">
-                [('branch_id', 'in', user.branch_ids.ids)]
-            </field>
-        </record> -->
-
         <record id="hr_contract_branchs_manager_rule" model="ir.rule">
             <field name="name">HR Contracts Branch Manager</field>
             <field name="model_id" ref="model_hr_contract" />
@@ -82,16 +73,9 @@
             <field name="model_id" ref="model_hr_contract" />
             <field name="global" eval="True" />
             <field name="domain_force">
-                ['|',('branch_id','=',False),('branch_id','=',user.branch_id.id)]
+                [('branch_id','=',user.branch_id.id)]
             </field>
             <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]" />
         </record>
-        <!-- <record id="hr_contracts_branch_rule" model="ir.rule">
-            <field name="name">HR Contracts Branch</field>
-            <field name="model_id" ref="model_hr_contract"/>
-            <field name="global" eval="True"/>
-            <field name="domain_force">['|',('branch_id','=',False),('branch_id','=',user.branch_id.id)]</field>
-            <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]"/>
-        </record> -->
     </data>
 </odoo>

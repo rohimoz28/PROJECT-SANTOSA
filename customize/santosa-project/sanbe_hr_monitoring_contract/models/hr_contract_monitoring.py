@@ -230,64 +230,6 @@ class HrContractMonitoring(models.Model):
         ('name_monitoring_uniq', 'unique (name)', "Just Once time Proccess")
     ]
 
-    @api.model
-    def _search(self, args, offset=0, limit=None, order=None, count=False):
-        # self name adalah nama context saat ini
-        _logger.info(f"[_search] Metode _search dipanggil untuk model '{self._name}'.")
-        # value args berasal dari value domain yang digunakan pada action window (tocheck)
-        _logger.info(f"[_search] Argumen awal: {args}")
-        # semua context value
-        _logger.info(f"[_search] Konteks saat ini: {self.env.context}")
-
-        # Prioritaskan allowed_branch_ids dari konteks jika tersedia
-        # Ini adalah daftar ID cabang yang dicentang di switcher multi-branch.
-        branch_ids_from_context = self.env.context.get('allowed_branch_ids')
-        _logger.info(f"[_search] allowed_branch_ids dari konteks (dari switcher): {branch_ids_from_context}")
-
-        # Jika allowed_branch_ids tersedia di konteks, gunakan untuk filter
-        if branch_ids_from_context:
-            _logger.info(f"[_search] Filter berdasarkan allowed_branch_ids dari konteks.")
-
-            # Jika daftar kosong (misalnya, tidak ada cabang yang dicentang), pastikan tidak ada record yang ditampilkan
-            if not branch_ids_from_context:
-                branch_ids_to_filter = [0] # Gunakan ID 0 atau ID yang pasti tidak ada
-                _logger.warning(f"[_search] allowed_branch_ids dari konteks kosong. Mengatur branch_ids_to_filter ke {branch_ids_to_filter}.")
-            else:
-                branch_ids_to_filter = branch_ids_from_context
-
-            # Tambahkan kondisi domain ke argumen pencarian awal yang digunakan untuk filter data yang ditampilkan
-            args = [('branch_id', 'in', branch_ids_to_filter)] + list(args)
-            _logger.info(f"[_search] Filter cabang dinamis diterapkan. Argumen akhir sebelum super(): {args}")
-
-        else:
-            # Jika allowed_branch_ids tidak tersedia di konteks,
-            # maka fallback ke logika sebelumnya (filter berdasarkan allowed_company_ids)
-            # atau biarkan tanpa filter dinamis jika tidak ada allowed_company_ids.
-            allowed_company_ids = self.env.context.get('allowed_company_ids')
-            _logger.info(f"[_search] allowed_branch_ids tidak ada di konteks. Mengecek allowed_company_ids: {allowed_company_ids}")
-
-            if allowed_company_ids:
-                _logger.info(f"[_search] Switcher multi-perusahaan aktif. Perusahaan yang dipilih: {allowed_company_ids}")
-
-                company_branches = self.env['res.branch'].sudo().search([
-                    ('company_id', 'in', allowed_company_ids)
-                ])
-                branch_ids_from_switcher = company_branches.ids
-                _logger.info(f"[_search] Cabang yang ditemukan untuk perusahaan yang dipilih (IDs): {branch_ids_from_switcher}")
-
-                if not branch_ids_from_switcher:
-                    branch_ids_from_switcher = [0]
-                    _logger.warning(f"[_search] Tidak ada cabang yang ditemukan untuk perusahaan yang diizinkan. Mengatur branch_ids_from_switcher ke {branch_ids_from_switcher}.")
-
-                args = [('branch_id', 'in', branch_ids_from_switcher)] + list(args)
-                _logger.info(f"[_search] Filter cabang dinamis (dari perusahaan) diterapkan. Argumen akhir sebelum super(): {args}")
-            else:
-                _logger.info("[_search] Tidak ada filter cabang dinamis diterapkan dari konteks.")
-
-
-        # Setelah ini, record rule Anda (jika ada) akan diterapkan di atas hasil ini.
-        # method python lebih kuat dari record rule, bersifat dinamis dibandingkan record rule yang statis
-        return super(HrContractMonitoring, self)._search(args, offset, limit, order, count)
 
     def waiting_expired(self):
         for line in self:
