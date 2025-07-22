@@ -74,6 +74,115 @@
             </field>
         </record>
 
-        <menuitem id="emp_group_unit_service" name="Group Unit" sequence='23' parent="hr.menu_human_resources_configuration" action="action_emp_group_unit"/>
- </data>
+        <menuitem id="emp_group_unit_service" name="Group Unit" sequence='23' parent="empoyee_group" action="action_emp_group_unit"/>
+        <!-- ===================================================================== -->
+        <record id="view_emp_group_unit_service_tree" model="ir.ui.view">
+            <field name="name">view.mst.group.unit.pelayanan.tree</field>
+            <field name="model">mst.group.unit.pelayanan</field>
+            <field name="arch" type="xml">
+                <tree delete="false" duplicate="false">
+                    <field name="branch_id" string="Unit Bisnis" options="{'no_create': True,'no_create_edit': True}"/>
+                    <field name="group_id" string="Group Pelayanan" options="{'no_create': True,'no_create_edit': True}"/>
+                    <field name="sub_group_id" string="Sub Group Pelayanan" options="{'no_create': True,'no_create_edit': True}"/>
+                    <field name="group_unit_id" string="Group Unit" options="{'no_create': True,'no_create_edit': True}"/>
+                    <field name="unit_name" string="Unit Pelayanan"/>
+                    <field name="unit_from" string="Nomor Ruangan Dari"/>
+                    <field name="unit_to" string="Nomor Ruangan Ke"/>
+                    <field name="create_date" string="Create Date"/>
+                    <field name="write_uid" string="Write User"/>
+                    <field name="write_date" string="Write Date"/>
+                    <field name="active" string="Active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_emp_group_unit_service_form" model="ir.ui.view">
+            <field name="name">view.mst.group.unit.pelayanan.form</field>
+            <field name="model">mst.group.unit.pelayanan</field>
+            <field name="arch" type="xml">
+                <form string="Sub Group Pelayanan">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="unit_name" string="Unit Pelayanan"/>
+                            <h1>
+                                <field name="unit_name" placeholder="Nama..."/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="branch_id" string="Unit Bisnis" options="{'no_create': True,'no_create_edit': True}"/>
+                                <field name="group_id" string="Group Pelayanan" options="{'no_create': True,'no_create_edit': True}"/>
+                                <field name="sub_group_id" string="Sub Group Pelayanan" options="{'no_create': True,'no_create_edit': True}"/>
+                            </group>
+                            <group>
+                                <field name="group_unit_id" string="Group Unit" options="{'no_create': True,'no_create_edit': True}"/>
+                                <field name="employee_id" string="Kepala Unit Pelayanan" options="{'no_create': True,'no_create_edit': True}" invisible="not employee_id" />
+                                <label for="unit_name" string="Ruangan" />
+                                <div class="o_row">
+                                    <field name="unit_name"/>
+        s/d
+                                    <field name="unit_from"/>
+                                </div>
+                            </group>
+                        </group>
+                        <notebook invisible="not employee_ids">
+                            <page name="name" string="string">
+                                <field name="employee_ids">
+                                    <tree readonly="1">
+                                        <field name="nik"/>
+                                        <field name="name"/>
+                                        <field name="work_phone" class="o_force_ltr" optional="show"/>
+                                        <field name="medic"/>
+                                        <field name="nurse"/>
+                                        <field name="seciality"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_emp_group_unit_service_search" model="ir.ui.view">
+            <field name="name">view.mst.group.unit.pelayanan.search</field>
+            <field name="model">mst.group.unit.pelayanan</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="unit_name" string="Name" filter_domain="['|','|','|',('unit_name','ilike',self),('group_id.name','ilike',self),('sub_group_id.name','ilike',self),('group_unit_id.name','ilike',self)]"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Nama" name="name" domain="[]" context="{'group_by':'name'}"/>
+                        <filter string="Group Pelayanan" name="group_id" domain="[]" context="{'group_by':'group_id'}"/>
+                        <filter string="Sub Group" name="sub_group_id" domain="[]" context="{'group_by':'sub_group_id'}"/>
+                        <filter string="Group Unit" name="group_unit_id" domain="[]" context="{'group_by':'group_unit_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_emp_group_unit_service" model="ir.actions.act_window">
+            <field name="name">Unit Pelayanan</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mst.group.unit.pelayanan</field>
+            <!-- <field name="view_mode">tree</field> -->
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                                        There is no examples click here to add new Sub Group Employee Service.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="act_emp_group_unit_service" name="Unit Pelayanan" sequence='24' parent="empoyee_group" action="action_emp_group_unit_service"/>
+
+
+        <!-- ===================================================================== -->
+    </data>
 </odoo>
