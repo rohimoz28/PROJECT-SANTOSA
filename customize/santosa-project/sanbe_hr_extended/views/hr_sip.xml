@@ -45,9 +45,9 @@
                         <h1 class="d-flex flex-row justify-content-between">
                             <field name="sip_number" class="text-truncate" placeholder="Nomor SIP"/>
                         </h1>
-                        <h2>
+                        <!-- <h2>
                             <field name="contract_type_id" placeholder="Tipe Kontrak" options="{'no_create': True,'no_create_edit': True}" nolabel="1"/>
-                        </h2>
+                        </h2> -->
                         <h2>
                         </h2>
                     </div>   
@@ -66,15 +66,14 @@
                             <field name='division_id' force_save="1"/>
                             <field name='branch_id' string='Unit Bisnis' force_save="1"/>
                             <field name='job_id' force_save="1"/>
-                            <field name='sip' force_save="1"/>
-                            <field name='competence'/>
                         </group>
                         <group name="top_info_right">
+                            <field name='sip' force_save="1"/>
                             <field name="start_date" />
                             <field name="end_date" />
                             <field name="no_pkwt" />
-                            <field name="company_id" string="Nama Perusahaan" force_save="1"/>
-                            <label for="sip_day" string="Periode Kontrak"/>
+                            <!-- <field name="company_id" string="Nama Perusahaan" force_save="1"/> -->
+                            <label for="sip_day" string="Periode SIP"/>
                             <div class="o_row">
                                 <label for="sip_year" string="Tahun"/>
                                 <div>
@@ -96,8 +95,11 @@
                                 <field name="notice_day"/>
                                 <span>Hari</span>
                             </div>
-                            <field name="structure_type_id" string="Jenis Struktur Gaji" force_save="1"/>
-                            <field name="salary_amount"/>
+                            <!-- <field name="structure_type_id" string="Jenis Struktur Gaji" force_save="1"/> -->
+                            <!-- <field name="salary_amount"/> -->
+                            <field name="specialization"/>
+                            <field name="professional_title"/>
+                            <field name='competence'/>
                         </group>
                     </group>
                     <group name="bottom_info" string="Catatan">
