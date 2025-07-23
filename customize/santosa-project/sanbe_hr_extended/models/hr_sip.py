@@ -31,7 +31,7 @@ class SuratIzipPraktek(models.Model):
     competence = fields.Text(string="Kompetensi")
     start_date = fields.Date(string='Masa Berlaku SIP Dari', required=True)
     end_date = fields.Date(string='Masa Berlaku SIP Hingga', required=True)
-    no_pkwt = fields.Selection(
+    no_sip_to = fields.Selection(
         selection=[
             ('1','1'),
             ('2','2'),
