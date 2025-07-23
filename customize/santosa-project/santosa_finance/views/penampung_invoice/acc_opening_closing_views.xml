@@ -29,7 +29,7 @@
                     <field name="isopen" invisible="1"/>
                     <button name="action_opening_periode" invisible="isopen == True or state_process == 'done'" string="Open" type="object" class="btn-primary"/>
                     <button name="action_reproses" string="Process" type="object" class="btn-primary" invisible="state_process != 'running'"/>
-                    <button name="action_closing_periode" invisible="state_process != 'running'" string="Close" type="object" class="btn-primary" />
+                    <button name="action_closing_periode" invisible="state_process != 'running' or state_process == 'draft'" string="Close" type="object" class="btn-primary" />
                     <field name="state_process" widget="statusbar" statusbar_visible="draft,running,done" readonly="1"/>
                 </header>
                 <sheet>
