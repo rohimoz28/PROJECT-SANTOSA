@@ -156,13 +156,13 @@ class AccountMove(models.Model):
         ondelete={'ar_klaim': 'set default'}
     )
     
-    # line_ids = fields.One2many(
-    #     'account.move.line',
-    #     'move_id',
-    #     string='Journal Items',
-    #     domain=[('flag','<',13)],
-    #     copy=True,
-    # )
+    line_ids = fields.One2many(
+        'account.move.line',
+        'move_id',
+        string='Journal Items',
+        domain=[('flag','=',13)],
+        copy=True,
+    )
 
 
     def _reset_values(self):

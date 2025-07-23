@@ -41,7 +41,17 @@ class AccountBankStatement(models.Model):
     account_periode_name = fields.Char(related = 'account_periode_id.name', string="Accounting Periode",store=True)
     
     def _get_running_periode(self):
-        return self.env['acc.periode.closing'].search([('state_process', '=', 'running'),('branch_id', '=', self.env.user.branch_id.id)], order='id DESC', limit=1)
+        periode = self.env['acc.periode.closing'].search(
+            [
+                ('state_process', '=', 'running'),
+                ('branch_id', '=', self.env.user.branch_id.id),
+                ('open_periode_from', '<', fields.Datetime.now()),
+                ('open_periode_to', '>', fields.Datetime.now())
+            ],
+            order='open_periode_to desc',
+            limit=1
+        )
+        return periode.id if periode else False
 
     account_periode_id = fields.Many2one('acc.periode.closing', string="Accounting Periode", domain="[('state_process', '=', 'running'),('branch_id', '=',branch_id)]", default=_get_running_periode )
     state = fields.Selection([('draft','Draft'),('open','Open'),('posted','Posted'),('cancel','Cancel')], string="Status", default="draft", tracking=True)
@@ -136,7 +146,7 @@ class AccountBankStatement(models.Model):
     
     populated_date = fields.Date(string="Populated Date", compute='_compute_populated_date', store=True)
     account_periode_number = fields.Char(related = 'account_periode_id.name', string="Accounting Periode",store=True)
-    account_periode_id = fields.Many2one('acc.periode.closing', )
+    account_periode_id = fields.Many2one('acc.periode.closing', related='cash_bank_id.account_periode_id')
     
     @api.depends('cash_bank_id','account_move_id')
     def _set_acc_periode_cahsbank(self):
