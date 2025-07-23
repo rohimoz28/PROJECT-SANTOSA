@@ -44,7 +44,7 @@ class AccOpeningClosing(models.Model):
     area_id = fields.Many2one('res.territory',string='Area', index=True )
     branch_ids = fields.Many2many('res.branch', 'res_branch_rel', string='AllBranch', compute='_isi_semua_branch',
                                   store=False)
-    branch_id = fields.Many2one('res.branch',string='Business Unit',required=True,index=True,domain="[('id','in',branch_ids)]")
+    branch_id = fields.Many2one('res.branch',string='Business Unit', required=True, index=True, domain="[('id','in',branch_ids)]")
     open_periode_from = fields.Date('Opening Periode From')
     open_periode_to = fields.Date('Opening Periode To')
     close_periode_from = fields.Date('Closing Periode From')

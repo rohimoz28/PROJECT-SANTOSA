@@ -80,7 +80,7 @@
 
             <xpath expr="//group[@id='header_right_group']" position="after">
                 <group id="header_left_claim_group" invisible="not is_klaim">
-                        <field name="transaction_date" string= "Tanggal Klaim" readonly="state != 'draft'"/> 
+                        <field name="transaction_date" string= "Tanggal Klaim" readonly="state != 'draft'"/>
                         <field name="name" string = "No. Klaim" readonly="state != 'draft'"/> 
                         <field name="accounting_periode_id" string="Accounting Period" options="{'no_create': True,'no_create_edit': True}" invisible="1"/>
                         <!-- <field name="no_bill" string = "No. Tagihan" readonly="state != 'draft'"/>  -->
@@ -93,6 +93,7 @@
                         <field name="amount_claim_aloc" string="Nilai Teralokasi" style="font-weight: bold;" readonly="state != 'draft'" />
                         <field name="amount_claim_paids" string="Nilai Terbayar" style="font-weight: bold;"  readonly="state != 'draft'"/>
                         <field name="partner_id" string = "Payor" readonly="state != 'draft'"/> 
+                        <field name="accounting_periode_id" readonly="state != 'draft'" string="Accounting Period" options="{'no_create': True,'no_create_edit': True}"/>
                         <field name="populated_date" string = "Populate Date" readonly="state != 'draft'"/>
                 </group>
             </xpath>
@@ -124,7 +125,7 @@
                 <field name="invoice_payment_term_id" context="{'example_date': invoice_date, 'example_amount': tax_totals['amount_total']}" placeholder="Payment Terms" options="{'no_quick_create':True,'no_create':True}" readonly="state in ['cancel', 'posted'] or pelayanan == 'pelayanan'"/>
                 <field name="invoice_date_due" force_save="1" placeholder="Date" readonly="state != 'draft' or pelayanan == 'pelayanan' or invoice_payment_term_id"/>
                 <field name="status_invoice" readonly='1'/>
-                <field name="amount_total_signed" string="Total" readonly='1' invisible="is_klaim"/>
+                <field name="accounting_periode_id" options="{'no_create': True,'no_create_edit': True}" invisible="1"/>
             </xpath>
             <xpath expr="//label[@for='partner_id' and contains(@invisible, 'out_invoice')]" position="replace"/>
             <xpath expr="//label[@for='partner_id' and contains(@invisible, 'in_invoice')]" position="replace"/>

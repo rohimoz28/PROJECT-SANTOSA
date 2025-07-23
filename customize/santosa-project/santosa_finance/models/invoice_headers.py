@@ -111,20 +111,29 @@ class AccountMove(models.Model):
     jurnal_name = fields.Char(related='journal_id.name',store=True)
     status_record = fields.Char()
     accounting_time_periode = fields.Datetime(string="Accounting Periode", default=lambda self: fields.Datetime.now())
-    accounting_periode_id = fields.Many2one('acc.periode.closing','Accounting Period',
+    accounting_periode_id = fields.Many2one('acc.periode.closing','Accounting Period', required=True, domain="[('state_process', '=', 'running'),('branch_id', '=',branch_id)]", 
         default=lambda self: self._get_last_open_periode()
     )
 
     @api.model
     def _get_last_open_periode(self):
         periode = self.env['acc.periode.closing'].search(
-            [('state_process', '=', 'running')],
+            [
+                ('state_process', '=', 'running'),
+                ('branch_id', '=', self.env.user.branch_id.id),
+                ('open_periode_from', '<', fields.Datetime.now()),
+                ('open_periode_to', '>', fields.Datetime.now())
+            ],
             order='open_periode_to desc',
             limit=1
-        ).id
-        return periode or False
+        )
+        return periode.id if periode else False
 
-        
+    accounting_date_periode_start = fields.Date(
+        related='accounting_periode_id.open_periode_from',
+        string='Accounting Date Period',
+        store=True
+    )        
     accounting_date_periode = fields.Date(
         related='accounting_periode_id.open_periode_to',
         string='Accounting Date Period',
@@ -150,7 +159,7 @@ class AccountMove(models.Model):
     journal_type = fields.Char('Tipe Jurnal',) #Un-Used
     journal_type_id = fields.Many2one('account.journal','Tipe Jurnal') #Un-Used
     journal_code = fields.Char('Kode Jurnal', related='journal_id.code')
-    branch_id = fields.Many2one('res.branch','Branch')
+    branch_id = fields.Many2one('res.branch','Branch',default=lambda self:self.env.user.branch_id)
     move_type = fields.Selection(
         selection_add=[('ar_klaim', 'AR Klaim')],
         ondelete={'ar_klaim': 'set default'}
@@ -160,15 +169,52 @@ class AccountMove(models.Model):
         'account.move.line',
         'move_id',
         string='Journal Items',
-        domain=[('flag','=',13)],
-        copy=True,
+        domain=[('flag','!=',13)]
     )
-
 
     def _reset_values(self):
         for line in self:
             pass
         
+    @api.onchange('invoice_date','accounting_periode_id')
+    def _onchange_periode_invoice(self):
+        if self.accounting_periode_id:
+            if self.invoice_date:
+                # raise UserError('Fuck')
+                if self.accounting_periode_id.open_periode_from > self.invoice_date or self.accounting_periode_id.open_periode_to < self.invoice_date:
+                    raise UserError(('Invoice date not in Range Accounting Periode (%s S/D %s)')%(str(self.accounting_periode_id.open_periode_from.strftime('%d-%m-%Y')),str(self.accounting_periode_id.open_periode_to.strftime('%d-%m-%Y'))))
+    
+    @api.onchange('invoice_payment_term_id','invoice_date')
+    def _set_due_dates(self):
+        self.set_due_dates()
+        # if not self.accounting_periode_id:
+        #     acc_periode = self.env['acc.periode.closing'].search([
+        #             ('state_process', '=', 'running'),
+        #             ('branch_id', '=', self.env.user.branch_id.id),
+        #             ('open_periode_from', '<=', self.invoice_date),
+        #             ('open_periode_to', '>=', self.invoice_date)
+        #         ],
+        #             order='open_periode_to desc',
+        #             limit=1
+        #         )
+        #     self.accounting_periode_id = acc_periode.id
+
+    @api.depends('invoice_payment_term_id','invoice_date')
+    def set_due_dates(self):
+        for line in self:
+            if line.invoice_payment_term_id:
+                for list_due_date in self.env['account.payment.term.line'].search([('payment_id','=',line.invoice_payment_term_id.id)],order='nb_days'):
+                    if line.invoice_date:
+                        line.invoice_date_due = line.invoice_date + timedelta(days=list_due_date.nb_days)
+                    else:
+                        line.invoice_date = fields.Date.context_today(self)
+                        line.invoice_date_due = fields.Date.context_today(self) + timedelta(days=list_due_date.nb_days)
+                        return {
+                            'warning': {
+                                'title': "Missing Invoice Date",
+                                'message': "Please input the Invoice Date before proceeding.",
+                            }
+                        }
     # @api.onchange('journal_type_id')
     # def _set_journal_id(self):
     #     for line in self:
