@@ -156,13 +156,13 @@ class AccountMove(models.Model):
         ondelete={'ar_klaim': 'set default'}
     )
     
-    line_ids = fields.One2many(
-        'account.move.line',
-        'move_id',
-        string='Journal Items',
-        domain=[('flag','=',13)],
-        copy=True,
-    )
+    # line_ids = fields.One2many(
+    #     'account.move.line',
+    #     'move_id',
+    #     string='Journal Items',
+    #     domain=[('flag','<',13)],
+    #     copy=True,
+    # )
 
 
     def _reset_values(self):
@@ -246,7 +246,7 @@ class AccountMove(models.Model):
     
     def action_post(self):
         # Call the original method first (important)
-        if not self.invinvoice_line_ids:
+        if not self.invoice_line_ids:
             raise UserError("Please Invoice Line")
         res = super(AccountMove, self).action_post()
         for move in self:

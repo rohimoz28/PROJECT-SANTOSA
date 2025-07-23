@@ -88,7 +88,7 @@ class AccountMoveLine(models.Model):
     accounting_time_periode = fields.Datetime(related='move_id.accounting_time_periode')
     accounting_date_periode = fields.Date(related='move_id.accounting_date_periode')
     need_to_calculate = fields.Boolean()
-    flag = fields.Integer(default=0)
+    flag = fields.Integer()
     pelayanan = fields.Selection([('pelayanan','AR Pelayanan'),('non pelayanan','AR Non Pelayanan')], 'type AR',store=True, default='non pelayanan', related='move_id.pelayanan')
     formatted_datetime = fields.Char(string='Formatted Datetime', compute='_compute_formatted_datetime')
     CostPrice_AVG = fields.Float()
