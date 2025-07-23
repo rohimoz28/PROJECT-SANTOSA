@@ -2,14 +2,12 @@
 import pdb
 
 from odoo import fields, models, api, _, Command
-from odoo.exceptions import ValidationError,UserError
-from odoo.osv import expression
+from odoo.exceptions import UserError
 import pytz
 from datetime import timedelta, datetime, time,date
 import dateutil.parser
 import holidays
 from datetime import datetime
-from odoo.exceptions import AccessError, MissingError, UserError
 import requests
 import logging
 
@@ -21,7 +19,7 @@ chari = {'0':6,'1':0,'2':1,'3':2,'4':3,'5':4,'6':5}
 
 class AccOpeningClosing(models.Model):
     _name = 'acc.periode.closing'
-    _description = 'HR TMS Open And Close'
+    _description = 'Accounting Period Setting'
     _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin', 'utm.mixin']
     _order = 'id DESC'
 
@@ -51,6 +49,19 @@ class AccOpeningClosing(models.Model):
     open_periode_to = fields.Date('Opening Periode To')
     close_periode_from = fields.Date('Closing Periode From')
     close_periode_to = fields.Date('Closing Periode To')
+    
+    def unlink(self):
+        if self.state_process!='draft':
+            raise UserError('Cannot Delete Account Closing Periode with state not in DRAFT')
+        else:
+            return super(AccOpeningClosing, self).unlink()
+    
+    @api.constrains('open_periode_from','open_periode_to')
+    def _check_validation_training(self):
+        for record in self:
+            if record.open_periode_from > record.open_periode_to :
+                raise UserError("harap masukan Masa Periode yang benar")
+            
     isopen = fields.Boolean('Is Open',default=False)
     state_process = fields.Selection(
         [

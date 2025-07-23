@@ -35,7 +35,7 @@ class HrContract(models.Model):
                                   store=False)
     alldepartment = fields.Many2many('hr.department', 'hr_department_rel', string='All Department',
                                      compute='_isi_department_branch', store=False)
-    branch_id = fields.Many2one('res.branch', string='Business Unit', tracking=True,  default=lambda self: self.env.company, required=True)
+    branch_id = fields.Many2one('res.branch', string='Business Unit', tracking=True,  default=lambda self: self.env.user.branch_id, required=True)
     employee_id = fields.Many2one(
         'hr.employee', 
         string='Nama Karyawan', 

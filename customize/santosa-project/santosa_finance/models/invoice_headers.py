@@ -21,6 +21,7 @@ from odoo.tools import (
 )
 from odoo import _
 from collections import defaultdict
+from odoo.exceptions import UserError
 from itertools import groupby
 from operator import itemgetter
 
@@ -110,7 +111,31 @@ class AccountMove(models.Model):
     jurnal_name = fields.Char(related='journal_id.name',store=True)
     status_record = fields.Char()
     accounting_time_periode = fields.Datetime(string="Accounting Periode", default=lambda self: fields.Datetime.now())
-    accounting_date_periode = fields.Date('Accounting Periode')
+    accounting_periode_id = fields.Many2one('acc.periode.closing','Accounting Period',
+        default=lambda self: self._get_last_open_periode()
+    )
+
+    @api.model
+    def _get_last_open_periode(self):
+        periode = self.env['acc.periode.closing'].search(
+            [('state_process', '=', 'running')],
+            order='open_periode_to desc',
+            limit=1
+        ).id
+        return periode or False
+
+        
+    accounting_date_periode = fields.Date(
+        related='accounting_periode_id.open_periode_to',
+        string='Accounting Date Period',
+        store=True
+    )
+
+    accounting_periode_name = fields.Char(
+        related='accounting_periode_id.name',
+        string='Accounting Period Name',
+        store=True
+    )
     populated_time = fields.Datetime(string="Populated Time", default=lambda self: fields.Datetime.now())
     is_klaim = fields.Boolean(default=False, string='AR Klaim')
     invoice_amount_claim = fields.Monetary(string="Amount Klaim ",default=0)
@@ -130,6 +155,15 @@ class AccountMove(models.Model):
         selection_add=[('ar_klaim', 'AR Klaim')],
         ondelete={'ar_klaim': 'set default'}
     )
+    
+    line_ids = fields.One2many(
+        'account.move.line',
+        'move_id',
+        string='Journal Items',
+        domain=[('flag','=',13)],
+        copy=True,
+    )
+
 
     def _reset_values(self):
         for line in self:
@@ -212,6 +246,8 @@ class AccountMove(models.Model):
     
     def action_post(self):
         # Call the original method first (important)
+        if not self.invinvoice_line_ids:
+            raise UserError("Please Invoice Line")
         res = super(AccountMove, self).action_post()
         for move in self:
             move.accounting_date_periode = fields.Date.context_today(move)
