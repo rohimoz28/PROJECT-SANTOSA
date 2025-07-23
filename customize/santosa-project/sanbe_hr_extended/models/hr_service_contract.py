@@ -8,7 +8,7 @@ class ServiceContract(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
 
-    medical_contract_number = fields.Char(string='Nomor SIP / Sertipikasi')
+    medical_contract_number = fields.Char(string='Nomor Kontrak Medis')
     contract_type_id = fields.Many2one('hr.contract.type', "Tipe Kontrak", tracking=True)
     employee_id = fields.Many2one(comodel_name='hr.employee',
                                            string='Nama Karyawan',
@@ -46,12 +46,12 @@ class ServiceContract(models.Model):
                                 string='Sub Department')
     job_id = fields.Many2one('hr.job',string='Jabatan', 
                              related='employee_id.job_id', readonly=True, store=True)
-    no_pkwt = fields.Selection([('1','1'),
+    mc_number = fields.Selection([('1','1'),
                                 ('2','2'),
                                 ('3','3'),
                                 ('4','4'),
                                 ('5','5')],
-                                string='Nomor PKWT',
+                                string='Nomor Kontrak Medis Ke',
                                 store=True)    
     start_date = fields.Date(string='Masa Berlaku Kontrak Medis Dari', required=True)
     end_date = fields.Date(string='Masa Berlaku Kontrak Medis Hingga', required=True)
@@ -61,10 +61,10 @@ class ServiceContract(models.Model):
     kd_day = fields.Integer(string='Hari Kontrak Medis', compute='_compute_kontrak_dinas', readonly=True)
     kd_month = fields.Integer(string='Bulan Kontrak Medis', compute='_compute_kontrak_dinas', readonly=True)
     kd_year = fields.Integer(string='Tahun Kontrak Medis', compute='_compute_kontrak_dinas', readonly=True)
-    contract_counts = fields.Integer(string='Jumlah Kontrak')
+    contract_counts = fields.Integer(string='Jumlah Kontrak Medis')
     attachment_contract =  fields.Many2many('ir.attachment',
-                                            string='Dokumen Kontrak',
-                                            help="You may attach files to with this")
+                                            string='Dokumen Kontrak Medis',
+                                            help="Lampirkan berkas disini")
     notice_day = fields.Integer(string='Periode Notifikasi')
     structure_type_id = fields.Many2one('hr.payroll.structure.type',
                                         string="Salary Structure Type",
