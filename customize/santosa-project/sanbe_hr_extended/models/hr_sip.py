@@ -38,7 +38,7 @@ class SuratIzipPraktek(models.Model):
             ('3','3'),
             ('4','4'),
         ],
-        string='Nomor PKWT',
+        string='Nomor SIP ke',
         store=True
     )
     company_id = fields.Many2one(
@@ -49,9 +49,9 @@ class SuratIzipPraktek(models.Model):
     sip_day = fields.Integer(string='Hari Kontrak Medis', compute='_compute_sip_date')
     sip_month = fields.Integer(string='Bulan Kontrak Medis', compute='_compute_sip_date')
     sip_year = fields.Integer(string='Tahun Kontrak Medis', compute='_compute_sip_date')
-    contract_counts = fields.Integer(string='Jumlah Kontrak')
+    contract_counts = fields.Integer(string='Jumlah SIP')
     attachment_contract =  fields.Many2many('ir.attachment',
-                                            string='Dokumen Kontrak',
+                                            string='Dokumen SIP',
                                             help="Lampirkan file disini")
     notice_day = fields.Integer(string='Periode Notifikasi')
     structure_type_id = fields.Many2one('hr.payroll.structure.type',
@@ -75,6 +75,8 @@ class SuratIzipPraktek(models.Model):
         default='draft',
         help='Status Surat Izin Praktek'
     )
+    specialization = fields.Char(string='Spesialisasi')
+    professional_title = fields.Char(string='Gelar Profesi')
 
 
     def unlink(self):
