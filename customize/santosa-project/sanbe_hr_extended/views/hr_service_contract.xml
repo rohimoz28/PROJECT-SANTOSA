@@ -5,19 +5,19 @@
         <field name="name">hr.service.contract.view.tree</field>
         <field name="model">hr.service.contract</field>
         <field name="arch" type="xml">
-            <tree string="Kontrak Medis">
-                <field name="employee_id" optional="show"/>
+            <tree string="Kontrak Medis" class="o_horizontal_scroll">
+                <field name="employee_id" optional="hide"/>
                 <field name="medical_contract_number" optional="show"/>
                 <field name="branch_id" optional="show"/>
                 <field name="directorate_id" optional="show"/>
                 <field name="department_id" optional="show"/>
                 <field name="division_id" optional="show"/>
                 <field name="job_id" optional="show"/>
+                <field name="mc_number" optional="show"/>
                 <field name="competence" optional="hide"/>
                 <field name="kontrak_medis" optional="hide"/>
                 <field name="start_date" optional="show"/>
                 <field name="end_date" optional="show"/>
-                <field name="contract_type_id" optional="show"/>
                 <field name="state" widget="badge"
                     decoration-info="state == 'draft'" 
                     decoration-warning="state == 'close'" 
@@ -49,9 +49,9 @@
                         <h1 class="d-flex flex-row justify-content-between">
                             <field name="medical_contract_number" class="text-truncate" placeholder="Nomor Kontrak Medis"/>
                         </h1>
-                        <h2>
+                        <!-- <h2>
                             <field name="contract_type_id" placeholder="Tipe Kontrak" options="{'no_create': True,'no_create_edit': True}" nolabel="1"/>
-                        </h2>
+                        </h2> -->
                         <h2>
                         </h2>
                     </div>
@@ -70,15 +70,14 @@
                             <field name='division_id' force_save="1"/>
                             <field name='branch_id' string='Unit Bisnis' force_save="1"/>
                             <field name='job_id' force_save="1"/>
-                            <field name='kontrak_medis' force_save="1"/>
-                            <field name='competence'/>
                         </group>
                         <group name="top_info_right">
+                            <field name='kontrak_medis' force_save="1"/>
                             <field name="start_date" />
                             <field name="end_date" />
-                            <field name="no_pkwt" />
+                            <field name="mc_number" />
                             <field name="company_id" string="Nama Perusahaan" force_save="1"/>
-                            <label for="kd_day" string="Periode Kontrak"/>
+                            <label for="kd_day" string="Periode Kontrak Medis"/>
                             <div class="o_row">
                                 <label for="kd_year" string="Tahun"/>
                                 <div>
@@ -100,8 +99,9 @@
                                 <field name="notice_day"/>
                                 <span>Hari</span>
                             </div>
-                            <field name="structure_type_id" string="Jenis Struktur Gaji" force_save="1"/>
-                            <field name="salary_amount"/>
+                            <field name='competence'/>
+                            <!-- <field name="structure_type_id" string="Jenis Struktur Gaji" force_save="1"/>
+                            <field name="salary_amount"/> -->
                         </group>
                     </group>
                     <group name="notes_group2" string="Catatan">

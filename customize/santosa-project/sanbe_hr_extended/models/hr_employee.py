@@ -251,7 +251,7 @@ class HrEmployee(models.Model):
     medical_contract_ids = fields.One2many(
         comodel_name='hr.service.contract',
         inverse_name='employee_id',
-        string='Service Contract',
+        string='Kontrak Medis',
     )
     sip = fields.Boolean(string="SIP", tracking=True)
     sip_ids = fields.One2many(

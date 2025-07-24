@@ -366,12 +366,12 @@
                         <field name="medical_contract_ids" 
                                mode="tree,form" 
                                context="{'default_employee_id': active_id}">
-                            <tree>
-                                <field name="employee_id" optional="show"/>
+                            <tree class="o_horizontal_scroll">
+                                <field name="employee_id" optional="hide"/>
                                 <field name="medical_contract_number" optional="show"/>
                                 <field name="start_date" optional="show"/>
                                 <field name="end_date" optional="show"/>
-                                <field name="contract_type_id" optional="show"/>
+                                <field name="mc_number" optional="show"/>
                                 <field name="state" widget="badge"
                                     decoration-info="state == 'draft'" 
                                     decoration-warning="state == 'close'" 
