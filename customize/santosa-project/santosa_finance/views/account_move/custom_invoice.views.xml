@@ -125,6 +125,7 @@
                 <field name="invoice_payment_term_id" context="{'example_date': invoice_date, 'example_amount': tax_totals['amount_total']}" placeholder="Payment Terms" options="{'no_quick_create':True,'no_create':True}" readonly="state in ['cancel', 'posted'] or pelayanan == 'pelayanan'"/>
                 <field name="invoice_date_due" force_save="1" placeholder="Date" readonly="state != 'draft' or pelayanan == 'pelayanan' or invoice_payment_term_id"/>
                 <field name="status_invoice" readonly='1'/>
+                <field name="amount_total_signed" string="Total" readonly='1' invisible="is_klaim"/>
                 <field name="accounting_periode_id" options="{'no_create': True,'no_create_edit': True}" invisible="1"/>
             </xpath>
             <xpath expr="//label[@for='partner_id' and contains(@invisible, 'out_invoice')]" position="replace"/>
