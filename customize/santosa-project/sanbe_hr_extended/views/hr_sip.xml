@@ -13,7 +13,7 @@
                     <field name='end_date' optional='show'/>
                     <field name='sip' optional='hide'/>
                     <field name='competence' optional='hide'/>
-                    <field name='no_pkwt' optional='show'/>
+                    <field name='no_sip_to' optional='show'/>
                     <field name='notice_day' optional='show'/>
                     <field name='state' 
                             widget='badge'
@@ -71,7 +71,7 @@
                             <field name='sip' force_save="1"/>
                             <field name="start_date" />
                             <field name="end_date" />
-                            <field name="no_pkwt" />
+                            <field name="no_sip_to" />
                             <!-- <field name="company_id" string="Nama Perusahaan" force_save="1"/> -->
                             <label for="sip_day" string="Periode SIP"/>
                             <div class="o_row">
