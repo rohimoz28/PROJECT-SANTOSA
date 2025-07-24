@@ -388,14 +388,13 @@
                         <field name="sip_ids" 
                                mode="tree,form" 
                                context="{'default_employee_id': active_id}">
-                            <tree class="o_horizontal_scroll">
+                            <tree class="o_horizontal_scroll" delete="0">
                                 <field name="employee_id" optional="hide"/>
                                 <field name="sip_number" optional="show"/>
                                 <field name="start_date" optional="show"/>
                                 <field name="end_date" optional="show"/>
                                 <field name="no_sip_to" optional="show"/>
                                 <field name="specialization" optional="show"/>
-                                <field name="professional_title" optional="show"/>
                                 <field name="competence" optional="show"/>
                                 <field name="state" widget="badge"
                                     decoration-info="state == 'draft'" 
@@ -403,6 +402,10 @@
                                     decoration-success="state == 'open'"
                                     decoration-danger="state == 'cancel'"
                                     optional="show"/>
+                                <button name="unlink_sip" 
+                                        string="" 
+                                        type="object"
+                                        icon="fa-trash"/>
                             </tree>
                         </field>
                     </page>

@@ -79,7 +79,11 @@ class SuratIzipPraktek(models.Model):
     professional_title = fields.Char(string='Gelar Profesi')
 
 
-    def unlink(self):
+    def unlink_sip(self):
+        for record in self:
+            if record.state != 'draft':
+                raise UserError("Data hanya bisa dihapus jika status SIP adalah 'New'.")
+        
         return super().unlink()
 
 
