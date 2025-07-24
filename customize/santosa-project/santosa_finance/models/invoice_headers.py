@@ -176,12 +176,14 @@ class AccountMove(models.Model):
         for line in self:
             pass
         
-    @api.onchange('invoice_date','accounting_periode_id')
+    @api.onchange('invoice_date','accounting_periode_id','self.accounting_periode_id.open_periode_from','self.accounting_periode_id.open_periode_to')
     def _onchange_periode_invoice(self):
         if self.accounting_periode_id:
             if self.invoice_date:
                 # raise UserError('Fuck')
-                if self.accounting_periode_id.open_periode_from > self.invoice_date or self.accounting_periode_id.open_periode_to < self.invoice_date:
+                if self.accounting_periode_id.open_periode_from <= self.invoice_date <= self.accounting_periode_id.open_periode_to :
+                    pass
+                else:
                     raise UserError(('Invoice date not in Range Accounting Periode (%s S/D %s)')%(str(self.accounting_periode_id.open_periode_from.strftime('%d-%m-%Y')),str(self.accounting_periode_id.open_periode_to.strftime('%d-%m-%Y'))))
     
     @api.onchange('invoice_payment_term_id','invoice_date')

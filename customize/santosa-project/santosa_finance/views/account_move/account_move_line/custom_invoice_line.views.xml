@@ -72,6 +72,9 @@
             <xpath expr="//field[@name='line_ids']/tree" position="attributes">
                 <attribute name="default_order">entered_date,account_id asc</attribute>
             </xpath>
+            <xpath expr="//field[@name='line_ids']/tree/field[@name='tax_tag_ids']" position="after">
+                <field name="accounting_periode_id" optional='show'/>
+            </xpath>
             <!-- <xpath expr="//field[@name='line_ids']" position="attributes">
                 <attribute name="invisible">[('amount_total_signed', '=', 0)]</attribute>
             </xpath> -->
@@ -263,7 +266,6 @@
             </field>
         </record>
 
-        <odoo>
     <record id="inherit_account_move_line_search" model="ir.ui.view">
         <field name="name">account.move.line.search.inherit</field>
         <field name="model">account.move.line</field>
@@ -274,6 +276,5 @@
             </xpath>
         </field>
     </record>
-</odoo>
 
 </odoo>
