@@ -43,7 +43,7 @@
                     </header>
                     <div class="oe_title pe-0 w-100 mw-100" name="title">
                         <h1 class="d-flex flex-row justify-content-between">
-                            <field name="sip_number" class="text-truncate" placeholder="Nomor SIP"/>
+                            <field name="sip_number" class="text-truncate" placeholder="Nomor SIP" readonly="state != 'draft'"/>
                         </h1>
                         <!-- <h2>
                             <field name="contract_type_id" placeholder="Tipe Kontrak" options="{'no_create': True,'no_create_edit': True}" nolabel="1"/>
@@ -53,7 +53,7 @@
                     </div>   
                     <group name="top_info">
                         <group name="top_info_left">
-                            <field name='employee_id'/>
+                            <field name='employee_id' readonly="state != 'draft'"/>
                             <field name='emp_selected_id' 
                             options="{'no_create': True,'no_create_edit': True}" 
                             context="{'search_by': 'No','search_by_name': False}"
@@ -69,10 +69,9 @@
                         </group>
                         <group name="top_info_right">
                             <field name='sip' force_save="1"/>
-                            <field name="start_date" />
-                            <field name="end_date" />
-                            <field name="no_sip_to" />
-                            <!-- <field name="company_id" string="Nama Perusahaan" force_save="1"/> -->
+                            <field name="start_date" readonly="state != 'draft'"/>
+                            <field name="end_date" readonly="state != 'draft'"/>
+                            <field name="no_sip_to" readonly="state != 'draft'"/>
                             <label for="sip_day" string="Periode SIP"/>
                             <div class="o_row">
                                 <label for="sip_year" string="Tahun"/>
@@ -88,18 +87,16 @@
                                     <field name="sip_day" force_save="1"/>
                                 </div>
                             </div>
-                            <field name="contract_counts" />
-                            <field name="attachment_contract" widget="many2many_binary"/>
+                            <!-- <field name="contract_counts" readonly="state != 'draft'"/> -->
+                            <field name="attachment_contract" widget="many2many_binary" readonly="state != 'draft'"/>
                             <label for="notice_day" string="Periode Notifikasi"/>
                             <div class="o_row">
-                                <field name="notice_day"/>
+                                <field name="notice_day"  readonly="state != 'draft'"/>
                                 <span>Hari</span>
                             </div>
-                            <!-- <field name="structure_type_id" string="Jenis Struktur Gaji" force_save="1"/> -->
-                            <!-- <field name="salary_amount"/> -->
-                            <field name="specialization"/>
-                            <field name="professional_title"/>
-                            <field name='competence'/>
+                            <field name="specialization" readonly="state != 'draft'"/>
+                            <!-- <field name="professional_title" readonly="state != 'draft'"/> -->
+                            <field name='competence' readonly="state != 'draft'"/>
                         </group>
                     </group>
                     <group name="bottom_info" string="Catatan">
