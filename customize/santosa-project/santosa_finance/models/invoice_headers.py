@@ -478,6 +478,17 @@ class AccountMove(models.Model):
                 return
 
         unbalanced_moves = self._get_unbalanced_moves(container)
+        
+    @api.onchange('transaction_date','accounting_periode_id','self.accounting_periode_id.open_periode_from','self.accounting_periode_id.open_periode_to')
+    def _onchange_periode_klaim(self):
+        if self.accounting_periode_id:
+            if self.transaction_date and self.is_klaim:
+                # raise UserError('Fuck')
+                if self.accounting_periode_id.open_periode_from <= self.transaction_date <= self.accounting_periode_id.open_periode_to :
+                    pass
+                else:
+                    raise UserError(('Invoice date not in Range Accounting Periode (%s S/D %s)')%(str(self.accounting_periode_id.open_periode_from.strftime('%d-%m-%Y')),str(self.accounting_periode_id.open_periode_to.strftime('%d-%m-%Y'))))
+
         # if unbalanced_moves:
         #     error_msg = _("An error has occurred.")
         #     for move_id, sum_debit, sum_credit in unbalanced_moves:
