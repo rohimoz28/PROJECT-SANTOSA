@@ -243,6 +243,7 @@
             <field name="inherit_id" ref="account.view_move_line_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="//tree/field[@name='date']" position="before">
+                    <field name="accounting_periode_id" string="Accounting Period" optional="show" options="{'no_create': True,'no_create_edit': True}"/>
                     <field name="populate_date" optional="hide"/>
                     <field name="entered_date" optional="show"/>
                     <field name="no_trx" optional="hide"/>
