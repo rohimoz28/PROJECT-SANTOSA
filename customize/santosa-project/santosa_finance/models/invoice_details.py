@@ -88,14 +88,14 @@ class AccountMoveLine(models.Model):
     accounting_time_periode = fields.Datetime(related='move_id.accounting_time_periode')
     accounting_date_periode = fields.Date(related='move_id.accounting_date_periode')
     need_to_calculate = fields.Boolean()
-    flag = fields.Integer(default=0)
+    flag = fields.Integer()
     pelayanan = fields.Selection([('pelayanan','AR Pelayanan'),('non pelayanan','AR Non Pelayanan')], 'type AR',store=True, default='non pelayanan', related='move_id.pelayanan')
     formatted_datetime = fields.Char(string='Formatted Datetime', compute='_compute_formatted_datetime')
     CostPrice_AVG = fields.Float()
     
     #claim purpose
     paid_state_klaim = fields.Boolean(default=False, string='Status Bayar')
-    
+    accounting_periode_id = fields.Many2one('acc.periode.closing','Accounting Period',related='move_id.accounting_periode_id',store=True)
     is_klaim = fields.Boolean(related="move_id.is_klaim",string='AR Klaim')
     invoice_id = fields.Many2one('account.move',string="No TRX", domain="[('is_klaim', '=',False),('state', '!=','draft')]",)
     invoice_date = fields.Date(related='invoice_id.invoice_date',store=True)
