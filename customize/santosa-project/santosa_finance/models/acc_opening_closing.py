@@ -155,10 +155,11 @@ class AccOpeningClosing(models.Model):
 
             body = _('Re-Process Period')
             data.message_post(body=body)
-
+            open_close_data = self.env['acc.periode.closing'].sudo().search([('state_process', '=', 'running'),('branch_id', '=', data.branch_id.id),('id','!=',data.id)])
+            if open_close_data:
+                raise UserError("An accounting period is already running: %s. Only one accounting period can be open at a time." % (', '.join(open_close_data.mapped('name'))))
             if data.state_process == 'done':
-                raise UserError("Sudah Close")
-
+                raise UserError("It was Closed")
             try:
                 self.env.cr.execute("CALL calculate_acc(%s, %s, %s)", (period_id, area_id.id, branch_id.id))
                 self.env.cr.commit()

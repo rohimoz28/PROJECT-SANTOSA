@@ -189,6 +189,7 @@
                             <field name="currency_id" column_invisible="1"/>
                             <field name="debit" string="Debit" optional='show' sum="Total Debit"/>
                             <field name="credit" string="Credit" optional='show' sum="Total Credit"/>
+                            <field name="accounting_periode_id" string="Accounting Period" optional='show'/>
                         </tree>
                     </field>
                     <group col="12" class="oe_invoice_lines_tab" name="klaim_journal_line_tab">
