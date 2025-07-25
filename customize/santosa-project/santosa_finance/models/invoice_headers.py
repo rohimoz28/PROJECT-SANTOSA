@@ -487,7 +487,7 @@ class AccountMove(models.Model):
                 if self.accounting_periode_id.open_periode_from <= self.transaction_date <= self.accounting_periode_id.open_periode_to :
                     pass
                 else:
-                    raise UserError(('Invoice date not in Range Accounting Periode (%s S/D %s)')%(str(self.accounting_periode_id.open_periode_from.strftime('%d-%m-%Y')),str(self.accounting_periode_id.open_periode_to.strftime('%d-%m-%Y'))))
+                    raise UserError(('Transaction date not in Range Accounting Periode (%s S/D %s)')%(str(self.accounting_periode_id.open_periode_from.strftime('%d-%m-%Y')),str(self.accounting_periode_id.open_periode_to.strftime('%d-%m-%Y'))))
 
         # if unbalanced_moves:
         #     error_msg = _("An error has occurred.")
