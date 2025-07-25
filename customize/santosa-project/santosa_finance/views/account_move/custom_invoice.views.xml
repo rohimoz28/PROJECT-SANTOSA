@@ -80,20 +80,19 @@
 
             <xpath expr="//group[@id='header_right_group']" position="after">
                 <group id="header_left_claim_group" invisible="not is_klaim">
-                        <field name="transaction_date" string= "Tanggal Klaim" readonly="state != 'draft'"/>
-                        <field name="name" string = "No. Klaim" readonly="state != 'draft'"/> 
-                        <field name="accounting_periode_id" string="Accounting Period" options="{'no_create': True,'no_create_edit': True}" invisible="1"/>
+                        <field name="accounting_periode_id" string="Accounting Period" options="{'no_create': True,'no_create_edit': True}" readonly="state not in ['draft']" required="1" />
+                        <field name="transaction_date" string= "Claim Date" readonly="state != 'draft'"/>
+                        <field name="name" string = "Claim No" readonly="state != 'draft'"/> 
                         <!-- <field name="no_bill" string = "No. Tagihan" readonly="state != 'draft'"/>  -->
                         <field name="journal_type_id" options="{'no_create': True}" invisible="1"/>
                         <field name="journal_code" readonly="1" invisible="1"/>
                         <field name="journal_id" options="{'no_create': True, 'no_open': True}" readonly="posted_before" invisible="1"/>
                 </group>
                 <group id="header_right_claim_group" invisible="not is_klaim">
-                        <field name="amount_total_signed" string = "Nilai Klaim" readonly="state != 'draft'" style="font-weight: bold;" />
-                        <field name="amount_claim_aloc" string="Nilai Teralokasi" style="font-weight: bold;" readonly="state != 'draft'" />
-                        <field name="amount_claim_paids" string="Nilai Terbayar" style="font-weight: bold;"  readonly="state != 'draft'"/>
+                        <field name="amount_total_signed" string = "Claim Amount" readonly="state != 'draft'" style="font-weight: bold;" />
+                        <field name="amount_claim_aloc" string="Claim Allocation" style="font-weight: bold;" readonly="state != 'draft'" />
+                        <field name="amount_claim_paids" string="Paid Claim" style="font-weight: bold;"  readonly="state != 'draft'"/>
                         <field name="partner_id" string = "Payor" readonly="state != 'draft'"/> 
-                        <field name="accounting_periode_id" readonly="state != 'draft'" string="Accounting Period" options="{'no_create': True,'no_create_edit': True}"/>
                         <field name="populated_date" string = "Populate Date" readonly="state != 'draft'"/>
                 </group>
             </xpath>
@@ -226,13 +225,13 @@
                 <tree string="AR Klaim">
                     <field name="accounting_periode_id" readonly="1" string="Accounting Period"/>
                     <field name="populated_date" string="Populate Date"/>
-                    <field name="transaction_date" string="Tanggal Klaim"/>
-                    <field name="name" string="No. Klaim"/>
+                    <field name="transaction_date" string="Claim Date"/>
+                    <field name="name" string="Claim No."/>
                     <!-- <field name="no_bill" string="No Tagihan"/> -->
                     <field name="partner_id" string="Payor"/>
-                    <field name="amount_total_signed" string="Nilai Klaim"/>
-                    <field name="amount_claim_aloc" string="Nilai Teralokasi"/>
-                    <field name="amount_claim_paids" string="Nilai Terbayar"/>
+                    <field name="amount_total_signed" string="Claim Amount"/>
+                    <field name="amount_claim_aloc" string="Claim Allocation"/>
+                    <field name="amount_claim_paids" string="Paid Claim"/>
                     <field name="state" string="Status" widget="badge" decoration-success="state != 'draft'" decoration-danger="state == 'draft'"/>
                 </tree>
             </field>
