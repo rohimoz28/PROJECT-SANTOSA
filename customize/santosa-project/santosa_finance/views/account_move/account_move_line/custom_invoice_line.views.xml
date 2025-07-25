@@ -58,7 +58,7 @@
             <xpath expr="//field[@name='line_ids']/tree/field[@name='account_id']" position="before">
                 <field name="create_date" optional="show" string="Create Date"/>
                 <field name="populate_date" column_invisible="1"/>
-                <field name="entered_date" optional="show"/>
+                <field name="entered_date" optional="hide"/>
                 <field name="idTrx" optional='show'/>
                 <field name="flag" optional='show'/>
                 <field name="no_trx" optional='hide'/>
@@ -72,6 +72,9 @@
             <xpath expr="//field[@name='line_ids']/tree" position="attributes">
                 <attribute name="default_order">entered_date,account_id asc</attribute>
             </xpath>
+            <xpath expr="//field[@name='line_ids']/tree/field[@name='tax_tag_ids']" position="after">
+                <field name="accounting_periode_id" optional='show'/>
+            </xpath>
             <!-- <xpath expr="//field[@name='line_ids']" position="attributes">
                 <attribute name="invisible">[('amount_total_signed', '=', 0)]</attribute>
             </xpath> -->
@@ -81,7 +84,8 @@
                         <tree editable="bottom" string="Journal Items" default_order="sequence, id" create="true" group_by="entered_date" class="o_horizontal_scroll"><field name="sequence" widget="handle"/>
                             <field name="create_date" optional="show" string="Create Date"/>
                             <field name="populate_date" column_invisible="1"/>
-                            <field name="entered_date" optional="show"/>
+                            <field name="entered_date" optional="hide"/>
+                            <field name="product_id" string="Product" optional="show"/>
                             <field name="name" widget="section_and_note_text" optional="show"/>
                             <field string="Asset Category" column_invisible="parent.move_type != 'in_invoice'" name="asset_category_id" domain="[('type','=','purchase')]" context="{'default_type':'purchase'}" can_create="True" can_write="True"/>
                             <field name="account_id" context="{'partner_id': partner_id, 'move_type': parent.move_type}" options="{'no_quick_create': True}" domain="[('deprecated', '=', False), ('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance')), ('company_id', 'parent_of', parent.company_id)]" required="display_type not in ('line_note', 'line_section')" on_change="1" can_create="True" can_write="True"/>
@@ -262,7 +266,6 @@
             </field>
         </record>
 
-        <odoo>
     <record id="inherit_account_move_line_search" model="ir.ui.view">
         <field name="name">account.move.line.search.inherit</field>
         <field name="model">account.move.line</field>
@@ -273,6 +276,5 @@
             </xpath>
         </field>
     </record>
-</odoo>
 
 </odoo>

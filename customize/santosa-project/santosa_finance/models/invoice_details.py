@@ -82,7 +82,7 @@ class AccountMoveLine(models.Model):
         for rec in self:
             rec.populate_date = rec.populated_time.date() if rec.populated_time else False
             
-    entered_date = fields.Datetime()
+    entered_date = fields.Datetime(default=fields.Datetime.now)
     last_update = fields.Datetime()
     binary_checksum = fields.Char()
     accounting_time_periode = fields.Datetime(related='move_id.accounting_time_periode')
@@ -95,7 +95,7 @@ class AccountMoveLine(models.Model):
     
     #claim purpose
     paid_state_klaim = fields.Boolean(default=False, string='Status Bayar')
-    
+    accounting_periode_id = fields.Many2one('acc.periode.closing','Accounting Period',related='move_id.accounting_periode_id',store=True)
     is_klaim = fields.Boolean(related="move_id.is_klaim",string='AR Klaim')
     invoice_id = fields.Many2one('account.move',string="No TRX", domain="[('is_klaim', '=',False),('state', '!=','draft')]",)
     invoice_date = fields.Date(related='invoice_id.invoice_date',store=True)

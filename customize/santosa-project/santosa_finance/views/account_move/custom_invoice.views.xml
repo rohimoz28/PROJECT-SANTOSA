@@ -32,7 +32,7 @@
                         <field name="odoo_transaction_no" readonly='1'/>
                         <field name="transaction_date" readonly='1'/>
                         <field name="invoice_no" invisible='1'/>
-                        <field name="temp_invoice_no" string="Invoice No" readonly='1'/>
+                        <field name="temp_invoice_no" string="Document Number" readonly='1'/>
                         <field name="is_klaim" invisible='1' readonly='1'/>
                         <!-- <field name="company_id" invisible='1'/> -->
 
@@ -67,7 +67,7 @@
                 <field name="pelayanan" nolabel="1" widget="radio" options="{'horizontal': true}" readonly="1"/> 
             </xpath>
             <xpath expr="//group[@id='header_right_group']/label[@for='invoice_date']" position="replace"/>            
-            <xpath expr="//field[@name='invoice_date']" position="before">
+            <!-- <xpath expr="//field[@name='invoice_date']" position="before">
                 <field name="transaction_date" string="Tanggal TRX" readonly="state != 'draft'"/>
                 <label for="invoice_date_due" string="Due Date"/>
                 <div class="d-flex" invisible="0" name="due_dates">
@@ -76,12 +76,13 @@
                     <field name="invoice_payment_term_id" context="{'example_date': invoice_date, 'example_amount': tax_totals['amount_total']}" placeholder="Payment Terms" options="{'no_quick_create':True,'no_create':True}" readonly="state in ['cancel', 'posted'] or pelayanan == 'pelayanan'"/>
                 </div>
                 
-            </xpath>    
+            </xpath>     -->
 
             <xpath expr="//group[@id='header_right_group']" position="after">
                 <group id="header_left_claim_group" invisible="not is_klaim">
-                        <field name="transaction_date" string= "Tanggal Klaim" readonly="state != 'draft'"/> 
+                        <field name="transaction_date" string= "Tanggal Klaim" readonly="state != 'draft'"/>
                         <field name="name" string = "No. Klaim" readonly="state != 'draft'"/> 
+                        <field name="accounting_periode_id" string="Accounting Period" options="{'no_create': True,'no_create_edit': True}" invisible="1"/>
                         <!-- <field name="no_bill" string = "No. Tagihan" readonly="state != 'draft'"/>  -->
                         <field name="journal_type_id" options="{'no_create': True}" invisible="1"/>
                         <field name="journal_code" readonly="1" invisible="1"/>
@@ -92,6 +93,7 @@
                         <field name="amount_claim_aloc" string="Nilai Teralokasi" style="font-weight: bold;" readonly="state != 'draft'" />
                         <field name="amount_claim_paids" string="Nilai Terbayar" style="font-weight: bold;"  readonly="state != 'draft'"/>
                         <field name="partner_id" string = "Payor" readonly="state != 'draft'"/> 
+                        <field name="accounting_periode_id" readonly="state != 'draft'" string="Accounting Period" options="{'no_create': True,'no_create_edit': True}"/>
                         <field name="populated_date" string = "Populate Date" readonly="state != 'draft'"/>
                 </group>
             </xpath>
@@ -117,10 +119,14 @@
             </xpath>
             
             <xpath expr="//field[@name='invoice_date']" position="replace">
-                <field name="invoice_date" string="Tanggal Invoice" readonly="state not in ['draft']"/>
-                <field name="invoice_no" readonly="state != 'draft' or pelayanan == 'pelayanan'" string="No. Invoice"/>
+                <field name="invoice_date" string="Invoice Date" readonly="state not in ['draft']" required="not is_klaim" />
+                <field name="invoice_no" readonly="state != 'draft' or pelayanan == 'pelayanan'" string="Document Number"/>
+                <field name="transaction_date" string="TRX Date" readonly="state != 'draft'" invisible="1" />
+                <field name="invoice_payment_term_id" context="{'example_date': invoice_date, 'example_amount': tax_totals['amount_total']}" placeholder="Payment Terms" options="{'no_quick_create':True,'no_create':True}" readonly="state in ['cancel', 'posted'] or pelayanan == 'pelayanan'"/>
+                <field name="invoice_date_due" force_save="1" placeholder="Date" readonly="state != 'draft' or pelayanan == 'pelayanan' or invoice_payment_term_id"/>
                 <field name="status_invoice" readonly='1'/>
                 <field name="amount_total_signed" string="Total" readonly='1' invisible="is_klaim"/>
+                <field name="accounting_periode_id" options="{'no_create': True,'no_create_edit': True}" invisible="1"/>
             </xpath>
             <xpath expr="//label[@for='partner_id' and contains(@invisible, 'out_invoice')]" position="replace"/>
             <xpath expr="//label[@for='partner_id' and contains(@invisible, 'in_invoice')]" position="replace"/>
@@ -148,15 +154,15 @@
             </xpath>
             
             <xpath expr="//field[@name='partner_shipping_id']" position="before">
+                <field name="accounting_periode_id" string="Accounting Period" options="{'no_create': True,'no_create_edit': True}" readonly="state not in ['draft']" required="1" />
                 <field name="sales_point" string="Sales Point" readonly="state != 'draft' or pelayanan == 'pelayanan'" invisible="pelayanan == 'non pelayanan'" />
                 <field name="penjamin_name_id" string="Penjamin" readonly="state != 'draft' or pelayanan == 'pelayanan'" invisible="pelayanan == 'non pelayanan'"/>
                 <field name="patient_name" string="Patient" readonly="state != 'draft' or pelayanan == 'pelayanan'" invisible="pelayanan == 'non pelayanan'"/>
-                <field name="accounting_date_periode" readonly="1" string="Accounting Periode"/>
-                <field name="journal_ajp" readonly="state != 'draft' or pelayanan == 'pelayanan'" string="Jurnal References"/>
+                <field name="journal_ajp" readonly="state != 'draft' or pelayanan == 'pelayanan'" string="Journal References"/>
                 <field name="journal_periode" readonly="state != 'draft' or pelayanan == 'pelayanan'"/>
-                <field name="journal_id" string="Tipe Jurnal" options="{'no_create': True, 'no_open': True}" readonly="posted_before or pelayanan == 'pelayanan'"/> <!-- auto filter by py just show tobe sale-->
+                <field name="journal_id" string="Journal Type" options="{'no_create': True, 'no_open': True}" readonly="posted_before or pelayanan == 'pelayanan'"/> <!-- auto filter by py just show tobe sale-->
                 <field name="journal_type_id" options="{'no_create': True, 'no_open': True}" invisible="1" readonly="state != 'draft' or pelayanan == 'pelayanan'"/>
-                <field name="journal_code" readonly="1"/>
+                <field name="journal_code" readonly="1" string="Journal Code"/>
                 <field name="partner_id"  string="Customer" invisible="pelayanan == 'pelayanan'" readonly="state != 'draft' or pelayanan == 'pelayanan'" options="{'no_create': True}" />
                 <field name="branch_id" readonly="state != 'draft' or pelayanan == 'pelayanan'"/>
             </xpath>
@@ -174,9 +180,10 @@
             <xpath expr="//tree/field[@name='invoice_date']" position="replace"/>
 
             <xpath expr="//tree/field[@name='name']" position="before">
-                <field name="populated_date" string="Populat Date"/>
+                <field name="accounting_periode_id" string="Accounting Period" />
+                <field name="populated_date" string="Populate Date"/>
                 <field name="invoice_date" string="Invoice Date"/>
-                <field name="temp_invoice_no" string="Invoice No"/>
+                <field name="temp_invoice_no" string="Document Number"/>
                 <field name="transaction_no"/>
             </xpath>
             <xpath expr="//tree/field[@name='name']" position="after">
@@ -217,6 +224,7 @@
             <field name="model">account.move</field>
             <field name="arch" type="xml">
                 <tree string="AR Klaim">
+                    <field name="accounting_periode_id" readonly="1" string="Accounting Period"/>
                     <field name="populated_date" string="Populate Date"/>
                     <field name="transaction_date" string="Tanggal Klaim"/>
                     <field name="name" string="No. Klaim"/>
