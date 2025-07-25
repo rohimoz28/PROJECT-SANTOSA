@@ -90,8 +90,13 @@ class ServiceContract(models.Model):
     competence = fields.Text(string="Kompetensi")
 
     
-    def unlink(self):
-        return super(ServiceContract, self).unlink()
+    def unlink_kontrak_medis(self):
+        for record in self:
+            if record.state != 'draft':
+                raise UserError("Data hanya bisa dihapus jika status kontrak medis adalah 'New'.")
+            
+        return super().unlink()
+
 
     # kondisi kontrak medis bernilai False di tabsheet form employee
     @api.model
