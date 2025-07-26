@@ -11,7 +11,7 @@
                     <field name="medical_contract_number" optional="show"/>
                     <field name="branch_id" optional="show"/>
                     <field name="directorate_id" optional="show"/>
-                    <field name="department_id" optional="show"/>
+                    <field name="hrms_department_id" optional="show"/>
                     <field name="division_id" optional="show"/>
                     <field name="job_id" optional="show"/>
                     <field name="start_date" optional="show"/>

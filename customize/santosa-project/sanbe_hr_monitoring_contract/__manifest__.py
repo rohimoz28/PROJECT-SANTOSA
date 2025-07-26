@@ -32,6 +32,7 @@
     'assets': {
         'web.assets_backend': [
             "/sanbe_hr_monitoring_contract/static/src/js/hr_monitoring_controller.js",
+            "sanbe_hr_monitoring_contract/static/src/css/tree_table.css",
         ],
         'web.assets_qweb': [
         ],
