@@ -6,19 +6,19 @@
         <field name="name">view.hr.employee.contract.monitoring.tree</field>
         <field name="model">hr.employee.contract.monitoring</field>
         <field name="arch" type="xml">
-            <tree default_order="territory_id,branch_id,time_limit,department_id,employee_id" 
-                  create="false" edit="false">
-                <field name="territory_id" string="Area"/>
-                <field name="branch_id" string="Business Units"/>
-                <field name="department_id" string="Sub Department"/>
-                <field name="employee_id" string="Employee"/>
-                <field name="nik_employee" string="NIK"/>
-                <field name="mobile_phone" string="Phone"/>
-                <field name="employee_address" string="Address"/>
-                <field name="notice_days" string="Notice"/>
-                <field name="date_end" string="End Date"/>
-                <field name="rehire"/>
-                <field name="time_limit"/>
+            <tree default_order="territory_id,branch_id,time_limit,hrms_department_id,employee_id" 
+                  create="false" edit="false" class="o_tree_table">
+                <field name="territory_id" string="Area" optional="show"/>
+                <field name="branch_id" string="Business Units" optional="show"/>
+                <field name="hrms_department_id" string="Departemen" optional="show"/>
+                <field name="employee_id" string="Employee" optional="show"/>
+                <field name="nik_employee" string="NIK" optional="show"/>
+                <field name="mobile_phone" string="Phone" optional="show"/>
+                <field name="employee_address" string="Address" optional="show"/>
+                <field name="notice_days" string="Notice" optional="show"/>
+                <field name="date_end" string="End Date" optional="show"/>
+                <field name="rehire" optional="show"/>
+                <field name="time_limit" optional="show"/>
             </tree>
         </field>
     </record>
@@ -32,7 +32,7 @@
                 <field name="employee_name" string="Name" filter_domain="['|','|','|','|',('employee_name','ilike',self),('nik_employee','ilike',self),('territory_name','ilike',self),('department_name','ilike',self),('branch_name','ilike',self)]"/>
                 <field name="branch_id" string="Business Units"/>
                 <field name="territory_id" string="Area"/>
-                <field name="department_id" string="Sub Department"/>
+                <field name="hrms_department_id" string="Departemen"/>
                 <separator/>
                 <filter string="Rehire" name="rehire" domain="[('rehire','=',True)]"/>
                 <filter string="Late" domain="[('time_limit','&lt;',0)]" name="late" help="Late Re-Newal Contract"/>
@@ -93,19 +93,17 @@
                         <group name="job_info">
                             <field name="territory_id"/>
                             <field name="branch_id"/>
-                            <field name="department_id"/>
+                            <field name="hrms_department_id"/>
                             <field name="job_id"/>
                             <label for="contract_id" string="Contract"/>
                             <div class="o_row">
                                 <field name="contract_id"/>
-[                                <field name="status_employee"/>
-]
+                                <field name="status_employee"/>
                             </div>
                             <label for="contract_id" string="Periode"/>
                             <div class="o_row">
                                 <field name="date_start"/>
--                                <field name="date_end"/>
-]
+                                <field name="date_end"/>
                             </div>
                         </group>
                         <group  name="contract_result">
@@ -135,25 +133,25 @@
         <field name="name">view.contract.monitoring.tree</field>
         <field name="model">hr.contract.monitoring</field>
         <field name="arch" type="xml">
-            <tree default_order="territory_id,branch_id,time_limit,department_id,employee_id" 
+            <tree default_order="territory_id,branch_id,time_limit,hrms_department_id,employee_id" 
                   decoration-danger="date_end &lt; current_date and is_done == 'waiting'"
-                  create="false" edit="false">
+                  create="false" edit="false" class="o_tree_table">
                 <header>
                     <button name="generate_data" string="Generate Data" type="object" class="oe_highlight" invisible="1" />
                     <button name="mail_send_hr" type="object" string="Check Branch" invisible="1" />
                     <button name="mail_send_mentor" type="object" string="Check Mentor" invisible="1" />
                 </header>
-                <field name="territory_id" string="Area"/>
-                <field name="branch_id" string="Business Units"/>
-                <field name="department_id" string="Sub Department"/>
-                <field name="employee_id" string="Employee"/>
-                <field name="nik_employee" string="NIK"/>
-                <field name="superior_id" string="Immediate Superior"/>
-                <field name="mobile_phone" string="Phone"/>
-                <field name="notice_days" string="Notice"/>
-                <field name="date_end" string="End Date"/>
-                <field name="rehire"/>
-                <field name="is_done"/>
+                <field name="territory_id" string="Area" optional="show"/>
+                <field name="branch_id" string="Business Units" optional="show"/>
+                <field name="hrms_department_id" string="Departemen" optional="show"/>
+                <field name="employee_id" string="Employee" optional="show"/>
+                <field name="nik_employee" string="NIK" optional="show"/>
+                <field name="superior_id" string="Immediate Superior" optional="show"/>
+                <field name="mobile_phone" string="Phone" optional="show"/>
+                <field name="notice_days" string="Notice" optional="show"/>
+                <field name="date_end" string="End Date" optional="show"/>
+                <field name="rehire" optional="show"/>
+                <field name="is_done" optional="show"/>
             </tree>
         </field>
     </record>
@@ -168,7 +166,7 @@
                 <field name="employee_name" string="Name" filter_domain="['|','|','|','|',('employee_name','ilike',self),('nik_employee','ilike',self),('territory_name','ilike',self),('department_name','ilike',self),('branch_name','ilike',self)]"/>
                 <field name="territory_id" string="Area"/>
                 <field name="branch_id" string="Business Units"/>
-                <field name="department_id" string="Sub Department"/>
+                <field name="hrms_department_id" string="Departemen"/>
                 <separator/>
                 <filter string="Rehire" name="rehire" domain="[('rehire','=',True)]"/>
                 <filter string="Late" domain="[('date_end','&lt;',current_date),('is_done','=','waiting')]" name="late" help="Late Re-Newal Contract"/>
