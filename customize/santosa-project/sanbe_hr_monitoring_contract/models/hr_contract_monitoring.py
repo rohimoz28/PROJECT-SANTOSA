@@ -81,7 +81,8 @@ class HrEmployeeContractMonitoring(models.Model):
     branch_name = fields.Char('Business Unit', required=True)
     territory_id = fields.Many2one('res.territory', string='Area', required=True)
     territory_name = fields.Char('Territory Name', required=True)
-    department_id = fields.Many2one('hr.department', string='Sub Department', required=True)
+    # department_id = fields.Many2one('hr.department', string='Sub Department', required=True)
+    hrms_department_id = fields.Many2one(comodel_name='sanhrms.department', related='employee_id.hrms_department_id', string='Departemen', store=True)
     department_name = fields.Char('Department Name', required=True)
     job_id = fields.Many2one('hr.job', string='Job Position', required=True)
     job_name = fields.Char('Job Position', required=True)
@@ -117,7 +118,7 @@ class HrEmployeeContractMonitoring(models.Model):
                     branch_name,
                     territory_id,
                     territory_name,
-                    department_id,
+                    hrms_department_id,
                     department_name,
                     job_id,
                     job_name,
@@ -146,8 +147,8 @@ class HrEmployeeContractMonitoring(models.Model):
                             rb.name AS branch_name,
                             rt.id AS territory_id,
                             rt.name AS territory_name,
-                            hd.id AS department_id,
-                            hd.name AS department_name,
+                            sd.id AS hrms_department_id,
+                            sd.name AS department_name,
                             hj.id AS job_id,
                             hj.name AS job_name,
                             hc2.id AS contract_id,
@@ -170,7 +171,7 @@ class HrEmployeeContractMonitoring(models.Model):
                             LEFT JOIN res_company rc ON hc2.company_id = rc.id
                             LEFT JOIN res_branch rb ON hc2.branch_id = rb.id
                             LEFT JOIN res_territory rt ON hc2.area = rt.id
-                            LEFT JOIN hr_department hd ON hc2.department_id = hd.id
+                            LEFT JOIN sanhrms_department sd ON hc2.hrms_department_id = sd.id
                             LEFT JOIN hr_job hj ON hc2.job_id = hj.id
                             LEFT JOIN (
                                 SELECT MAX(hel.id) AS id, hel.employee_id
@@ -210,7 +211,8 @@ class HrContractMonitoring(models.Model):
     territory_id = fields.Many2one('res.territory', related='employee_id.area', string='Area', readonly=True, store=True)
     territory_name = fields.Char(related='territory_id.name', string='Area', readonly=True, store=True)
     department_id = fields.Many2one('hr.department', related='employee_id.department_id', string='Sub Department', readonly=True, store=True)
-    department_name = fields.Char(related='department_id.name', string='Sub Department', readonly=True, store=True)
+    hrms_department_id = fields.Many2one(comodel_name='sanhrms.department', related='employee_id.hrms_department_id', string='Departemen', store=True)
+    department_name = fields.Char(related='hrms_department_id.name', string='Departemen', readonly=True, store=True)
     job_id = fields.Many2one('hr.job', string='Job Position', related='employee_id.job_id', readonly=True, store=True)
     job_name = fields.Char(string='Job Position', related='job_id.name', readonly=True)
     contract_id = fields.Many2one('hr.contract', string='Contract', readonly=True, store=True)
@@ -376,8 +378,8 @@ class HrContractMonitoring(models.Model):
                     query = """ SELECT hcm.id,
                             rb.name AS branch_name,
                             rt.name AS territory_name,
-                            hd.id AS department_id,
-                            hd.name::VARCHAR AS department_name,   -- Single-language field for department
+                            sd.id AS hrms_department_id,
+                            sd.name::VARCHAR AS department_name,   -- Single-language field for department
                             hj.id AS job_id,
                             hj.name::VARCHAR AS job_name,          -- Single-language field for job
                             he.name parent_name,
@@ -390,7 +392,7 @@ class HrContractMonitoring(models.Model):
                         LEFT JOIN 
                             res_territory rt ON hcm.territory_id = rt.id
                         LEFT JOIN 
-                            hr_department hd ON hcm.department_id = hd.id
+                            sanhrms_department sd ON hcm.hrms_department_id = sd.id
                         LEFT JOIN 
                             hr_job hj ON hj.id = hcm.job_id
                         LEFT JOIN 
@@ -459,8 +461,8 @@ class HrContractMonitoring(models.Model):
                 query = """ SELECT hcm.id,
                         rb.name AS branch_name,
                         rt.name AS territory_name,
-                        hd.id AS department_id,
-                        hd.name::VARCHAR AS department_name,   -- Single-language field for department
+                        sd.id AS hrms_department_id,
+                        sd.name::VARCHAR AS department_name,   -- Single-language field for department
                         hj.id AS job_id,
                         hj.name::VARCHAR AS job_name,          -- Single-language field for job
                         he.name parent_name,
@@ -473,7 +475,7 @@ class HrContractMonitoring(models.Model):
                     LEFT JOIN 
                         res_territory rt ON hcm.territory_id = rt.id
                     LEFT JOIN 
-                        hr_department hd ON hcm.department_id = hd.id
+                        sanhrms_department sd ON hcm.hrms_department_id = sd.id
                     LEFT JOIN 
                         hr_job hj ON hj.id = hcm.job_id
                     LEFT JOIN 
