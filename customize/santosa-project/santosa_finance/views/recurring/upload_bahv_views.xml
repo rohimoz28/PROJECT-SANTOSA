@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- View upload.bahv View Tree -->
+    <record id="view_upload_bahv_tree" model="ir.ui.view">
+        <field name="name">upload.bahv.tree</field>
+        <field name="model">upload.bahv</field>
+        <field name="arch" type="xml">
+            <tree string="Upload Bahv" create="1" delete="1" duplicate="0">
+                <field name="branch_id" column_invisible="1"/>
+                <!-- <field name="company_id" column_invisible="1"/> -->
+                <field name="currency_id" column_invisible="1"/>
+                <field name="admission_date"/>
+                <field name="discharge_date"/>
+                <field name="birth_date"/>
+                <field name="birth_weight"/>
+                <field name="sex"/>
+                <field name="deskripsi_inacbg"/>
+                <field name="tarif_inacbg"/>
+                <field name="total_tarif"/>
+                <field name="tarif_rs"/>
+                <field name="nama_pasien"/>
+                <field name="mrn"/>
+                <field name="umur_tahun"/>
+                <field name="umur_hari"/>
+                <field name="dpjp"/>
+                <field name="sep"/>
+                <field name="nokartu"/>
+                <field name="prosedur_non_bedah" sum="Total Non Bedah" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="prosedur_bedah" sum="Total Prosedur Bedah" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="konsultasi" sum="Total Konsultasi" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="tenaga_ahli" sum="Total Tenaga Ahli" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="keperawatan" sum="Total Keperawatan" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="penunjang" sum="Total Penunjang" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="radiologi" sum="Total Radiologi" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="laboratorium" sum="Total laboratorium" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="pelayanan_darah" sum="Total Pelayanan Darah" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="rehabilitasi" sum="Total Rehabilitasi" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="kamar_akomodasi" sum="Total Akomodasi" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="rawat_intensif" sum="Total intensif" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="obat" sum="Total Obat" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="alkes" sum="Total alkes" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="bmhp"/>
+                <field name="sewa_alat" sum="Total sewa alkes" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="obat_kronis" sum="Total Kronis" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="obat_kemo" sum="Total kemo" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="create_uid"/>
+                <field name="create_date"/>
+                <field name="write_date"/>
+                <field name="file_name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- View upload.bahv form -->
+   <record id="view_upload_bahv_form" model="ir.ui.view">
+        <field name="name">view.upload.bahv.form</field>
+        <field name="model">upload.bahv</field>
+        <field name="arch" type="xml">
+            <form string="Upload Bahv">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="nama_pasien" string="Nama Pasien"/>
+                        <h1>
+                            <field name="nama_pasien" placeholder="Nama Pasien..."/>
+                        </h1>
+                        <label for="nokartu" string="No. Kartu"/>
+                        <h3>
+                            <field name="nokartu"/>
+                        </h3>
+                    </div>
+
+                    <group>
+                        <group string="Patient Info">
+                            <field name="mrn"/>
+                            <label for="birth_date" string="Birth Date/Weight"/>
+                            <div class="o_row">
+                                <field name="birth_date"/> /
+                                <field name="birth_weight"/> Kg
+                            </div>
+                            <label for="umur_tahun" string="Age"/>
+                            <div class="o_row">
+                                <field name="umur_tahun"/>
+                            Tahun
+                                <!-- <field name="umur_bulan"/>
+                            Bulan -->
+                                <field name="umur_hari"/>
+                            Hari
+                            </div>
+                            
+                            <field name="sex"/>
+                            <field name="dpjp"/>
+                            <field name="sep"/>
+                        </group>
+
+                        <group string="Admission Dates">
+                            <field name="admission_date"/>
+                            <field name="discharge_date"/>
+                            <!-- <field name="company_id" column_invisible="1"/> -->
+                            <field name="currency_id" invisible="1"/>
+
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="Medical Procedures">
+                            <field name="prosedur_non_bedah" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="prosedur_bedah" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="konsultasi" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="tenaga_ahli" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="keperawatan" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="penunjang" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="radiologi" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="laboratorium" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="pelayanan_darah" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="rehabilitasi" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="kamar_akomodasi" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="rawat_intensif" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+
+                        <group string="Pharmacy &amp; Supplies">
+                            <field name="obat" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="alkes" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="bmhp"/>
+                            <field name="sewa_alat" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="obat_kronis" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="obat_kemo" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <separator name="inacbg_info" string="INACBG Info"/>
+                            <field name="deskripsi_inacbg"/>
+                            <field name="tarif_inacbg" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="total_tarif" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="tarif_rs" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- View upload.bahv search -->
+    <record id="view_upload_bahv_search" model="ir.ui.view">
+        <field name="name">view.upload.bahv.search</field>
+        <field name="model">upload.bahv</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Search" filter_domain="['|','|',('name','ilike',self),('sep','ilike',self),('file_name','ilike',self)]"/>
+                <field name="name" string="Name" filter_domain="[('name','ilike',self)]"/>
+                <field name="sep" string="SEP" filter_domain="[('sep','ilike',self)]"/>
+                <field name="file_name" string="File Name" filter_domain="[('file_name','ilike',self)]"/>
+                <field name="admission_date_str" string="Admission Date" filter_domain="[('admission_date_str','ilike',self)]"/>
+                <field name="discharge_date_str" string="Discharge Date" filter_domain="[('discharge_date_str','ilike',self)]"/>
+                <separator string="-" />
+                <filter string="Today’s Admissions" name="filter_today_admission" domain="[('admission_date', '=', context_today())]" />
+                <filter string="Today’s Discharge" name="filter_today_discharge" domain="[('discharge_date', '=', context_today())]" />
+                <separator/>
+                <filter string="Admission Date" name="admission_date" date="admission_date"/>
+                <filter string="Discharge Date" name="discharge_date" date="discharge_date"/>
+                <separator/>
+                <!-- 📦 Group By Options -->
+                <group expand="1" string="Group By">
+                    <filter string="Name" name="name" domain="[]" context="{'group_by':'name'}"/>
+                    <filter string="Sex" name="sex" domain="[]" context="{'group_by':'sex'}"/>
+                    <filter string="SEP Number" name="sep" domain="[]" context="{'group_by':'sep'}"/>
+                    <filter string="File Name" name="file_name" domain="[]" context="{'group_by':'file_name'}"/>
+                    <filter string="Admission" name="admission_date" domain="[]" context="{'group_by':'admission_date'}"/>
+                    <filter string="Discharge" name="discharge_date" domain="[]" context="{'group_by':'discharge_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action upload.bahv -->
+    <record id="action_upload_bahv" model="ir.actions.act_window">
+        <field name="name">Upload BAHV</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">upload.bahv</field>
+        <!-- <field name="view_mode">tree</field> -->
+        <field name="view_mode">tree</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                There is no examples click here to add new Upload Bahv.
+            </p>
+        </field>
+    </record>
+    <menuitem id="menu_ar_klaim_bahv" name="BAHV" action="action_upload_bahv" parent="santosa_finance.transaction_sanfi_root" sequence="21"/>
+
+</odoo>
