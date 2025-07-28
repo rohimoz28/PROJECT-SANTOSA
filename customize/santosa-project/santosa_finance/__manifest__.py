@@ -47,6 +47,7 @@
         'views/recurring/recurring_setup.views.xml',
         'views/recurring/recurring_setup_details.views.xml',
         'views/recurring/recurring_setup_detail_details.views.xml',
+        'views/recurring/upload_bahv_views.xml',
         'views/tagihan/tagihan_master.views.xml',
         'views/tagihan/tagihan_headers.views.xml',
         'views/tagihan/tagihan_line.views.xml',
