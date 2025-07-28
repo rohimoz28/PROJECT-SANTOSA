@@ -23,6 +23,7 @@ class SuratIzipPraktek(models.Model):
     nik_lama = fields.Char(string='NIK Lama', related='employee_id.nik_lama', store=True)
     area = fields.Many2one(related='employee_id.area', string='Area', store=True)
     department_id = fields.Many2one(related='employee_id.department_id', store=True, string='Departemen')
+    hrms_department_id = fields.Many2one(related='employee_id.hrms_department_id', store=True, string='Departemen')
     directorate_id = fields.Many2one(related='employee_id.directorate_id', string='Direktorat', store=True)
     division_id = fields.Many2one('sanhrms.division',string='Divisi', related='employee_id.division_id', store=True)
     branch_id = fields.Many2one(related='employee_id.branch_id', string='Unit Bisnis', store=True)

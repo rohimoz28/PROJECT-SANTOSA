@@ -283,4 +283,51 @@
     </record>
 
     <menuitem id="emp_hr_profesion_special" name=" Profesi Khusus" sequence='30' parent="profesion_id" action="action_hr_profesion_special"/>
+    
+    
+    <record id='hr_monitoring_sip_view_tree' model='ir.ui.view'>
+        <field name='name'>hr.sip.view.tree</field>
+        <field name='model'>hr.sip</field>
+        <field name='arch' type='xml'>
+            <tree string='Surat Izin Praktek' 
+            delete="false" 
+            create="false"
+            
+            >
+                <field name='employee_id' optional='show'/>
+                <field name='sip_number' optional='show'/>
+                <field name='branch_id' optional='show'/>
+                <field name='directorate_id' optional='show'/>
+                <field name='hrms_department_id' optional='show'/>
+                <field name='division_id' optional='show'/>
+                <field name='job_id' optional='show'/>
+                <field name='start_date' optional='show'/>
+                <field name='end_date' optional='show'/>
+                <field name="no_sip_to" optional="hide"/>
+                <field name="specialization" optional="show"/>
+                <field name="competence" optional="hide"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'close'" decoration-success="state == 'open'" decoration-danger="state == 'cancel'" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <!-- Action hr.employee.contract.monitoring -->
+    <record id="action_hr_employee_sip" model="ir.actions.act_window">
+        <field name="name">Monitoring SIP</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.sip</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="hr_monitoring_sip_view_tree"/>
+        <field name="context">{}</field>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                    There is no examples click here to add new Hr Employee Contract Monitoring.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="hr_employee_monitoring_sip" name="Monitoring SIP" action="action_hr_employee_sip" parent="hr.hr_menu_hr_reports" sequence="20"/>
+
 </odoo>
