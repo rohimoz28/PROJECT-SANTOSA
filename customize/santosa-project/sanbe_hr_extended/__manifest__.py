@@ -38,9 +38,12 @@
         "views/hr_service_contract.xml",
         "views/hr_service_contract_monitoring.xml",
         "views/hr_sip.xml",
+        
+        "views/hr_pension_monitoring.xml",
     ],
     'assets': {
         'web.assets_backend': [
+            "sanbe_hr_extended/static/src/css/hide_searchpanel.css",
         ],
     },
     # only loaded in demonstration mode
