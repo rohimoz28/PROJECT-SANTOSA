@@ -153,6 +153,12 @@
                     <field name="employee_id" />
                     <field name="nik" />
                     <field name="nik_lama" />
+                    <group expand="0" string="Group By">
+                        <filter name="group_by_department" string="HRMS Departemen" 
+                        domain="[]" context="{'group_by': 'hrms_department_id'}"/>
+                        <filter name="group_by_job" string="Jabatan" 
+                        domain="[]" context="{'group_by': 'job_id'}"/>
+                    </group>
                 </search>
             </field>
         </record>
