@@ -12,6 +12,26 @@ class ResPartner(models.Model):
     transaction_tracking_ids = fields.One2many(
         comodel_name='santosa_finance.transaction_tracking',
         inverse_name='partner_id')
+    di_tracking_ids = fields.One2many(
+        comodel_name='santosa_finance.transaction_tracking',
+        inverse_name='partner_id', domain=[('flag','=',20)], help="Differed Income"
+        )
+    hd_tracking_ids = fields.One2many(
+        comodel_name='santosa_finance.transaction_tracking',
+        inverse_name='partner_id', domain=[('flag','=',10)], help="Hutang Docter"
+        )
+    ar_jkn_tracking_ids = fields.One2many(
+        comodel_name='santosa_finance.transaction_tracking',
+        inverse_name='partner_id', domain=[('flag','=',30)], help="AR JKN"
+        )
+    ar_tracking_ids = fields.One2many(
+        comodel_name='santosa_finance.transaction_tracking',
+        inverse_name='partner_id', domain=[('flag','=',40)], help="AR"
+        )
+    ump_tracking_ids = fields.One2many(
+        comodel_name='santosa_finance.transaction_tracking',
+        inverse_name='partner_id', domain=[('flag','=',40)], help="UMP"
+        )
     tipe_customer = fields.Selection([ 
         ('Asuransi', 'Asuransi'),
         ('Umum', 'Umum'),

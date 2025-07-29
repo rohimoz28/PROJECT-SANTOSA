@@ -22,6 +22,7 @@ class TransactionTracking(models.Model):
     document_no = fields.Char()
     transaction_class = fields.Char()
     jenis = fields.Integer()
+    flag = fields.Integer()
     jenis_tracking = fields.Integer()
     description = fields.Char()
     beginning_balance = fields.Monetary()
