@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- tree view -->
+        <record id="hr_pension_view_tree" model="ir.ui.view">
+            <field name="name">hr.pension.view.tree</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                <tree create="0" delete="0" class="hide-searchpanel o_tree_table">
+                    <field name="name" optional="show"/>
+                    <field name="parent_id" optional="show"/>
+                    <field name="employee_id" optional="show"/>
+                    <field name="hrms_department_id" optional="show"/>
+                    <field name="job_id" optional="show"/>
+                    <field name="join_date" optional="show"/>
+                    <field name="pension_date" optional="show"/>
+                    <field name="retire_age" optional="show"/>
+                    <field name="birthday" optional="show"/>
+                    <field name="pension_state" 
+                           optional="show" 
+                           widget="badge"
+                           decoration-danger="pension_state == 'expired'" decoration-info="pension_state == 'running'"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- action window -->
+        <record id="hr_pension_action_window" model="ir.actions.act_window">
+            <field name="name">Monitoring Kontrak - Pensiun</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="hr_pension_view_tree"/>
+            <field name="domain">[('job_status', '=', 'permanent')]</field>
+        </record>
+
+        <!-- menuitem -->
+        <menuitem
+            id="hr_pension_menuitem"
+            name="Monitoring Kontrak Pensiun - Sertipikasi"
+            parent="hr.hr_menu_hr_reports"
+            sequence="30"
+            action="hr_pension_action_window"/>
+    </data>
+</odoo>

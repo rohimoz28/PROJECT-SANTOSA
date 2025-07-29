@@ -41,7 +41,6 @@ class HREmployee(models.Model):
     service_to = fields.Date('Kontrak Hingga')
     is_pinalty = fields.Boolean('Penalti',default=False)
     pinalty_bs = fields.Integer('Penalti BS')
-
     pinalty_amount = fields.Monetary('Jumlah Pinalti')
     resign_notice = fields.Integer('Masa pengunduran diri')
     asset_ids = fields.One2many('hr.employee.assets','employee_id',auto_join=True,string='Detail Asset')

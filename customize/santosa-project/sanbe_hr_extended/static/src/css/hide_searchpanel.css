@@ -1,0 +1,9 @@
+/* Tambahan (versi Owl baru) */
+.o_list_view.hide-searchpanel ~ .o_search_panel {
+    display: none !important;
+}
+
+/* Alternatif lebih umum (backward-compatible) */
+.hide-searchpanel .o_search_panel {
+    display: none !important;
+}

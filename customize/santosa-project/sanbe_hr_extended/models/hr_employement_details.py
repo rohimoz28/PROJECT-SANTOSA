@@ -42,6 +42,7 @@ class HREmployee(models.Model):
     resign_notice = fields.Integer('Resign Notice')
     asset_ids = fields.One2many('hr.employee.assets','employee_id',auto_join=True,string='Asset Details')
     is_prob = fields.Boolean(default=False, string='Is Prob', compute='_isi_confirm_probation')
+    
 
     @api.onchange('periode_probation','ext_probation')
     @api.depend('periode_probation','ext_probation')
