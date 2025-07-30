@@ -96,7 +96,7 @@
         </record>
         <record id="action_view_hr_employement_tracking" model="ir.actions.act_window">
             <field name="res_model">hr.employment.tracking</field>
-            <field name="name">Pelacakan karyawanan</field>
+            <field name="name">Pelacakan karyawan</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
