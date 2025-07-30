@@ -30,7 +30,7 @@ class ResPartner(models.Model):
         )
     ump_tracking_ids = fields.One2many(
         comodel_name='santosa_finance.transaction_tracking',
-        inverse_name='partner_id', domain=[('flag','=',40)], help="UMP"
+        inverse_name='partner_id', domain=[('flag','=',50)], help="UMP"
         )
     tipe_customer = fields.Selection([ 
         ('Asuransi', 'Asuransi'),
