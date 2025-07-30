@@ -96,10 +96,10 @@
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>
-        <menuitem
+        <!-- <menuitem
             id="hr_menu_hr_monitoring_contract"
             name="Monitoring Kontrak Pensiun - Sertipikasi"
                   parent="hr.hr_menu_hr_reports"
                   sequence="30"
-            action="action_view_hr_monitoring_contract"/>
+            action="action_view_hr_monitoring_contract"/> -->
 </odoo>
