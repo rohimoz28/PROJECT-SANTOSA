@@ -11,22 +11,26 @@ from odoo.exceptions import UserError
 import requests
 import logging
 _logger = logging.getLogger(__name__)
+
+
 ORDER_STATE = [
     ('draft', "Draft"),
     ('approved', "Approved"),
 ]
+
+
 class HrEmployementTracking(models.TransientModel):
     _name = 'hr.employment.tracking'
     _description = 'HR Employement Tracking'
 
     idpeg = fields.Char('id pegawai')
-    emp_no = fields.Many2one('hr.employee',string='Employee No',index=True)
-    employee_id = fields.Many2one('hr.employee', string='Employee ID', index=True)
-    employee_name = fields.Char(string='Employee Name')
+    employee_id = fields.Many2one('hr.employee', string='Nama Karyawan', index=True)
+    emp_id = fields.Char(related='employee_id.employee_id',string='Id Karyawan',index=True)
+    # employee_name = fields.Char(string='Employee Name')
     nik = fields.Char('NIK')
     area = fields.Char('Area')
-    bisnis_unit = fields.Char('Business Unit')
-    departmentid = fields.Char('Sub Department')
+    bisnis_unit = fields.Char('Unit Bisnis')
+    departmentid = fields.Char('Departemen')
     state = fields.Selection(
         selection=ORDER_STATE,
         string="Status",
@@ -34,7 +38,7 @@ class HrEmployementTracking(models.TransientModel):
         tracking=3,
         default='draft')
     jobstatus = fields.Char('Job Status')
-    employementstatus = fields.Char('Employeement Status')
+    employementstatus = fields.Char('Status Kekaryawanan')
     jobtitle = fields.Char('Job Position')
     empgroup = fields.Char('Employee P Group')
 
@@ -49,19 +53,17 @@ class HrEmployementTracking(models.TransientModel):
     def pencarian_data(self):
         return
 
-    @api.onchange('emp_no')
+    @api.onchange('employee_id')
     def _isi_data_employee(self):
         for alldata in self:
-            if not alldata.emp_no:
-                return
+            myemp = alldata.employee_id
+
             alldata.tracking_ids = [Command.set([])]
-            myemp = alldata.emp_no
             alldata.nik = myemp.nik
-            alldata.employee_id = myemp.id
-            alldata.employee_name = myemp.name
+            alldata.emp_id = myemp.employee_id
             alldata.area = myemp.area.name
-            alldata.bisnis_unit = myemp.department_id.branch_id.name
-            alldata.departmentid = myemp.department_id.name
+            alldata.bisnis_unit = myemp.branch_id.name
+            alldata.departmentid = myemp.hrms_department_id.name
             alldata.jobstatus = myemp.job_status
             empstat = ''
             if myemp.emp_status:
@@ -70,7 +72,7 @@ class HrEmployementTracking(models.TransientModel):
                 empstat = myemp.emp_status
             alldata.employementstatus = empstat
             alldata.jobtitle = myemp.job_id.name
-            empgroup =myemp.employee_group1
+            empgroup =myemp.employee_group1s
             alldata.empgroup = empgroup
             mycari = self.env['hr.employment.log'].sudo().search([('employee_id', '=', int(myemp.id))])
             mydetails = self.env['hr.employment.trackingdetails']
@@ -85,7 +87,7 @@ class HrEmployementTracking(models.TransientModel):
                         'start_date': allcari.start_date,
                         'end_date': allcari.end_date,
                         'bisnis_unit': allcari.bisnis_unit.id,
-                        'department_id': allcari.department_id.id,
+                        'hrms_department_id': allcari.hrms_department_id.id,
                         'job_title': allcari.job_title,
                         'job_status': allcari.job_status,
                         'emp_status': allcari.emp_status})
@@ -108,7 +110,7 @@ class HrEmployementTracking(models.TransientModel):
                                                                              'start_date': allcari.start_date,
                                                                              'end_date': allcari.end_date,
                                                                              'bisnis_unit': allcari.bisnis_unit.id,
-                                                                             'department_id': allcari.department_id.id,
+                                                                             'hrms_department_id': allcari.hrms_department_id.id,
                                                                              'job_title': allcari.job_title,
                                                                              'job_status': allcari.job_status,
                                                                              'emp_status': allcari.emp_status})
@@ -135,10 +137,10 @@ class HrEmployementTrackingDetails(models.TransientModel):
     service_type = fields.Char('Service Type')
     start_date = fields.Date('Start Date')
     end_date = fields.Date('End date')
-    bisnis_unit = fields.Many2one('res.branch',string='BU')
-    department_id = fields.Many2one('hr.department',string='Dept')
+    bisnis_unit = fields.Many2one('res.branch',string='Unit Bisnis')
+    hrms_department_id = fields.Many2one('sanhrms.department', string='Departemen', tracking=True)
     sub_dept = fields.Many2one('hr.department',string='Sub Dept')
-    job_title = fields.Char('Job Title')
+    job_title = fields.Char('Jabatan')
     job_status = fields.Selection([('permanent', 'Karyawan Tetap (PKWTT)'),
                                    ('contract', 'Karyawan Kontrak (PKWT)'),
                                    ('partner_doctor', 'Dokter Mitra'),
@@ -147,7 +149,7 @@ class HrEmployementTrackingDetails(models.TransientModel):
     emp_status = fields.Selection([('probation','Probation'),
                                    ('confirmed','Confirmed'),
                                    ('resigned','Resigned'),
-                                   ('retired','Retired')],default='probation',string='Employement Status')
+                                   ('retired','Retired')],default='probation',string='Status Kekaryawanan')
 
     def unlink(self):
         return super(HrEmployementTrackingDetails, self).unlink()
@@ -163,6 +165,8 @@ class HrEmployementTrackingDetails(models.TransientModel):
                    for node in arch.xpath("//button"):
                           node.set('invisible', 'True')
         return arch, view
+    
+
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
     @api.model
@@ -176,8 +180,8 @@ class HrEmployee(models.Model):
               'employee_id':  myemp.id,
               'employee_name': myemp.name,
               'area': myemp.area.name,
-              'bisnis_unit': myemp.department_id.branch_id.name,
-              'departmetid': myemp.department_id.name,
+              'bisnis_unit': myemp.branch_id.name,
+              'departmetid': myemp.hrms_department_id.name,
               'jobstatus': myemp.job_status,
               'employementstatus':  myemp.emp_status,
               'jobtitle':  myemp.employee_levels.id,
