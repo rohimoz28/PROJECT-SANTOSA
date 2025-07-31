@@ -43,10 +43,10 @@
                 
                 
                 <xpath expr="//notebook" position="inside">
-                    <page string="Hutang Dokter">
+                    <page string="Hutang Dokter" invisible="not is_dokter_mitra and is_customer">
                         <group>
-                            <field name="transaction_tracking_ids" readonly="1">
-                                <tree delete="0" default_order="id asc">
+                            <field name="hd_tracking_ids" string="Hutang Dokter" readonly="1">
+                                <tree delete="0" create="0" default_order="id asc">
                                     <field name="transaction_date" string="Transaction Date" optional="hide"/>
                                     <field name="populate_date" string="Populate Date" optional="hide"/>
                                     <field name="account_move_id" string="Transaction Number" optional="show"/>
@@ -56,10 +56,11 @@
                                     <field name="transaction_class" string="Transaction Class" optional="hide"/>
                                     <field name="description" string="Description" optional="hide"/>
                                     <field name="beginning_balance" string="Beginning Balance" optional="show"/>
-                                    <field name="amount_debit" string="Amount Debit" optional="show"/>
-                                    <field name="amount_credit" string="Amount Credit" optional="show"/>
+                                    <field name="amount_debit" string="Debit" optional="show"/>
+                                    <field name="amount_credit" string="Credit" optional="show"/>
                                     <field name="ending_balance" string="Ending Balance" optional="show"/>
                                     <field name="journal_number" string="Journal Number" optional="hide"/>
+                                    <field name="flag" string="Flag" optional='hide'/>
                                     <button name="ambil_view" type="object" string="Detail" class="oe_highlight"/>
                                 </tree>
                             </field>
@@ -75,7 +76,7 @@
             <field name="res_model">res.partner</field>
             <field name="view_mode">tree,form</field>
             <!-- <field name="domain">[('is_dokter_mitra', '=', True)]</field> -->
-            <field name="context">{'default_is_dokter_mitra': 1, 'search_default_filter_dokter_mitra': 1}</field>
+            <field name="context">{'default_is_dokter_mitra': 1, 'search_default_filter_dokter_mitra': 1,'is_dokter_mitra': 1'}</field>
         </record>
 
         <!-- Menu item for Dokter Mitra -->

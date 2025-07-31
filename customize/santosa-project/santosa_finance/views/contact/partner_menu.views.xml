@@ -5,7 +5,7 @@
         <field name="res_model">res.partner</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('customer_rank', '>', 0)]</field>
-        <field name="context">{"default_is_customer": 1, "search_default_customer": 1, "res_partner_search_mode": "customer", "default_is_company": True, "default_customer_rank": 1, "group_by": ["tipe_customer"]}</field>
+        <field name="context">{"default_is_customer": 1, "search_default_customer": 1, "res_partner_search_mode": "customer", "default_is_company": True,"is_dokter_mitra": False, "default_customer_rank": 1, "group_by": ["tipe_customer"]}</field>
     </record>
 
     <!-- Action for Insurance -->
