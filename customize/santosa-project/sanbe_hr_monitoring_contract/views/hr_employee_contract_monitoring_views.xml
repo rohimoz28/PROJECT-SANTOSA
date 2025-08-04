@@ -9,7 +9,7 @@
             <tree default_order="territory_id,branch_id,time_limit,hrms_department_id,employee_id" 
                   create="false" edit="false" class="o_tree_table">
                 <field name="territory_id" string="Area" optional="show"/>
-                <field name="branch_id" string="Business Units" optional="show"/>
+                <field name="branch_id" string="Unit Bisnis" optional="show"/>
                 <field name="hrms_department_id" string="Departemen" optional="show"/>
                 <field name="employee_id" string="Employee" optional="show"/>
                 <field name="nik_employee" string="NIK" optional="show"/>
@@ -17,13 +17,13 @@
                 <field name="employee_address" string="Address" optional="show"/>
                 <field name="notice_days" string="Notice" optional="show"/>
                 <field name="date_end" string="End Date" optional="show"/>
-                <field name="rehire" optional="show"/>
-                <field name="time_limit" optional="show"/>
+                <field name="rehire" optional="hide"/>
+                <field name="time_limit" optional="hide"/>
             </tree>
         </field>
     </record>
 
-    <record id="view_hr_employee_contract_monitoring_filter" model="ir.ui.view">
+    <!-- <record id="view_hr_employee_contract_monitoring_filter" model="ir.ui.view">
         <field name="name">hr.employee.contract.monitoring.select</field>
         <field name="model">hr.employee.contract.monitoring</field>
         <field name="arch" type="xml">
@@ -39,7 +39,7 @@
                 <separator/>
             </search>
         </field>
-    </record>
+    </record> -->
 
 
     <!-- Action hr.employee.contract.monitoring -->
@@ -128,7 +128,7 @@
         </field>
     </record>
 
-    <!-- View hr.employee.contract.monitoring View Tree -->
+    <!-- Monitoring Contract View Tree -->
     <record id="view_hr_contract_monitoring_tree" model="ir.ui.view">
         <field name="name">view.contract.monitoring.tree</field>
         <field name="model">hr.contract.monitoring</field>
@@ -142,22 +142,22 @@
                     <button name="mail_send_mentor" type="object" string="Check Mentor" invisible="1" />
                 </header>
                 <field name="territory_id" string="Area" optional="show"/>
-                <field name="branch_id" string="Business Units" optional="show"/>
+                <field name="branch_id" string="Unit Bisnis" optional="show"/>
                 <field name="hrms_department_id" string="Departemen" optional="show"/>
-                <field name="employee_id" string="Employee" optional="show"/>
+                <field name="employee_id" string="Nama Karyawan" optional="show"/>
                 <field name="nik_employee" string="NIK" optional="show"/>
-                <field name="superior_id" string="Immediate Superior" optional="show"/>
-                <field name="mobile_phone" string="Phone" optional="show"/>
-                <field name="notice_days" string="Notice" optional="show"/>
-                <field name="date_end" string="End Date" optional="show"/>
-                <field name="rehire" optional="show"/>
-                <field name="is_done" optional="show"/>
+                <field name="superior_id" string="Atasan Langsung" optional="show"/>
+                <field name="date_start" optional="show"/>
+                <field name="date_end" optional="show"/>
+                <field name="state" optional="show"/>
+                <field name="rehire" optional="hide"/>
+                <field name="is_done" optional="hide"/>
             </tree>
         </field>
     </record>
 
 
-    <record id="view_hr_employee_contract_monitoring_filter" model="ir.ui.view">
+    <record id="view_contract_monitoring_filter" model="ir.ui.view">
         <field name="name">hr.contract.monitoring.select</field>
         <field name="model">hr.contract.monitoring</field>
         <field name="arch" type="xml">
@@ -165,13 +165,23 @@
                 <filter string="To Check" name="tocheck" domain="[('is_done','=','waiting')]" help="Plese Check Employee Contract."/>
                 <field name="employee_name" string="Name" filter_domain="['|','|','|','|',('employee_name','ilike',self),('nik_employee','ilike',self),('territory_name','ilike',self),('department_name','ilike',self),('branch_name','ilike',self)]"/>
                 <field name="territory_id" string="Area"/>
-                <field name="branch_id" string="Business Units"/>
+                <field name="branch_id" string="Unit Bisnis"/>
                 <field name="hrms_department_id" string="Departemen"/>
                 <separator/>
                 <filter string="Rehire" name="rehire" domain="[('rehire','=',True)]"/>
                 <filter string="Late" domain="[('date_end','&lt;',current_date),('is_done','=','waiting')]" name="late" help="Late Re-Newal Contract"/>
                 <filter string="Done" domain="[('is_done','!=','waiting')]" name="late" help="Contract was Porccess"/>
                 <separator/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_department"
+                            string="HRMS Departemen"
+                            domain="[]"
+                            context="{'group_by': 'hrms_department_id'}"/>
+                    <filter name="group_by_job"
+                            string="Jabatan"
+                            domain="[]"
+                            context="{'group_by': 'job_id'}"/>          
+                </group>
             </search>
         </field>
     </record>
@@ -184,6 +194,8 @@
         <field name="res_model">hr.contract.monitoring</field>
         <field name="view_mode">tree,form</field>
         <field name="context">{'search_default_tocheck': True}</field>
+        <field name="search_view_id" ref="view_contract_monitoring_filter" />
+        <field name="domain">[]</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 There is no examples click here to add new Hr Employee Contract Monitoring.

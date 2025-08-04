@@ -4,6 +4,9 @@ from odoo.exceptions import ValidationError
 from odoo.exceptions import UserError
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class HrContract(models.Model):
@@ -213,3 +216,45 @@ class HrContract(models.Model):
                 'branch_id' : self.env.user.branch_id.id or False
             })
         return res
+
+
+    @api.model
+    def _search(self, args, offset=0, limit=None, order=None, count=False):
+        
+        branch_ids_from_context = self.env.context.get('allowed_branch_ids')
+
+        # Jika allowed_branch_ids tersedia di konteks, gunakan untuk filter
+        if branch_ids_from_context:
+
+            # Jika daftar kosong (misalnya, tidak ada cabang yang dicentang), pastikan tidak ada record yang ditampilkan
+            if not branch_ids_from_context:
+                branch_ids_to_filter = [0] # Gunakan ID 0 atau ID yang pasti tidak ada
+                _logger.warning(f"[_search] allowed_branch_ids dari konteks kosong. Mengatur branch_ids_to_filter ke {branch_ids_to_filter}.")
+            else:
+                branch_ids_to_filter = branch_ids_from_context
+
+            # Tambahkan kondisi domain ke argumen pencarian awal yang digunakan untuk filter data yang ditampilkan
+            args = [('branch_id', 'in', branch_ids_to_filter)] + list(args)
+
+        else:
+            # Jika allowed_branch_ids tidak tersedia di konteks,
+            # maka fallback ke logika sebelumnya (filter berdasarkan allowed_company_ids)
+            # atau biarkan tanpa filter dinamis jika tidak ada allowed_company_ids.
+            allowed_company_ids = self.env.context.get('allowed_company_ids')
+
+            if allowed_company_ids:
+
+                company_branches = self.env['res.branch'].sudo().search([
+                    ('company_id', 'in', allowed_company_ids)
+                ])
+                branch_ids_from_switcher = company_branches.ids
+
+                if not branch_ids_from_switcher:
+                    branch_ids_from_switcher = [0]
+
+                args = [('branch_id', 'in', branch_ids_from_switcher)] + list(args)
+
+
+        # Setelah ini, record rule Anda (jika ada) akan diterapkan di atas hasil ini.
+        # method python lebih kuat dari record rule, bersifat dinamis dibandingkan record rule yang statis
+        return super(HrContract, self)._search(args, offset, limit, order, count)
