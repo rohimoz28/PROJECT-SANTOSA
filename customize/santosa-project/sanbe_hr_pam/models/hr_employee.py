@@ -8,16 +8,6 @@ class HrEmployee(models.Model):
     """Extended model for HR employees with additional features."""
     _inherit = 'hr.employee'
 
-    @api.depends('job_status')
-    def _get_domain_emp_status_id(self):
-        print("kedua")
-        for record in self:
-            if record.job_status == 'contract':
-                return [('id', '=', 1)]
-            elif record.job_status == 'permanent':
-                return [('id', 'in', [1, 2])]
-            else:
-                return []
 
     ptkp = fields.Selection(selection=[('TK0', "TK0"),
                                         ('TK1', "TK1"),
@@ -29,7 +19,7 @@ class HrEmployee(models.Model):
                                         ('K3', "K3"),],
                                     string="PTKP", default='TK0')
     exp_sim_no = fields.Date('License Expiration Date')
-    emp_status_id = fields.Many2one('hr.emp.status', string='Employment Status', domain=lambda self: self._get_domain_emp_status_id(), tracking=True)
+    emp_status_id = fields.Many2one('hr.emp.status', string='Employment Status', tracking=True)
     status = fields.Char(related='emp_status_id.status')
     allowance_ot_flat = fields.Boolean('OT Flat')
     allowance_ot1 = fields.Boolean('OT 1')
@@ -182,3 +172,15 @@ class HrEmployee(models.Model):
             mycontract.write({'employee_id': res.id})
         
         return res
+
+    
+    @api.depends('job_status')
+    def _get_domain_emp_status_id(self):
+        print("kedua")
+        for record in self:
+            if record.job_status == 'contract':
+                return [('id', '=', 1)]
+            elif record.job_status == 'permanent':
+                return [('id', 'in', [1, 2])]
+            else:
+                return []
