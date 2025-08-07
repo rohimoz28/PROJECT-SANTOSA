@@ -127,7 +127,7 @@ class HrEmployee(models.Model):
                                    ('contract', 'Karyawan Kontrak (PKWT)'),
                                    ('partner_doctor', 'Dokter Mitra'),
                                    ('visitor', 'Visitor'),
-                                   ], default='contract', tracking=True, string='Status Hubungan Kerja')
+                                   ], default='contract', tracking=True, string='Status Hubungan Kerja', required=True)
     emp_status = fields.Selection([('probation', 'Probation'),
                                    ('confirmed', 'Confirmed'),
                                    ('end_contract', 'End Of Contract'),
