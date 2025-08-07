@@ -73,7 +73,7 @@
             <field name="model_id" ref="model_hr_contract" />
             <field name="global" eval="True" />
             <field name="domain_force">
-                [('branch_id','=',user.branch_ids.ids)]
+                [('branch_id','in',user.branch_ids.ids)]
             </field>
             <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]" />
         </record>
