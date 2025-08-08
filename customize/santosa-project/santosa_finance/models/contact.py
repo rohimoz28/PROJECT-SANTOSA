@@ -36,7 +36,8 @@ class ResPartner(models.Model):
         ('Asuransi', 'Asuransi'),
         ('Umum', 'Umum'),
         ('Korporasi', 'Korporasi'),
-        ('Sanbe Group', 'Sanbe Group')
+        ('Sanbe Group', 'Sanbe Group'),
+        ('Jkn', 'Jaminan Kesehatan Nasional')
     ])
     is_customer = fields.Boolean(string="Is Customer", compute="_compute_is_customer", inverse="_set_is_customer", store=True)
     is_supplier = fields.Boolean(string="Is Vendor", compute="_compute_is_supplier", inverse="_set_is_supplier", store=True)
