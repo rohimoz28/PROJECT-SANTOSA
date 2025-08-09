@@ -35,7 +35,7 @@ class HrEmployementlog(models.Model):
     department_id = fields.Many2one('hr.department', string='Sub Department')
     hrms_department_id = fields.Many2one('sanhrms.department', string='Departemen')
     division_id = fields.Many2one('sanhrms.division', string='Divisi')
-    job_title = fields.Char('Job Title')
+    job_title = fields.Char(string='Jabatan')
     job_status = fields.Selection([('permanent', 'Karyawan Tetap (PKWTT)'),
                                    ('contract', 'Karyawan Kontrak (PKWT)'),
                                    ('partner_doctor', 'Dokter Mitra'),
@@ -50,13 +50,14 @@ class HrEmployementlog(models.Model):
                                    ('terminated', 'Terminated'),
                                    ('pass_away', 'Pass Away'),
                                    ('long_illness', 'Long Illness')], default='probation', string='Employement Status')
+    emp_status_id = fields.Many2one(comodel_name='hr.emp.status', string='Status Kekaryawanan', tracking=True)
     masa_jabatan = fields.Char('Masa Jabatan', compute='hitung_masa_jabatan', store=False)
     nik = fields.Char('NIK', compute='_get_nik')
-    employee_group1 = fields.Char(string="Employee P Group", compute='_get_nik')
+    employee_group1 = fields.Char(string="Group Penggajian", compute='_get_nik')
     model_name = fields.Char(string="Model Name")
     model_id = fields.Integer(string="Model Id")
-    trx_number = fields.Char(string="Transaction Number")
-    doc_number = fields.Char(string="Document Number")
+    trx_number = fields.Char(string="Nomor Transaksi")
+    doc_number = fields.Char(string="Nomor Dokumen")
     # end_contract = fields.Boolean(string="Flag End of Contract", default=False)
     end_contract = fields.Boolean(string="Rehire", default=False)
     label = fields.Char(default="Open View")
@@ -79,39 +80,53 @@ class HrEmployementlog(models.Model):
         for rec in self:
             if rec.employee_id:
                 rec.nik = rec.employee_id.nik
-                rec.employee_group1 = rec.employee_id.employee_group1
+                rec.employee_group1 = rec.employee_id.employee_group1s.name
+
+    # @api.depends('start_date', 'end_date')
+    # def hitung_masa_jabatan(self):
+    #     for record in self:
+    #         service_util = False
+    #         myear = 0
+    #         mmonth = 0
+    #         mday = 0
+    #         if record.employee_id.job_status == 'contract':
+    #             mycont = self.env['hr.contract'].sudo().search(
+    #                 [('employee_id', '=', record.employee_id.id), ('date_end', '<=', record.start_date)], limit=1)
+    #             if mycont:
+    #                 service_until = mycont.date_end
+    #                 if mycont.date_start and service_until > mycont.date_start:
+    #                     service_duration = relativedelta(
+    #                         service_until, mycont.date_start
+    #                     )
+    #                     myear = service_duration.years
+    #                     mmonth = service_duration.months
+    #                     mday = service_duration.days
+    #         else:
+    #             if record.start_date and record.end_date:
+    #                 service_until = record.end_date
+    #             else:
+    #                 service_until = fields.Date.today()
+    #             if record.start_date and service_until > record.start_date:
+    #                 service_duration = relativedelta(
+    #                     service_until, record.start_date
+    #                 )
+    #                 myear = service_duration.years
+    #                 mmonth = service_duration.months
+    #                 mday = service_duration.days
+    #         masajab = 'Year %s Month %s Days %s' % (myear, mmonth, mday)
+    #         record.masa_jabatan = masajab
 
     @api.depends('start_date', 'end_date')
     def hitung_masa_jabatan(self):
         for record in self:
-            service_util = False
             myear = 0
             mmonth = 0
             mday = 0
-            if record.employee_id.job_status == 'contract':
-                mycont = self.env['hr.contract'].sudo().search(
-                    [('employee_id', '=', record.employee_id.id), ('date_end', '<=', record.start_date)], limit=1)
-                if mycont:
-                    service_until = mycont.date_end
-                    if mycont.date_start and service_until > mycont.date_start:
-                        service_duration = relativedelta(
-                            service_until, mycont.date_start
-                        )
-                        myear = service_duration.years
-                        mmonth = service_duration.months
-                        mday = service_duration.days
-            else:
-                if record.start_date and record.end_date:
-                    service_until = record.end_date
-                else:
-                    service_until = fields.Date.today()
-                if record.start_date and service_until > record.start_date:
-                    service_duration = relativedelta(
-                        service_until, record.start_date
-                    )
-                    myear = service_duration.years
-                    mmonth = service_duration.months
-                    mday = service_duration.days
+            if record.start_date and record.end_date:
+                service_duration = relativedelta(record.end_date, record.start_date)
+                myear = service_duration.years
+                mmonth = service_duration.months
+                mday = service_duration.days
             masajab = 'Year %s Month %s Days %s' % (myear, mmonth, mday)
             record.masa_jabatan = masajab
 

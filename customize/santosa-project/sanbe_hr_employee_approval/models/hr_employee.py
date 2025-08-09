@@ -73,9 +73,12 @@ class HrEmployee(models.Model):
         datalog = {'employee_id': self.id,
                    'service_type': 'NEWS',
                    'start_date': self.join_date,
+                   'area': self.area.id,
                    'end_date': False,
                    'bisnis_unit': self.branch_id.id,
-                   'department_id': self.department_id.id,
+                   'directorate_id': self.directorate_id.id,
+                   'hrms_department_id': self.hrms_department_id.id,
+                   'division_id': self.division_id.id,
                    'job_title': self.job_id.name,
                    'job_status': self.job_status,
                    'emp_status': self.emp_status}

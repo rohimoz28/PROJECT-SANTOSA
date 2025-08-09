@@ -6,20 +6,19 @@
             <field name="name">hr.employment.log.tree</field>
             <field name="model">hr.employment.log</field>
             <field name="arch" type="xml">
-                <tree string="HR Mutation" edit="0" create="0" delete="0">
+                <tree string="HR Mutation" edit="0" create="0" delete="0" class="o_tree_table">
                     <field name="service_type" string="Tipe Transaksi" optional="show"/>
                     <field name="start_date" string="Tanggal Mulai" optional="show"/>
                     <field name="end_date" string="Tanggal Akhir" optional="show"/>
                     <field name="area" optional="show"/>
                     <field name="bisnis_unit" string="Unit Bisnis" optional="show"/>
                     <field name="directorate_id" optional="show"/>
-                    <!-- <field name="department_id" string="Sub Departemen" optional="show"/> -->
                     <field name="hrms_department_id" optional="show"/>
                     <field name="division_id" optional="show"/>
                     <field name="nik" optional="show"/>
                     <field name="job_title" optional="show"/>
                     <field name="job_status" optional="show"/>
-                    <field name="emp_status" optional="show"/>
+                    <field name="emp_status_id" optional="show"/>
                     <field name="masa_jabatan" optional="show"/>
                     <field name="employee_group1" optional="show"/>
                     <field name="trx_number" optional="show"/>
