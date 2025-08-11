@@ -47,15 +47,14 @@ class HrContract(models.Model):
         domain="[('state','not in',['hold']),('job_status','=','contract')]", 
         index=True
     )                 
-    division_id = fields.Many2one('sanhrms.division',string='Divisi', related='employee_id.division_id')
-    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', related='employee_id.directorate_id')
-    employee_group1s = fields.Many2one('emp.group',
-                                       string='Employee P Group', related='employee_id.employee_group1s')
-    work_unit_id = fields.Many2one('hr.work.unit','Work Unit', related='employee_id.work_unit_id')
-    medic = fields.Many2one('hr.profesion.medic','Profesi Medis', related='employee_id.medic')
-    nurse = fields.Many2one('hr.profesion.nurse','Profesi Perawat', related='employee_id.nurse')
-    job_id = fields.Many2one('hr.job','Jabatan', related='employee_id.job_id', readonly=True)
-    seciality = fields.Many2one('hr.profesion.special','Kategori Khusus', related='employee_id.seciality')
+    division_id = fields.Many2one('sanhrms.division',string='Divisi', related='employee_id.division_id', store=True)
+    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', related='employee_id.directorate_id', store=True)
+    employee_group1s = fields.Many2one('emp.group', string='Employee P Group', related='employee_id.employee_group1s', store=True)
+    work_unit_id = fields.Many2one('hr.work.unit','Work Unit', related='employee_id.work_unit_id', store=True)
+    medic = fields.Many2one('hr.profesion.medic','Profesi Medis', related='employee_id.medic', store=True)
+    nurse = fields.Many2one('hr.profesion.nurse','Profesi Perawat', related='employee_id.nurse', store=True)
+    job_id = fields.Many2one('hr.job','Jabatan', related='employee_id.job_id', readonly=True, store=True)
+    seciality = fields.Many2one('hr.profesion.special','Kategori Khusus', related='employee_id.seciality', store=True)
     
     department_id = fields.Many2one('hr.department', compute = '_find_department_id',  string='Departemen', store=True, related='employee_id.department_id')
     hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen', related='employee_id.hrms_department_id', store=True)
@@ -139,16 +138,16 @@ class HrContract(models.Model):
     def _compute_employee_contract(self):
         for contract in self.filtered('employee_id'):
             contract.job_id = contract.employee_id.job_id
-            contract.depart_id = contract.employee_id.department_id
             contract.resource_calendar_id = contract.employee_id.resource_calendar_id
             contract.company_id = contract.employee_id.company_id
             contract.area = contract.employee_id.area.id
             contract.branch_id = contract.employee_id.branch_id.id
+            contract.hrms_department_id = contract.employee_id.hrms_department_id.id
             contract.nik = contract.employee_id.nik
             contract.nik_lama = contract.employee_id.nik_lama
 
     def write(self,vals_list):
-        res = super(HrContract,self).write(vals_list)
+        # res = super(HrContract,self).write(vals_list)
         for allrec in self:
             if allrec.state =='open':
                 # if allrec.employee_id.state !='approved':
@@ -158,14 +157,24 @@ class HrContract(models.Model):
                 allrec.employee_id.contract_id = allrec.id
                 allrec.employee_id.contract_datefrom = allrec.date_start
                 allrec.employee_id.contract_dateto = allrec.date_end
-                mycari = self.env['hr.employment.log'].sudo().search([('employee_id','=',allrec.employee_id.id),('job_status','=','contract'),('service_type','=', allrec.contract_type_id.code),('start_date','=',allrec.date_start),('end_date','=', allrec.date_end)])
-                if not mycari:
+                mycari = self.env['hr.employment.log'].sudo().search([
+                    ('employee_id','=',allrec.employee_id.id),
+                    ('job_status','=','contract'),
+                    ('service_type','=', allrec.contract_type_id.code),
+                    ('start_date','=',allrec.date_start),
+                    ('end_date','=', allrec.date_end)
+                    ])
+              
+                if not mycari:   
                     self.env['hr.employment.log'].sudo().create({'employee_id': allrec.employee_id.id,
                                                                  'service_type': allrec.contract_type_id.code,
                                                                  'start_date': allrec.date_start,
                                                                  'end_date': allrec.date_end,
+                                                                 'area': allrec.area.id,
                                                                  'bisnis_unit': allrec.branch_id.id,
-                                                                 'department_id': allrec.depart_id.id,
+                                                                 'directorate_id': allrec.directorate_id.id,
+                                                                 'hrms_department_id': allrec.hrms_department_id.id,
+                                                                 'division_id': allrec.division_id.id,
                                                                  'job_title': allrec.job_id.name,
                                                                  'job_status': 'contract',
                                                                  'emp_status': empstatus,
@@ -173,6 +182,8 @@ class HrContract(models.Model):
                                                                  'model_id': allrec.id,
                                                                  'doc_number': allrec.name,
                                                                  })
+                  
+        return super(HrContract, self).write(vals_list)         
 
 
     @api.depends("date_start","date_end")
