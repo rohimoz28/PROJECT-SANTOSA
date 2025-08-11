@@ -67,13 +67,13 @@
                 <xpath expr="//field[@name='structure_type_id']" position="before">
                         <field name="sallary_amount"/>
                         <field name="nilai_pa" force_save="1" />
-                        <field name="area" options="{'no_create': True,'no_create_edit': True}" required="1"/>
-                        <field name="branch_ids" invisible="1" />
+                        <field name="area" options="{'no_create': True,'no_create_edit': True}" required="1" readonly="1" force_save="1"/>
+                        <field name="branch_ids" invisible="1" readonly="1"/>
                         <field name="alldepartment" invisible="1" />
-                        <field name="branch_id" options="{'no_create': True,'no_create_edit': True}" string = "Unit Bisnis"/>
-                        <field name="directorate_id" options="{'no_create': True,'no_create_edit': True}" string = "Direktorat"/>
+                        <field name="branch_id" options="{'no_create': True,'no_create_edit': True}" string = "Unit Bisnis" readonly="1" force_save="1"/>
+                        <field name="directorate_id" options="{'no_create': True,'no_create_edit': True}" string = "Direktorat" force_save="1"/>
                         <field name="hrms_department_id" options="{'no_create': True,'no_create_edit': True}" string = "Departemen" force_save="1"/>
-                        <field name="division_id" options="{'no_create': True,'no_create_edit': True}" string = "Divisi"/>
+                        <field name="division_id" options="{'no_create': True,'no_create_edit': True}" string = "Divisi" force_save="1"/>
                         <field name="work_unit_id" options="{'no_create': True,'no_create_edit': True}" string = "Unit Kerja"/>
                         <field name="job_id" options="{'no_create': True,'no_create_edit': True}" string = "Jabatan" readonly="1" />
                         <label for="ws_day" string="Periode Kontrak"
@@ -208,6 +208,9 @@
             <field name="model">hr.contract</field>
             <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='contract_type_id']" position="attributes">
+                    <attribute name="domain">[('is_active', '=', True)]</attribute>
+                </xpath>
                 <xpath expr="//field[@name='structure_type_id']" position="attributes">
                     <attribute name="required">0</attribute>
                      <attribute name="invisible">1</attribute>
@@ -217,8 +220,7 @@
                     <field name="nik_lama"/>
                 </xpath>
                 <xpath expr="//field[@name='employee_id']" position="replace">
-                    <field name="employee_id" 
-                           options="{'no_create': True,'no_create_edit': True}"/>
+                    <field name="employee_id" options="{'no_create': True,'no_create_edit': True}"/>
                 </xpath>
                 <xpath expr="//field[@name='name']" position="attributes">
                     <attribute name="readonly">state in ['open','close']</attribute>

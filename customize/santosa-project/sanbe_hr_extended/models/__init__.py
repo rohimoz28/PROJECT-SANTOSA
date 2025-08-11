@@ -21,3 +21,4 @@ from . import hr_service_contract
 from . import hr_sip
 from . import mst_group_unit
 from . import hr_pension_monitoring
+from . import hr_contract_type
