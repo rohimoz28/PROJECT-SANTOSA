@@ -44,10 +44,7 @@ class HrContract(models.Model):
         string='Nama Karyawan', 
         required=True, 
         tracking=True, 
-        domain=lambda self: [
-            ('state', 'not in', ['hold']),
-            ('job_status', 'in', ['contract', 'partner_doctor']),
-        ], 
+        domain="[('state','not in',['hold']),('job_status','=','contract')]", 
         index=True
     )                 
     division_id = fields.Many2one('sanhrms.division',string='Divisi', related='employee_id.division_id', store=True)
