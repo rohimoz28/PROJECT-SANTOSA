@@ -215,13 +215,13 @@ class HRTmsOpenClose(models.Model):
             if len(employee_group) > 1:
                 raise UserError('Ensure all employee groups have been approved.')
 
-            try:
-                self.env.cr.execute("CALL calculate_tms(%s, %s, %s)", (period_id, area_id.id, branch_id.id))
-                self.env.cr.commit()
-                _logger.info("Stored procedure executed successfully for period_id: %s", period_id)
-            except Exception as e:
-                _logger.error("Error calling stored procedure: %s", str(e))
-                raise UserError("Error executing the function: %s" % str(e))
+            # try:
+            #     self.env.cr.execute("CALL calculate_tms(%s, %s, %s)", (period_id, area_id.id, branch_id.id))
+            #     self.env.cr.commit()
+            #     _logger.info("Stored procedure executed successfully for period_id: %s", period_id)
+            # except Exception as e:
+            #     _logger.error("Error calling stored procedure: %s", str(e))
+            #     raise UserError("Error executing the function: %s" % str(e))
 
             data.isopen = True
             data.state_process = "running"
