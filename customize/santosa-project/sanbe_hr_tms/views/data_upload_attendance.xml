@@ -20,7 +20,9 @@
                                 <field name="date_to" readonly="1"/-->
                                 <field name="area_id" options="{'no_create': True,'no_create_edit': True}" readonly="1"/>
                                 <field name="branch_id" options="{'no_create': True,'no_create_edit': True}" readonly="1"/>
-                                <field name="department_id" readonly="1"/>
+                                <field name="directorate_id" readonly="1"/>
+                                <field name="hrms_department_id" readonly="1"/>
+                                <field name="division_id" readonly="1"/>
                                 <field name="nik" readonly="1"/>
                                 <!--field name="user_id" options="{'no_create': True,'no_create_edit': True}" readonly="1"/-->
                             </group>
@@ -51,7 +53,9 @@
                     <field name="tgl" widget="date" readonly="1"/>
                     <field name="area_id" options="{'no_create': True,'no_create_edit': True}" readonly="1"/>
                     <field name="branch_id" options="{'no_create': True,'no_create_edit': True}" readonly="1"/>
-                    <field name="department_id" readonly="1"/>
+                    <field name="directorate_id" readonly="1"/>
+                    <field name="hrms_department_id" readonly="1"/>
+                    <field name="division_id" readonly="1"/>
                     <field name="nik" readonly="1"/>
                     <!--field name="user_id" options="{'no_create': True,'no_create_edit': True}" readonly="1"/-->
                     <field name="tgl_masuk" readonly="1"/>
@@ -87,7 +91,9 @@
                     <field name="tgl"/>
                     <field name="area_id"/>
                     <field name="branch_id"/>
-                    <field name="department_id"/>
+                    <field name="directorate_id"/>
+                    <field name="hrms_department_id"/>
+                    <field name="division_id"/>
                     <field name="nik"/>
                     <field name="tgl_masuk"/>
                     <field name="time_in"/>

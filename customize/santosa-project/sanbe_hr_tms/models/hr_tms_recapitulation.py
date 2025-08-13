@@ -32,6 +32,11 @@ class HRRecapitulation(models.Model):
     tms_to = fields.Date(string='To')
     tms_status = fields.Selection([('all','ALL')], string='Status')
     department_id = fields.Many2one('hr.department', string='Department')
+    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', related='employee_id.directorate_id', store=True)
+    division_id = fields.Many2one('sanhrms.division',string='Divisi', related='employee_id.division_id', store=True)
+    hrms_department_id = fields.Many2one('sanhrms.department',
+                                         string='Departemen', 
+                                         related='employee_id.hrms_department_id', store=True)
     employee_id = fields.Many2one('hr.employee', string='Employee No')
     job_id = fields.Many2one('hr.job', string='Job Title')
     recap_ids = fields.One2many('hr.tms.recapdetails', 'recap_id', auto_join=True, string='Recapitulation Details')

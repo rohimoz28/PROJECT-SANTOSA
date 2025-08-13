@@ -62,6 +62,11 @@ class HREmpOvertimeRequest(models.Model):
     branch_id = fields.Many2one('res.branch', string='Business Unit', index=True, domain="[('id','in',branch_ids)]")
     alldepartment = fields.Many2many('hr.department','hr_department_plan_ot_rel', string='All Department',compute='_isi_department_branch',store=False)
     department_id = fields.Many2one('hr.department',domain="[('id','in',alldepartment)]",string='Sub Department')
+    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', related='employee_id.directorate_id', store=True)
+    division_id = fields.Many2one('sanhrms.division',string='Divisi', related='employee_id.division_id', store=True)
+    hrms_department_id = fields.Many2one('sanhrms.department',
+                                         string='Departemen', 
+                                         related='employee_id.hrms_department_id', store=True)
     periode_from = fields.Date('Period From',default=_get_active_periode_from)
     periode_to = fields.Date('Period To',default=_get_active_periode_to)
     approve1 = fields.Boolean('Supervisor Department',default=False)

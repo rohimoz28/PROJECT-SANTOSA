@@ -40,6 +40,10 @@ class HrTMSTransferToPayroll(models.TransientModel):
                                   store=False)
     branch_id = fields.Many2one('res.branch',string='Business Unit',index=True,domain="[('id','in',branch_ids)]")
     department_id = fields.Many2one('hr.department',string='Sub Department')
+    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat',  store=True)
+    division_id = fields.Many2one('sanhrms.division',string='Divisi',  store=True)
+    hrms_department_id = fields.Many2one('sanhrms.department',
+                                         string='Departemen', store=True)
     periode_from  = fields.Date('Periode From',default=_get_active_periode_from)
     periode_to = fields.Date('Periode To',default=_get_active_periode_to)
 

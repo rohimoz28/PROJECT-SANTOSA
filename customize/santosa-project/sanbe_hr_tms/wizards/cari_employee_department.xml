@@ -13,7 +13,10 @@
                                 <field name="wdcode_ids" options="{'no_edit': True, 'no_create': True, 'no_open': True}" invisible="1"/>
                                 <field name="branch_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" readonly="1"/>
                                 <field name="alldepartment" options="{'no_edit': True, 'no_create': True, 'no_open': True}" invisible="1"/>
-                                <field name="department_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
+                                <field name="department_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" invisible="1" />
+                                <field name="directorate_id" no_close="1" domain="[('branch_id', '=', branch_id)]" readonly="0" options="{'no_create': True, 'no_close': True}"/>
+                                <field name="hrms_department_id" no_close="1" domain="['|',('directorate_id', '=', directorate_id),('directorate_id', '=', False)]" readonly="0" options="{'no_create': True, 'no_close': True}"/>
+                                <field name="division_id" no_close="1" domain="['|',('department_id', '=', hrms_department_id),('department_id', '=', False)]" readonly="0" options="{'no_create': True, 'no_close': True}"/>
                                 <field name="empgroup_id" invisible="1"/>
                             </group>
                             <group col="3" id="planning">
@@ -51,9 +54,12 @@
                                     <tree editable="bottom">
                                             <field name="cari_id" column_invisible="1"/>
                                             <field name="employee_id"/>
-                                             <field name="department_id"/>
-                                             <field name="nik"/>
-                                             <field name="job_id"/>
+                                            <field name="directorate_id" />
+                                            <field name="hrms_department_id" />
+                                            <field name="division_id"/>
+                                            <field name="department_id" column_invisible="1"/>
+                                            <field name="nik"/>
+                                            <field name="job_id"/>
                                             <field name="is_selected"/>
                                     </tree>
                                 </field>

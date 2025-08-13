@@ -10,7 +10,11 @@
             <form string="Rekap Overtime Attendance" options="{'no_close': True}">
                 <sheet>
                     <group>
-                        <field name="department_id" no_close="1" readonly="0" options="{'no_create': True, 'no_close': True}"/>
+                        <field name="branch_id" invisible="1" />
+                        <field name="department_id" no_close="1" readonly="0" options="{'no_create': True, 'no_close': True}" invisible="1" />
+                        <field name="directorate_id" no_close="1" domain="[('branch_id', '=', branch_id)]" readonly="0" options="{'no_create': True, 'no_close': True}"/>
+                        <field name="hrms_department_id" no_close="1" domain="['|',('directorate_id', '=', directorate_id),('directorate_id', '=', False)]" readonly="0" options="{'no_create': True, 'no_close': True}"/>
+                        <field name="division_id" no_close="1" domain="['|',('department_id', '=', hrms_department_id),('department_id', '=', False)]" readonly="0" options="{'no_create': True, 'no_close': True}"/>
                         <field name="start_date"/>
                         <field name="end_date"/>
                     </group>

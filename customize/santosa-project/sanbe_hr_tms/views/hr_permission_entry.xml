@@ -20,7 +20,9 @@
                                 <field name="branch_ids" invisible="1" />
                                 <field name="branch_id" readonly="permission_status != 'draft'" options="{'no_edit': True, 'no_create': True, 'no_open': True}" required="True" />
                                 <field name="alldepartment" invisible="1"/>
-                                <field name="department_id" readonly="1" force_save="1" options="{'no_edit': True, 'no_create': True, 'no_open': True}" required="employee_id !=False"/>
+                                <field name="directorate_id" readonly="1" force_save="1" options="{'no_edit': True, 'no_create': True, 'no_open': True}" required="employee_id !=False"/>
+                                <field name="hrms_department_id" readonly="1" force_save="1" options="{'no_edit': True, 'no_create': True, 'no_open': True}" required="employee_id !=False"/>
+                                <field name="division_id" readonly="1" force_save="1" options="{'no_edit': True, 'no_create': True, 'no_open': True}" required="employee_id !=False"/>
                                 <field name="job_id" readonly="1" force_save="1" options="{'no_edit': True, 'no_create': True, 'no_open': True}" required="employee_id != False"/>
                                 <field name="handled_temp_to" readonly="permission_status != 'draft'" />
                                 <field name="remarks" readonly="permission_status != 'draft'" />

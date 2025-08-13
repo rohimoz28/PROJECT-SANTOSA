@@ -33,7 +33,9 @@
                     <field name="period_id"/>
                     <field name="area_id"/>
                     <field name="branch_id"/>
-                    <field name="department_id"/>
+                    <field name="directorate_id" string="Direktorat"/>
+                    <field name="hrms_department_id" string="Department"/>
+                    <field name="division_id" string="Divisi"/>
                 </tree>
             </field>
         </record>
@@ -48,8 +50,12 @@
                     <!-- <field name="nik" string="NIK"/> -->
                     <filter string="Business Unit" name="branch_id"
                             context="{'group_by':'branch_id'}"/>
-                    <filter string="Department" name="department_id"
-                            context="{'group_by':'department_id'}"/>
+                    <filter string="Direktorat" name="directorate_id"
+                            context="{'group_by':'directorate_id'}"/>
+                    <filter string="Department" name="hrms_department_id" 
+                            context="{'group_by':'hrms_department_id'}"/>
+                    <filter string="Divisi" name="division_id" 
+                            context="{'group_by':'division_id'}"/>
                     <!-- <filter string="Employee" name="employee_id" -->
                     <!--         context="{'group_by':'employee_id'}"/> -->
                 </search>

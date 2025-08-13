@@ -30,6 +30,12 @@ class HrListEmployeeSchedule(models.TransientModel):
     department_id = fields.Many2one('hr.department',domain="[('id','in',alldepartment)]")
     employee_id = fields.Many2one('hr.employee',string='Employee ID',default='New')
     employee_list = fields.One2many('hr.employeelist.schedule_details','hr_list_id',auto_join=True,string='Employee List')
+    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', related='employee_id.directorate_id', store=True)
+    division_id = fields.Many2one('sanhrms.division',string='Divisi', related='employee_id.division_id', store=True)
+    hrms_department_id = fields.Many2one('sanhrms.department',
+                                         string='Departemen', 
+                                         related='employee_id.hrms_department_id', store=True)
+    
 
 class HrListEmployeeScheduleDetails(models.TransientModel):
     _name = 'hr.employeelist.schedule_details'
@@ -37,6 +43,11 @@ class HrListEmployeeScheduleDetails(models.TransientModel):
 
     hr_list_id = fields.Many2one('hr.employeelist.schedule',string='Employee List Id',index=True)
     department_id = fields.Many2one('hr.department',string='Department',index=True)
+    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', related='employee_id.directorate_id', store=True)
+    division_id = fields.Many2one('sanhrms.division',string='Divisi', related='employee_id.division_id', store=True)
+    hrms_department_id = fields.Many2one('sanhrms.department',
+                                         string='Departemen', 
+                                         related='employee_id.hrms_department_id', store=True)
     nik = fields.Char('NIK')
     employee_id = fields.Many2one('hr.employee',string='Employee',index=True)
     job_id  = fields.Many2one('hr.job',string='Job Position',index=True)

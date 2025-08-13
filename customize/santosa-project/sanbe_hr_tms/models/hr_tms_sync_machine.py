@@ -109,6 +109,11 @@ class HRTMSSyncMachine(models.TransientModel):
     date_from = fields.Date(string='Date From',readonly="state == 'done'",related='periode_id.open_periode_from')
     date_to  = fields.Date(string='To',related='periode_id.open_periode_to')
     department_id = fields.Many2one('hr.department', string='Sub Department')
+    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', related='employee_id.directorate_id', store=True)
+    division_id = fields.Many2one('sanhrms.division',string='Divisi', related='employee_id.division_id', store=True)
+    hrms_department_id = fields.Many2one('sanhrms.department',
+                                         string='Departemen', 
+                                         related='employee_id.hrms_department_id', store=True)
     employee_id = fields.Many2one('hr.employee', string='Employee')
 
     area_id = fields.Many2one('res.territory', string='Area ID', index=True)
@@ -626,6 +631,11 @@ class DataTblUploadanAttendance(models.Model):
     area_id = fields.Many2one('res.territory',string='Area')
     branch_id = fields.Many2one('res.branch',string='Business Unit')
     department_id = fields.Many2one('hr.department',string='Sub Department')
+    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', related='employee_id.directorate_id', store=True)
+    division_id = fields.Many2one('sanhrms.division',string='Divisi', related='employee_id.division_id', store=True)
+    hrms_department_id = fields.Many2one('sanhrms.department',
+                                         string='Departemen', 
+                                         related='employee_id.hrms_department_id', store=True)
     tgl = fields.Date('Tgl Data')
     user_id = fields.Many2one('res.users',string='User')
     time_in = fields.Float('Time In')

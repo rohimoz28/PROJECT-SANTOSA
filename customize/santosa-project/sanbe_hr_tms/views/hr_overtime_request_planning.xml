@@ -37,7 +37,14 @@
                             <field name="branch_id"
                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
                                    readonly="state == 'approved' or state == 'done'" />
-                            <field name="department_id"
+                            <field name="department_id" invisible="1"/>
+                            <field name="directorate_id"
+                                   options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
+                                   readonly="state == 'approved' or state == 'done'"/>
+                            <field name="hrms_department_id"
+                                   options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
+                                   readonly="state == 'approved' or state == 'done'"/>
+                            <field name="division_id"
                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
                                    readonly="state == 'approved' or state == 'done'"/>
                             <field name="approve1" readonly="state == 'done'"/>

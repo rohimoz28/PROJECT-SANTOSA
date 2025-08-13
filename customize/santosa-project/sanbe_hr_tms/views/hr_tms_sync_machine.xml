@@ -50,8 +50,9 @@
                                 <field name="area_id" readonly="state == 'done'" required="transfer_from != 'import_file'" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" invisible="transfer_from == 'import_file'"/>
                                 <field name="branch_ids" invisible="1" />
                                 <field name="branch_id" required="transfer_from != 'import_file'" readonly="state == 'done'" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" invisible="transfer_from == 'import_file'"/>
-                                <field name="department_id"
-                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" required="employee_id == False and transfer_from != 'import_file'" invisible="transfer_from == 'import_file'" readonly="state == 'done'"/>
+                                <field name="directorate_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" required="employee_id == False and transfer_from != 'import_file'" invisible="transfer_from == 'import_file'" readonly="state == 'done'"/>
+                                <field name="hrms_department_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" required="employee_id == False and transfer_from != 'import_file'" invisible="transfer_from == 'import_file'" readonly="state == 'done'"/>
+                                <field name="division_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" required="employee_id == False and transfer_from != 'import_file'" invisible="transfer_from == 'import_file'" readonly="state == 'done'"/>
                                 <field name="employee_id"
                                     options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" requried="department_id == False and transfer_from != 'import_file'" invisible="transfer_from == 'import_file'" readonly="state == 'done'"/>
                             </group>
@@ -85,7 +86,9 @@
                     <field name="machine_tos" />
                     <field name="date_from" />
                     <field name="date_to" />
-                    <field name="department_id" />
+                    <field name="directorate_id" />
+                    <field name="hrms_department_id" />
+                    <field name="division_id" />
                     <field name="employee_id" />
                 </tree>
             </field>

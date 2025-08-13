@@ -26,3 +26,9 @@ class StgTransformAbsent (models.Model):
     terminal = fields.Char('Terminal')
     status = fields.Char('Status')
     employee_id = fields.Many2one('hr.employee', string='Employee')
+    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', related='employee_id.directorate_id', store=True)
+    division_id = fields.Many2one('sanhrms.division',string='Divisi', related='employee_id.division_id', store=True)
+    hrms_department_id = fields.Many2one('sanhrms.department',
+                                         string='Departemen', 
+                                         related='employee_id.hrms_department_id', store=True)
+    

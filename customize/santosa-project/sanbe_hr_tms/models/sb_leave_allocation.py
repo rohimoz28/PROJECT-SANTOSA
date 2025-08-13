@@ -18,7 +18,12 @@ class SbLeaveAllocation(models.Model):
     date = fields.Date(string='Date', tracking=True, default=datetime.today(), required=True)
     remarks = fields.Char(string='Remarks', tracking=True)
     description = fields.Text(string='Description', tracking=True)
-
+    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', related='employee_id.directorate_id', store=True)
+    division_id = fields.Many2one('sanhrms.division',string='Divisi', related='employee_id.division_id', store=True)
+    hrms_department_id = fields.Many2one('sanhrms.department',
+                                         string='Departemen', 
+                                         related='employee_id.hrms_department_id', store=True)
+    
     @api.onchange('employee_id',)
     def get_employee_data(self):
         for rec in self:

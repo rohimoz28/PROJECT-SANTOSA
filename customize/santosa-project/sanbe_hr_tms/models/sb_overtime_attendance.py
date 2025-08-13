@@ -36,6 +36,11 @@ class SbOvertimeAttendance(models.Model):
     area_id = fields.Many2one('res.territory', string='Area ID', index=True)
     branch_id = fields.Many2one('res.branch', string='Bisnis Unit', index=True, domain="[('id','in',branch_ids)]")
     department_id = fields.Many2one('hr.department', domain="[('id','in',alldepartment)]", string='Sub Department', index=True)
+    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat',  store=True)
+    division_id = fields.Many2one('sanhrms.division',string='Divisi', store=True)
+    hrms_department_id = fields.Many2one('sanhrms.department',
+                                         string='Departemen', store=True)
+    
     periode_id = fields.Many2one('hr.opening.closing',string='Period',index=True)
     state = fields.Char(
         string='State',

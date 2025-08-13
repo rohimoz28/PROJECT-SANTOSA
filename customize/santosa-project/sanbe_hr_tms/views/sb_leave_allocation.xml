@@ -13,7 +13,9 @@
                             <field name="date"/>
                             <field name="area_id"/>
                             <field name="branch_id"/>
-                            <field name="department_id"/>
+                            <field name="directorate_id" string="Direktorat"/>
+                            <field name="hrms_department_id" string="Department"/>
+                            <field name="division_id"  string="Divisi"/>
                             <field name="job_id"/>
                             <field name="leave_allocation"/>
                             <field name="leave_used"/>
@@ -35,7 +37,9 @@
                     <field name="date"/>
                     <field name="area_id"/>
                     <field name="branch_id"/>
-                    <field name="department_id"/>
+                    <field name="directorate_id" string="Direktorat"/>
+                    <field name="hrms_department_id" string="Department"/>
+                    <field name="division_id" string="Divisi"/>
                     <field name="job_id"/>
                     <field name="leave_allocation"/>
                     <field name="leave_used"/>

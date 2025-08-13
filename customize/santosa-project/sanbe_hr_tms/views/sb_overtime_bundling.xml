@@ -7,7 +7,9 @@
             <field name="arch" type="xml">
                 <tree string="Overtime Bundling" create="0">
                     <field name="branch_id" optional="show" string="Business Unit"/>
-                    <field name="department_id" optional="show" string="Sub Department"/>
+                    <field name="directorate_id" optional="show" string="Direktorat"/>
+                    <field name="hrms_department_id" optional="show" string="Department"/>
+                    <field name="division_id" optional="show" string="Divisi"/>
                     <field name="no_request" optional="show" string="Request Number"/>
                     <field name="req_date" optional="show"/>
                     <field name="employee_id" optional="show" string="Employee Name"/>
@@ -34,8 +36,12 @@
                 <search string="Overtime Bundling">
                     <filter string="Business Unit" name="branch_id"
                             context="{'group_by':'branch_id'}"/>
-                    <filter string="Department" name="department_id"
-                            context="{'group_by':'department_id'}"/>
+                    <filter string="Direktorat" name="directorate_id"
+                            context="{'group_by':'directorate_id'}"/>
+                    <filter string="Department" name="hrms_department_id" 
+                            context="{'group_by':'hrms_department_id'}"/>
+                    <filter string="Divisi" name="division_id" 
+                            context="{'group_by':'division_id'}"/>
                 </search>
             </field>
         </record>

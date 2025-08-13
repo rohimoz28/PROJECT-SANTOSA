@@ -23,7 +23,7 @@
     'depends': [
         'base', 'hr_holidays', 'sanbe_hr_employee_mutation', 'hr_attendance', 'hr_holidays_attendance',
         'base_territory', 'project', 'sale', 'purchase', 'stock', 'account', 'event', 'field_timepicker',
-        'report_xlsx', 'sanbe_hr_dashboard'
+        'report_xlsx', 'sanbe_hr_dashboard','sanbe_hr_extended'
     ],
     'data': [
         'data/ir_cron_data.xml',

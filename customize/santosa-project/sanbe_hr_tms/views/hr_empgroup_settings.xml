@@ -35,7 +35,12 @@
                                        readonly="state == 'approved' or state == 'close'"/>
                                 <!--field name="periode_id" required="1"/-->
                                 <field name="alldepartment" invisible="1"/>
-                                <field name="department_id" readonly="state == 'approved' or state == 'close'"
+                                <field name="department_id" invisible="1"/>
+                                <field name="directorate_id" readonly="state == 'approved' or state == 'close'"
+                                       options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"/>
+                                <field name="hrms_department_id" readonly="state == 'approved' or state == 'close'"
+                                       options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"/>
+                                <field name="division_id" readonly="state == 'approved' or state == 'close'"
                                        options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"/>
                             </group>
                                 <group>
@@ -79,7 +84,7 @@
                         <notebook>
                             <page string="Employee List" name="empgroup_list">
                                 <field name="empgroup_ids" required="1" readonly="state == 'approved' or state == 'close'">
-                                    <tree editable="bottom" widget='one2many_delete' context="{'default_area_id': area_id,'default_branch_id': branch_id,'default_department_id': department_id}">
+                                    <tree editable="bottom" widget='one2many_delete' context="{'default_area_id': area_id,'default_branch_id': branch_id,'default_department_id': hrms_department_id}">
                                         <field name="empgroup_id" column_invisible="1" />
                                         <field name="branch_ids" column_invisible="1" />
                                         <field name="alldepartment" column_invisible="1"/>
@@ -93,7 +98,10 @@
                                         <field name="valid_to" required="1"/>
                                         <field name="area_id" />
                                         <field name="branch_id" />
-                                        <field name="department_id" />
+                                        <field name="directorate_id"/>
+                                        <field name="department_id" column_invisible="1"/>
+                                        <field name="hrms_department_id"/>
+                                        <field name="division_id"/>
                                         <field name="nik" />
                                         <field name="job_id" />
                                     </tree>

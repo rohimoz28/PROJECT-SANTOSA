@@ -12,7 +12,9 @@
                             <field name="branch_ids" invisible="1"/>
                             <field name="alldepartment" invisible="1"/>
                             <field name="branch_id"/>
-                            <field name="department_id"/>
+                            <field name="directorate_id"/>
+                            <field name="hrms_department_id"/>
+                            <field name="division_id"/>
                             <field name="employee_id"/>
                         </group>
                         <notebook>
@@ -20,7 +22,9 @@
                                 <field name="employee_list">
                                     <tree edit="0" create="0" delete="0">
                                          <field name="hr_list_id" column_invisible="1"/>
-                                        <field name="department_id"/>
+                                        <field name="directorate_id"/>
+                                        <field name="hrms_department_id"/>
+                                        <field name="division_id"/>
                                         <field name="nik"/>
                                         <field name="employee_id"/>
                                         <field name="job_id"/>

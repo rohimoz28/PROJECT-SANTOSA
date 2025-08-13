@@ -13,7 +13,9 @@
                     <field name="details_date" string="Tanggal"/>
                     <field name="empgroup_id" string="Group Emp"/>
                     <field name="branch_id" string="BU"/>
-                    <field name="department_id" string="Department"/>
+                    <field name="directorate_id" string="Direktorat"/>
+                    <field name="hrms_department_id" string="Department"/>
+                    <field name="division_id" string="Divisi"/>
                     <field name="time_in"/>
                     <field name="time_out"/>
                     <field name="status_attendance" string="Status"/>
@@ -31,8 +33,12 @@
                             context="{'group_by':'periode_id'}"/>
                     <filter string="Business Unit" name="branch_id"
                             context="{'group_by':'branch_id'}"/>
-                    <filter string="Department" name="department_id"
-                            context="{'group_by':'department_id'}"/>
+                    <filter string="Direktorat" name="directorate_id"
+                            context="{'group_by':'directorate_id'}"/>
+                    <filter string="Department" name="hrms_department_id" 
+                            context="{'group_by':'hrms_department_id'}"/>
+                    <filter string="Divisi" name="division_id" 
+                            context="{'group_by':'division_id'}"/>
                     <filter string="Employee" name="employee_id"
                             context="{'group_by':'employee_id'}"/>
                 </search>

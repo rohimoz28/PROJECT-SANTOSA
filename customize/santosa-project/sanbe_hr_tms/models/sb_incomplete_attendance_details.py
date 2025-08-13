@@ -20,6 +20,9 @@ class SbIncompleteAttendanceDetails(models.Model):
         string='Name',
         required=False)
     department_id = fields.Many2one('hr.department', string='Sub Department')
+    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat',  store=True)
+    division_id = fields.Many2one('sanhrms.division',string='Divisi',  store=True)
+    hrms_department_id = fields.Many2one('sanhrms.department', string='Departemen', store=True)
     job_id = fields.Many2one('hr.job', string='Job Position')
     wdcode = fields.Many2one(
         'hr.working.days',

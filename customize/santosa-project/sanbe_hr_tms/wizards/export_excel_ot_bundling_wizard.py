@@ -8,12 +8,18 @@ class ExportExcelOvertimeBundling(models.TransientModel):
     _name = 'export.excel.ot.bundling'
     _description = 'Export Excel Overtime Bundling'
 
+    branch_id = fields.Many2one('res.branch', string='Business Unit', tracking=True,  default=lambda self: self.env.user.branch_id)
     department_id = fields.Many2one(
         comodel_name ='hr.department',
         string ='Sub Department',
         domain =lambda self: self._get_departments_domain(),
         options = "{'no_create': True}"
     )
+    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat',  store=True)
+    division_id = fields.Many2one('sanhrms.division',string='Divisi', store=True)
+    hrms_department_id = fields.Many2one('sanhrms.department',
+                                         string='Departemen', store=True)
+    
     start_date = fields.Date(string='Start Date')
     end_date = fields.Date(string='End Date')
 

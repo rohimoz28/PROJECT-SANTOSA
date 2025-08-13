@@ -69,6 +69,11 @@ class HRTMSEntrySummary(models.Model):
     branch_id = fields.Many2one('res.branch', string='Business Unit', index=True, domain="[('id','in',branch_ids)]",
                                 readonly="state =='done'")
     department_id = fields.Many2one('hr.department', string='Sub Department', readonly="state =='done'")
+    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', related='employee_id.directorate_id', store=True)
+    division_id = fields.Many2one('sanhrms.division',string='Divisi', related='employee_id.division_id', store=True)
+    hrms_department_id = fields.Many2one('sanhrms.department',
+                                         string='Departemen', 
+                                         related='employee_id.hrms_department_id', store=True)
     nik = fields.Char('Employee NIK')
     job_id = fields.Many2one('hr.job', string='Job Title', readonly="state =='done'")
     date_from = fields.Date('Periode From', readonly="state =='done'", related='periode_id.open_periode_from')

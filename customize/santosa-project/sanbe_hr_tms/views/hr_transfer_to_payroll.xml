@@ -12,7 +12,9 @@
                             <field name="area_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" />
                             <field name="branch_ids" invisible="1"/>
                             <field name="branch_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" />
-                            <field name="department_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" />
+                            <field name="directorate_id" string="Direktorat" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" />
+                            <field name="hrms_department_id" string="Department" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" />
+                            <field name="division_id" string="Divisi" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" />
                         </group>
                         <group col="2">
                             <group>
@@ -31,7 +33,9 @@
                                     <field name="transfer_id" column_invisible="1"/>
                                     <field name="nik"/>
                                     <field name="employee_id"/>
-                                    <field name="department_id"/>
+                                    <field name="directorate_id" string="Direktorat" optional="show"/>
+                                    <field name="hrms_department_id" string="Department" optional="show"/>
+                                    <field name="division_id" string="Divisi" optional="show"/>
                                     <field name="attendee_status"/>
                                     <field name="pg_attendee"/>
                                     <field name="aot1"/>

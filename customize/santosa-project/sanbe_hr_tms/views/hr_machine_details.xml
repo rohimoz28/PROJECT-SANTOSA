@@ -13,7 +13,9 @@
                     <field name="employee_id" />
                     <field name="nik" />
                     <field name="branch_id" />
-                    <field name="department_id" />
+                    <field name="directorate_id"/>
+                    <field name="hrms_department_id"/>
+                    <field name="division_id"/>
                     <field name="job_id" />
                 </search>
             </field>
@@ -36,7 +38,9 @@
                         <group col="2">
                             <group>
                                 <field name="branch_id"/>
-                                <field name="department_id"/>
+                                <field name="directorate_id"/>
+                                <field name="hrms_department_id"/>
+                                <field name="division_id"/>
                                 <field name="job_id"/>
                             </group>
                         </group>
@@ -55,7 +59,9 @@
                     <field name="employee_id" readonly="1"/>
                     <field name="nik" readonly="1"/>
                     <field name="branch_id" readonly="1"/>
-                    <field name="department_id" readonly="1"/>
+                    <field name="directorate_id" readonly="1"/>
+                    <field name="hrms_department_id" readonly="1"/>
+                    <field name="division_id" readonly="1"/>
                     <field name="job_id" readonly="1"/>
                 </tree>
             </field>
