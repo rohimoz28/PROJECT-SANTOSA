@@ -21,6 +21,11 @@ class ExportExcelTms(models.TransientModel):
         string='Sub Department',
         options="{'no_create': True}"
     )
+    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat',  store=True)
+    division_id = fields.Many2one('sanhrms.division',string='Divisi', store=True)
+    hrms_department_id = fields.Many2one('sanhrms.department',
+                                         string='Departemen', store=True)
+    
 
     @api.onchange('periode_id')
     def _onchange_periode_id(self):
