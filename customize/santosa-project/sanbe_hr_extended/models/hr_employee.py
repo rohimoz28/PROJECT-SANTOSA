@@ -12,6 +12,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from odoo.osv import expression
 from datetime import date
+from decimal import Decimal, ROUND_DOWN
 
 EMP_GROUP1 = [
     ('Group1', 'Group 1 - Harian(pak Deni)'),
@@ -84,6 +85,7 @@ class HrEmployee(models.Model):
     department_id = fields.Many2one('hr.department', compute = '_find_department_id',  string='Old Departemen', store=True, required=False)
     hrms_department_id = fields.Many2one('sanhrms.department', tracking=True, string='Departemen')
     medic_finish_date = fields.Date('SPK Date',store=True)
+    
     @api.depends('hrms_department_id')
     def _find_department_id(self):
         for line in self:
@@ -161,6 +163,21 @@ class HrEmployee(models.Model):
     attende_premie = fields.Boolean('Premi Kehadiran', default=False)
     attende_premie_amount = fields.Float(digits='Product Price', string='Jumlah Premi Kehadiran')
     allowance_jemputan = fields.Boolean('Jemputan')
+    max_ot = fields.Float('Jam Lembur Maksimal', digits=(16, 1), default=0)
+    
+    @api.constrains('max_ot')
+    def _check_max_ot(self):
+        for rec in self:
+            if rec.max_ot:
+                if rec.max_ot <0:            
+                    raise UserError("Values cannot be below zero")  
+            value = Decimal(str(rec.max_ot))
+            rounded = value.quantize(Decimal('0.1'), rounding=ROUND_DOWN)
+            if value != rounded:
+                raise UserError("Maximum of 1 digits allowed after decimal point.")
+            if (value % Decimal('0.5')) != 0:
+                raise UserError("Value must be a multiple of 0.5 Hours")
+    
     allowance_ot = fields.Boolean('OT')
     allowance_transport = fields.Boolean('Transport')
     allowance_meal = fields.Boolean('Uang Makan')
