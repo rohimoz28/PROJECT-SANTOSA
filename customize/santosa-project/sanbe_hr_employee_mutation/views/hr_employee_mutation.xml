@@ -75,13 +75,13 @@
                             <field name="nik_lama" readonly="1" force_save="1" string="NIK Lama"/>
                             <field name="emp_status" readonly="1" force_save="1" />
                             <field name="employee_levels" string="Level Karyawan" readonly="1" force_save="1" />
-                            <field name="employee_group1s" string="Group Penggajian" readonly="1" force_save="1" />
+                            <field name="employee_group1s" string="Group Penggajian" readonly="1" force_save="1"/>
                             <field name="medic" force_save="1" readonly="1"/>
                             <field name="nurse" force_save="1" readonly="1"/>
                             <field name="speciality" force_save="1" readonly="1"/>                      
                         </group>
                         <group>
-                            <field name="area" required="1" readonly="1" force_save="1"/>
+                            <field name="area" readonly="1" force_save="1"/>
                             <field name="branch_ids" invisible="1" />
                             <field name="alldepartment" invisible="1" />
                             <field name="branch_id" options="{'no_create': True,'no_create_edit': True}" string = "Unit Bisnis" readonly="1" force_save="1" />
@@ -94,21 +94,21 @@
                             <field name="parent_id" readonly="1" string='Atasan'/>
                         </group>
                     </group>
-                    <group name="emp_service_det" string="Mutasi Detail">
+                    <group name="emp_service_det" string="Detail Mutasi">
                         <group>
                             <field name="service_type" readonly="state in ['approved']"/>
-                            <field name="emp_status_other" invisible="service_type not in ['conf']" readonly="state in ['approved']" string="Status Karyawan" rforce_save="1" />
-                            <field name="emp_status_actv" invisible="service_type not in ['corr','actv']" string="Status Karyawan" readonly="state in ['approved']" force_save="1" />
-                            <field name="join_date" invisible="service_type not in ['corr']"  readonly="state in ['approved']" string="Tanggal Bergabung"/>
-                            <field name="service_birthday" invisible="service_type not in ['corr']" readonly="state in ['approved']" string="Tanggal lahir"/>
-                            <field name="marital" invisible="service_type not in ['corr']"  readonly="state in ['approved']"/>
-                            <field name="service_employee_levels" readonly="state in ['approved']" string="Level Karyawan" invisible="service_type not in ['actv','corr','prom','rota','demo','muta']" required="service_type == 'prom'" options="{'no_create': True,'no_quick_create': True}" />
-                            <field name="service_identification" readonly="state in ['approved']" string="Nomor Identifikasi" invisible="service_type not in ['actv','corr']"/>
-                            <field name="service_nik" readonly="state in ['approved']" force_save="1" invisible="service_type not in ['actv','corr','muta']" />
-                            <field name="service_nik_lama" readonly="1" force_save="1" string="NIK Lama" invisible="service_type not in ['muta','corr','actv']" />
-                            <field name="service_no_npwp" readonly="state in ['approved']" force_save="1" invisible="service_type not in ['actv','corr']"/>
-                            <field name="service_no_ktp" readonly="state in ['approved']" force_save="1" invisible="service_type not in ['actv','corr']"/>
-                            <field name="service_employee_group1s" string="Group Penggajian" force_save="1" invisible="service_type not in ['actv','corr','prom','rota','demo','muta']" readonly="state in ['approved']"/>
+                            <field name="emp_status_other" invisible="service_type not in ['conf']" readonly="state in ['approved']" string="Status Karyawan" force_save="1" required="service_type in ['conf']" placeholder="Wajib diisi"/>
+                            <field name="emp_status_actv" invisible="service_type not in ['corr','actv']" string="Status Karyawan" readonly="state in ['approved']" force_save="1" required="service_type in ['corr', 'actv']" placeholder="Wajib diisi"/>
+                            <field name="join_date" invisible="service_type not in ['corr']"  readonly="state in ['approved']" string="Tanggal Bergabung" required="service_type in ['corr']" placeholder="Wajib diisi"/>
+                            <field name="service_birthday" invisible="service_type not in ['corr']" readonly="state in ['approved']" string="Tanggal lahir" required="service_type in ['corr']" placeholder="Wajib diisi"/>
+                            <field name="marital" invisible="service_type not in ['corr']"  readonly="state in ['approved']" required="service_type in ['corr']" placeholder="Wajib diisi"/>
+                            <field name="service_employee_levels" readonly="state in ['approved']" string="Level Karyawan" invisible="service_type not in ['actv','corr','prom','rota','demo','muta']" required="service_type in ['prom', 'demo', 'rota', 'muta', 'actv', 'corr']" options="{'no_create': True,'no_quick_create': True}" placeholder="Wajib diisi"/>
+                            <field name="service_identification" readonly="state in ['approved']" string="Nomor Identifikasi" invisible="service_type not in ['actv','corr']" required="service_type in ['actv','corr']" placeholder="Wajib diisi"/>
+                            <field name="service_nik" readonly="state in ['approved']" force_save="1" invisible="service_type not in ['actv','corr','muta']" required="service_type in ['actv','corr','muta']" placeholder="Wajib diisi"/>
+                            <field name="service_nik_lama" readonly="1" force_save="1" string="NIK Lama" invisible="service_type not in ['actv','corr','muta']" required="service_type in ['actv','corr','muta']" placeholder="Wajib diisi"/>
+                            <field name="service_no_npwp" readonly="state in ['approved']" force_save="1" invisible="service_type not in ['actv','corr']" required="service_type in ['actv', 'corr']" placeholder="Wajib diisi"/>
+                            <field name="service_no_ktp" readonly="state in ['approved']" force_save="1" invisible="service_type not in ['actv','corr']" required="service_type in ['actv', 'corr']" placeholder="Wajib diisi"/>
+                            <field name="service_employee_group1s" string="Group Penggajian" force_save="1" invisible="service_type not in ['actv','corr','prom','rota','demo','muta']" readonly="state in ['approved']" required="service_type in ['prom', 'demo', 'rota', 'muta', 'actv', 'corr']" placeholder="Wajib diisi"/>
                             <field name="service_medic" options="{'no_create': True,'no_create_edit': True}" string = "Profesi Medis" readonly="state in ['approved']"  force_save="1" invisible="service_type in ['conf']"/>
                             <field name="service_nurse" options="{'no_create': True,'no_create_edit': True}" string = "Profesi Perawat"  readonly="state in ['approved']"  force_save="1" invisible="service_type in ['conf']"/>
                             <field name="service_speciality" options="{'no_create': True,'no_create_edit': True}" string = "Kategori Khusus" readonly="state in ['approved']"  force_save="1" invisible="service_type in ['conf']"/>
@@ -117,19 +117,18 @@
                         </group>
                         <group>
                             <field name="service_date" readonly="state in ['approved']" force_save="1" string="Tanggal Transaksi"/>
-                            <field name="service_start" readonly="state in ['approved']" string="Berlaku Mulai" required="True"/>
-                            <field name="service_end" readonly="state in ['approved']" string="Berlaku Hingga"/>
-                            <field name="service_area" readonly="state in ['approved']" force_save="1" invisible="service_type not in ['actv','corr','muta']"/>
+                            <field name="service_start" readonly="state in ['approved']" string="Berlaku Mulai" required="service_type in ['conf', 'prom', 'demo', 'rota', 'muta', 'actv']" placeholder="Wajib diisi"/>
+                            <field name="service_end" readonly="state in ['approved']" string="Berlaku Hingga" required="service_type in ['conf', 'prom', 'demo', 'rota', 'muta', 'actv']" placeholder="Wajib diisi"/>
+                            <field name="service_area" readonly="state in ['approved']" force_save="1" invisible="service_type not in ['actv','corr','muta']" required="service_type in ['muta', 'actv', 'corr']" placeholder="Wajib diisi"/>
                             <field name="branch_ids" invisible="1"/>
-                            <field name="service_bisnisunit" readonly="state in ['approved']" force_save="1" invisible="service_type not in ['actv','corr','muta']"/>
-                            <field name="service_directorate_id" options="{'no_create': True,'no_create_edit': True}" readonly="state in ['approved']" string = "Direktorat" force_save="1" invisible="service_type not in ['actv','corr','muta']" />
-                            <field name="service_departmentid" readonly="state in ['approved']" force_save="1" invisible="service_type not in ['actv','corr','muta']" domain="[('directorate_id', '=',service_directorate_id)]" />
-                            <!-- <field name="service_hrms_department_id" options="{'no_create': True,'no_create_edit': True}" readonly="state in ['approved']" string = "Departemen"  force_save="1" domain="[('directorate_id', '=',service_directorate_id)]" invisible="service_type not in ['actv','corr','muta']" /> -->
-                            <field name="service_division_id" options="{'no_create': True,'no_create_edit': True}" readonly="state in ['approved']" string = "Divisi" force_save="1" domain="[('department_id', '=',service_departmentid)]" invisible="service_type not in ['actv','corr','muta']" />
+                            <field name="service_bisnisunit" readonly="state in ['approved']" force_save="1" invisible="service_type not in ['actv','corr','muta']" required="service_type in ['muta', 'actv', 'corr']" placeholder="Wajib diisi"/>
+                            <field name="service_directorate_id" options="{'no_create': True,'no_create_edit': True}" readonly="state in ['approved']" string = "Direktorat" force_save="1" invisible="service_type not in ['actv','corr','muta']" required="service_type in ['muta', 'actv', 'corr']" placeholder="Wajib diisi"/>
+                            <field name="service_departmentid" readonly="state in ['approved']" force_save="1" invisible="service_type not in ['actv','corr','muta']" domain="[('directorate_id', '=',service_directorate_id)]" required="service_type in ['muta', 'actv', 'corr']" placeholder="Wajib diisi"/>
+                            <field name="service_division_id" options="{'no_create': True,'no_create_edit': True}" readonly="state in ['approved']" string = "Divisi" force_save="1" domain="[('department_id', '=',service_departmentid)]" invisible="service_type not in ['actv','corr','muta']" required="service_type in ['muta', 'actv', 'corr']" placeholder="Wajib diisi"/>
                             <field name="service_work_unit_id" options="{'no_create': True,'no_create_edit': True}" readonly="state in ['approved']" string = "Unit Kerja" invisible = "1" force_save="1" />
-                            <field name="service_jobtitle" readonly="state in ['approved']" options="{'no_create': True,'no_create_edit': True}" domain="[('division_id', '=',service_division_id)]" invisible="service_type not in ['actv','corr','prom','rota','demo','muta']" />
+                            <field name="service_jobtitle" readonly="state in ['approved']" options="{'no_create': True,'no_create_edit': True}" domain="[('division_id', '=',service_division_id)]" invisible="service_type not in ['actv','corr','prom','rota','demo','muta']" required="service_type in ['prom', 'demo', 'rota', 'muta', 'actv', 'corr']" placeholder="Wajib diisi"/>
                             <field name="service_job_status_id" readonly="state in ['approved']" force_save="1" invisible="1" />
-                            <field name="service_jobstatus" readonly="state in ['approved']" force_save="1" invisible="service_type not in ['actv','corr','prom','rota','demo','muta']" />
+                            <field name="service_jobstatus" readonly="state in ['approved']" force_save="1" invisible="service_type not in ['actv','corr','prom','rota','demo','muta']" required="service_type in ['prom', 'demo', 'rota', 'muta', 'actv']" placeholder="Wajib diisi"/>
                             <field name="service_job_status_type" readonly="1" force_save="1" invisible="1" />
                             <field name="service_empgroup1" readonly="state in ['approved']" invisible="1" force_save="1" />
                             <field name="company_id" invisible="1"/>
