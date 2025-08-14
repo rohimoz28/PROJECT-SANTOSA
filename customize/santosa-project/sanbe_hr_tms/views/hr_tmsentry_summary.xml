@@ -20,7 +20,7 @@
                             <field name="nik" required="1" readonly="True"/>
                             <field name="employee_id" required="1" readonly="True"/>
                             <field name="job_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" required="1" readonly="True"/>
-                            <field name="employee_group1" required="1" readonly="True" force_save="1"/>
+                            <field name="employee_group1s" required="1" readonly="True" force_save="1"/>
 
                         </group>
                         <group>
@@ -31,6 +31,11 @@
                             <field name="ot" readonly="True" string="OT"/>
                             <field name="ot_flat" readonly="True" string="OT Flat"/>
                             <field name="night_shift" readonly="True" string="Night Shift"/>
+                            <label for="max_ot" string="Total Jam Lembur Maksimal"/>
+                            <div class="o_row">
+                                <field name="max_ot"/>
+                                <label for="max_ot" string="Jam"/>
+                            </div>
                         </group>
                     </group>
                     <br></br>
