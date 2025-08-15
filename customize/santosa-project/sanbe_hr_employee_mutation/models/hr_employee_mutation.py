@@ -93,7 +93,6 @@ class HrEmployeeMutation(models.Model):
     service_medic = fields.Many2one('hr.profesion.medic','Profesi Medis', default=lambda self:self.employee_id.medic.id)
     service_nurse = fields.Many2one('hr.profesion.nurse','Profesi Perawat', default=lambda self:self.employee_id.nurse.id)
     service_speciality = fields.Many2one('hr.profesion.special','Kategori Khusus', default=lambda self:self.employee_id.seciality.id)
-    # service_hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen', default=lambda self:self.employee_id.hrms_department_id.id)
     service_departmentid = fields.Many2one('sanhrms.department', domain="[('branch_id','=',service_bisnisunit)]", string='Departemen', default=lambda self:self.employee_id.hrms_department_id.id)
     service_identification = fields.Char(related='employee_id.identification_id', string='Nomor Kartu Keluarga', store=True)
     service_jobstatus = fields.Selection([('permanent', 'Karyawan Tetap (PKWTT)'),
@@ -300,17 +299,17 @@ class HrEmployeeMutation(models.Model):
             record.nik_lama = record.service_nik_lama
             record.service_name = employee.name
             record.service_previous_name = employee.name
-            record.service_area = employee.area.id
-            record.service_bisnisunit = employee.hrms_department_id.branch_id.id or employee.branch_id.id
-            record.service_directorate_id = employee.directorate_id.id
-            record.service_departmentid = employee.hrms_department_id.id
-            record.service_division_id = employee.division_id.id
+            # record.service_area = employee.area.id
+            # record.service_bisnisunit = employee.hrms_department_id.branch_id.id or employee.branch_id.id
+            # record.service_directorate_id = employee.directorate_id.id
+            # record.service_departmentid = employee.hrms_department_id.id
+            # record.service_division_id = employee.division_id.id
+            # record.service_jobtitle = employee.job_id.id
+            # record.service_jobstatus = employee.job_status
             record.service_medic = employee.medic.id
             record.service_nurse = employee.nurse.id
             record.service_speciality = employee.seciality.id
-            record.service_jobstatus = employee.job_status
             record.service_employementstatus = 'confirmed'
-            record.service_jobtitle = employee.job_id.id
             record.service_employee_levels = employee.employee_levels.id
             record.service_empgroup1 = employee.employee_group1
             record.service_no_npwp = employee.no_npwp
