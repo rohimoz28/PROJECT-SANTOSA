@@ -317,8 +317,13 @@
                         <group name="salary_info">
                             <group string="Tunjangan">
                                 <field name="attende_premie"   readonly="(state !='draft')" />
-                                <field name="allowance_jemputan"  readonly="(state !='draft')" />
+                                <!-- <field name="allowance_jemputan"  readonly="(state !='draft')" /> -->
                                 <field name="allowance_ot"   readonly="(state !='draft')" />
+                                <label for="max_ot" string="Total Jam Lembur Maksimal" invisible="not allowance_ot" />
+                                <div class="o_row" invisible="not allowance_ot">
+                                    <field name="max_ot" readonly="(state !='draft')" /> 
+                                    <label for="max_ot" string="Jam"/>
+                                </div>
                                 <field name="allowance_transport"   readonly="(state !='draft')" />
                                 <field name="allowance_meal"   readonly="(state !='draft')" />
                                 <field name="allowance_night_shift"  readonly="(state !='draft')" />

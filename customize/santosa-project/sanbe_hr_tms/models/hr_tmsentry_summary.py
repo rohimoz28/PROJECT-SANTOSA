@@ -74,6 +74,7 @@ class HRTMSEntrySummary(models.Model):
     hrms_department_id = fields.Many2one('sanhrms.department',
                                          string='Departemen', 
                                          related='employee_id.hrms_department_id', store=True)
+    max_ot = fields.Float('Jam Lembur Maksimal', related='employee_id.max_ot', digits=(16, 1), store=True)
     nik = fields.Char('Employee NIK')
     job_id = fields.Many2one('hr.job', string='Job Title', readonly="state =='done'")
     date_from = fields.Date('Periode From', readonly="state =='done'", related='periode_id.open_periode_from')
@@ -90,6 +91,7 @@ class HRTMSEntrySummary(models.Model):
     attendee_count = fields.Integer('Attendee')
     absent_count = fields.Integer('Absent')
     delay_total = fields.Integer('Total Delay',help="Total Delay in Minutes")
+    employee_group1s = fields.Many2one('emp.group', string='Employee P Group', related='employee_id.employee_group1s', tracking=True, store=True)
 
     attendee_total = fields.Integer('Total Attendee')
     sick_count = fields.Integer('Total Sick')
