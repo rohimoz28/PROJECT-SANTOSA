@@ -5,6 +5,10 @@ overflow: auto !important;
 .oh_dashboards{
     padding-top :15px;
     background-color: #f8faff !important;
+    background-image: url('/hrms_dashboard/static/description/santosa.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .oh-card h4 {

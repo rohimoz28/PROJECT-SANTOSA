@@ -12,7 +12,8 @@
         name="Dashboard"
         action="hr_action_dashboard"
         web_icon="hrms_dashboard,static/description/icon.png"
-        sequence="-100"
+        sequence="500"
+        active="0"
         groups="base.group_user" />
 
 </odoo>

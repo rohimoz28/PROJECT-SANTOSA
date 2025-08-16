@@ -5,7 +5,9 @@
     <t t-name="HrDashboardMain">
         <div class="oh_dashboards">
             <div class="container-fluid o_hr_dashboard">
-                <iframe src="https://www.sanbe-farma.com/about" width="100%" height="750px"></iframe>
+            <img t-att-src="'/hrms_dashboard/static/src/img/santosa.jpg'" alt="Santosa Background" style="width: 100%; height: auto;"/>
+
+                <!-- <iframe src="https://www.google.com" width="100%" height="750px"></iframe> -->
                 <!-- <t t-if="this.state.login_employee">
                     <t t-if="this.state.is_manager == true">
                         <t t-call="LoginEmployeeDetails"/>
