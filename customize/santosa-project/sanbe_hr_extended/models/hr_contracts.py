@@ -54,6 +54,7 @@ class HrContract(models.Model):
     directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', related='employee_id.directorate_id', store=True)
     employee_group1s = fields.Many2one('emp.group', string='Employee P Group', related='employee_id.employee_group1s', store=True)
     work_unit_id = fields.Many2one('hr.work.unit','Work Unit', related='employee_id.work_unit_id', store=True)
+    work_unit = fields.Char(related='employee_id.work_unit', string='Unit Kerja', store=True)
     medic = fields.Many2one('hr.profesion.medic','Profesi Medis', related='employee_id.medic', store=True)
     nurse = fields.Many2one('hr.profesion.nurse','Profesi Perawat', related='employee_id.nurse', store=True)
     job_id = fields.Many2one('hr.job','Jabatan', related='employee_id.job_id', readonly=True, store=True)
