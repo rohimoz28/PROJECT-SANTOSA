@@ -11,7 +11,7 @@ from . import hr_employee_assets
 # from . import hr_employee_certification
 from . import hr_employment_log
 from . import hr_payroll_entry
-from . import hr_mutations
+# from . import hr_mutations
 from . import res_branch
 from . import directorate
 from . import hr_contract
