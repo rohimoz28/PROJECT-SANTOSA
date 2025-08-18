@@ -54,29 +54,32 @@ class HrEmployeeMutation(models.Model):
                                    ('visitor', 'Visitor'),
                                    ], default='contract', tracking=True, related="employee_id.job_status", string='Status Hubungan Kerja')
     emp_status = fields.Selection(related='employee_id.emp_status', string='Status Karyawan', store=True)
-    emp_status_otheremp_status_actv = fields.Selection([
-                                        ('confirmed', 'Confirmed')
-                                        ], string='Status Karyawan', default='confirmed', store=True)
-    emp_status_other = fields.Selection([('confirmed', 'Confirmed')
-                                        ], string='Status Karyawan',default='confirmed', store=True)
-    emp_status_actv = fields.Selection([('probation', 'Probation'),
-                                        ('confirmed', 'Confirmed')
-                                        ], string='Status Karyawan',default='confirmed', store=True)
-    employee_group1 = fields.Selection(selection=[('Group1', 'Group 1 - Harian(pak Deni)'),
-                                                  ('Group2', 'Group 2 - bulanan pabrik(bu Felisca)'),
-                                                  ('Group3', 'Group 3 - Apoteker and Mgt(pak Ryadi)'),
-                                                  ('Group4', 'Group 4 - Security and non apoteker (bu Susi)'),
-                                                  ('Group5', 'Group 5 - Tim promosi(pak Yosi)'),
-                                                  ('Group6', 'Group 6 - Adm pusat(pak Setiawan)'),
-                                                  ('Group7', 'Group 7 - Tim Proyek (pak Ferry)'), ],
-                                       string="Employee P Group")
-    service_type = fields.Selection([('conf', 'Confirm'),
+    emp_status_otheremp_status_actv = fields.Selection(selection=[('', ''),
+                                                                  ('confirmed', 'Confirmed')], 
+                                                       string='Status Karyawan', store=True)
+    emp_status_other = fields.Selection(selection=[('', ''),
+                                                   ('confirmed', 'Confirmed')], 
+                                        string='Status Karyawan', store=True)
+    emp_status_actv = fields.Selection(selection=[('', ''),
+                                                  ('probation', 'Probation'),
+                                                  ('confirmed', 'Confirmed')], 
+                                       string='Status Karyawan', store=True)
+    # employee_group1 = fields.Selection(selection=[('Group1', 'Group 1 - Harian(pak Deni)'),
+    #                                               ('Group2', 'Group 2 - bulanan pabrik(bu Felisca)'),
+    #                                               ('Group3', 'Group 3 - Apoteker and Mgt(pak Ryadi)'),
+    #                                               ('Group4', 'Group 4 - Security and non apoteker (bu Susi)'),
+    #                                               ('Group5', 'Group 5 - Tim promosi(pak Yosi)'),
+    #                                               ('Group6', 'Group 6 - Adm pusat(pak Setiawan)'),
+    #                                               ('Group7', 'Group 7 - Tim Proyek (pak Ferry)'), ],
+    #                                    string="Employee P Group")
+    service_type = fields.Selection([('', ''),
+                                     ('conf', 'Confirm'),
                                      ('prom', 'Promotion'),
                                      ('demo', 'Demotion'),
                                      ('rota', 'Rotation'),
                                      ('muta', 'Mutation'),
                                      ('actv', 'Activation'),
-                                     ('corr', 'Correction')], default = 'conf', string='Service Type', required=True)
+                                     ('corr', 'Correction')], string='Service Type')
     service_date = fields.Date('Transaction Date', default=fields.Date.today())
     service_status = fields.Char('Mutation Status')
     service_nik = fields.Char('NIK', default=lambda self:self.employee_id.nik)
@@ -94,12 +97,13 @@ class HrEmployeeMutation(models.Model):
     service_nurse = fields.Many2one('hr.profesion.nurse','Profesi Perawat', default=lambda self:self.employee_id.nurse.id)
     service_speciality = fields.Many2one('hr.profesion.special','Kategori Khusus', default=lambda self:self.employee_id.seciality.id)
     service_departmentid = fields.Many2one('sanhrms.department', domain="[('branch_id','=',service_bisnisunit)]", string='Departemen', default=lambda self:self.employee_id.hrms_department_id.id)
-    service_identification = fields.Char(related='employee_id.identification_id', string='Nomor Kartu Keluarga', store=True)
-    service_jobstatus = fields.Selection([('permanent', 'Karyawan Tetap (PKWTT)'),
-                                   ('contract', 'Karyawan Kontrak (PKWT)'),
-                                   ('partner_doctor', 'Dokter Mitra'),
-                                   ('visitor', 'Visitor'),
-                                   ], tracking=True, string='Status Hubungan Kerja', default=lambda self:self.employee_id.job_status )
+    service_identification = fields.Char(string='Nomor Kartu Keluarga', default=lambda self:self.employee_id.identification_id)
+    service_jobstatus = fields.Selection([('', ''),
+                                          ('permanent', 'Karyawan Tetap (PKWTT)'),
+                                          ('contract', 'Karyawan Kontrak (PKWT)'),
+                                          ('partner_doctor', 'Dokter Mitra'),
+                                          ('visitor', 'Visitor')], 
+                                          string='Status Hubungan Kerja')
     service_job_status_id = fields.Many2one('sanhrms.job.status', string='Status Pekerjaan', default=lambda self:self.employee_id.job_status)
     service_job_status_type = fields.Selection(store=True, default=lambda self:self.employee_id.job_status, related='service_job_status_id.type')
     service_employementstatus = fields.Selection([('probation', 'Probation'),
@@ -126,9 +130,10 @@ class HrEmployeeMutation(models.Model):
     image = fields.Many2many('ir.attachment', string='Image', help="You may attach files to with this")
     service_employee_levels = fields.Many2one('employee.level', string='Employee Level', default=lambda self:self.employee_id.employee_levels.id)
     join_date = fields.Date('Join Date')
-    marital = fields.Selection([('single', 'Lajang'),
-                            ('married', 'Menikah'),
-                            ('seperate', 'Berpisah')], string='Status Pernikahan')
+    marital = fields.Selection([('', ''),
+                                ('single', 'Belum Menikah'),
+                                ('married', 'Menikah'),
+                                ('seperate', 'Berpisah')], string='Status Perkawinan')
     contract_no = fields.Many2one('hr.contract', related='employee_id.contract_id', readonly=False)
     contract_from = fields.Date('Contract Date From', related='employee_id.contract_datefrom', readonly=False)
     contract_to = fields.Date('Contract Date To', related='employee_id.contract_dateto', readonly=False)
@@ -207,9 +212,6 @@ class HrEmployeeMutation(models.Model):
         if self.service_jobstatus != self.employee_id.job_status:
             self.employee_id.write({'job_status': self.service_jobstatus})
 
-        if self.service_jobstatus != self.employee_id.job_status:
-            self.employee_id.write({'job_status': self.service_jobstatus})
-
         if self.service_type == 'conf':
             self.employee_id.write({'emp_status': 'confirmed'})
         elif self.service_type in ['actv','corr']:
@@ -221,8 +223,8 @@ class HrEmployeeMutation(models.Model):
         if self.service_jobtitle.id != self.employee_id.job_id.id:
             self.employee_id.write({'job_id': self.service_jobtitle.id})
 
-        if self.service_empgroup1 != self.employee_id.employee_group1:
-            self.employee_id.write({'employee_group1': self.service_empgroup1})
+        if self.service_employee_group1s != self.employee_id.employee_group1s.id:
+            self.employee_id.write({'employee_group1s': self.service_employee_group1s})
 
         # if self.service_employee_id != self.employee_id.employee_id:
         #    self.employee_id.write({'employee_id': self.service_employee_id})
@@ -273,9 +275,8 @@ class HrEmployeeMutation(models.Model):
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
         for record in self:
+            # header
             employee = record.employee_id
-
-            # data header
             record.emp_id = employee.employee_id
             record.nik = employee.nik
             record.nik_lama = employee.nik_lama
@@ -292,35 +293,149 @@ class HrEmployeeMutation(models.Model):
             record.medic = employee.medic
             record.nurse = employee.nurse
             record.speciality = employee.seciality
-
-            # data detail
-            record.service_nik = str(str(employee.nik).replace("('", '')).replace("')", "")
-            record.service_nik_lama = str(str(employee.nik_lama).replace("('", '')).replace("')", "")
-            record.nik_lama = record.service_nik_lama
-            record.service_name = employee.name
-            record.service_previous_name = employee.name
-            # record.service_area = employee.area.id
-            # record.service_bisnisunit = employee.hrms_department_id.branch_id.id or employee.branch_id.id
-            # record.service_directorate_id = employee.directorate_id.id
-            # record.service_departmentid = employee.hrms_department_id.id
-            # record.service_division_id = employee.division_id.id
-            # record.service_jobtitle = employee.job_id.id
-            # record.service_jobstatus = employee.job_status
-            record.service_medic = employee.medic.id
-            record.service_nurse = employee.nurse.id
-            record.service_speciality = employee.seciality.id
-            record.service_employementstatus = 'confirmed'
-            record.service_employee_levels = employee.employee_levels.id
-            record.service_empgroup1 = employee.employee_group1
-            record.service_no_npwp = employee.no_npwp
-            record.service_no_ktp = employee.no_ktp
             record.employee_levels = employee.employee_levels.id
+            # detail
             record.join_date = employee.join_date
             record.marital = employee.marital
-            record.service_birthday = employee.birthday
+            
 
-            record.service_status = 'Draft'
+    @api.onchange('service_type')
+    def _onchange_service_status(self):
+        for record in self:
+            employee = record.employee_id
 
+            if not employee:
+                continue
+
+            if record.service_type in ['conf']:
+                record.join_date = employee.join_date
+                record.service_birthday = employee.birthday
+                record.marital = employee.marital
+                record.service_employee_levels = employee.employee_levels.id
+                record.service_identification = employee.identification_id
+                record.service_nik = str(str(employee.nik).replace("('", '')).replace("')", "")
+                record.service_nik_lama = str(str(employee.nik_lama).replace("('", '')).replace("')", "")
+                record.service_no_npwp = employee.no_npwp
+                record.service_no_ktp = employee.no_ktp
+                record.service_employee_group1s = employee.employee_group1s.id
+                record.service_name = employee.name
+                record.service_previous_name = employee.name
+                record.service_medic = employee.medic.id
+                record.service_nurse = employee.nurse.id
+                record.service_speciality = employee.seciality.id
+                record.service_area = employee.area.id
+                record.service_bisnisunit = employee.hrms_department_id.branch_id.id or employee.branch_id.id
+                record.service_directorate_id = employee.directorate_id.id
+                record.service_departmentid = employee.hrms_department_id.id
+                record.service_division_id = employee.division_id.id
+                record.service_jobtitle = employee.job_id.id
+                record.service_jobstatus = employee.job_status
+                record.service_employementstatus = 'confirmed'
+                record.service_status = 'Draft'
+
+            elif record.service_type in ['prom', 'demo', 'rota']:
+                record.join_date = employee.join_date
+                record.service_birthday = employee.birthday
+                record.marital = employee.marital
+                record.service_employee_levels = False
+                record.service_identification = employee.identification_id
+                record.service_nik = str(str(employee.nik).replace("('", '')).replace("')", "")
+                record.service_nik_lama = str(str(employee.nik_lama).replace("('", '')).replace("')", "")
+                record.service_no_npwp = employee.no_npwp
+                record.service_no_ktp = employee.no_ktp
+                record.service_employee_group1s = False
+                record.service_name = employee.name
+                record.service_previous_name = employee.name
+                record.service_medic = employee.medic.id
+                record.service_nurse = employee.nurse.id
+                record.service_speciality = employee.seciality.id
+                record.service_area = employee.area.id
+                record.service_bisnisunit = employee.hrms_department_id.branch_id.id or employee.branch_id.id
+                record.service_directorate_id = employee.directorate_id.id
+                record.service_departmentid = employee.hrms_department_id.id
+                record.service_division_id = employee.division_id.id
+                record.service_jobtitle = False
+                record.service_jobstatus = False
+                record.service_employementstatus = 'confirmed'
+                record.service_status = 'Draft'
+            
+            elif record.service_type in ['muta']:
+                record.join_date = employee.join_date
+                record.service_birthday = employee.birthday
+                record.marital = employee.marital
+                record.service_employee_levels = False
+                record.service_identification = employee.identification_id
+                record.service_nik = str(str(employee.nik).replace("('", '')).replace("')", "")
+                record.service_nik_lama = str(str(employee.nik_lama).replace("('", '')).replace("')", "")
+                record.service_no_npwp = employee.no_npwp
+                record.service_no_ktp = employee.no_ktp
+                record.service_employee_group1s = False
+                record.service_name = employee.name
+                record.service_previous_name = employee.name
+                record.service_medic = employee.medic.id
+                record.service_nurse = employee.nurse.id
+                record.service_speciality = employee.seciality.id
+                record.service_area = False
+                record.service_bisnisunit = False
+                record.service_directorate_id = False
+                record.service_departmentid = False
+                record.service_division_id = False
+                record.service_jobtitle = False
+                record.service_jobstatus = False
+                record.service_employementstatus = 'confirmed'
+                record.service_status = 'Draft'
+
+            elif record.service_type in ['actv']:
+                record.join_date = employee.join_date
+                record.service_birthday = employee.birthday
+                record.marital = employee.marital
+                record.service_employee_levels = False
+                record.service_identification = False
+                record.service_nik = str(str(employee.nik).replace("('", '')).replace("')", "")
+                record.service_nik_lama = str(str(employee.nik_lama).replace("('", '')).replace("')", "")
+                record.service_no_npwp = employee.no_npwp
+                record.service_no_ktp = employee.no_ktp
+                record.service_employee_group1s = False
+                record.service_name = employee.name
+                record.service_previous_name = employee.name
+                record.service_medic = employee.medic.id
+                record.service_nurse = employee.nurse.id
+                record.service_speciality = employee.seciality.id
+                record.service_area = False
+                record.service_bisnisunit = False
+                record.service_directorate_id = False
+                record.service_departmentid = False
+                record.service_division_id = False
+                record.service_jobtitle = False
+                record.service_jobstatus = False
+                record.service_employementstatus = 'confirmed'
+                record.service_status = 'Draft'
+        
+            elif record.service_type in ['corr']:
+                record.join_date = False
+                record.service_birthday = False
+                record.marital = False
+                record.service_employee_levels = False
+                record.service_identification = False
+                record.service_nik = str(str(employee.nik).replace("('", '')).replace("')", "")
+                record.service_nik_lama = str(str(employee.nik_lama).replace("('", '')).replace("')", "")
+                record.service_no_npwp = employee.no_npwp
+                record.service_no_ktp = employee.no_ktp
+                record.service_employee_group1s = False
+                record.service_name = employee.name
+                record.service_previous_name = employee.name
+                record.service_medic = employee.medic.id
+                record.service_nurse = employee.nurse.id
+                record.service_speciality = employee.seciality.id
+                record.service_area = False
+                record.service_bisnisunit = False
+                record.service_directorate_id = False
+                record.service_departmentid = False
+                record.service_division_id = False
+                record.service_jobtitle = False
+                record.service_jobstatus = False
+                record.service_employementstatus = 'confirmed'
+                record.service_status = 'Draft'
 
     # def button_intransfer(self):
     #     self.write({'state': 'intransfer'})
