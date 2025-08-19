@@ -3,30 +3,98 @@
     <!-- QWeb Report Template -->
     <template id="sanbe_hr_tms.report_attendance_html" name="Attendance Report">
         <t t-call="web.html_container">
-            <t t-call="web.external_layout">
+            <t t-call="web.basic_layout">
+                <t t-set="o" t-value="docs[0]" />
+                <t t-set="company" t-value="res_company" />
+
+                <div class="header">
+                    <table style="width:100%; margin-right: auto; border: 0px solid transparent;">
+                        <tr>
+                            <td>
+                                <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 100px; width: 200px;" alt="Logo" />
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div style="border-bottom: 1px solid black; margin-bottom: 2px;" />
+                            <div style="border-bottom: 4px solid black;" />
+                        </div>
+                    </div>
+
+                    <table style="width:100%; margin-left: auto; border: 0px solid transparent;">
+                        <tr>
+                            <td class="text-left" style="vertical-align: middle; font-family: 'Bookman Old Style', Georgia, serif;">
+                                <strong>
+                                    <span style="font-size:17px;" t-field="o.branch_id.name" />
+                                </strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size:13px; font-family: 'Bookman Old Style', Georgia, serif;" class="text-left">
+                                <t t-if="o.branch_id and o.branch_id.street">
+                                    <strong>
+                                        <span t-field="o.branch_id.street"/>
+                                    </strong>
+                                </t>
+                                <t t-if="o.branch_id and o.branch_id.street2">
+                                    <strong>
+                                        <span t-field="o.branch_id.street2"/>
+                                    </strong>
+                                </t>
+                                <t t-if="o.branch_id and o.branch_id.city">
+                                    <strong>
+                                        <span t-field="o.branch_id.city"/>
+                                    </strong>
+                                </t>
+                                <strong>
+                                    <br/>
+Telp: 
+                                    <t t-if="o.branch_id and o.branch_id.phone">
+                                        <span t-field="o.branch_id.phone"/>
+                                    </t>
+                                    <br/>
+Fax: 
+                                    <t t-if="o.branch_id and o.branch_id.fax">
+                                        <span t-field="o.branch_id.fax"/>
+                                    </t>
+                                    <br/>
+                                    <t t-if="o.branch_id and o.branch_id.city">
+                                        <span t-field="o.branch_id.city"/>
+                                    </t>
+                                    <t t-if="o.branch_id and o.branch_id.zip">
+                                        <span t-field="o.branch_id.zip"/>
+                                    </t>
+                                </strong>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
                 <div class="page">
                     <h2 class="text-center mb-4">
                         Rekap Perhitungan Kehadiran dan Overtime - HRMS
                     </h2>
-                    
+
                     <table class="table table-bordered table-striped" style="table-layout: auto; word-wrap: break-word;">
                         <thead>
                             <tr>
                                 <th style="width: 5%;">No</th>
-                                <th>Employee</th>
-                                <th>Employee NIK</th>
-                                <th>Job Title</th>
-                                <th>Working Day</th>
-                                <th>Attendee</th>
-                                <th>Absent</th>
-                                <th>Total Leave</th>
-                                <th>Total Sick</th>
+                                <th>Nama Karyawan</th>
+                                <th>NIK</th>
+                                <th>Jabatan</th>
+                                <th>Hari kerja</th>
+                                <th>Kehadiran</th>
+                                <th>Mangkir</th>
+                                <th>Total Izin</th>
+                                <th>Total Sakit</th>
                                 <th>Total OT1</th>
                                 <th>Total OT2</th>
-                                <th>Night Shift 1</th>
-                                <th>Night Shift 2</th>
+                                <th>Shift Malam 1</th>
+                                <th>Shift Malam 2</th>
                                 <th>Status</th>
-                                <th>Deduction</th>
+                                <th>Potongan</th>
                                 <th>Total Delay</th>
                                 <th>Times Delayed</th>
                             </tr>
@@ -34,30 +102,62 @@
                         <tbody>
                             <t t-foreach="report_lines" t-as="line">
                                 <tr>
-                                    <td><span t-esc="line['no']"/></td>
-                                    <td class="text-wrap"><span t-esc="line['employee_name']"/></td>
-                                    <td><span t-esc="line['employee_nik']"/></td>
-                                    <td class="text-wrap"><span t-esc="line['job_title']"/></td>
-                                    <td><span t-esc="line['attendee_total']"/></td>
-                                    <td><span t-esc="line['attendee_count']"/></td>
-                                    <td><span t-esc="line['absent_count']"/></td>
-                                    <td><span t-esc="line['leave_count']"/></td>
-                                    <td><span t-esc="line['sick_count']"/></td>
-                                    <td><span t-esc="line['ot1_total']"/></td>
-                                    <td><span t-esc="line['ot2_total']"/></td>
-                                    <td><span t-esc="line['nightshift1_count']"/></td>
-                                    <td><span t-esc="line['nightshift2_count']"/></td>
-                                    <td><span t-esc="line['state']"/></td>
-                                    <td><span t-esc="line['deduction']"/></td>
-                                    <td><span t-esc="line['delay_total']"/></td>
-                                    <td><span t-esc="line['delay_count']"/></td>
+                                    <td>
+                                        <span t-esc="line['no']"/>
+                                    </td>
+                                    <td class="text-wrap">
+                                        <span t-esc="line['employee_name']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line['employee_nik']"/>
+                                    </td>
+                                    <td class="text-wrap">
+                                        <span t-esc="line['job_title']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line['attendee_total']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line['attendee_count']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line['absent_count']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line['leave_count']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line['sick_count']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line['ot1_total']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line['ot2_total']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line['nightshift1_count']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line['nightshift2_count']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line['state']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line['deduction']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line['delay_total']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line['delay_count']"/>
+                                    </td>
                                 </tr>
                             </t>
                             <t t-if="not report_lines">
                                 <tr>
-                                    <td colspan="16" class="text-center">
-                                        No Data Available
-                                    </td>
+                                    <td colspan="17" class="text-center">No Data Available</td>
                                 </tr>
                             </t>
                         </tbody>
@@ -74,7 +174,7 @@
         <field name="model">hr.tmsentry.summary</field>
         <field name="report_type">qweb-html</field>
         <field name="report_name">sanbe_hr_tms.report_attendance_html</field>
-         <field name="report_file">sanbe_hr_tms.report_attendance_html</field>
+        <field name="report_file">sanbe_hr_tms.report_attendance_html</field>
         <field name="binding_model_id" ref="model_hr_tmsentry_summary"/>
         <field name="binding_type">report</field>
     </record>

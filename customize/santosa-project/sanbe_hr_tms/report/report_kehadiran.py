@@ -41,9 +41,9 @@ class ReportKehadiranXlsx(models.AbstractModel):
 
             # Headers
             headers = [
-                'No', 'Employee', 'Employee NIK', 'Job Title', 'Working Day', 'Attendee', 
-                'Absent', 'Total Leave', 'Total Sakit', 'Total OT1', 
-                'Total OT2', 'Night Shift 1', 'Night Shift 2', 'Status', 'Potongan', 
+                'No', 'Nama Karyawan', 'NIK', 'Jabatan', 'Hari Kerja', 'Kehadiran', 
+                'Mangkir', 'Total Izin', 'Total Sakit', 'Total OT1', 
+                'Total OT2', 'Shift Malam 1', 'Shift Malam 2', 'Status', 'Potongan', 
                 'Total Delay', 'Total Times Delay'
             ]
 
