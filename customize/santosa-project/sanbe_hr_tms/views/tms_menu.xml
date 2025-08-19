@@ -6,7 +6,7 @@
         <menuitem
                 id="hr_menu_tms_root"
                 name="Time Management System"
-                sequence="10"
+                sequence="-108"
                 web_icon="sanbe_hr_tms,static/description/icon.png"
                 groups="hr.group_hr_manager"
         />

@@ -7,7 +7,7 @@
             id="test_menu"
             name="Dashboard HRMS"
             action="action_sales_dashboard"
-            sequence="-101"/>
+            sequence="-110"/>
 
         <!-- <menuitem
             id="Sales_menu"

@@ -5,7 +5,7 @@
         <!-- PAYROLL MENU -->
 
         <!-- Transaction -->
-        <menuitem id="menu_sanbe_hr_payroll_root" name="Pengupahan" sequence="45"
+        <menuitem id="menu_sanbe_hr_payroll_root" name="Pengupahan" sequence="-106"
                   web_icon="sanbe_hr_payroll,static/description/icon.png"
                   groups="hr.group_hr_manager"
         />

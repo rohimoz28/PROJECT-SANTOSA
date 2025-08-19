@@ -40,16 +40,22 @@
 
         <record id="hr_payroll_community.menu_hr_payroll_community_root" model="ir.ui.menu">
             <field name="name">Pengupahan</field>
-            <!-- <field name="active" eval="False"/> -->
+            <field name="active" eval="False"/>
         </record>
 
         <record id="hr.menu_hr_root" model="ir.ui.menu">
             <field name="name">Administrasi Kepegawaian</field>
+            <field name="sequence">-109</field>
         </record>
 
         <record id="hr.menu_hr_employee_payroll" model="ir.ui.menu">
             <field name="name">Kepegawaian</field>
         </record>
+        
+        <record id="base.menu_administration" model="ir.ui.menu">
+            <field name="sequence">-107</field>
+        </record>   
+
 
         <record id="hr.menu_hr_employee_user" model="ir.ui.menu">
             <field name="name">Kepegawaian</field>
@@ -110,6 +116,7 @@
         <record id="account.menu_finance" model="ir.ui.menu">
             <field name="active" eval="True"/>
             <field name="name">Keuangan</field>
+            <field name="sequence">-105</field>
         </record>
         <record id="event.event_main_menu" model="ir.ui.menu">
             <field name="active" eval="False"/>
@@ -142,8 +149,12 @@
             <field name="name">Area</field>
             <field name="parent_id" ref="base.menu_users"/> <!-- ✅ Corrected -->
         </record>
-
-
+        
+        <record id="ohrms_loan.hr_loan_menu_requests" model="ir.ui.menu">
+            <field name="sequence">10</field>
+            <field name="parent_id" eval="False"/>
+        </record>
+        
         <record id="menu_hr_warning_letter" model="ir.ui.menu">
             <field name="name">Surat Peringatan</field>
         </record>

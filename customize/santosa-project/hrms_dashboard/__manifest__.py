@@ -52,6 +52,7 @@
             'hrms_dashboard/static/src/js/lib/d3.min.js',
             'hrms_dashboard/static/src/xml/hrms_dashboard.xml',
             'hrms_dashboard/static/src/lib/moment.min.js',
+            'hrms_dashboard/static//src/img/santosa.jpg',
         ],
     },
     'images': ["static/description/banner.jpg"],
