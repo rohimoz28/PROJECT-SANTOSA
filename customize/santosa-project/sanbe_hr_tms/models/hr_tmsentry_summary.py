@@ -91,7 +91,7 @@ class HRTMSEntrySummary(models.Model):
     attendee_count = fields.Integer('Attendee')
     absent_count = fields.Integer('Absent')
     delay_total = fields.Integer('Total Delay',help="Total Delay in Minutes")
-    employee_group1s = fields.Many2one('emp.group', string='Employee P Group', related='employee_id.employee_group1s', tracking=True, store=True)
+    employee_group1s = fields.Many2one('emp.group', string='Employee Group', related='employee_id.employee_group1s', tracking=True, store=True)
 
     attendee_total = fields.Integer('Total Attendee')
     sick_count = fields.Integer('Total Sick')
@@ -178,7 +178,7 @@ class HRTMSEntrySummary(models.Model):
     #     compute='_is_all_approved_by_ca',
     #     default=False,
     #     required=False)
-    employee_group1 = fields.Selection(selection=EMP_GROUP1,string='Employee P Group')
+    # employee_group1 = fields.Selection(selection=EMP_GROUP1,string='Employee P Group')
     completed_hrd = fields.Integer(
         string='Completed Approval HRD',
         compute='_task_progress_approval',

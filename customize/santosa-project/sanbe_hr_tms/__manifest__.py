@@ -98,6 +98,8 @@
                 'sanbe_hr_tms/static/src/js/report_action.js'
                 
             ],
+        'web.assets_qweb': [
+        ],
     },
     # only loaded in demonstration mode
     'demo': [

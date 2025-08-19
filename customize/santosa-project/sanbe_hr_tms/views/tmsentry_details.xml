@@ -43,7 +43,7 @@
                                 <field name="aot4" readonly="1"/>
                                 <field name="oto" readonly="1"/>
                                 <field name="approved"/>
-                                <field name="approved_by_ca"/>
+                                <field name="approved_by_ca" invisible="1"/>
                             </group>
                         </group>
                     </sheet>
