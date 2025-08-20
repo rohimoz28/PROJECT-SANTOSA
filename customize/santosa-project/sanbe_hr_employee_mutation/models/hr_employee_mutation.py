@@ -456,7 +456,7 @@ class HrEmployeeMutation(models.Model):
     def _update_employee_status(self):
         for record in self:
             if record.emp_status and record.employee_id:
-                record.service_employementstatus = self.emp_status
+                # record.service_employementstatus = self.emp_status
                 new_emp_status_id = self.env['hr.emp.status'].sudo().search([('emp_status', '=', self.emp_status),('status', '=', False)])
                 if new_emp_status_id:
                     record.employee_id.sudo().write({'emp_status_id': new_emp_status_id.id})
