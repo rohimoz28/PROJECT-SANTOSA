@@ -275,6 +275,13 @@ class HrEmployeeMutation(models.Model):
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
         for record in self:
+            contract_end = record.employee_id.contract_dateto  # sudah date, bukan record
+            today = fields.Date.today()
+            if contract_end and contract_end <= today:
+                raise UserError(
+                    f"Kontrak untuk karyawan {record.employee_id.name} sudah berakhir pada {contract_end}. "
+                    f"Silahkan buat kontrak baru terlebih dahulu untuk karyawan tersebut."
+                )
             # header
             employee = record.employee_id
             record.emp_id = employee.employee_id
@@ -456,7 +463,7 @@ class HrEmployeeMutation(models.Model):
     def _update_employee_status(self):
         for record in self:
             if record.emp_status and record.employee_id:
-                # record.service_employementstatus = self.emp_status
+                record.service_employementstatus = self.emp_status
                 new_emp_status_id = self.env['hr.emp.status'].sudo().search([('emp_status', '=', self.emp_status),('status', '=', False)])
                 if new_emp_status_id:
                     record.employee_id.sudo().write({'emp_status_id': new_emp_status_id.id})
