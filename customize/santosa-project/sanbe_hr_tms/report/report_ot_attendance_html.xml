@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- QWeb Report Template -->
-    <template id="sanbe_hr_tms.report_ot_attendance_html" name="OT Attendance Report">
+    <!-- <template id="sanbe_hr_tms.report_ot_attendance_html" name="OT Attendance Report">
         <t t-call="web.html_container">
             <t t-call="web.external_layout">
                 <div class="page">
@@ -27,8 +27,6 @@
                                 <th style="text-align: center; white-space: nowrap;">Rel Time To</th>
                                 <th style="text-align: center; white-space: nowrap;">State</th>
                                 <th style="text-align: center; white-space: nowrap;">Period</th>
-                                <!-- <th>Total Delay</th>
-                                <th>Times Delayed</th> -->
                             </tr>
                         </thead>
                         <tbody>
@@ -49,8 +47,6 @@
                                     <td><span t-esc="line['rlz_time_to']" widget="float_time"/></td>
                                     <td><span t-esc="line['state']"/></td>
                                     <td><span t-esc="line['periode_id']"/></td>
-                                    <!-- <td><span t-esc="line['delay_total']"/></td>
-                                    <td><span t-esc="line['delay_count']"/></td> -->
                                 </tr>
                             </t>
                             <t t-if="not report_lines">
@@ -64,6 +60,151 @@
                     </table>
                 </div>
             </t>
+        </t>
+    </template> -->
+    
+    <template id="sanbe_hr_tms.report_ot_attendance_html" name="OT Attendance Report">
+        <t t-call="web.html_container">
+            <div class="header">
+                <t t-set="company" t-value="res_company" />
+                <table style="width=100%; margin-right: auto; border: 0px solid transparent;">
+                    <tr>
+                        <td>
+                            <img
+                                t-if="company.logo"
+                                t-att-src="image_data_uri(company.logo)"
+                                style="max-height: 100px; width: 200px;" alt="Logo"
+                            />
+                        </td>
+                    </tr>
+                </table>
+                <div class="row">
+                    <div class="col-12">
+                        <div style="border-bottom: 1px solid black; margin-bottom: 2px;" />
+                        <div style="border-bottom: 4px solid black;" />
+                    </div>
+                </div>
+                <table style="width=100%; margin-left: auto; border: 0px solid transparent;">
+                    <tr>
+                        <td class="text-left" style="vertical-align: middle; font-family: 'Bookman Old Style', Georgia, serif;">
+                            <strong>
+                                <span style="font-size:17px;" t-field="company.name" />
+                                Pharmaceutical Manufacturer
+                            </strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-size:13px; font-family: 'Bookman Old Style', Georgia, serif;" class="text-left">
+                        <t t-if="o.branch_id.street">
+                            <strong>
+                                <span style="font-size:13px; font-family: 'Bookman Old Style', Georgia, serif;" t-field="o.branch_id.street" />
+                            </strong>
+                        </t>
+                        <t t-if="o.branch_id.street2">
+                            <strong>
+                                <span style="font-size:13px; font-family: 'Bookman Old Style', Georgia, serif;" t-field="o.branch_id.street2" />
+                            </strong>
+                        </t>
+                        <t t-if="o.branch_id.city">
+                            <strong>
+                                <span style="font-size:13px; font-family: 'Bookman Old Style', Georgia, serif;" t-field="o.branch_id.city" />
+                            </strong>
+                        </t>
+                            <strong>
+                                <br /> Telp: <t t-if="o.branch_id.phone"><span style="font-size:13px; font-family: 'Bookman Old Style', Georgia, serif;" t-field="o.branch_id.phone" /></t>
+                                <br /> Fax: <t t-if="o.branch_id.fax"><span style="font-size:13px; font-family: 'Bookman Old Style', Georgia, serif;" t-field="o.branch_id.fax" /></t>
+                                <br />
+                                <t t-if="o.branch_id.city"><span style="font-size:13px; font-family: 'Bookman Old Style', Georgia, serif;" t-field="o.branch_id.city" /></t> <t t-if="o.branch_id.zip"><span style="font-size:13px; font-family: 'Bookman Old Style', Georgia, serif;" t-field="o.branch_id.zip" /></t>
+                            </strong>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="page">
+                <h2 class="text-center mb-4">
+                        Rekap Overtime Attendance - HRMS
+                </h2>
+
+                <table class="table table-bordered table-striped" style="table-layout: auto; word-wrap: break-word;">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center; white-space: nowrap;">No</th>
+                            <th style="text-align: center; white-space: nowrap;">Business Unit</th>
+                            <th style="text-align: center; white-space: nowrap;">Sub Department</th>
+                            <th style="text-align: center; white-space: nowrap;">Request Number</th>
+                            <th style="text-align: center; white-space: nowrap;">Request Date</th>
+                            <th style="text-align: center; white-space: nowrap;">Employee Name</th>
+                            <th style="text-align: center; white-space: nowrap;">NIK</th>
+                            <th style="text-align: center; white-space: nowrap;">Req Time Fr</th>
+                            <th style="text-align: center; white-space: nowrap;">Req Time To</th>
+                            <th style="text-align: center; white-space: nowrap;">App Time Fr</th>
+                            <th style="text-align: center; white-space: nowrap;">App Time To</th>
+                            <th style="text-align: center; white-space: nowrap;">Rel Time Fr</th>
+                            <th style="text-align: center; white-space: nowrap;">Rel Time To</th>
+                            <th style="text-align: center; white-space: nowrap;">State</th>
+                            <th style="text-align: center; white-space: nowrap;">Period</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="report_lines" t-as="line">
+                            <tr>
+                                <td>
+                                    <span t-esc="line['no']"/>
+                                </td>
+                                <td class="text-wrap">
+                                    <span t-esc="line['branch_id']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['department']"/>
+                                </td>
+                                <td class="text-wrap">
+                                    <span t-esc="line['no_request']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['req_date']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['employee_id']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['nik']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['req_time_fr']" widget="float_time"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['req_time_to']" widget="float_time"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['approve_time_from']" widget="float_time"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['approve_time_to']" widget="float_time"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['rlz_time_fr']" widget="float_time"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['rlz_time_to']" widget="float_time"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['state']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['periode_id']"/>
+                                </td>
+                            </tr>
+                        </t>
+                        <t t-if="not report_lines">
+                            <tr>
+                                <td colspan="16" class="text-center">
+                                        No Data Available
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
         </t>
     </template>
 
@@ -84,14 +225,15 @@
     <!-- Report Action -->
     <record id="action_report_ot_attendance" model="ir.actions.report">
         <field name="name">OT Attendance Report (HTML)</field>
-        <field name="type">ir.actions.report</field>
+        <!-- <field name="type">ir.actions.report</field> -->
         <field name="model">sb.overtime.attendance</field>
         <field name="report_type">qweb-html</field>
         <field name="report_name">sanbe_hr_tms.report_ot_attendance_html</field>
-         <field name="report_file">sanbe_hr_tms.report_ot_attendance_html</field>
+        <field name="report_file">sanbe_hr_tms.report_ot_attendance_html</field>
         <field name="binding_model_id" ref="model_sb_overtime_attendance"/>
         <field name="binding_type">report</field>
-        <field name="paperformat_id" 
-             ref="sanbe_hr_tms.paperformat_overtime_attendance_report" />
+        <field name="paperformat_id" ref="sanbe_hr_tms.paperformat_overtime_attendance_report" />
     </record>
+
+ 
 </odoo>
