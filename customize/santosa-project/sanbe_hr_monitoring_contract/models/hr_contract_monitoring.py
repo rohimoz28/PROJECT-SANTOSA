@@ -405,6 +405,7 @@ class HrContractMonitoring(models.Model):
     employee_id = fields.Many2one('hr.employee', string='Employee', readonly=True)
     employee_name = fields.Char('Employee Name', related='employee_id.name', readonly=True, store=True)
     nik_employee = fields.Char('Employee NIK', related='employee_id.nik', readonly=True, store=True)
+    #superior_id = fields.Many2one('parent.hr.employee', 'Immediate Superior', related='employee_id.parent_id', readonly=True, store=True)
     superior_id = fields.Many2one('hr.employee', 'Immediate Superior', related='employee_id.parent_id', readonly=True, store=True)
     nik_lama = fields.Char('Old NIK', related='employee_id.nik_lama', readonly=True, store=True)
     address_id = fields.Many2one('res.partner',related='employee_id.address_id',string='Partner')

@@ -81,7 +81,7 @@ class HRJob(models.Model):
     department_code = fields.Char('Departemen Code', related='hrms_department_id.department_code')
     division_id = fields.Many2one('sanhrms.division', tracking=True, string='Divisi')
     division_code = fields.Char('Divisi Code', related='division_id.division_code')
-
+    display_name = fields.Char(compute='_compute_display_name', string='Display Name', store=True, readonly=True)
 
     _sql_constraints = [
         ('name_company_uniq', 'check(1=1)', 'The name of the job position must be unique per department in company!'),
@@ -140,3 +140,9 @@ class HRJob(models.Model):
             if not allres.branch_id:
                 allres.branch_id = allres.department_id.branch_id.id
         return res
+
+    
+    @api.depends('name')
+    def _compute_display_name(self):
+        for account in self:
+            account.display_name = f"{account.name.upper()}"
