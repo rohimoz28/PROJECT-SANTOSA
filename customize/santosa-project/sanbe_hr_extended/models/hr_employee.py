@@ -116,6 +116,10 @@ class HrEmployee(models.Model):
     no_npwp = fields.Char('No NPWP', tracking=True)
     doc_npwp = fields.Many2many('ir.attachment', 'hr_employee_rel', string='NPWP Document',
                                 help="You may attach files to with this")
+    # job_title = fields.Char(related='job_id.display_name', string='Job Title', store=True, readonly=True)
+    
+    job_id = fields.Many2one('hr.job', string='Jabatan', tracking=True, store=True)
+    # job_title = fields.Char(related='job_id.name', string='Job Title', store=True, readonly=True)
     title = fields.Char('Title')
     license = fields.Char('License')
     religion = fields.Selection([('islam', 'Islam'),
@@ -130,7 +134,7 @@ class HrEmployee(models.Model):
                                    ('partner_doctor', 'Dokter Mitra'),
                                    ('visitor', 'Visitor'),
                                    ], default='contract', tracking=True, string='Status Hubungan Kerja', required=True)
-    job_title = fields.Char(string='Job Title', compute='_compute_job_title', store=True)
+    job_title = fields.Char(string='Job Title', compute='_compute_job_title',  store=True)
 
     @api.onchange('job_id')
     def _onchange_job_id(self):
@@ -139,7 +143,7 @@ class HrEmployee(models.Model):
     @api.depends('job_id')
     def _compute_job_title(self):
         for rec in self:
-            rec.job_title = str(rec.job_id.name or '')
+            rec.job_title = str(rec.job_id.display_name or '')
             
     emp_status = fields.Selection([('probation', 'Probation'),
                                    ('confirmed', 'Confirmed'),
