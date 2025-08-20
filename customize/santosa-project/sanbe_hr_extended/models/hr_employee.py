@@ -116,10 +116,6 @@ class HrEmployee(models.Model):
     no_npwp = fields.Char('No NPWP', tracking=True)
     doc_npwp = fields.Many2many('ir.attachment', 'hr_employee_rel', string='NPWP Document',
                                 help="You may attach files to with this")
-    # job_title = fields.Char(related='job_id.display_name', string='Job Title', store=True, readonly=True)
-    
-    job_id = fields.Many2one('hr.job', string='Jabatan', tracking=True, store=True)
-    # job_title = fields.Char(related='job_id.name', string='Job Title', store=True, readonly=True)
     title = fields.Char('Title')
     license = fields.Char('License')
     religion = fields.Selection([('islam', 'Islam'),
