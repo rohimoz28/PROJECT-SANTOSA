@@ -145,4 +145,5 @@ class HRJob(models.Model):
     @api.depends('name')
     def _compute_display_name(self):
         for account in self:
-            account.display_name = f"{account.name.upper()}"
+            if account.name:
+                account.display_name = f"{account.name.upper()}"
