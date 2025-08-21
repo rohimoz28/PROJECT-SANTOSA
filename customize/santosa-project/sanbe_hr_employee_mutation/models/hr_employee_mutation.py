@@ -25,6 +25,7 @@ class HrEmployeeMutation(models.Model):
     employee_id = fields.Many2one('hr.employee', string='Nama Karyawan', index=True)
     emp_id = fields.Char(string='ID Karyawan', tracking=True)
     nik = fields.Char(string='NIK', tracking=True)
+    nik_lama = fields.Char('NIK Lama', store=True)
     area = fields.Many2one('res.territory', string='Area', tracking=True)
     alldepartment = fields.Many2many('hr.department', 'hr_department_rel', string='All Department',  store=False)                
     branch_id = fields.Many2one('res.branch', string='unit Bisnis', domain="[('id','in',branch_ids)]", tracking=True)     
@@ -83,27 +84,28 @@ class HrEmployeeMutation(models.Model):
     service_date = fields.Date('Transaction Date', default=fields.Date.today())
     service_status = fields.Char('Mutation Status')
     service_nik = fields.Char('NIK', default=lambda self:self.employee_id.nik)
+    service_nik_lama = fields.Char('Previous NIK', default=lambda self:self.employee_id.nik)
     service_birthday = fields.Date('Tanggal lahir', default=lambda self:self.employee_id.birthday)
     service_employee_id = fields.Char('Employee ID', default='New')
     service_no_npwp = fields.Char('Nomor NPWP', default=lambda self:self.employee_id.no_npwp)
     service_no_ktp = fields.Char('Nomor KTP', default=lambda self:self.employee_id.no_ktp)
     service_area = fields.Many2one('res.territory', string='Area', tracking=True)
     service_bisnisunit = fields.Many2one('res.branch', domain="[('id','in',branch_ids)]", string='Unit Bisnis', default=lambda self:self.branch_id.id)              
-    service_division_id = fields.Many2one('sanhrms.division',string='Divisi', default=lambda self:self.employee_id.division_id.id)
     service_directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', default=lambda self:self.employee_id.directorate_id.id)
+    service_departmentid = fields.Many2one('sanhrms.department', domain="[('branch_id','=',service_bisnisunit)]", string='Departemen', default=lambda self:self.employee_id.hrms_department_id.id)
+    service_division_id = fields.Many2one('sanhrms.division',string='Divisi', default=lambda self:self.employee_id.division_id.id)
+    service_jobtitle = fields.Many2one('hr.job', domain="[('hrms_department_id','=',service_departmentid)]", string='Jabatan', index=True, default=lambda self:self.employee_id.job_id.id)
+    service_parent_id = fields.Many2one('parent.hr.employee', string='Atasan Langsung', tracking=True)
     service_employee_group1s = fields.Many2one('emp.group', string='Employee P Group', default=lambda self:self.employee_id.employee_group1s.id)
-    service_work_unit_id = fields.Many2one('hr.work.unit','Work Unit', default=lambda self:self.employee_id.work_unit_id.id)
     service_medic = fields.Many2one('hr.profesion.medic','Profesi Medis', default=lambda self:self.employee_id.medic.id)
     service_nurse = fields.Many2one('hr.profesion.nurse','Profesi Perawat', default=lambda self:self.employee_id.nurse.id)
     service_speciality = fields.Many2one('hr.profesion.special','Kategori Khusus', default=lambda self:self.employee_id.seciality.id)
-    service_departmentid = fields.Many2one('sanhrms.department', domain="[('branch_id','=',service_bisnisunit)]", string='Departemen', default=lambda self:self.employee_id.hrms_department_id.id)
     service_identification = fields.Char(string='Nomor Kartu Keluarga', default=lambda self:self.employee_id.identification_id)
     service_jobstatus = fields.Selection([('', ''),
                                           ('permanent', 'Karyawan Tetap (PKWTT)'),
                                           ('contract', 'Karyawan Kontrak (PKWT)'),
                                           ('partner_doctor', 'Dokter Mitra'),
-                                          ('visitor', 'Visitor')], 
-                                          string='Status Hubungan Kerja')
+                                          ('visitor', 'Visitor')], string='Status Hubungan Kerja')
     service_job_status_id = fields.Many2one('sanhrms.job.status', string='Status Pekerjaan', default=lambda self:self.employee_id.job_status)
     service_job_status_type = fields.Selection(store=True, default=lambda self:self.employee_id.job_status, related='service_job_status_id.type')
     service_employementstatus = fields.Selection([('probation', 'Probation'),
@@ -113,7 +115,6 @@ class HrEmployeeMutation(models.Model):
                                                   ('retired', 'Retired'),
                                                   ('terminated', 'Terminated')],
                                                  string='Status Kekaryawanan')
-    service_jobtitle = fields.Many2one('hr.job', domain="[('hrms_department_id','=',service_departmentid)]", string='Jabatan', index=True, default=lambda self:self.employee_id.job_id.id)
     service_empgroup1 = fields.Selection(selection=[('Group1', 'Group 1 - Harian(pak Deni)'),
                                                     ('Group2', 'Group 2 - bulanan pabrik(bu Felisca)'),
                                                     ('Group3', 'Group 3 - Apoteker and Mgt(pak Ryadi)'),
@@ -125,7 +126,7 @@ class HrEmployeeMutation(models.Model):
     service_start = fields.Date('Effective Date From', required=True)
     service_end = fields.Date('Effective Date To')
     service_name = fields.Char('Nama Karyawan')
-    service_previous_name = fields.Char('Nama Karyawan Sebelumnya')
+    service_previous_name = fields.Char('Nama Karyawan Lama')
     remarks = fields.Text('Remarks')
     image = fields.Many2many('ir.attachment', string='Image', help="You may attach files to with this")
     service_employee_levels = fields.Many2one('employee.level', string='Employee Level', default=lambda self:self.employee_id.employee_levels.id)
@@ -138,8 +139,9 @@ class HrEmployeeMutation(models.Model):
     contract_from = fields.Date('Contract Date From', related='employee_id.contract_datefrom', readonly=False)
     contract_to = fields.Date('Contract Date To', related='employee_id.contract_dateto', readonly=False)
     company_id = fields.Many2one('res.company', required=True, readonly=True, default=lambda self: self.env.company)
-    nik_lama = fields.Char('NIK Lama', store=True)
-    service_nik_lama = fields.Char('Previous NIK', default=lambda self:self.employee_id.nik)
+    service_work_unit = fields.Char('Unit Kerja')
+    service_work_unit_id = fields.Many2one('hr.work.unit', string='Posisi Unit Kerja', tracking=True)
+    service_coach_id = fields.Many2one('parent.hr.employee', string='Atasan Unit Kerja', tracking=True)
 
 
     @api.depends('hrms_department_id')
@@ -183,6 +185,7 @@ class HrEmployeeMutation(models.Model):
                                                      'hrms_department_id': self.service_departmentid.id,
                                                      'division_id': self.service_division_id.id,
                                                      'job_title': self.service_jobtitle.name,
+                                                     'parent_id': self.service_parent_id.id,
                                                      'job_status': self.service_jobstatus,
                                                      'emp_status': self.service_employementstatus,
                                                      'model_name': 'hr.employee.mutations',
@@ -212,6 +215,15 @@ class HrEmployeeMutation(models.Model):
         if self.service_jobstatus != self.employee_id.job_status:
             self.employee_id.write({'job_status': self.service_jobstatus})
 
+        if self.service_work_unit != self.employee_id.work_unit:
+            self.employee_id.write({'work_unit': self.service_work_unit})
+
+        if self.service_work_unit_id != self.employee_id.work_unit_id.id:
+            self.employee_id.write({'work_unit_id': self.service_work_unit_id})
+
+        if self.service_coach_id != self.employee_id.coach_id.id:
+            self.employee_id.write({'coach_id': self.service_coach_id})
+
         if self.service_type == 'conf':
             self.employee_id.write({'emp_status': 'confirmed'})
         elif self.service_type in ['actv','corr']:
@@ -223,11 +235,14 @@ class HrEmployeeMutation(models.Model):
         if self.service_jobtitle.id != self.employee_id.job_id.id:
             self.employee_id.write({'job_id': self.service_jobtitle.id})
 
+        if self.service_parent_id.id != self.employee_id.parent_id.id:
+            self.employee_id.write({'parent_id': self.service_parent_id.id})
+
         if self.service_employee_group1s != self.employee_id.employee_group1s.id:
             self.employee_id.write({'employee_group1s': self.service_employee_group1s})
 
-        # if self.service_employee_id != self.employee_id.employee_id:
-        #    self.employee_id.write({'employee_id': self.service_employee_id})
+        if self.service_name != self.employee_id.name:
+            self.employee_id.write({'name': self.service_name})
 
         if self.service_no_npwp != self.employee_id.no_npwp:
             self.employee_id.write({'no_npwp': self.service_no_npwp})
@@ -272,8 +287,8 @@ class HrEmployeeMutation(models.Model):
                            'service_status': 'Approved'})
 
 
-    @api.onchange('employee_id')
-    def _onchange_employee_id(self):
+    @api.onchange('employee_id', 'service_type')
+    def _onchange_employee_id_and_service_type(self):
         for record in self:
             contract_end = record.employee_id.contract_dateto  # sudah date, bukan record
             today = fields.Date.today()
@@ -284,6 +299,10 @@ class HrEmployeeMutation(models.Model):
                 )
             # header
             employee = record.employee_id
+
+            if not employee:
+                continue
+
             record.emp_id = employee.employee_id
             record.nik = employee.nik
             record.nik_lama = employee.nik_lama
@@ -301,19 +320,11 @@ class HrEmployeeMutation(models.Model):
             record.nurse = employee.nurse
             record.speciality = employee.seciality
             record.employee_levels = employee.employee_levels.id
+
             # detail
             record.join_date = employee.join_date
             record.marital = employee.marital
             
-
-    @api.onchange('service_type')
-    def _onchange_service_status(self):
-        for record in self:
-            employee = record.employee_id
-
-            if not employee:
-                continue
-
             if record.service_type in ['conf']:
                 record.join_date = employee.join_date
                 record.service_birthday = employee.birthday
@@ -336,7 +347,11 @@ class HrEmployeeMutation(models.Model):
                 record.service_departmentid = employee.hrms_department_id.id
                 record.service_division_id = employee.division_id.id
                 record.service_jobtitle = employee.job_id.id
+                record.service_parent_id = employee.parent_id.id
                 record.service_jobstatus = employee.job_status
+                record.service_work_unit = employee.work_unit
+                record.service_work_unit_id = employee.work_unit_id.id
+                record.service_coach_id = employee.coach_id.id
                 record.service_employementstatus = 'confirmed'
                 record.service_status = 'Draft'
 
@@ -362,7 +377,11 @@ class HrEmployeeMutation(models.Model):
                 record.service_departmentid = employee.hrms_department_id.id
                 record.service_division_id = employee.division_id.id
                 record.service_jobtitle = False
+                record.service_parent_id = employee.parent_id.id
                 record.service_jobstatus = False
+                record.service_work_unit = employee.work_unit
+                record.service_work_unit_id = employee.work_unit_id.id
+                record.service_coach_id = employee.coach_id.id
                 record.service_employementstatus = 'confirmed'
                 record.service_status = 'Draft'
             
@@ -388,7 +407,11 @@ class HrEmployeeMutation(models.Model):
                 record.service_departmentid = False
                 record.service_division_id = False
                 record.service_jobtitle = False
+                record.service_parent_id = False
                 record.service_jobstatus = False
+                record.service_work_unit = employee.work_unit
+                record.service_work_unit_id = employee.work_unit_id.id
+                record.service_coach_id = employee.coach_id.id
                 record.service_employementstatus = 'confirmed'
                 record.service_status = 'Draft'
 
@@ -414,7 +437,11 @@ class HrEmployeeMutation(models.Model):
                 record.service_departmentid = False
                 record.service_division_id = False
                 record.service_jobtitle = False
+                record.service_parent_id = False
                 record.service_jobstatus = False
+                record.service_work_unit = employee.work_unit
+                record.service_work_unit_id = employee.work_unit_id.id
+                record.service_coach_id = employee.coach_id.id
                 record.service_employementstatus = 'confirmed'
                 record.service_status = 'Draft'
         
@@ -440,9 +467,14 @@ class HrEmployeeMutation(models.Model):
                 record.service_departmentid = False
                 record.service_division_id = False
                 record.service_jobtitle = False
+                record.service_parent_id = False
                 record.service_jobstatus = False
+                record.service_work_unit = employee.work_unit
+                record.service_work_unit_id = employee.work_unit_id.id
+                record.service_coach_id = employee.coach_id.id
                 record.service_employementstatus = 'confirmed'
-                record.service_status = 'Draft'
+                record.service_status = 'Draft'        
+
 
     # def button_intransfer(self):
     #     self.write({'state': 'intransfer'})
