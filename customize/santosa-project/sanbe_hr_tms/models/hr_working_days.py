@@ -69,8 +69,8 @@ class HRWorkingDays(models.Model):
     periode_from = fields.Date('Periode From')
     periode_to = fields.Date('Periode To')
 
-    overtime_ids = fields.One2many('hr.overtime.list','workingday_id',auto_join=True,index=True)
-    overtimetol_ids = fields.One2many('hr.overtime.tollerance','workingday_id',auto_join=True,index=True)
+    # overtime_ids = fields.One2many('hr.overtime.list','workingday_id',auto_join=True,index=True)
+    # overtimetol_ids = fields.One2many('hr.overtime.tollerance','workingday_id',auto_join=True,index=True)
     allowance_ids = fields.One2many('hr.allowance.list','workingday_id',auto_join=True,index=True)
     is_active = fields.Boolean('Active')
     is_inactive = fields.Boolean('In Active')
@@ -88,16 +88,16 @@ class HRWorkingDays(models.Model):
     bu6 = fields.Boolean('BU6')
     sbe = fields.Boolean('SBE')
     cwc = fields.Boolean('CWC')
-    is_tunjangan = fields.Boolean('Tunjangan/Premi')
-    valid_from = fields.Date('Valid From')
-    valid_to = fields.Date('To')
+    # is_tunjangan = fields.Boolean('Tunjangan/Premi')
+    # valid_from = fields.Date('Valid From')
+    # valid_to = fields.Date('To')
     delay_allow = fields.Integer(string='Permitted Delays (Minute)', default=10)
-    is_ot_holiday = fields.Boolean(
-        string='Overtime',
-        required=False)
-    is_ot_automatic = fields.Boolean(
-        string='OT Otomatis',
-        required=False)
+    # is_ot_holiday = fields.Boolean(
+    #     string='Overtime',
+    #     required=False)
+    # is_ot_automatic = fields.Boolean(
+    #     string='OT Otomatis',
+    #     required=False)
     
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)
