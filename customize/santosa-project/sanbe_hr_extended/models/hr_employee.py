@@ -130,6 +130,17 @@ class HrEmployee(models.Model):
                                    ('partner_doctor', 'Dokter Mitra'),
                                    ('visitor', 'Visitor'),
                                    ], default='contract', tracking=True, string='Status Hubungan Kerja', required=True)
+    job_title = fields.Char(string='Job Title', compute='_compute_job_title',  store=True)
+
+    @api.onchange('job_id')
+    def _onchange_job_id(self):
+        self._compute_job_title()
+    
+    @api.depends('job_id')
+    def _compute_job_title(self):
+        for rec in self:
+            rec.job_title = str(rec.job_id.display_name or '')
+            
     emp_status = fields.Selection([('probation', 'Probation'),
                                    ('confirmed', 'Confirmed'),
                                    ('end_contract', 'End Of Contract'),

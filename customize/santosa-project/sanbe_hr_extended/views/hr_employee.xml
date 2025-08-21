@@ -1,7 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
 <odoo>
     <data>
-<!--        <delete model="ir.ui.view" search="[('id','=', ref('sanbe_hr_extended.hr_employee_extended_form'))]"/>-->
+        
+        <!-- <template id="hr_org_chart_remove_job_title" inherit_id="hr_org_chart.hr_org_chart_employee_content">
+            <xpath expr="//small[@t-esc='employee.job_title']" position="replace"/>
+        </template> -->
+
         <record id="hr_employee_extended_form" model="ir.ui.view">
             <field name="name">hr.employee.extended.form</field>
             <field name="model">hr.employee</field>
