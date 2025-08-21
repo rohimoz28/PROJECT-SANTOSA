@@ -26,16 +26,17 @@ class HrEmployementlog(models.Model):
 
     employee_id = fields.Many2one('hr.employee', string='Employee ID', index=True)
     contract_id = fields.Many2one(related="employee_id.contract_id", string="Contract", store=True)
-    service_type = fields.Char('Service Type')
-    start_date = fields.Date('Start Date')
-    end_date = fields.Date('End date')
-    area = fields.Many2one('res.territory', string='Area')
-    bisnis_unit = fields.Many2one('res.branch', string='Business Units')
-    directorate_id = fields.Many2one('sanhrms.directorate', string='Direktorat')
+    service_type = fields.Char('Service Type', tracking=True)
+    start_date = fields.Date('Start Date', tracking=True)
+    end_date = fields.Date('End date', tracking=True)
+    area = fields.Many2one('res.territory', string='Area', tracking=True)
+    bisnis_unit = fields.Many2one('res.branch', string='Business Units', tracking=True)
+    directorate_id = fields.Many2one('sanhrms.directorate', string='Direktorat', tracking=True)
     department_id = fields.Many2one('hr.department', string='Sub Department')
-    hrms_department_id = fields.Many2one('sanhrms.department', string='Departemen')
-    division_id = fields.Many2one('sanhrms.division', string='Divisi')
-    job_title = fields.Char(string='Jabatan')
+    hrms_department_id = fields.Many2one('sanhrms.department', string='Departemen', tracking=True)
+    division_id = fields.Many2one('sanhrms.division', string='Divisi', tracking=True)
+    job_title = fields.Char(string='Jabatan', tracking=True)
+    parent_id = fields.Many2one('parent.hr.employee', tracking=True, string='Atasan Langsung')
     job_status = fields.Selection([('permanent', 'Karyawan Tetap (PKWTT)'),
                                    ('contract', 'Karyawan Kontrak (PKWT)'),
                                    ('partner_doctor', 'Dokter Mitra'),
