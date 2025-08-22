@@ -96,9 +96,7 @@
                                 <field name="delay_allow"/>
                             </group>
                         </group>
-                        <group 
-                        invisible="1"
-                        >
+                        <group invisible="1">
                             <field name="is_tunjangan" invisible="1"/>
                         </group>
                         <group invisible="1">
@@ -117,7 +115,7 @@
                         </group>
                         <notebook invisible="1">
                             <page name="overtime" string="OT Calculation">
-                                <field name="overtime_ids" required="1">
+                                <field name="overtime_ids" required="0">
                                     <tree editable="bottom">
                                         <field name="workingday_id" column_invisible="1" />
                                         <field name="ot_type" />

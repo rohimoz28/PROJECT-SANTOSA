@@ -69,8 +69,8 @@ class HRWorkingDays(models.Model):
     periode_from = fields.Date('Periode From')
     periode_to = fields.Date('Periode To')
 
-    # overtime_ids = fields.One2many('hr.overtime.list','workingday_id',auto_join=True,index=True)
-    # overtimetol_ids = fields.One2many('hr.overtime.tollerance','workingday_id',auto_join=True,index=True)
+    overtime_ids = fields.One2many('hr.overtime.list','workingday_id',auto_join=True,index=True)
+    overtimetol_ids = fields.One2many('hr.overtime.tollerance','workingday_id',auto_join=True,index=True)
     allowance_ids = fields.One2many('hr.allowance.list','workingday_id',auto_join=True,index=True)
     is_active = fields.Boolean('Active')
     is_inactive = fields.Boolean('In Active')
