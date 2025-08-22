@@ -15,6 +15,7 @@
                     <field name="directorate_id" optional="show"/>
                     <field name="hrms_department_id" optional="show"/>
                     <field name="division_id" optional="show"/>
+                    <field name="parent_id" optional="show"/>
                     <field name="nik" optional="show"/>
                     <field name="job_title" optional="show"/>
                     <field name="job_status" optional="show"/>
@@ -47,6 +48,7 @@
                                 <field name="directorate_id"/>
                                 <field name="hrms_department_id"/>
                                 <field name="division_id"/>
+                                <field name="parent_id"/>
                                 <field name="masa_jabatan"/>
                                 <field name="employee_group1"/>
                             </group>
