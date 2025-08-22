@@ -144,7 +144,7 @@
                             <field name="name" placeholder="Nama karyawan" required="True"
                                 style="font-size: min(4vw, 2.6rem);" readonly="(state !='draft')" />
                         </h1>
-                        <field name="initial" placeholder="Inisial"  readonly="(state !='draft')" />
+                        <field name="employee_category" readonly="(state != 'draft')" placeholder="Kategori" required="1" class="employee-category-field"/>
                     </div>
                 </xpath>
                 <xpath expr="//page[@name='personal_information']/group/group[1]"
