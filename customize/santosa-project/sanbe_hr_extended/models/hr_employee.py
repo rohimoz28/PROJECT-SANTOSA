@@ -289,11 +289,11 @@ class HrEmployee(models.Model):
     employee_category = fields.Selection(
         selection=[
             ('nakes', 'Nakes'),
+            ('perawat', 'Perawat'),
             ('dokter', 'Dokter'),
             ('back_office', 'Back Office'),
         ],
         string='Kategori',
-        # default=False
     )
 
 
