@@ -88,16 +88,16 @@ class HRWorkingDays(models.Model):
     bu6 = fields.Boolean('BU6')
     sbe = fields.Boolean('SBE')
     cwc = fields.Boolean('CWC')
-    # is_tunjangan = fields.Boolean('Tunjangan/Premi')
-    # valid_from = fields.Date('Valid From')
-    # valid_to = fields.Date('To')
+    is_tunjangan = fields.Boolean('Tunjangan/Premi')
+    valid_from = fields.Date('Valid From')
+    valid_to = fields.Date('To')
     delay_allow = fields.Integer(string='Permitted Delays (Minute)', default=10)
-    # is_ot_holiday = fields.Boolean(
-    #     string='Overtime',
-    #     required=False)
-    # is_ot_automatic = fields.Boolean(
-    #     string='OT Otomatis',
-    #     required=False)
+    is_ot_holiday = fields.Boolean(
+        string='Overtime',
+        required=False)
+    is_ot_automatic = fields.Boolean(
+        string='OT Otomatis',
+        required=False)
     
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)
