@@ -212,7 +212,6 @@ class HrEmployee(models.Model):
         tracking=3,
         default='draft')
     nama_pekerjaans = fields.Char(related='job_id.name', store=True)
-    initial = fields.Char('Inisial')
     gender_selection = fields.Selection([('male', 'Laki-Laki'),
                             ('female', 'Perempuan'),],compute="_get_gender_status",
                             inverse='onchange_gender_selection', string='Jenis Kelamin')
@@ -287,7 +286,15 @@ class HrEmployee(models.Model):
         inverse_name='employee_id',
         string='SIP'
     )
-
+    employee_category = fields.Selection(
+        selection=[
+            ('nakes', 'Nakes'),
+            ('perawat', 'Perawat'),
+            ('dokter', 'Dokter'),
+            ('back_office', 'Back Office'),
+        ],
+        string='Kategori',
+    )
 
 
     # wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.", group_operator="avg")

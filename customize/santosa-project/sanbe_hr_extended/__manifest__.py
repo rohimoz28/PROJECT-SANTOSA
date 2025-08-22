@@ -45,6 +45,7 @@
     'assets': {
         'web.assets_backend': [
             "sanbe_hr_extended/static/src/css/hide_searchpanel.css",
+            "sanbe_hr_extended/static/src/css/employee_category.css",
         ],
     },
     # only loaded in demonstration mode
