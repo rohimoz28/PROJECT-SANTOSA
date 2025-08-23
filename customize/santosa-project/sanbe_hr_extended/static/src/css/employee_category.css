@@ -1,0 +1,10 @@
+.o_form_view .employee-category-field input {
+    min-height: 32px;        
+    line-height: 1.4em;      
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.o_form_view .employee-category-field input::placeholder {
+    line-height: 1.4em;
+}
