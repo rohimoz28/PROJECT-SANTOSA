@@ -39,6 +39,7 @@ access_mst_group_unit,access_mst_group_unit,model_mst_group_unit,base.group_user
 access_mst_group_unit_pelayanan_manager,access_mst_group_unit_pelayanan_manager,model_mst_group_unit_pelayanan,base_territory.group_branch_user_manager,1,1,1,1
 access_mst_group_unit_pelayanan,access_mst_group_unit_pelayanan,model_mst_group_unit_pelayanan,base.group_user,1,0,0,0
 access_hr_sip,access.hr.sip,model_hr_sip,base.group_user,1,1,1,1
+access_employee_report_wizard,access.employee.report.wizard,model_employee_report_wizard,base.group_user,1,1,1,1
 
 access_hrd_read_attachment_admin,HRD Read Attachment,model_ir_attachment,hr.group_hr_manager,0,1,1,1
 access_hrd_read_attachment_manager,HRD Read Attachment,model_ir_attachment,hr.group_hr_user,1,1,1,1

@@ -53,7 +53,7 @@ class HrEmployementlog(models.Model):
                                    ('long_illness', 'Long Illness')], default='probation', string='Employement Status')
     emp_status_id = fields.Many2one(comodel_name='hr.emp.status', string='Status Kekaryawanan', tracking=True)
     masa_jabatan = fields.Char('Masa Jabatan', compute='hitung_masa_jabatan', store=False)
-    nik = fields.Char('NIK', compute='_get_nik')
+    nik = fields.Char('NIK', compute='_get_nik', store=True)
     employee_group1 = fields.Char(string="Group Penggajian", compute='_get_nik')
     model_name = fields.Char(string="Model Name")
     model_id = fields.Integer(string="Model Id")
@@ -62,6 +62,8 @@ class HrEmployementlog(models.Model):
     # end_contract = fields.Boolean(string="Flag End of Contract", default=False)
     end_contract = fields.Boolean(string="Rehire", default=False)
     label = fields.Char(default="Open View")
+    employee_group1s = fields.Char(string='Group penggajian', compute='_get_nik' , tracking=True, store=True)
+    
 
     def ambil_view(self):
         for rec in self:
@@ -81,7 +83,7 @@ class HrEmployementlog(models.Model):
         for rec in self:
             if rec.employee_id:
                 rec.nik = rec.employee_id.nik
-                rec.employee_group1 = rec.employee_id.employee_group1s.name
+                rec.employee_group1s = rec.employee_id.employee_group1s
 
     # @api.depends('start_date', 'end_date')
     # def hitung_masa_jabatan(self):
