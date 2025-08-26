@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="sanbe_hr_extended.employee_report_html" name="Report Karyawan">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2 class="text-center mb-4">
+                        LAPORAN KARYAWAN MASUK, KELUAR DAN MUTASI <t t-esc="branch_id"/>
+                    </h2>
+                </div>
+
+                <p>
+                    Periode: <t t-esc="start_date_filter"/> s/d <t t-esc="end_date_filter"/><br/>
+                    Group Penggajian: <t t-esc="employee_group1s"/><br/>
+                    Level: <t t-esc="employee_levels"/>
+                </p>
+                
+                <h4>KARYAWAN MASUK</h4>
+                <table class="table table-bordered table-striped" style="table-layout: auto; word-wrap: break-word;">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center; white-space: nowrap;">No</th>
+                            <th style="text-align: center; white-space: nowrap;">Kode Bag</th>
+                            <th style="text-align: center; white-space: nowrap;">NIK</th>
+                            <th style="text-align: center; white-space: nowrap;">Nama</th>
+                            <th style="text-align: center; white-space: nowrap;">Jabatan</th>
+                            <th style="text-align: center; white-space: nowrap;">Tgl Lahir</th>
+                            <th style="text-align: center; white-space: nowrap;">Jenis Kelamin</th>
+                            <th style="text-align: center; white-space: nowrap;">No KTP</th>
+                            <th style="text-align: center; white-space: nowrap;">Gaji</th>
+                            <th style="text-align: center; white-space: nowrap;">Tgl Masuk</th>
+                            <th style="text-align: center; white-space: nowrap;">Kontrak Kerja</th>
+                            <th style="text-align: center; white-space: nowrap;">No Rekening</th>
+                            <th style="text-align: center; white-space: nowrap;">THR (N/L)</th>
+                            <th style="text-align: center; white-space: nowrap;">No NPWP</th>
+                            <th style="text-align: center; white-space: nowrap;">Nama Atasan</th>
+                            <th style="text-align: center; white-space: nowrap;">Jumlah Keluarga</th>
+                            <th style="text-align: center; white-space: nowrap;">Pendidikan</th>
+                            <th style="text-align: center; white-space: nowrap;">Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="new_lines" t-as="line">
+                            <tr>
+                                <td><span t-esc="line['no']"/></td>
+                                <td> </td>
+                                <td><span t-esc="line['nik']"/></td>
+                                <td><span t-esc="line['name']"/></td>
+                                <td><span t-esc="line['job_id']"/></td>
+                                <td><span t-esc="line['birthday']"/></td>
+                                <td><span t-esc="line['gender']"/></td>
+                                <td><span t-esc="line['no_ktp']"/></td>
+                                <td> </td>
+                                <td><span t-esc="line['start_date']"/></td>
+                                <td><span t-esc="line['contract_id']"/></td>
+                                <td><span t-esc="line['bank_account_id']"/></td>
+                                <td> </td>
+                                <td><span t-esc="line['no_npwp']"/></td>
+                                <td><span t-esc="line['parent_id']"/></td>
+                                <td> </td>
+                                <td><span t-esc="line['title']"/></td>
+                                <td><span t-esc="line['service_type']"/></td>
+                            </tr>
+                        </t>
+                        <t t-if="not new_lines">
+                            <tr>
+                                <td colspan="16" class="text-center">
+                                    No Data Available
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+
+                <h4>KARYAWAN KELUAR</h4>
+                <table class="table table-bordered table-striped" style="table-layout: auto; word-wrap: break-word;">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center; white-space: nowrap;">No</th>
+                            <th style="text-align: center; white-space: nowrap;">Kode Bag</th>
+                            <th style="text-align: center; white-space: nowrap;">NIK</th>
+                            <th style="text-align: center; white-space: nowrap;">Nama</th>
+                            <th style="text-align: center; white-space: nowrap;">Jabatan</th>
+                            <th style="text-align: center; white-space: nowrap;">Tgl Lahir</th>
+                            <th style="text-align: center; white-space: nowrap;">Jenis Kelamin</th>
+                            <th style="text-align: center; white-space: nowrap;">No KTP</th>
+                            <th style="text-align: center; white-space: nowrap;">Gaji</th>
+                            <th style="text-align: center; white-space: nowrap;">Tgl Keluar</th>
+                            <th style="text-align: center; white-space: nowrap;">Alasan Keluar</th>
+                            <th style="text-align: center; white-space: nowrap;">Uang Pisah</th>
+                            <th style="text-align: center; white-space: nowrap;">Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="exit_lines" t-as="line">
+                            <tr>
+                                <td><span t-esc="line['no']"/></td>
+                                <td> </td>
+                                <td><span t-esc="line['nik']"/></td>
+                                <td><span t-esc="line['name']"/></td>
+                                <td><span t-esc="line['job_id']"/></td>
+                                <td><span t-esc="line['birthday']"/></td>
+                                <td><span t-esc="line['gender']"/></td>
+                                <td><span t-esc="line['no_ktp']"/></td>
+                                <td> </td>
+                                <td><span t-esc="line['start_date']"/></td>
+                                <td> </td>
+                                <td> </td>
+                                <td><span t-esc="line['service_type']"/></td>
+                            </tr>
+                        </t>
+                        <t t-if="not exit_lines">
+                            <tr>
+                                <td colspan="16" class="text-center">
+                                    No Data Available
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+
+                <h4>KARYAWAN MUTASI</h4>
+                <table class="table table-bordered table-striped" style="table-layout: auto; word-wrap: break-word;">
+                    <thead>
+                        <tr>
+                            <th rowspan="2" style="text-align: center;">No</th>
+                            <th rowspan="2" style="text-align: center;">Kode Bag</th>
+                            <th rowspan="2" style="text-align: center;">NIK</th>
+                            <th rowspan="2" style="text-align: center;">Nama</th>
+                            <th rowspan="2" style="text-align: center;">Jabatan</th>
+                            <th colspan="4" style="text-align: center;">Mutasi</th>
+                            <th rowspan="2" style="text-align: center;">Keterangan</th>
+                        </tr>
+                        <tr>
+                            <th style="text-align: center;">Kode Bag Lama</th>
+                            <th style="text-align: center;">Jabatan Lama</th>
+                            <th style="text-align: center;">Kode Bag Baru</th>
+                            <th style="text-align: center;">Jabatan Baru</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="mutation_lines" t-as="line">
+                            <tr>
+                                <td><span t-esc="line['no']"/></td>
+                                <td> </td>
+                                <td><span t-esc="line['nik']"/></td>
+                                <td><span t-esc="line['name']"/></td>
+                                <td><span t-esc="line['job_id']"/></td>
+                                <td> </td>
+                                <td> </td>
+                                <td> </td>
+                                <td> </td>
+                                <td><span t-esc="line['service_type']"/></td>
+                            </tr>
+                        </t>
+                        <t t-if="not mutation_lines">
+                            <tr>
+                                <td colspan="16" class="text-center">
+                                    No Data Available
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </t>
+        </t>
+    </template>
+
+    <record id="paperformat_employee_report" model="report.paperformat">
+        <field name="name">Print Out PDF Employee Report</field>
+        <field name="default" eval="True" />
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">15</field>
+        <field name="margin_bottom">15</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="True"/>
+        <field name="header_spacing">35</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <!-- Report Action -->
+    <record id="action_employee_report" model="ir.actions.report">
+        <field name="name">Laporan Karyawan PDF</field>
+        <field name="type">ir.actions.report</field>
+        <field name="model">hr.employment.log</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">sanbe_hr_extended.employee_report_html</field>
+        <field name="report_file">sanbe_hr_extended.employee_report_html</field>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" 
+             ref="sanbe_hr_extended.paperformat_employee_report" />
+    </record>
+
+</odoo>

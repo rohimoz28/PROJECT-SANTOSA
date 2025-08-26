@@ -39,8 +39,14 @@
         "views/hr_service_contract_monitoring.xml",
         "views/hr_sip.xml",
         "views/hr_contract_type.xml",
-        
         "views/hr_pension_monitoring.xml",
+
+        # wizards
+        "wizards/employee_report_wizard.xml",
+
+        # reports
+        "reports/employee_report_pdf.xml",
+        "reports/employee_report_excel.xml",
     ],
     'assets': {
         'web.assets_backend': [

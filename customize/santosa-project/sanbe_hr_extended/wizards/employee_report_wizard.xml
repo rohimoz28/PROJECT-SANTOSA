@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="employee_report_wizard_form_view" model="ir.ui.view">
+            <field name="name">employee.report.wizard.form.view</field>
+            <field name="model">employee.report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Export Employee Report">
+                    <div class="o_row">
+                        <label for="start_date"/>
+                        <div>
+                            <field name="start_date"/>
+                        </div>
+                        <label for="end_date"/>
+                        <div>
+                            <field name="end_date"/>
+                        </div>
+                    </div>
+                    <group>
+                        <field name="branch_id" options="{'no_create': True, 'no_create_edit': True}"/>
+                        <field name="employee_group1s"/>
+                        <field name="employee_levels"/>
+                    </group>
+                    <footer class="d-flex align-items-center">
+                        <button 
+                            name="button_export_pdf"
+                            string="Ekspor ke PDF"
+                            type="object"
+                            class="oe_highlight"
+                        />
+                        <span class="mx-2">atau</span>
+                        <button 
+                            name="button_export_excel"
+                            string="Ekspor ke Excel"
+                            type="object"
+                            class="oe_highlight"
+                        />
+                        <button 
+                            string="Batal"
+                            class="oe_link"
+                            special="cancel"
+                        />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="employee_wizard_report_action" model="ir.actions.act_window">
+            <field name="name">Laporan Karyawan</field>
+            <field name="res_model">employee.report.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="sanbe_hr_extended.employee_report_wizard_form_view"/>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>
