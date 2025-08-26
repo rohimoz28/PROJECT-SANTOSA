@@ -74,6 +74,20 @@
             groups="hr_expense.group_hr_expense_manager"
         />
 
+        <menuitem id="employee_report_menu_root"
+              parent="hr.menu_hr_root"
+              name="Reporting"
+              action=""
+              sequence="60"/>
+        
+        <menuitem 
+            id="employee_report_wizard_menu"
+            parent="sanbe_hr_menu.employee_report_menu_root"
+            name="Laporan Karyawan"
+            action="sanbe_hr_extended.employee_wizard_report_action"
+            sequence="0"
+        />
+
         <!-- Configuration Menu -->
         <menuitem
             id="menu_hr_pasal_pelanggaran"
