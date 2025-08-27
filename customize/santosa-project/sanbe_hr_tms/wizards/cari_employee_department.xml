@@ -8,23 +8,29 @@
                 <form>
                     <sheet>
                             <group id="info">
-                                <field name="area_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" readonly="1"/>
+                                <field name="area_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" readonly="1" invisible="1"/>
                                 <field name="branch_ids" options="{'no_edit': True, 'no_create': True, 'no_open': True}" invisible="1"/>
                                 <field name="wdcode_ids" options="{'no_edit': True, 'no_create': True, 'no_open': True}" invisible="1"/>
                                 <field name="branch_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" readonly="1"/>
                                 <field name="alldepartment" options="{'no_edit': True, 'no_create': True, 'no_open': True}" invisible="1"/>
-                                <field name="department_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
+                                <field name="department_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" invisible="1"/>
+                                <field name="directorate_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" string = "Direktorat" required='1' readonly="1" />
+                                <field name="hrms_department_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" string = "Departemen" required='1' readonly="1"/>
+                                <field name="division_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" string = "Divisi" required='1' readonly="1"/>
                                 <field name="empgroup_id" invisible="1"/>
                             </group>
-                            <group col="3" id="planning">
+                            <group id="planning">
                                 <group>
                                     <field name="plan_id" invisible="1"/>
                                     <field name="modelname" invisible="1"/>
                                     <field name="branch_id" invisible="modelname != 'hr.overtime.planning'"/>
                                     <field name="wdcode" options="{'no_edit': True, 'no_create': True, 'no_open': True}" invisible="modelname == 'hr.overtime.planning'" required="modelname == 'hr.overtime.planning'"/>
                                     <!--field name="periode_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" invisible="modelname == 'hr.overtime.planning'" required="modelname == 'hr.overtime.planning'"/-->
-                                    <field name="valid_from" widget="date" invisible="modelname == 'hr.overtime.planning'" required="modelname == 'hr.overtime.planning'"/>
-                                    <field name="valid_to" widget="date" invisible="modelname == 'hr.overtime.planning'" required="modelname == 'hr.overtime.planning'"/>
+                                    <label string="Periode" for="valid_from"/>
+                                    <div for="valid_from" class="o_row">
+                                        <field name="valid_from" widget="date" invisible="modelname == 'hr.overtime.planning'" required="modelname == 'hr.overtime.planning'"/> to 
+                                        <field name="valid_to" widget="date" invisible="modelname == 'hr.overtime.planning'" required="modelname == 'hr.overtime.planning'"/>
+                                    </div>
                                     <field name="plann_date_from" widget="date" invisible="modelname != 'hr.overtime.planning'"/>
                                     <field name="plann_date_to" widget="date" invisible="modelname != 'hr.overtime.planning'"/>
                                     <field name="ot_plann_from" widget="easy_timepicker" invisible="modelname != 'hr.overtime.planning'"/>
@@ -47,18 +53,22 @@
                             </group>
                             <notebook>
                             <page string="Employee List" name="empgroup_list">
-                                <field name="employee_ids">
-                                    <tree editable="bottom">
+                                <field name="employee_ids" readonly="0" >
+                                    <tree editable="bottom" create="false" delete="false">
                                             <field name="cari_id" column_invisible="1"/>
-                                            <field name="employee_id"/>
-                                             <field name="department_id"/>
-                                             <field name="nik"/>
-                                             <field name="job_id"/>
+                                            <field name="employee_id" readonly="1"/>
+                                            <field name="directorate_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" string = "Direktorat" readonly="1"/>
+                                            <field name="hrms_department_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" string = "Departemen" readonly="1"/>
+                                            <field name="division_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" string = "Divisi" readonly="1" />
+                                             <field name="department_id" column_invisible="1"/>
+                                             <field name="nik" readonly="1"/>
+                                             <field name="job_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" string = "Jabatan" readonly="1"/>
                                             <field name="is_selected"/>
                                     </tree>
                                 </field>
                             </page>
                             </notebook>
+                        <field name="id" readonly="1" invisible="1"/>
                     </sheet>
                     <footer>
                         <button name="action_insert_empgroup" string="Apply" type="object" class="oe_highlight" data-hotkey="q" invisible="modelname == 'hr.overtime.planning'"/>
