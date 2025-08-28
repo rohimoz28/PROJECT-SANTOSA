@@ -46,22 +46,40 @@ class HREmpGroupSetting(models.Model):
     description = fields.Char('Description', copy=True, tracking=True)
     #wdcode_ids = fields.Many2many('hr.working.days','wd_emp_rel',string='WD Code All', copy=True,compute='_isi_department_branch', store=False)
     #wdcode = fields.Many2one('hr.working.days',domain="[('id','in',wdcode_ids)]",string='WD Code', copy=True,index=True, required=True)
-    area_id = fields.Many2one("res.territory", string='Area ID', copy=True, index=True, tracking=True)
+    area_id = fields.Many2one(
+        "res.territory",
+        string='Area ID',
+        copy=True,
+        index=True,
+        default=lambda self: self.env.user.area.id,
+        required=True,
+        tracking=True
+    )
     branch_ids = fields.Many2many('res.branch', 'res_branch_emp_rel', string='AllBranch', copy=True, compute='_isi_semua_branch', store=False, tracking=True)
     is_active = fields.Boolean('Active', copy=True,tracking=True)
     is_inactive = fields.Boolean('In Active', copy=True,tracking=True)
     islabelstate = fields.Char('Status', copy=True)
-    branch_id = fields.Many2one('res.branch',string='Bisnis Unit', copy=True,index=True,domain="[('id','in',branch_ids)]",tracking=True)
-    area_id = fields.Many2one("res.territory", string='Area ID', copy=True, index=True, required=True)
+    branch_id = fields.Many2one(
+        'res.branch',
+        string='Bisnis Unit',
+        copy=True,
+        index=True,
+        # domain="[('id','in',branch_ids)]",
+        default=lambda self: self.env.user.branch_id.id,
+        tracking=True
+    )
     alldepartment = fields.Many2many('hr.department','hr_department_emp_set_rel', string='All Department', copy=True,compute='_isi_department_branch',store=False, tracking=True)
     department_id = fields.Many2one('hr.department',domain="[('id','in',alldepartment)]", copy=True,string='Sub Department',tracking=True)
+    division_id = fields.Many2one('sanhrms.division',string='Divisi', store=True)
+    hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen', store=True)
+    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', store=True)
     state = fields.Selection([('draft','Draft'),('approved','Approved'),('close','Close')], default='draft', copy=True, tracking=True)
     #valid_from = fields.Date('Valid From', required=True, copy=True)
     #valid_to = fields.Date('To', required=True, copy=True)
     summary_details_id = fields.Many2one('sb.tms.tmsentry.details', string='details')
     value_id = fields.Integer('value_id', compute='action_export_excel')
     value_name = fields.Char('value_name')
-    employee_id = fields.Many2one('hr.employee', string="Employee", required=False, copy=True, 
+    employee_id = fields.Many2one('hr.employee', string="Employee", required=False,
                                   ondelete='cascade', index=True)
     # employee_ids = fields.One2many('hr.employee', 'emp_group_id', string='employee')
     empgroup_ids = fields.One2many('hr.empgroup.details','empgroup_id',auto_join=True,string='Employee Group Setting Details', copy=True,tracking=True)
@@ -286,29 +304,29 @@ class HREmpGroupSetting(models.Model):
             
     #Function For PopUp Search Employee
     def action_search_employee(self):
-            #if self.department_id:
-            return {
-                'type': 'ir.actions.act_window',
-                'name': _('Search Employee'),
-                'res_model': 'hr.employeedepartment',
-                'view_mode': 'form',
-                'target': 'new',
-                'limit': 1000,  # Limit to the first 100 records
-                'domain': [('department_id', '=', self.department_id.id)],
-                'context': {
-                    'active_id': self.id,
-                    'default_modelname':'hr.empgroup',
-                    'default_area_id':self.area_id.id,
-                    'default_branch_id':self.branch_id.id,
-                    'default_department_id':self.department_id.id,
-                    #'default_periode_id':self.periode_id.id,
-                    #'default_valid_from':self.valid_from,
-                    #'default_valid_to':self.valid_to
-                    },
-                'views': [[False, 'form']]
-            }
-            #else:
-            #    raise UserError('Sub Department Not Selected')
+        wizard = self.env['hr.employeedepartment'].create({
+                    'empgroup_id': self.id,
+                    'modelname':'hr.empgroup',
+                    'area_id':self.area_id.id,
+                    'branch_id':self.branch_id.id,
+                    'department_id':self.department_id.id,
+                    'division_id':self.division_id.id,
+                    'hrms_department_id':self.hrms_department_id.id,
+                    'directorate_id':self.directorate_id.id,
+                    })
+        emp_line = self.env['hr.employeedepartment.details'].search([('cari_id','=',wizard.id)])
+        if not emp_line:
+            wizard._isi_employee()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Search Employee'),
+            'res_model': 'hr.employeedepartment',
+            'view_mode': 'form',
+            'target': 'new',
+            'res_id': wizard.id,
+            'domain': [('division_id', '=', self.division_id.id),('hrms_department_id', '=', self.hrms_department_id.id),('directorate_id', '=', self.directorate_id.id)],
+            'views': [[False, 'form']]
+        }
 
     def action_generate_employee_group(self):
         try:
@@ -459,6 +477,9 @@ class HREmpGroupSettingDetails(models.Model):
     area_id = fields.Many2one("res.territory", string='Area ID', copy=True, index=True,tracking=True)
     alldepartment = fields.Many2many('hr.department','hr_department_emp_detail_set_rel', string='All Department', copy=True,compute='_isi_department_branch',store=False,tracking=True)
     department_id = fields.Many2one('hr.department',string='Sub Department',copy=True,index=True,domain="[('id','in',alldepartment)]",tracking=True)
+    division_id = fields.Many2one('sanhrms.division',string='Divisi', store=True)
+    hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen', store=True)
+    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', store=True)
     wdcode_ids = fields.Many2many('hr.working.days','wd_emp_detail_rel',string='WD Code All', copy=True,compute='_isi_department_branch', store=False,tracking=True)
     wdcode = fields.Many2one('hr.working.days',domain="[('id','in',wdcode_ids)]",string='WD Code', copy=True,index=True,tracking=True)
     wdcode_name = fields.Char(string='WD Code Name', required=False,tracking=True)

@@ -57,6 +57,9 @@ class HrAttendance(models.Model):
     emp_id = fields.Integer('Employees ID')
     employee_id =fields.Many2one('hr.employee', domain="[('branch_id','=',branch_id)]",string="Employee", default=_default_employee, required=True, ondelete='cascade', index=True,)
     department_id = fields.Many2one('hr.department',related='employee_id.department_id',string='Sub Department',store=True)
+    division_id = fields.Many2one('sanhrms.division',string='Divisi',related='employee_id.division_id',store=True)
+    hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen',related='employee_id.hrms_department_id', store=True)
+    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat',related='employee_id.directorate_id',  store=True)
     area_id = fields.Many2one('res.territory',string='Area ID', index=True )
     branch_ids = fields.Many2many('res.branch', 'res_branch_rel_tms_entry', string='AllBranch', compute='_isi_semua_branch',
                                   store=False)

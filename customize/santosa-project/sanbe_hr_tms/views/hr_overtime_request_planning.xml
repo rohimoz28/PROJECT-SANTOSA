@@ -25,9 +25,7 @@
                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
                                    required="1"
                                    readonly="state == 'approved' or state == 'done'"  /> -->
-                            <field name="area_id"
-                                   options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
-                                   required="1"
+                            <field name="area_id" invisible="1" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
                                    readonly="state == 'approved' or state == 'done'"  />
                             <field name="branch_ids" invisible="1"/>
                             <field name="alldepartment" invisible="1"/>
@@ -40,9 +38,9 @@
                             <field name="department_id"
                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
                                    readonly="state == 'approved' or state == 'done'" invisible="1"/>
-                            <field name="directorate_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" readonly="state == 'approved' or state == 'done'"/>
-                            <field name="hrms_department_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" readonly="state == 'approved' or state == 'done'"/>
-                            <field name="division_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" readonly="state == 'approved' or state == 'done'"/>
+                            <field name="directorate_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" domain="['|',('branch_id','=',branch_id),('branch_id','=',False)]" readonly="state == 'approved' or state == 'done'"/>
+                            <field name="hrms_department_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" domain="[('directorate_id','=',directorate_id)]" readonly="state == 'approved' or state == 'done'"/>
+                            <field name="division_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" domain="[('department_id','=',hrms_department_id)]"         readonly="state == 'approved' or state == 'done'"/>
                             <field name="approve1" readonly="state == 'done'"/>
                             <field name="approve2" readonly="state == 'done'"/>
                             <field name="approve3" readonly="state == 'done'"/>
@@ -72,8 +70,8 @@
                     <notebook>
                         <page string="Request" name="overtime_request">
                             <field name="hr_ot_planning_ids" readonly="state == 'approved' or state == 'done'"
-                                   context="{'default_area_id': area_id, 'default_branch_id': branch_id, 'default_department_id': department_id}">
-                                <tree editable="bottom">
+                                   context="{'default_area_id': area_id, 'default_branch_id': branch_id, 'default_directorate_id': directorate_id, 'default_hrms_department_id': hrms_department_id, 'default_division_id': division_id}">
+                                <tree editable="bottom" create="false" delete="false">
                                     <field name="ot_type" optional="show"/>
                                     <field name="planning_id" column_invisible="1"/>
                                     <field name="employee_ids" column_invisible="1"/>

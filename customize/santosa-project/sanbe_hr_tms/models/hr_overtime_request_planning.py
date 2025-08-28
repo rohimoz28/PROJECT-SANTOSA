@@ -55,11 +55,27 @@ class HREmpOvertimeRequest(models.Model):
     name = fields.Char('Planning Request',default=lambda self: _('New'),
        copy=False, readonly=True, tracking=True, requirement=True)
     request_date = fields.Date('Planning Request Create', default=fields.Date.today(), readonly=True)
-    area_id = fields.Many2one('res.territory', string='Area', index=True, required=True)
+    area_id = fields.Many2one(
+        "res.territory",
+        string='Area ID',
+        copy=True,
+        index=True,
+        default=lambda self: self.env.user.area.id,
+        required=True,
+        tracking=True
+    )
     branch_ids = fields.Many2many('res.branch', 'res_branch_rel', string='AllBranch', compute='_isi_semua_branch',
                                   store=False)
 
-    branch_id = fields.Many2one('res.branch', string='Business Unit', index=True, domain="[('id','in',branch_ids)]")
+    branch_id = fields.Many2one(
+        'res.branch',
+        string='Bisnis Unit',
+        copy=True,
+        index=True,
+        # domain="[('id','in',branch_ids)]",
+        default=lambda self: self.env.user.branch_id.id,
+        tracking=True
+    )
     alldepartment = fields.Many2many('hr.department','hr_department_plan_ot_rel', string='All Department',compute='_isi_department_branch',store=False)
     department_id = fields.Many2one('hr.department',domain="[('id','in',alldepartment)]",string='Sub Department')
     division_id = fields.Many2one('sanhrms.division',string='Divisi', store=True)
@@ -76,7 +92,7 @@ class HREmpOvertimeRequest(models.Model):
         readonly=True, copy=False, index=True,
         tracking=3,
         default='draft')
-    periode_id = fields.Many2one('hr.opening.closing',string='Period',index=True, required=True)
+    periode_id = fields.Many2one('hr.opening.closing',string='Period',domain="[('branch_id','=',branch_id),('state','=','approved')]", index=True, required=True)
     hr_ot_planning_ids = fields.One2many('hr.overtime.employees','planning_id',auto_join=True,index=True,required=True)
     employee_id = fields.Many2one('hr.employee', string='Employee',domain="[('area','=',area_id),('branch_id','=',branch_id),('state','=','approved')]")
     company_id = fields.Many2one('res.company', string="Company Name", index=True)
@@ -229,29 +245,56 @@ class HREmpOvertimeRequest(models.Model):
             
     def action_search_employee(self):
         #if self.department_id:
+        # return {
+        #     'type': 'ir.actions.act_window',
+        #     'name': _('Search Employee'),
+        #     'res_model': 'hr.employeedepartment',
+        #     'view_mode': 'form',
+        #     'target': 'new',
+        #     'context': {
+        #         'active_id': self.id, 
+        #         'fieldname':'plan_id', 
+        #         'default_modelname':'hr.overtime.planning',
+        #         'default_area_id':self.area_id.id,
+        #         'default_branch_id':self.branch_id.id,
+        #         'default_plann_date_from':self.periode_from,
+        #         'default_plann_date_to':self.periode_to,
+        #         'default_department_id':self.department_id.id,
+        #         'default_division_id':self.division_id.id,
+        #         'default_hrms_department_id':self.hrms_department_id.id,
+        #         'default_directorate_id':self.directorate_id.id,
+        #         },
+        #     'views': [[False, 'form']]
+        # }
+        #else:
+        #    raise UserError('Sub Department Not Selected')
+        wizard = self.env['hr.employeedepartment'].create({
+                    'plan_id': self.id,
+                    'modelname':'hr.overtime.planning',
+                    'area_id':self.area_id.id,
+                    'branch_id':self.branch_id.id,
+                    'department_id':self.department_id.id,
+                    'division_id':self.division_id.id,
+                    'hrms_department_id':self.hrms_department_id.id,
+                    'directorate_id':self.directorate_id.id,
+                    'plann_date_from':self.periode_from,
+                    'plann_date_to':self.periode_to,
+                    })
+        emp_line = self.env['hr.employeedepartment.details'].search([('cari_id','=',wizard.id)])
+        if not emp_line:
+            wizard._isi_employee()
         return {
             'type': 'ir.actions.act_window',
             'name': _('Search Employee'),
             'res_model': 'hr.employeedepartment',
             'view_mode': 'form',
             'target': 'new',
-            'context': {
-                'active_id': self.id, 
-                'fieldname':'plan_id', 
-                'default_modelname':'hr.overtime.planning',
-                'default_area_id':self.area_id.id,
-                'default_branch_id':self.branch_id.id,
-                'default_plann_date_from':self.periode_from,
-                'default_plann_date_to':self.periode_to,
-                'default_department_id':self.department_id.id,
-                'default_division_id':self.division_id.id,
-                'default_hrms_department_id':self.hrms_department_id.id,
-                'default_directorate_id':self.directorate_id.id,
-                },
+            'res_id': wizard.id,
+            'domain': [('division_id', '=', self.division_id.id),('hrms_department_id', '=', self.hrms_department_id.id),('directorate_id', '=', self.directorate_id.id)],
             'views': [[False, 'form']]
         }
-        #else:
-        #    raise UserError('Sub Department Not Selected')
+        
+        
     def action_generate_ot(self):
         try:
             self.env.cr.execute("CALL generate_ot_request()")
