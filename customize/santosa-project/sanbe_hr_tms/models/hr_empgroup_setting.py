@@ -61,7 +61,7 @@ class HREmpGroupSetting(models.Model):
     summary_details_id = fields.Many2one('sb.tms.tmsentry.details', string='details')
     value_id = fields.Integer('value_id', compute='action_export_excel')
     value_name = fields.Char('value_name')
-    employee_id = fields.Many2one('hr.employee', string="Employee", required=True,
+    employee_id = fields.Many2one('hr.employee', string="Employee", required=False, copy=True, 
                                   ondelete='cascade', index=True)
     # employee_ids = fields.One2many('hr.employee', 'emp_group_id', string='employee')
     empgroup_ids = fields.One2many('hr.empgroup.details','empgroup_id',auto_join=True,string='Employee Group Setting Details', copy=True,tracking=True)

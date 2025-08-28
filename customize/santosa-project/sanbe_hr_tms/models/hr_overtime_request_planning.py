@@ -62,6 +62,9 @@ class HREmpOvertimeRequest(models.Model):
     branch_id = fields.Many2one('res.branch', string='Business Unit', index=True, domain="[('id','in',branch_ids)]")
     alldepartment = fields.Many2many('hr.department','hr_department_plan_ot_rel', string='All Department',compute='_isi_department_branch',store=False)
     department_id = fields.Many2one('hr.department',domain="[('id','in',alldepartment)]",string='Sub Department')
+    division_id = fields.Many2one('sanhrms.division',string='Divisi', store=True)
+    hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen', store=True)
+    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', store=True)
     periode_from = fields.Date('Period From',default=_get_active_periode_from)
     periode_to = fields.Date('Period To',default=_get_active_periode_to)
     approve1 = fields.Boolean('Supervisor Department',default=False)
@@ -231,7 +234,7 @@ class HREmpOvertimeRequest(models.Model):
             'name': _('Search Employee'),
             'res_model': 'hr.employeedepartment',
             'view_mode': 'form',
-            'target': 'current',
+            'target': 'new',
             'context': {
                 'active_id': self.id, 
                 'fieldname':'plan_id', 
@@ -241,6 +244,9 @@ class HREmpOvertimeRequest(models.Model):
                 'default_plann_date_from':self.periode_from,
                 'default_plann_date_to':self.periode_to,
                 'default_department_id':self.department_id.id,
+                'default_division_id':self.division_id.id,
+                'default_hrms_department_id':self.hrms_department_id.id,
+                'default_directorate_id':self.directorate_id.id,
                 },
             'views': [[False, 'form']]
         }
@@ -308,6 +314,9 @@ class HREmpOvertimeRequestEmployee(models.Model):
     area_id = fields.Many2one('res.territory', string='Area',index=True)
     branchh_id = fields.Many2one('res.branch', related='planning_id.branch_id',string='Bisnis Unit Header', index=True, readonly=True)
     departmenth_id = fields.Many2one('hr.department', related='planning_id.department_id',string='Department ID Header', index=True, readonly=True)
+    division_id = fields.Many2one('sanhrms.division',string='Divisi', related='planning_id.division_id', store=True)
+    hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen', related='planning_id.hrms_department_id',store=True)
+    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', related='planning_id.directorate_id',store=True)
     nik = fields.Char('Employee NIK',index=True)
     employee_ids = fields.Many2many('hr.employee','ov_plan_emp_rel',compute='_ambil_employee',string='Employee Name',store=False)
     employee_id = fields.Many2one('hr.employee',domain="[('id','in',employee_ids),('state','=','approved')]",string='Employee Name',index=True)

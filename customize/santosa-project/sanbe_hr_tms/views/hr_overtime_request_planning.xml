@@ -39,7 +39,10 @@
                                    readonly="state == 'approved' or state == 'done'" />
                             <field name="department_id"
                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
-                                   readonly="state == 'approved' or state == 'done'"/>
+                                   readonly="state == 'approved' or state == 'done'" invisible="1"/>
+                            <field name="directorate_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" readonly="state == 'approved' or state == 'done'"/>
+                            <field name="hrms_department_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" readonly="state == 'approved' or state == 'done'"/>
+                            <field name="division_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" readonly="state == 'approved' or state == 'done'"/>
                             <field name="approve1" readonly="state == 'done'"/>
                             <field name="approve2" readonly="state == 'done'"/>
                             <field name="approve3" readonly="state == 'done'"/>
@@ -113,7 +116,10 @@
                                            force_save="1" optional="show"/>
                                     <field name="department_id" context="{'default_department_id': department_id}"
                                            options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
-                                           force_save="1" optional="show"/>
+                                           force_save="1" column_invisible="1"/>
+                                    <field name="directorate_id" context="{'default_directorate_id': directorate_id}" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" force_save="1" optional="show"/>
+                                    <field name="hrms_department_id" context="{'default_hrms_department_id': hrms_department_id}" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" force_save="1" optional="show"/>
+                                    <field name="division_id" context="{'default_division_id': division_id}" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" force_save="1" optional="show"/>
                                     <field name="bundling_ot" optional="show"/>
                                     <field name="transport" optional="show"/>
                                     <field name="meals" optional="show"/>
@@ -142,7 +148,10 @@
                     <field name="name" optional="show"/>
                     <field name="request_date" optional="show"/>
                     <field name="state" string="Status" optional="show"/>
-                    <field name="department_id" optional="show"/>
+                    <field name="department_id" column_invisible="1"/>
+                    <field name="directorate_id" optional="show"/>
+                    <field name="hrms_department_id" optional="show"/>
+                    <field name="division_id" optional="show"/>
                     <field name="branch_id" optional="show"/>
                     <field name="periode_id" optional="show"/>
                     <field name="periode_from" optional="show"/>
