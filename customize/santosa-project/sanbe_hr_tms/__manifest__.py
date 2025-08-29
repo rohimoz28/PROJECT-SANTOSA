@@ -55,6 +55,7 @@
         'views/hr_tms_open_close.xml',
         'views/hr_tms_machine_setting.xml',
         'views/hr_machine_details.xml',
+        'views/st_master_leave.xml',
         'report/report_kehadiran_templates.xml',
         'report/report_kehadiran_html.xml',
         'report/report_ot_attendance_html.xml',
