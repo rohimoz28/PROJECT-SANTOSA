@@ -14,7 +14,7 @@ class HrCariEmployeeDepartment(models.TransientModel):
     division_id = fields.Many2one('sanhrms.division',string='Divisi', store=True)
     hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen', store=True)
     directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', store=True)
-    empgroup_id = fields.Many2one('hr.empgroup', string='Employee Group Setting', ondelete='cascade', index=True)
+    empgroup_id = fields.Many2one('hr.empgroup', string='Employee Group Setting', index=True)
     plan_id = fields.Many2one('hr.overtime.planning', string='Planning OT', index=True)
     plann_date_from = fields.Date('Plann Date From')
     plann_date_to = fields.Date('Plann Date To')
@@ -130,7 +130,6 @@ class HrCariEmployeeDepartment(models.TransientModel):
             rec.employee_ids = [(5, 0, 0)]
             domain = rec._get_filtered_employees_domain()
             employees = self.env['hr.employee'].search(domain)
-            print(len(employees))
             datadetails = self.env['hr.employeedepartment.details']
             if employees:
                 for emp in employees:
@@ -150,8 +149,9 @@ class HrCariEmployeeDepartment(models.TransientModel):
         context_field = self._context.get('fieldname')
         employee_data = []
 
-        if context_field == 'plan_id':
+        # if context_field == 'plan_id':
             # Processing for 'plan_id' context
+        if self.modelname == 'hr.overtime.planning':
             for emp in self.employee_ids.filtered(lambda e: e.is_selected):
                 employee_data.append({
                     'planning_id': self.plan_id.id,
@@ -190,11 +190,11 @@ class HrCariEmployeeDepartment(models.TransientModel):
 
         else:
             # Ensure required fields are set
-            if not self.wdcode:
+            if not self.wdcode and self.modelname != 'hr.overtime.planning':
                 raise UserError('WD Code must be selected.')
-            if not self.valid_from:
+            if not self.valid_from and self.modelname != 'hr.overtime.planning':
                 raise UserError('Date Valid From must be selected.')
-            if not self.valid_to:
+            if not self.valid_to  and self.modelname != 'hr.overtime.planning':
                 raise UserError('Date Valid To must be selected.')
 
             # Processing for other contexts
