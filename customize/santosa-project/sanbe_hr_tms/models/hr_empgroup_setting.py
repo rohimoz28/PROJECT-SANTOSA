@@ -304,7 +304,6 @@ class HREmpGroupSetting(models.Model):
             
     #Function For PopUp Search Employee
     def action_search_employee(self):
-        
         wizard = self.env['hr.employeedepartment'].create({
                     'empgroup_id': self.id,
                     'modelname':'hr.empgroup',
