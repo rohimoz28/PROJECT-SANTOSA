@@ -309,7 +309,8 @@
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
             <search string="TMS Entry">
-                <field name="employee_id" filter_domain="[('employee_id', 'child_of', self)]"/>
+                <!-- <field name="employee_id" filter_domain="[('employee_id', 'child_of', self)]"/>  -->
+                <field name="employee_id" string="Name" filter_domain="['|',('employee_id.name','ilike',self),('nik','ilike',self)]"/>
                 <field name="nik" string="NIK"/>
                 <filter string="Department" name="department_id"
                         context="{'group_by':'department_id'}"/>
