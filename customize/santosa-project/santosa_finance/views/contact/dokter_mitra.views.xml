@@ -5,7 +5,8 @@
         <record id="view_res_partner_form_inherit_hutang_dokter" model="ir.ui.view">
             <field name="name">res.partner.form.inherit.hutang.dokter</field>
             <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form"/> <!-- Adjust to the correct base form view ID -->
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <!-- Adjust to the correct base form view ID -->
             <field name="arch" type="xml">
                 <xpath expr="(//group)[1]" position="after">
                     <label for="is_dokter_mitra" string="Dokter Mitra?&#160;&#160;"/>
@@ -40,13 +41,14 @@
                 <xpath expr="//notebook/page[@name='accounting']" position="attributes">
                     <attribute name="invisible">['|','|','|',('is_dokter_mitra','=',True),('is_customer','=',True),('is_company','=',True)]</attribute>
                 </xpath>
-                
-                
+
+
                 <xpath expr="//notebook" position="inside">
                     <page string="Hutang Dokter" invisible="not is_dokter_mitra and is_customer">
                         <group>
                             <field name="hd_tracking_ids" string="Hutang Dokter" readonly="1">
                                 <tree delete="0" create="0" default_order="id asc">
+                                    <field name="currency_id" string="Currency" column_invisible='1'/>
                                     <field name="transaction_date" string="Transaction Date" optional="hide"/>
                                     <field name="populate_date" string="Populate Date" optional="hide"/>
                                     <field name="account_move_id" string="Transaction Number" optional="show"/>
@@ -56,8 +58,8 @@
                                     <field name="transaction_class" string="Transaction Class" optional="hide"/>
                                     <field name="description" string="Description" optional="hide"/>
                                     <field name="beginning_balance" string="Beginning Balance" optional="show"/>
-                                    <field name="amount_debit" string="Debit" optional="show"/>
-                                    <field name="amount_credit" string="Credit" optional="show"/>
+                                    <field name="amount_debit" string="Debit" optional='show' sum="Total Debit" widget='monetary'/>
+                                    <field name="amount_credit" string="Credit" optional='show' sum="Total Credit" widget='monetary'/>
                                     <field name="ending_balance" string="Ending Balance" optional="show"/>
                                     <field name="journal_number" string="Journal Number" optional="hide"/>
                                     <field name="flag" string="Flag" optional='hide'/>

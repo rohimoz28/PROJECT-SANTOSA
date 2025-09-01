@@ -45,10 +45,36 @@ class AccOpeningClosing(models.Model):
     branch_ids = fields.Many2many('res.branch', 'res_branch_rel', string='AllBranch', compute='_isi_semua_branch',
                                   store=False)
     branch_id = fields.Many2one('res.branch',string='Business Unit', required=True, index=True, domain="[('id','in',branch_ids)]")
+    company_id = fields.Many2one('res.company', string='Company', index=True, default=lambda self: self.env.company)
+    currency_id = fields.Many2one('res.currency', string='Mata Uang', related="company_id.currency_id", store=True)
     open_periode_from = fields.Date('Opening Periode From')
     open_periode_to = fields.Date('Opening Periode To')
     close_periode_from = fields.Date('Closing Periode From')
     close_periode_to = fields.Date('Closing Periode To')
+    begining_balance = fields.Monetary('Beginning Balance',store=True, default=0, tracking=True) # saldo awal = saldo akhir periode sebelumnya
+    # current_balance = fields.Monetary('Current Balance',store=True, default=0, tracking=True)
+    ending_balance = fields.Monetary('Ending Balance', store=True, default=0, tracking=True) # saldo akhir = saldo awal + amt_kasbank
+    kasbank = fields.One2many('cash.bank', 'account_periode_id', string="Kas Bank", store=True) # transaksi kasbank yg terkait dengan periode ini
+    amt_kasbank = fields.Monetary(
+        string='Cash Bank Amount',
+        compute='_compute_amt_kasbank',
+        store=True,
+        currency_field='currency_id',
+        tracking=True
+    ) # menghitung total transaksi dari kasbank dengan status 'posted'
+    ar_klaim_ids = fields.One2many('account.move', 'accounting_periode_id', string='AR Klaim', domain=[('state','=','posted'),('is_klaim','=',True)], store=True) # menghitung total transaksi dari account move dengan type ar klaim dengan status 'posted'
+    amt_ar_klaim = fields.Monetary('Total AR Klaim', compute='_compute_amt_ar_klaim', store=True, currency_field='currency_id', tracking=True) # menghitung total transaksi dari account move dengan type ar klaim dengan status 'posted'
+    
+    def _compute_amt_ar_klaim(self):
+        for rec in self:
+            total = sum(ar.amount_total for ar in rec.ar_klaim_ids if ar.state == 'posted')
+            rec.amt_ar_klaim = total
+    
+    @api.depends('kasbank.state', 'kasbank.debit')  # otomatis menghitung jumlah total debit kasbank yg berstatus 'posted' pada periode ini
+    def _compute_amt_kasbank(self):
+        for rec in self:
+            total = sum(kb.debit for kb in rec.kasbank if kb.state == 'posted')
+            rec.amt_kasbank = total
     
     def unlink(self):
         if self.state_process!='draft':
@@ -223,7 +249,7 @@ class AccOpeningClosing(models.Model):
             #     raise UserError('Ensure all employee groups have been approved.')
 
             try:
-                self.env.cr.execute("CALL calculate_tms(%s, %s, %s)", (period_id, area_id.id, branch_id.id))
+                self.env.cr.execute("CALL calculate_acc_periode(%s, %s, %s)", (period_id, area_id.id, branch_id.id))
                 self.env.cr.commit()
                 _logger.info("Stored procedure executed successfully for period_id: %s", period_id)
             except Exception as e:
