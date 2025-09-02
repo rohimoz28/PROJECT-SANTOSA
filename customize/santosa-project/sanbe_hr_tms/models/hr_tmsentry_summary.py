@@ -63,6 +63,7 @@ class HRTMSEntrySummary(models.Model):
     periode_id = fields.Many2one('hr.opening.closing', string='Periode', index=True)
     employee_id = fields.Many2one('hr.employee', string="Employee", default=_default_employee, required=True,
                                   ondelete='cascade', index=True, readonly="state =='done'")
+    employee_name = fields.Char('Employee Name', related='employee_id.name', store=True)
     area_id = fields.Many2one('res.territory', string='Area', index=True, readonly="state =='done'")
     branch_ids = fields.Many2many('res.branch', 'res_branch_rel', string='AllBranch', compute='_isi_semua_branch',
                                   store=False)
