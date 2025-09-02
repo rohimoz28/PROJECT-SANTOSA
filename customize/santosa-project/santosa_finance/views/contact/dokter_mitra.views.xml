@@ -9,8 +9,8 @@
             <!-- Adjust to the correct base form view ID -->
             <field name="arch" type="xml">
                 <xpath expr="(//group)[1]" position="after">
-                    <label for="is_dokter_mitra" string="Dokter Mitra?&#160;&#160;"/>
-                    <field name="is_dokter_mitra" string="Dokter Mitra?" />
+                    <label for="is_dokter_mitra" string="Dokter Mitra?&#160;&#160;" invisible="1"/>
+                    <field name="is_dokter_mitra" string="Dokter Mitra?" invisible="1"/>
                     <div />
                     <label for="is_customer" string="Customer?&#160;&#160;" invisible="is_dokter_mitra"/>
                     <field name="is_customer" string="Customer?" invisible="is_dokter_mitra"/>
