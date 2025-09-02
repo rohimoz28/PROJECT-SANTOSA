@@ -64,6 +64,7 @@ class AccountMove(models.Model):
     cost_price_last_date = fields.Date(string = "Cost Price Last Date", help="Tanggal saat nilai cost price terakhir tersebut berlaku")
     cost_price_last_based = fields.Char(string = "Cost Price Last Based", help="Menjelaskan nilai cost price terakhir ini didapat dari metode apa, misalnya LastBuy atau LastHNA")
 
+    cash_bank_id = fields.Many2one('cash.bank', string="Cash Bank", store=True)
     #AR
     tgl_klaim = fields.Date()
     amount_tagihan = fields.Monetary()
@@ -161,8 +162,13 @@ class AccountMove(models.Model):
     journal_code = fields.Char('Kode Jurnal', related='journal_id.code')
     branch_id = fields.Many2one('res.branch','Branch',default=lambda self:self.env.user.branch_id)
     move_type = fields.Selection(
-        selection_add=[('ar_klaim', 'AR Klaim')],
-        ondelete={'ar_klaim': 'set default'}
+        selection_add=[('ar_klaim', 'AR Klaim'),
+            ('cash_bank', 'Cash/Bank'),
+        ],
+        ondelete={
+            'ar_klaim': 'set default',
+            'cash_bank': 'set default',  # or 'cascade' if appropriate
+        }
     )
     
     line_ids = fields.One2many(

@@ -45,7 +45,7 @@ class AccountMoveLine(models.Model):
     cost_price_avg= fields.Monetary(string = "Cost Price AVG", default=0.0)
     cost_price_last_date = fields.Date(string = "Cost Price Last Date", help="Tanggal saat nilai cost price terakhir tersebut berlaku")
     cost_price_last_based = fields.Char(string = "Cost Price Last Based", help="Menjelaskan nilai cost price terakhir ini didapat dari metode apa, misalnya LastBuy atau LastHNA")
-
+    
     #tambahan terakhir
     rowkey = fields.Char()
     element_detail_key = fields.Char()
@@ -93,6 +93,8 @@ class AccountMoveLine(models.Model):
     formatted_datetime = fields.Char(string='Formatted Datetime', compute='_compute_formatted_datetime')
     CostPrice_AVG = fields.Float()
     
+    cash_bank_id = fields.Many2one('cash.bank', string="Cash Bank", store=True)
+    cash_bank_line_id = fields.Many2one('account.bank.statement', string="Cash Bank Line", store=True)
     #claim purpose
     paid_state_klaim = fields.Boolean(default=False, string='Status Bayar')
     accounting_periode_id = fields.Many2one('acc.periode.closing','Accounting Period',related='move_id.accounting_periode_id',store=True)
