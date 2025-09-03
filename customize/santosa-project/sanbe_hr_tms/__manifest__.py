@@ -40,6 +40,7 @@
         'views/sb_allowances.xml',
         'views/sb_allowance_details.xml',
         'views/sb_leave_allocation.xml',
+        'views/sb_leave_allocation_request.xml',
         'views/stg_transform_absent.xml',
         'views/hr_public_holiday.xml',
         'views/hr_workingday_setting.xml',

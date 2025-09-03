@@ -46,6 +46,9 @@ access_sb_allowances,access.sb.allowances,model_sb_allowances,base.group_user,1,
 access_sb_allowance_details,access.sb.allowance.details,model_sb_allowance_details,base.group_user,1,1,1,1
 access_hr_allowance_list_users,access.hr.allowance.list.users,model_hr_allowance_list,base.group_user,1,1,1,1
 access_sb_leave_allocation_manager,access.sb.leave.allocation.manager,model_sb_leave_allocation,sanbe_hr_tms.module_sub_category_leave_allocation_manager,1,1,1,1
+access_sb_leave_allocation_request,access.sb.leave.allocation.request,model_sb_leave_allocation_request,base.group_user,1,1,1,1
+access_sb_leave_tracking,access.sb.leave.tracking,model_sb_leave_tracking,base.group_user,1,1,1,1
+access_sb_leave_benefit,access.sb.leave.benefit,model_sb_leave_benefit,base.group_user,1,1,1,1
 access_hr_open_closing_periode,access.hr.open.closing.periode,model_hr_opening_closing,base.group_user,1,1,1,1
 
 access_hr_holidays_status_employee,hr_holidays.hr.leave.type,model_hr_leave_type,base.group_user,1,1,1,1
