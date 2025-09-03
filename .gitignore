@@ -50,3 +50,4 @@ conf/santosa-project/pg-data/
 conf/santosa-project/production/.env
 
 .vscode/
+*.env
