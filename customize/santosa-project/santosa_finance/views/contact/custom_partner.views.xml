@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <!-- Tambahkan Tab Baru -->
             <xpath expr="//notebook" position="inside">
-                <page string="Differed Income" invisible="not is_customer">
+                <page string="Differed Income" invisible="not is_customer or tipe_customer != 'Jkn'">
                     <group>
                         <field name="di_tracking_ids" string="Differed Income Tracing" readonly="1">
                             <tree delete="0" create="0" default_order="id asc">
@@ -33,10 +33,59 @@
                         </field>
                     </group>
                 </page>
-
-                <page string="AR (JKN)" invisible="not is_customer">
+                <page string="AR" invisible="not is_customer or tipe_customer == 'Jkn'">
                     <group>
-                        <field name="ar_jkn_tracking_ids" string="AR JKN Tracing" readonly="1">
+                        <field name="di_tracking_ids" string="AR Tracing" readonly="1">
+                            <tree delete="0" create="0" default_order="id asc">
+                                <field name="id" string="id" optional='hide'/>
+                                <field name="currency_id" string="Currency" column_invisible='1'/>
+                                <field name="transaction_date" string="Transaction Date" optional='hide'/>
+                                <field name="populate_date" string="Populate Date" optional='hide'/>
+                                <field name="account_move_id" string="Transaction Number" optional='show'/>
+                                <field name="document_date" string="Document Date" optional='hide'/>
+                                <field name="entered_date" string="Entered Date" optional='show'/>
+                                <field name="document_no" string="Document Number" optional='show'/>
+                                <field name="description" string="Description" optional='show'/>
+                                <field name="transaction_class" string="Transaction Class" optional='hide'/>
+                                <field name="beginning_balance" string="Beginning Balance" optional='show'/>
+                                <field name="amount_debit" string="Debit" optional='show' sum="Total Debit" widget='monetary'/>
+                                <field name="amount_credit" string="Credit" optional='show' sum="Total Credit" widget='monetary'/>
+                                <field name="ending_balance" string="Ending Balance" optional='show'/>
+                                <field name="journal_number" string="Journal Number" optional='hide'/>
+                                <field name="flag" string="Flag" optional='hide'/>
+                                <button name="ambil_view" type="object" string="Detail" class="fa fa-eye"/>
+                            </tree>
+                        </field>
+                    </group>
+                </page>
+                <page string="AR Klaim" invisible="not is_customer or tipe_customer == 'Jkn'">
+                    <group>
+                        <field name="ar_jkn_tracking_ids" string="AR KLAIM Tracing" readonly="1">
+                            <tree delete="0" create="0" default_order="id asc">
+                                <field name="id" string="id" optional='hide'/>
+                                <field name="currency_id" string="Currency" column_invisible='1'/>
+                                <field name="transaction_date" string="Transaction Date" optional='hide'/>
+                                <field name="populate_date" string="Populate Date" optional='hide'/>
+                                <field name="account_move_id" string="Transaction Number" optional='show'/>
+                                <field name="document_date" string="Document Date" optional='hide'/>
+                                <field name="entered_date" string="Entered Date" optional='show'/>
+                                <field name="document_no" string="Document Number" optional='show'/>
+                                <field name="description" string="Description" optional='show'/>
+                                <field name="transaction_class" string="Transaction Class" optional='hide'/>
+                                <field name="beginning_balance" string="Beginning Balance" optional='show'/>
+                                <field name="amount_debit" string="Debit" optional='show' sum="Total Debit" widget='monetary'/>
+                                <field name="amount_credit" string="Credit" optional='show' sum="Total Credit" widget='monetary'/>
+                                <field name="ending_balance" string="Ending Balance" optional='show'/>
+                                <field name="journal_number" string="Journal Number" optional='hide'/>
+                                <field name="flag" string="Flag" optional='hide'/>
+                                <button name="ambil_view" type="object" string="Detail" class="fa fa-eye"/>
+                            </tree>
+                        </field>
+                    </group>
+                </page>
+                <page string="AR Klaim (BAHV)" invisible="not is_customer or tipe_customer != 'Jkn'">
+                    <group>
+                        <field name="ar_jkn_tracking_ids" string="AR KLAIM (BAHV) Tracing" readonly="1">
                             <tree delete="0" create="0" default_order="id asc">
                                 <field name="id" string="id" optional='hide'/>
                                 <field name="currency_id" string="Currency" column_invisible='1'/>
@@ -60,10 +109,10 @@
                     </group>
                 </page>
 
-                <page string="AR" invisible="not is_customer">
-                    <group>
-                        <field name="ar_tracking_ids" string="AR Tracing" readonly="1">
-                            <tree delete="0" create="0" default_order="id asc">
+               <page string="AR" invisible="1">
+                    <group invisible="1">
+                        <field name="ar_tracking_ids" string="AR Tracing" readonly="1" invisible="1">
+                            <tree delete="0" create="0" default_order="id asc" invisible="1">
                                 <field name="id" string="id" optional='hide'/>
                                 <field name="currency_id" string="Currency" column_invisible='1'/>
                                 <field name="transaction_date" string="Transaction Date" optional='hide'/>
@@ -85,7 +134,6 @@
                         </field>
                     </group>
                 </page>
-
                 <page string="UMP" invisible="not is_customer">
                     <group>
                         <field name="ump_tracking_ids" string="UMP Tracing" readonly='1'>
@@ -229,7 +277,8 @@
         <field name="arch" type="xml">
             <xpath expr="//form/sheet/group" position="inside">
                 <group>
-                    <field name="is_dokter_mitra" string="Dokter Mitra?" invisible="context.get('default_is_dokter_mitra', False) != 1"/>
+                    <!-- <field name="is_dokter_mitra" string="Dokter Mitra?" invisible="context.get('default_is_dokter_mitra', False) != 1"/> -->   <!-- dinonaktifkan karena user sudah diarahkan via menu selection -->
+                    <field name="is_dokter_mitra" string="Dokter Mitra?" invisible="1"/>
                 </group>
             </xpath>
         </field>
