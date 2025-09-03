@@ -15,7 +15,10 @@
                             <field name="branch_id" string="Branch"/>
                             <field name="nik" string="NIK"/>
                             <field name="name" string="Name"/>
-                            <field name="department_id" string="Department"/>
+                            <field name="department_id" string="Department" column_invisible="1"/>
+                            <field name="directorate_id" string="Directorat"/>
+                            <field name="hrms_department_id" string="Department"/>
+                            <field name="division_id" string="Division"/>
                             <field name="job_id" string="Job Position"/>
                             <field name="wdcode" string="WD Code"/>
                             <field name="empgroup_id" string="Emp Group"/>
