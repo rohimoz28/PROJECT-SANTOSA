@@ -20,6 +20,9 @@ class SbAttendanceCorrections (models.Model):
     branch_id = fields.Many2one('res.branch', string='Business Unit', index=True, domain="[('id','in',branch_ids)]",
                                 readonly="state =='done'")
     department_id = fields.Many2one('hr.department', string='Sub Department')
+    division_id = fields.Many2one('sanhrms.division', string='Divisi', store=True, readonly="state =='done'")
+    hrms_department_id = fields.Many2one('sanhrms.department', string='Departemen', store=True, readonly="state =='done'")
+    directorate_id = fields.Many2one('sanhrms.directorate', string='Direktorat', store=True , readonly="state =='done'")
     attn_correction_detail_ids = fields.One2many(
         comodel_name='sb.attendance.correction.details',
         inverse_name='attn_correction_id',

@@ -33,7 +33,10 @@
                     <field name="period_id"/>
                     <field name="area_id"/>
                     <field name="branch_id"/>
-                    <field name="department_id"/>
+                    <field name="department_id" column_invisible="1"/>
+                    <field name="directorate_id" string="Directorat"/>
+                    <field name="hrms_department_id" string="Department"/>
+                    <field name="division_id" string="Division"/>
                 </tree>
             </field>
         </record>
@@ -48,8 +51,12 @@
                     <!-- <field name="nik" string="NIK"/> -->
                     <filter string="Business Unit" name="branch_id"
                             context="{'group_by':'branch_id'}"/>
-                    <filter string="Department" name="department_id"
-                            context="{'group_by':'department_id'}"/>
+                    <filter string="Directorat" name="directorate_id"
+                            context="{'group_by':'directorate_id'}"/>
+                    <filter string="Department" name="hrms_department_id"
+                            context="{'group_by':'hrms_department_id'}"/>
+                    <filter string="Division" name="division_id"
+                            context="{'group_by':'division_id'}"/>
                     <!-- <filter string="Employee" name="employee_id" -->
                     <!--         context="{'group_by':'employee_id'}"/> -->
                 </search>
@@ -62,9 +69,12 @@
             <field name="res_model">sb.attendance.corrections</field>
             <!-- <field name="view_type">form</field> -->
             <field name="view_mode">tree,form</field>
-            <field name="context">
-                {'search_default_branch_id':1, 'search_default_department_id':1}
-            </field>
+            <!-- <field name="context">
+                {'search_default_branch_id':1, 
+                'search_default_directorate_id':1, 
+                'search_default_hrms_department_id':1, 
+                'search_default_division_id':1}
+            </field> -->
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No Report Attendance Corrections
