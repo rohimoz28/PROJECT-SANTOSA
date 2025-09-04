@@ -34,7 +34,6 @@ class CashBank(models.Model):
     begining_ump = fields.Monetary(string="Saldo Awal UMP", compute="_get_ending_balance", store=True, tracking=True, currency_field='currency_id')
     end_uar = fields.Monetary(string="Saldo Akhir UAR", compute="_get_ending_balance", store=True, tracking=True, currency_field='currency_id')
     end_ump = fields.Monetary(string="Saldo Akhir UMP", compute="_get_ending_balance", store=True, tracking=True, currency_field='currency_id')
-
     total_ump = fields.Monetary(string="Total UMP", compute='_compute_ump_uar', tracking=True, store=True, currency_field='currency_id', readonly=True)
     total_uar = fields.Monetary(string="Total UAR", compute='_compute_ump_uar', tracking=True, store=True, currency_field='currency_id', readonly=True)
     total_alokasi = fields.Monetary(string="Total Alokasi", default=0, tracking=True, currency_field='currency_id')
@@ -153,7 +152,9 @@ class CashBank(models.Model):
     def act_close(self):
         self.ensure_one()
         for rec in self:
-            rec.state = 'posted'
+            rec.state = 'posted'            
+            rec.residual_ump = rec.total_ump
+            rec.residual_uar = rec.total_uar
             if rec.move_id:
                 existing_lines = self.env['account.move.line'].search([('cash_bank_id', '=', rec.id)])
                 # if not existing_lines:
@@ -350,7 +351,7 @@ class AccountBankStatementLine(models.Model):
         ('Bank Masuk', 'Bank Masuk'),
         ('Alokasi Bank Masuk INS Corp', 'Alokasi Bank Masuk INS Corp'),
         ('Alokasi Bank Masuk Umum', 'Alokasi Bank Masuk Umum')
-    ], string="Flag")
+    ], string="Flag",default='Bank Masuk', tracking=True, index=True)
 
     cash_bank_id = fields.Many2one('cash.bank', string="Cash Bank")
     account_periode_id = fields.Many2one(
@@ -358,10 +359,12 @@ class AccountBankStatementLine(models.Model):
         related='cash_bank_id.account_periode_id',
         store=True
     )
+    company_id = fields.Many2one('res.company', related='cash_bank_id.company_id',)
+    branch_id = fields.Many2one('res.branch', related='cash_bank_id.branch_id',)
 
     # === Transactional Info ===
-    no_bank_masuk = fields.Char(string="No Bank Masuk")
-    tgl_bank_masuk = fields.Date(string="Tanggal Bank Masuk")
+    no_bank_masuk = fields.Char(string="No Bank Masuk", related = 'cash_bank_id.name', store=True)
+    tgl_bank_masuk = fields.Date(string="Tanggal Bank Masuk" , store=True)
     amount_bank_masuk = fields.Char(string="Amount Bank Masuk")  # You can switch to Monetary/Float if needed
     balance = fields.Monetary(string="Amount", default=0, currency_field='currency_id')
 
@@ -373,7 +376,7 @@ class AccountBankStatementLine(models.Model):
     nama_bank = fields.Char(string="Nama Bank")
     notes = fields.Char(string="Notes")
     keterangan = fields.Char(string="Keterangan")
-    status = fields.Char(string="Status")
+    status = fields.Selection(string="Status",related='cash_bank_id.state', store=True)
     status_transaksi = fields.Char(string="Status Transaksi")
     populated_time = fields.Datetime(string="Populated Time", default=lambda self: fields.Datetime.now())
     populated_date = fields.Date(
@@ -385,7 +388,6 @@ class AccountBankStatementLine(models.Model):
     transaction_no = fields.Char(related='account_move_id.transaction_no', store=True)
     odoo_transaction_no = fields.Char(string="Odoo Transaction No")
     transaction_date = fields.Datetime(string="Transaction Date")
-
     # === Relational ===
     partner_id = fields.Many2one('ajp.res.partner',string="Cust/Penjamin", tracking=True)
     partner_name = fields.Char(related="partner_id.display_name", store=True)
@@ -407,6 +409,9 @@ class AccountBankStatementLine(models.Model):
         store=True,
         index=True,
     )
+    distributed_state = fields.Selection([('none', 'None'), ('partial', 'Partial'), ('full', 'Full')], string="Distributed State", default='none', tracking=True)
+    residual_ump = fields.Monetary(string="Residual UMP", tracking=True, store=True, currency_field='currency_id')
+    residual_uar = fields.Monetary(string="Residual UAR", tracking=True, store=True, currency_field='currency_id')
 
     # === SQL Constraint ===
     _sql_constraints = [

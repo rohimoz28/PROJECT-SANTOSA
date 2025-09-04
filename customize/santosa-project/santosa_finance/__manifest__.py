@@ -26,6 +26,8 @@
         'security/access_group.xml',
         'views/menuitems.views.xml',
         'wizards/export_honor_dokter.xml',
+        # 'wizards/settlement_ar_klaim.xml',
+        'wizards/settlement_bm.xml',
         'report/report_xls.xml',
         'db/calculate_acc.sql',
         'views/matrix_posting/matrix_posting_master.views.xml',
@@ -72,6 +74,7 @@
         'views/penampung_invoice/akun_kontrol_honor_dokter.xml',
         'views/penampung_invoice/acc_opening_closing_views.xml',
         'views/cash_bank/cash_bank_views.xml',
+        'views/accounting/settlement_bank.xml',
         # 'views/master.views.xml',
     ],
 

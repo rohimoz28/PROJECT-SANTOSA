@@ -31,3 +31,4 @@ from . import journal_ajp
 from . import acc_opening_closing
 from . import akun_kontrol_honor_dokter
 from . import upload_bahv
+from . import sattlement_bank

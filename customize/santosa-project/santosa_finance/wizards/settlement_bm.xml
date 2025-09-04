@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- View Form untuk Wizard Settlement Bank -->
+        <record id="wizard_settlement_bank_view_form" model="ir.ui.view">
+            <field name="name">wizard.settlement.bank.view.form</field>
+            <field name="model">wizard.settlement.bank</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="start_date"/>
+                                <field name="end_date"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="List UMP" name="ump_list">
+                                <button name="btn_select_all" string="Selected All" type="object" class="oe_highlight fa fa-check"/>
+                                <field name="line_ids" readonly="0">
+                                    <tree editable="bottom" create="false" delete="false">
+                                        <field name="wiz_settle_bank_id" column_invisible="1"/>
+                                        <field name="cash_bank_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" readonly="1"/>
+                                        <field name="date_trx" readonly="1"/>
+                                        <field name="partner_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" readonly="1"/>
+                                        <field name="balance" readonly="1"/>
+                                        <field name="residual_ump" readonly="1"/>
+                                        <field name="is_select"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <footer>
+                        <button name="act_apply" string="Apply" type="object" class="oe_highlight" data-hotkey="a" />
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action untuk membuka Wizard -->
+        <record id="wizard_settlement_bank_action" model="ir.actions.act_window">
+            <field name="name">Search UMP</field>
+            <field name="res_model">wizard.settlement.bank</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

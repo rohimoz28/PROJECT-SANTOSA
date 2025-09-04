@@ -30,4 +30,9 @@ access_export_honor_dokter,access_export_honor_dokter,model_export_honor_dokter,
 access_acc_periode_closing,access_acc_periode_closing,model_acc_periode_closing,base.group_user,1,1,1,1
 access_upload_bahv,access_upload_bahv,model_upload_bahv,base.group_user,1,1,1,1
 access_santosa_finance_cash.bank,access_santosa_finance_cash.bank,model_cash_bank,base.group_user,1,1,1,1
+access_ajp_sattlement_bank,access_ajp_sattlement_bank,model_ajp_sattlement_bank,base.group_user,1,1,1,1
+access_ajp_sattlement_bank_line,access_ajp_sattlement_bank_line,model_ajp_sattlement_bank_line,base.group_user,1,1,1,1
+access_ajp_sattlement_bank_ump,access_ajp_sattlement_bank_ump,model_ajp_sattlement_bank_ump,base.group_user,1,1,1,1
+access_wizard_settlement_bank,access_wizard_settlement_bank,model_wizard_settlement_bank,base.group_user,1,1,1,1
+access_wizard_settlement_bank_list,access_wizard_settlement_bank_list,model_wizard_settlement_bank_list,base.group_user,1,1,1,1
 access_ajp_res_partner,access_ajp_res_partner,model_ajp_res_partner,base.group_user,1,0,0,0

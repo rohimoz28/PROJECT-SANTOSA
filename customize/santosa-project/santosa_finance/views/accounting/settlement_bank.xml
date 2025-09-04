@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Main Form View for Sattlement Bank -->
+    <record id="view_sattlement_bank_form" model="ir.ui.view">
+        <field name="name">ajp.sattlement.bank.form</field>
+        <field name="model">ajp.sattlement.bank</field>
+        <field name="arch" type="xml">
+            <form string="Sattlement Bank" create="1" edit="1">
+                <header>
+                    <button name="act_post" invisible="state != 'draft'" string="Open" type="object" class="oe_highlight" data-hotkey="p"/>
+                    <button name="act_cancel" string="Cancel" type="object" invisible="state in ['cancelled', 'posted']" data-hotkey="x"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,posted" readonly="1"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <label for="bank_type" string="Bank Type&#160;&#160;&#160;&#160;&#160;&#160;:&#160;&#160;"/>
+                        <field name="bank_type" widget="radio" options="{'horizontal': true}"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id" options="{'no_create': True,'no_create_edit': True}"/>
+                            <label for="sattlement_source" string="Settlement Source"/>
+                            <div for="sattlement_source" class="o_row">
+                                <field name="sattlement_source"/>
+                                <button name="action_search_bank_masuk" string="Search UMP" type="object" class="oe_highlight" invisible="sattlement_source != 'ump'"/>
+                            </div>
+                            <field name="sattlement_amount"/>
+                            <field name="description" invisible="1" />
+                            <field name="company_id" invisible="1" />
+                            <field name="currency_id" invisible="1" />
+                            <field name="name" invisible="1" />
+                        </group>
+                        <group>
+                            <field name="number"/>
+                            <field name="date"/>
+                            <field name="branch_id" readonly="1" invisible="1" />
+                            <field name="accounting_period" options="{'no_create': True,'no_create_edit': True}"/>
+                        </group>
+                    </group>
+
+                    <!-- One2many Line -->
+                    <notebook>
+                        <page string="Details">
+                            <button name="action_search_bank_inv_ar" string="Search Invoice/AR Klaim" type="object" class="oe_highlight"/>
+                            <field name="ajp_sattlement_bank_line_ids">
+                                <tree editable="bottom">
+                                    <field name="claim_date"/>
+                                    <field name="claim_number"/>
+                                    <field name="trx_date"/>
+                                    <field name="trx_number"/>
+                                    <field name="invoice_date"/>
+                                    <field name="invoice_number"/>
+                                    <field name="invoice_claim_amount"/>
+                                    <field name="outstanding_inv_amount"/>
+                                    <field name="payment_inv_amount"/>
+                                    <field name="ending_balance"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Bank Masuk" invisible= "sattlement_source != 'ump'">
+                            <field name="bank_masuk_ids" options="{'no_create': True,'no_create_edit': True}">
+                                <tree editable="bottom" create="false">
+                                    <field name="cash_bank_id"/>
+                                    <field name="partner_id"/>
+                                    <field name="residual_ump"/>
+                                    <field name="total_ump"/>
+                                    <field name="amount_bm"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View for Sattlement Bank -->
+    <record id="view_sattlement_bank_tree" model="ir.ui.view">
+        <field name="name">ajp.sattlement.bank.tree</field>
+        <field name="model">ajp.sattlement.bank</field>
+        <field name="arch" type="xml">
+            <tree string="Sattlement Bank">
+                <field name="name"/>
+                <field name="number"/>
+                <field name="date"/>
+                <field name="branch_id"/>
+                <field name="bank_type"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_sattlement_bank" model="ir.actions.act_window">
+        <field name="name">Sattlement Bank</field>
+        <field name="res_model">ajp.sattlement.bank</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Buat Sattlement Bank baru
+            </p>
+        </field>
+    </record>
+<!-- Menu item for cash.bank -->
+    <menuitem id="menu_bank_settlment" name="Bank Settlement" action="action_sattlement_bank" parent="santosa_finance.transaction_sanfi_root" sequence="24"/>
+
+</odoo>
