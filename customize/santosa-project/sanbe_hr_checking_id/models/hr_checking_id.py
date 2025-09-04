@@ -59,7 +59,7 @@ class HRCheckingID(models.Model):
                     'service_start' : fields.Date.today(),
                 })
                 
-                mut_id._onchange_employee_id()
+                mut_id._onchange_employee_id_and_service_type()
                 mut_id.env.cr.commit()
         if mut_id:
             return mut_id.id

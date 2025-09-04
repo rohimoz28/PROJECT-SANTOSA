@@ -67,7 +67,8 @@ bulan_map = {
     '10': 'Oktober', '11': 'November', '12': 'Desember'
 }
 
-    
+# digunakan sebagai view sql untuk 
+# monitoring contract yang running
 class HrEmployeeContractMonitoring(models.Model):
     _auto = False
     _name = 'hr.employee.contract.monitoring'

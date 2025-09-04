@@ -312,7 +312,6 @@
     </record>
 
 
-    <!-- Action hr.employee.contract.monitoring -->
     <record id="action_hr_employee_sip" model="ir.actions.act_window">
         <field name="name">Monitoring SIP</field>
         <field name="type">ir.actions.act_window</field>
