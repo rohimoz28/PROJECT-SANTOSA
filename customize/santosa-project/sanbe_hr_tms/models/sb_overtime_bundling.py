@@ -7,6 +7,9 @@ class SbOvertimeBundling(models.Model):
 
     branch_id = fields.Many2one('res.branch', string='Bisnis Unit', index=True, domain="[('id','in',branch_ids)]")
     department_id = fields.Many2one('hr.department', domain="[('id','in',alldepartment)]", string='Sub Department', index=True)
+    division_id = fields.Many2one('sanhrms.division', string='Divisi', store=True, index=True)
+    hrms_department_id = fields.Many2one('sanhrms.department', string='Departemen', store=True, index=True)
+    directorate_id = fields.Many2one('sanhrms.directorate', string='Direktorat', store=True, index=True)
     no_request = fields.Char(string='No Request')
     req_date = fields.Date(string='Request Date')
     employee_id = fields.Many2one('hr.employee', string='Employee')

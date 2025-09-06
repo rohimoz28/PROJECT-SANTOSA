@@ -23,6 +23,9 @@ class SbIncompleteAttendance(models.Model):
                                 readonly="state =='done'")
     state = fields.Char(string='State', required=False)
     department_id = fields.Many2one('hr.department', string='Sub Department')
+    division_id = fields.Many2one('sanhrms.division', string='Divisi', store=True,)
+    hrms_department_id = fields.Many2one('sanhrms.department', string='Departemen', store=True,)
+    directorate_id = fields.Many2one('sanhrms.directorate', string='Direktorat', store=True , )
     incomplete_attn_detail_ids = fields.One2many(
         comodel_name='sb.incomplete.attendance.details',
         inverse_name='incomplete_attn_id',

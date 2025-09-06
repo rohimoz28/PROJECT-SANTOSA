@@ -1567,6 +1567,9 @@ begin
     WITH flag AS (SELECT he.name,
                          he.employee_levels,
                          hts.employee_id,
+                         hts.division_id,
+                         hts.hrms_department_id,
+                         hts.directorate_id,
                          hts.id                                                                 AS hts_id,
                          sum(case when type = 'W' then 1 else 0 end)                            AS total_workingday,
                          COUNT(CASE
@@ -1596,7 +1599,7 @@ begin
                 AND*/ hts.branch_id = branch
                     AND hts.area_id = l_area
                     AND hts.periode_id = period
-                  GROUP BY he.name, hts.employee_id, hts.id, he.employee_levels)
+                  GROUP BY he.name, hts.employee_id, hts.id, he.employee_levels, hts.division_id, hts.hrms_department_id, hts.directorate_id)
     UPDATE hr_tmsentry_summary h
     SET attendee_total    = flag.total_workingday,
         attendee_count    = flag.total_attendee,
@@ -1625,7 +1628,7 @@ begin
     DELETE FROM sb_attendance_correction_details WHERE period_id = period and area_id = l_area and branch_id = branch;
 
     -- master incomplete attendance
-    insert into sb_incomplete_attendances as sia (period_id, area_id, branch_id, department_id)
+    insert into sb_incomplete_attendances as sia (period_id, area_id, branch_id, department_id,division_id,hrms_department_id,directorate_id)
     with aa as (select hts.periode_id,
                        hts.area_id,
                        hts.branch_id,
@@ -1636,7 +1639,10 @@ begin
                        coalesce(sttd.edited_time_in, sttd.time_in)   as time_in,
                        sttd.date_out,
                        coalesce(sttd.edited_time_out, sttd.time_out) as time_out,
-                       sttd.status_attendance
+                       sttd.status_attendance,
+                        hts.division_id,
+                        hts.hrms_department_id,
+                        hts.directorate_id
                 from hr_tmsentry_summary hts
                          join sb_tms_tmsentry_details sttd on hts.id = sttd.tmsentry_id
                 where coalesce(sttd.edited_time_in, sttd.time_in) is null
@@ -1650,9 +1656,9 @@ begin
                   and aa.periode_id = period
                   and aa.area_id = l_area
                   and aa.branch_id = branch)
-    select bb.periode_id, bb.area_id, bb.branch_id, bb.department_id
+    select bb.periode_id, bb.area_id, bb.branch_id, bb.department_id, bb.division_id, bb.hrms_department_id, bb.directorate_id
     from bb
-    group by bb.periode_id, bb.area_id, bb.branch_id, bb.department_id;
+    group by bb.periode_id, bb.area_id, bb.branch_id, bb.department_id, bb.division_id, bb.hrms_department_id, bb.directorate_id;
 
     -- detail incomplete attendance
     delete
@@ -1673,7 +1679,7 @@ begin
                                                           name,
                                                           department_id, job_id, wdcode, empgroup_id,
                                                           details_date, date_timein, time_in, date_timeout, time_out,
-                                                          status_attendance)
+                                                          status_attendance,division_id,hrms_department_id,directorate_id)
     with aa as (select hts.periode_id,
                        sttd.type,
                        hts.area_id,
@@ -1689,7 +1695,10 @@ begin
                        coalesce(sttd.edited_time_in, time_in)        as time_in,
                        sttd.date_out,
                        coalesce(sttd.edited_time_out, sttd.time_out) as time_out,
-                       sttd.status_attendance
+                       sttd.status_attendance,
+                        hts.division_id,
+                        hts.hrms_department_id,
+                        hts.directorate_id
                 from hr_tmsentry_summary hts
                          join sb_tms_tmsentry_details sttd on hts.id = sttd.tmsentry_id
                          join hr_department hd on hts.department_id = hd.id
@@ -1702,7 +1711,7 @@ begin
     from aa
              join sb_incomplete_attendances sia
                   on /*aa.periode_id = sia.period_id and aa.area_id = sia.area_id and aa.branch_id = sia.branch_id
-                  and*/ aa.department_id = sia.department_id
+                  and*/ aa.department_id = sia.department_id and aa.division_id = sia.division_id and aa.hrms_department_id = sia.hrms_department_id  and aa.directorate_id = sia.directorate_id
     where aa.status_attendance not in ('Full Day Leave', 'Sick Leave', 'Unpaid Leave', 'Special Leave')
       and aa.periode_id = period
       and aa.area_id = l_area
@@ -1710,11 +1719,14 @@ begin
       and aa.type = 'W';
 
     -- master koreksi absensi
-    insert into sb_attendance_corrections as sac (period_id, branch_id, area_id, department_id)
+    insert into sb_attendance_corrections as sac (period_id, branch_id, area_id, department_id,division_id,hrms_department_id,directorate_id)
     select hts.periode_id,
            he.branch_id,
            hts.area_id,
-           he.department_id
+           he.department_id,
+           hts.division_id,
+           hts.hrms_department_id,
+           hts.directorate_id
     from hr_tmsentry_summary hts
              join sb_tms_tmsentry_details sttd on hts.id = sttd.tmsentry_id
              join hr_employee he on hts.employee_id = he.id
@@ -1722,19 +1734,23 @@ begin
       and hts.periode_id = period
       and hts.area_id = l_area
       and hts.branch_id = branch
-    group by hts.periode_id, he.branch_id, hts.area_id, he.department_id;
+    group by hts.periode_id, he.branch_id, hts.area_id, he.department_id, hts.division_id, hts.hrms_department_id, hts.directorate_id;
 
     -- monitoring kehadiran
     delete
     from sb_employee_attendance sea
     where sea.periode_id = period and sea.area_id = l_area and sea.branch_id = branch;
 
-    insert into sb_employee_attendance(employee_id, area_id, branch_id, department_id, empgroup_id, nik,
+    insert into sb_employee_attendance(employee_id, area_id, branch_id, department_id, division_id, 
+                                        hrms_department_id, directorate_id, empgroup_id, nik,
                                        details_date, time_in, time_out, status_attendance, periode_id)
     select hts.employee_id,
            hts.area_id,
            hts.branch_id,
            hts.department_id,
+           he.division_id,
+           he.hrms_department_id,
+           he.directorate_id,
            sttd.empgroup_id,
            he.nik,
            sttd.details_date                             as details_date,
@@ -1752,7 +1768,8 @@ begin
 
     -- detail koreksi absensi
     insert into sb_attendance_correction_details as sacd (attn_correction_id, period_id, area_id,
-                                                          branch_id, department_id, job_id, wdcode, empgroup_id,
+                                                          branch_id, department_id, division_id, 
+                                                           hrms_department_id, directorate_id, job_id, wdcode, empgroup_id,
                                                           nik, name, remark, tgl_time_in, tgl_time_out, time_in,
                                                           edited_time_in,
                                                           time_out, edited_time_out, delay)
@@ -1760,6 +1777,9 @@ begin
                        hts.area_id,
                        he.branch_id,
                        he.department_id,
+                       he.division_id,
+                       he.hrms_department_id,
+                       he.directorate_id,
                        he.job_id,
                        sttd.workingday_id,
                        sttd.empgroup_id,
@@ -1791,12 +1811,16 @@ begin
       and soa.area_id = l_area
       and soa.branch_id = branch;
 
-    insert into sb_overtime_attendance as soa ( area_id, branch_id, department_id, periode_id, no_request
+    insert into sb_overtime_attendance as soa ( area_id, branch_id, department_id, division_id, 
+                                                           hrms_department_id, directorate_id, periode_id, no_request
                                               , nik, req_date, employee_id, req_time_fr, req_time_to, rlz_time_fr
                                               , rlz_time_to, approve_time_from, approve_time_to, state)
     select hts.area_id,
            hts.branch_id,
            hts.department_id,
+           hts.division_id,
+           hts.hrms_department_id,
+           hts.directorate_id,
            hts.periode_id,
            hop.name                                      as no_request,
            hts.nik,
