@@ -15,12 +15,12 @@
                         </header>
                         <group string="PERMISSION ENTRY" name="permission_entry">
                             <group>
-                                <field name="employee_id" readonly="permission_status != 'draft'" options="{'no_edit': True, 'no_create': True, 'no_open': True}" required="True"/>
                                 <field name="area_id" readonly="permission_status != 'draft'" options="{'no_edit': True, 'no_create': True, 'no_open': True}" required="True"/>
                                 <field name="branch_ids" invisible="1" />
                                 <field name="branch_id" readonly="permission_status != 'draft'" options="{'no_edit': True, 'no_create': True, 'no_open': True}" required="True" />
-                                <field name="alldepartment" invisible="1"/>
-                                <field name="department_id" readonly="1" force_save="1" options="{'no_edit': True, 'no_create': True, 'no_open': True}" required="employee_id !=False"/>
+                                <field name="employee_id" readonly="permission_status != 'draft'" options="{'no_edit': True, 'no_create': True, 'no_open': True}" required="True"/>
+                                <field name="directorate_id" readonly="1" force_save="1" options="{'no_edit': True, 'no_create': True, 'no_open': True}" required="employee_id != False"/>
+                                <field name="hrms_department_id" readonly="1" force_save="1" options="{'no_edit': True, 'no_create': True, 'no_open': True}" required="employee_id != False"/>
                                 <field name="job_id" readonly="1" force_save="1" options="{'no_edit': True, 'no_create': True, 'no_open': True}" required="employee_id != False"/>
                                 <field name="handled_temp_to" readonly="permission_status != 'draft'" />
                                 <field name="remarks" readonly="permission_status != 'draft'" />
@@ -29,9 +29,10 @@
                             <group>
                                 <field name="trans_number" readonly="permission_status != 'draft'"/>
                                 <field name="doc_number" readonly="permission_status != 'draft'"/>
-                                <field name="periode_id" readonly="1" force_save="True"/>
                                 <field name="employee_company_id" invisible="1"/>
                                 <field name="holiday_status_id" readonly="permission_status != 'draft'" options="{'no_edit': True, 'no_create': True, 'no_open': True}" />
+                                <field name="permission_type_id" readonly="permission_status != 'draft'" options="{'no_edit': True, 'no_create': True, 'no_open': True}" />
+                                <field name="total_leave_balance" readonly="1" invisible="not permission_type_id" force_save="1"/>
                                 <field name="permission_date_from" readonly="permission_status != 'draft'" required="True"/>
                                 <field name="permission_date_To" readonly="permission_status != 'draft'" required="True"/>
                                 <field name="permission_time_from" readonly="permission_status != 'draft'" widget="float_time" required="True"/>
@@ -46,6 +47,8 @@
                                     </div>
                                 </div>
                                 <field name="back_to_office" readonly="permission_status != 'draft'" widget="easy_timepicker"/>
+                                <field name="leave_used" readonly="1" force_save="1"/>
+                                <field name="remaining_leave" readonly="1" force_save="1"/>
                             </group>
                         </group>
                         <br></br>
@@ -96,7 +99,7 @@
                     <field name="holiday_status_id" optional="show" />
                     <field name="permission_date_from" optional="show" />
                     <field name="permission_date_To" optional="show" />
-                    <field name="periode_id" optional="show" />
+                    <!-- <field name="periode_id" optional="show" /> -->
                     <field name="permission_status" string="Status" optional="show" />
                 </tree>
             </field>
