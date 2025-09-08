@@ -26,7 +26,7 @@
         'security/access_group.xml',
         'views/menuitems.views.xml',
         'wizards/export_honor_dokter.xml',
-        # 'wizards/settlement_ar_klaim.xml',
+        'wizards/settlement_ar_klaim.xml',
         'wizards/settlement_bm.xml',
         'report/report_xls.xml',
         'db/calculate_acc.sql',

@@ -99,7 +99,7 @@ class SattlementBank(models.Model):
             wizard._isi_employee()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Search Bank Masuk/Invoice AR'),
+            'name': _('Search Bank Masuk'),
             'res_model': 'wizard.settlement.bank',
             'view_mode': 'form',
             'target': 'new',
@@ -108,7 +108,24 @@ class SattlementBank(models.Model):
         }
     
     def action_search_bank_inv_ar(self):
-        pass
+        if not self.accounting_period.id:
+            raise UserError(_("Please fill Accounting Period"))
+        if not self.partner_id.id:
+            raise UserError(_("Please fill Partner"))
+        wizard = self.env['wizard.settlement.klaim'].create({
+                    'sattlement_bank_id':self.id,})
+        emp_line = self.env['wizard.settlement.klaim.list'].search([('wiz_settle_klaim_id','=',wizard.id)])
+        if not emp_line:
+            wizard._isi_klaim()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Search Invoice AR'),
+            'res_model': 'wizard.settlement.klaim',
+            'view_mode': 'form',
+            'target': 'new',
+            'res_id': wizard.id,
+            'views': [[False, 'form']]
+        }
     
     def act_post(self):
         pass
