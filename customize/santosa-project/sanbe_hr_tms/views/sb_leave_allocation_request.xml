@@ -86,8 +86,8 @@
                     </group>
                     <notebook>
                         <page name="leave_tracking" string="Leave Tracking">
-                            <field name="leave_tracking_ids">
-                                <tree string="Leave Tracking" editable="bottom">
+                            <field name="leave_tracking_ids" options="{'no_create': True,'no_create_edit': True}">
+                                <tree string="Leave Tracking">
                                     <field name="date" />
                                     <field name="permission_date_from" />
                                     <field name="permission_date_to" />
@@ -97,6 +97,13 @@
                                     <field name="leave_remaining" />
                                     <field name="remarks" />
                                     <field name="description" />
+                                    <field name="permission_status"
+                                           statusbar_visible="draft,approved,close,cancel" 
+                                           decoration-info="permission_status == 'draft'" 
+                                           decoration-success="permission_status == 'approved'"
+                                           decoration-warning="permission_status == 'close'"
+                                           decoration-danger="permission_status == 'cancel'"
+                                           widget="badge"/>
                                 </tree>
                             </field>
                         </page>

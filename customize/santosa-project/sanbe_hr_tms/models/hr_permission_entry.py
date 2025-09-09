@@ -45,7 +45,7 @@ class HRPermissionEntry(models.Model):
     permission_status = fields.Selection(selection=[('draft', 'Draft'),
                                                     ('approved', "Approved"),
                                                     ('close','Close'),
-                                                    ('cancel','Cancel by System')],
+                                                    ('cancel','Cancel')],
                                         string="Status", readonly=True, copy=False,
                                         index=True, tracking=3, default='draft')
 
@@ -264,7 +264,8 @@ class HRPermissionEntry(models.Model):
                         'leave_allocation': rec.total_leave_balance,
                         'leave_used': rec.leave_used,
                         'leave_remaining': rec.remaining_leave,
-                        'remarks': rec.remarks
+                        'remarks': rec.remarks,
+                        'permission_status': rec.permission_status
                     })
 
                 if rec.permission_date_from and rec.permission_date_To:
@@ -313,6 +314,27 @@ class HRPermissionEntry(models.Model):
     def btn_close(self):
         for rec in self:
             rec.permission_status = 'done'
+
+    def btn_cancel(self):
+        for rec in self:
+            rec.permission_status = 'cancel'
+
+            if rec.permission_type_id:
+                    benefit = rec.permission_type_id
+                    benefit.total_leave_balance = rec.total_leave_balance
+
+                    self.env['sb.leave.tracking'].create({  
+                        'leave_req_id': benefit.leave_req_id.id,
+                        'date': rec.permission_date_from,
+                        'permission_date_from': rec.permission_date_from,
+                        'permission_date_to': rec.permission_date_To,
+                        'leave_master_id': benefit.leave_master_id.id,
+                        'leave_allocation': rec.remaining_leave,
+                        'leave_used': -abs(rec.leave_used),
+                        'leave_remaining': rec.total_leave_balance,
+                        'remarks': rec.remarks,
+                        'permission_status': rec.permission_status
+                    })
 
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)

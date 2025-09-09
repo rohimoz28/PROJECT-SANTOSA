@@ -111,6 +111,15 @@ class SbLeaveTracking(models.Model):
     leave_remaining = fields.Float('Remaining Leave')
     remarks = fields.Char('Remarks')
     description = fields.Text('Description')
+    permission_status = fields.Selection(
+        selection=[
+            ('draft', 'Draft'),
+            ('approved', 'Approved'),
+            ('close','Close'),
+            ('cancel','Cancel')
+        ],
+        string="Status"
+    )
 
 
 class SbLeaveBenefit(models.Model):
