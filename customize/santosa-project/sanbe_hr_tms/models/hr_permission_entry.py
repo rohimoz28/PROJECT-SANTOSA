@@ -37,7 +37,9 @@ class HRPermissionEntry(models.Model):
     branch_id = fields.Many2one('res.branch', string='Business Unit', domain="[('id','in',branch_ids)]", tracking=True,)
     department_id = fields.Many2one('hr.department', domain="[('id','in',alldepartment)]", string='Sub Department')
     employee_id = fields.Many2one('hr.employee', domain="[('area','=',area_id),('branch_id','=',branch_id)]", string='Employee Name', index=True, tracking=True)
-    job_id = fields.Many2one('hr.job', string='Job Position', index=True)
+    directorate_id = fields.Many2one(comodel_name='sanhrms.directorate', related='employee_id.directorate_id', string='Directorate', index=True, store=True)
+    hrms_department_id = fields.Many2one(comodel_name='sanhrms.department', related='employee_id.hrms_department_id', string='Department', index=True, store=True)
+    job_id = fields.Many2one(comodel_name='hr.job', related='employee_id.job_id', string='Job Position', index=True, store=True)
     permission_date_from = fields.Date('Permission From')
     permission_date_To = fields.Date('Permission To')
     permission_status = fields.Selection(selection=[('draft', 'Draft'),
@@ -74,10 +76,37 @@ class HRPermissionEntry(models.Model):
     holiday_status_id = fields.Many2one("hr.leave.type", store=True, string="Permission Code",
                                         required=True, readonly=False, tracking=True)
     nik = fields.Char(related='employee_id.nik')
-    periode_id = fields.Many2one('hr.opening.closing',string='Period',index=True, required=True)
     leave_allocation_id = fields.Many2one('sb.leave.allocation', string='Leave Allocation ID', compute='_compute_leave_allocation_id')
     leave_allocation = fields.Float(string='Leave Allocation', related='leave_allocation_id.leave_remaining',
                                     readonly=True, store=True)
+    permission_type_id = fields.Many2one('sb.leave.benefit', domain="[('leave_req_id.employee_id','=',employee_id)]", string='Permission Type')
+    leave_used = fields.Float('Leave Used', compute='_compute_permission_type', store=True)
+    total_leave_balance = fields.Float('Total Leave Balance', compute='_compute_permission_type', store=True)
+    remaining_leave = fields.Float('Remaining Leave', compute='_compute_permission_type', store=True)
+
+    @api.depends('permission_type_id', 'permission_date_from', 'permission_date_To')
+    def _compute_permission_type(self):
+        for rec in self:
+            if rec.permission_type_id:
+                rec.total_leave_balance = rec.permission_type_id.total_leave_balance
+                rec.leave_used = rec.time_days
+                rec.remaining_leave = max(rec.total_leave_balance - rec.leave_used, 0.0)
+            else:
+                rec.total_leave_balance = 0
+                rec.leave_used = 0
+                rec.remaining_leave = 0
+    
+    @api.constrains('leave_used','total_leave_balance')
+    def _constrains_leave_balance(self):
+        for rec in self:
+            if rec.leave_used and rec.total_leave_balance and rec.leave_used > rec.total_leave_balance:
+                raise ValidationError('Insufficient leave balance.')
+    
+    @api.constrains('total_leave_balance','permission_type_id')
+    def _constraint_leave_balance_zero(self):
+        for rec in self:
+            if rec.permission_type_id and rec.total_leave_balance == 0:
+                raise ValidationError('You cannot create a Permission Entry. Leave balance is 0.')
 
     @api.onchange('holiday_status_id', 'time_days')
     def set_remarks(self):
@@ -136,56 +165,24 @@ class HRPermissionEntry(models.Model):
             if not leave_alloc or leave_alloc.leave_remaining < time_days:
                 raise ValidationError('Employee Has No Leave Allocation.\nPlease choose Leave Type: Unpaid Leave.')
 
-    @api.constrains('permission_date_from')
-    def _validate_date_periode(self):
-        for rec in self:
-            get_periode = self.env['hr.opening.closing'].sudo().search([
-                ('id', '=', rec.periode_id.id),
-                ('open_periode_from','<=',rec.permission_date_from),
-                ('open_periode_to','>=',rec.permission_date_from),
-                ('state_process','=','running')], limit=1)
-            if not get_periode:
-                raise ValidationError('This period is already closed.')
-
-    @api.onchange('permission_date_from')
-    def _get_periode_id(self):
-        for rec in self:
-            get_periode = self.env['hr.opening.closing'].sudo().search([
-                # ('id', '=', rec.periode_id.id),
-                ('open_periode_from','<=',rec.permission_date_from),
-                ('open_periode_to','>=',rec.permission_date_from)], limit=1)
-            if get_periode:
-                rec.periode_id = get_periode.id
-            else:
-                rec.periode_id = False
 
     @api.model_create_multi
     def create(self, vals_list):
-        #CHP = Area Cimahi
-        #CMP = Area Cimareme
-        #TSP = Area Taman Sari
-        #CHP24000001
         
         for vals in vals_list:
             if vals.get('trans_number', _('New')) == _('New'):
                 if 'area_id' in vals:
-                    area = vals.get('area_id')
-                    department = vals.get('department_id')
+                    area_id = vals.get('area_id')
+                    directorate_id = vals.get('directorate_id')
+                    department_id = vals.get('hrms_department_id')
                     branch_id = vals.get('branch_id')
-                    dt_area = self.env['res.territory'].sudo().search([('id','=',int(area))],limit=1)
-                    dept = self.env['hr.department'].sudo().search([('id','=',int(department))],limit=1)
-                    department_code = dept.department_code
-                    branch = self.env['res.branch'].sudo().search([('id','=',int(branch_id))],limit=1)
-                    branch_unit_id = branch.unit_id
+                    dt_area = self.env['res.territory'].browse(area_id) if area_id else False
+                    dept = self.env['sanhrms.department'].browse(department_id) if department_id else False
+                    branch = self.env['res.branch'].browse(branch_id) if branch_id else False
+                    department_code = dept.department_code if dept else ''
+                    branch_unit_id = branch.unit_id if branch else ''
+
                     if dt_area:
-                        # if dt_area.area_code == 'TSR':
-                        #     cdo = 'TSP'
-                        # if dt_area.area_code == 'CMH':
-                        #     cdo = 'CHP'
-                        # if dt_area.area_code == 'CMR':
-                        #     cdo = 'CMP'
-                        # if dt_area.area_code == 'SBF':
-                        #     cdo = 'SBP'
                         tgl = fields.Date.today()
                         tahun = str(tgl.year)[2:]
                         bulan = str(tgl.month)
@@ -203,7 +200,6 @@ class HRPermissionEntry(models.Model):
                     myleave = self.env['hr.leave'].sudo().create({'employee_id': alldata.employee_id.id,
                                                                   'date_from': alldata.permission_date_from,
                                                                   'date_to': alldata.permission_date_To,
-                                                                  'holiday_type': 'company',
                                                                   'request_date_from': alldata.permission_date_from,
                                                                   'request_date_to': alldata.permission_date_To,
                                                                   'number_of_days_display': alldata.permission_date_To - alldata.permission_date_from,
@@ -254,6 +250,22 @@ class HRPermissionEntry(models.Model):
         for rec in self:
             if rec.is_approved == True:
                 rec.permission_status = 'approved'
+
+                if rec.permission_type_id:
+                    benefit = rec.permission_type_id
+                    benefit.total_leave_balance = rec.remaining_leave
+
+                    self.env['sb.leave.tracking'].create({  
+                        'leave_req_id': benefit.leave_req_id.id,
+                        'date': rec.permission_date_from,
+                        'permission_date_from': rec.permission_date_from,
+                        'permission_date_to': rec.permission_date_To,
+                        'leave_master_id': benefit.leave_master_id.id,
+                        'leave_allocation': rec.total_leave_balance,
+                        'leave_used': rec.leave_used,
+                        'leave_remaining': rec.remaining_leave,
+                        'remarks': rec.remarks
+                    })
 
                 if rec.permission_date_from and rec.permission_date_To:
                     # days_permission = (rec.permission_date_To - rec.permission_date_from).days
