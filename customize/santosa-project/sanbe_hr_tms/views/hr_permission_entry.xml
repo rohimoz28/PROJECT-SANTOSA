@@ -9,8 +9,8 @@
                 <form string="Permission">
                     <sheet>
                         <header>
-                            <button name="btn_approve" type="object" data-hotkey="shift+g" string="Approved" class="oe_highlight" invisible="permission_status != 'draft'"/>
-                            <button name="btn_draft" type="object" data-hotkey="shift+g" string="Draft" class="oe_highlight" invisible="permission_status != 'approved'"/>
+                            <button name="btn_approve" type="object" data-hotkey="shift+a" string="Approved" class="oe_highlight" invisible="permission_status != 'draft'"/>
+                            <button name="btn_cancel" type="object" data-hotkey="shift+c" string="Cancel" class="oe_highlight" invisible="permission_status != 'approved'"/>
                             <field name="permission_status" widget="statusbar" statusbar_visible="draft,approved,close,cancel" force_save="1"/>
                         </header>
                         <group string="PERMISSION ENTRY" name="permission_entry">
@@ -99,8 +99,15 @@
                     <field name="holiday_status_id" optional="show" />
                     <field name="permission_date_from" optional="show" />
                     <field name="permission_date_To" optional="show" />
-                    <!-- <field name="periode_id" optional="show" /> -->
-                    <field name="permission_status" string="Status" optional="show" />
+                    <field name="permission_status" 
+                           string="Status" 
+                           optional="show"
+                           statusbar_visible="draft,approved,close,cancel"
+                           decoration-info="permission_status == 'draft'" 
+                           decoration-success="permission_status == 'approved'"
+                           decoration-warning="permission_status == 'close'"
+                           decoration-danger="permission_status == 'cancel'"
+                           widget="badge"/>
                 </tree>
             </field>
         </record>
