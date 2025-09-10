@@ -19,7 +19,7 @@
                     <field name="nik" optional="show"/>
                     <field name="job_title" optional="show"/>
                     <field name="job_status" optional="show"/>
-                    <field name="emp_status_id" optional="show"/>
+                    <field name="emp_status" optional="show"/>
                     <field name="masa_jabatan" optional="show"/>
                     <field name="employee_group1s" optional="show"/>
                     <field name="trx_number" optional="show"/>
