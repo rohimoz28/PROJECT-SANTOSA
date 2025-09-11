@@ -50,7 +50,7 @@ class HrEmployementlog(models.Model):
                                    ('transfer_to_group', 'Transfer To Group'),
                                    ('terminated', 'Terminated'),
                                    ('pass_away', 'Pass Away'),
-                                   ('long_illness', 'Long Illness')], default='probation', string='Employement Status')
+                                   ('long_illness', 'Long Illness')], default='probation', string='Status Kekaryawanan')
     emp_status_id = fields.Many2one(comodel_name='hr.emp.status', string='Status Kekaryawanan', tracking=True)
     masa_jabatan = fields.Char('Masa Jabatan', compute='hitung_masa_jabatan', store=False)
     nik = fields.Char('NIK', compute='_get_nik', store=True)
