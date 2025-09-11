@@ -174,7 +174,7 @@ class HrEmployeeMutation(models.Model):
 
     def button_approve(self):
         self.ensure_one()
-        self._update_employee_status()
+        # self._update_employee_status()
         self.env['hr.employment.log'].sudo().create({'employee_id': self.employee_id.id,
                                                      'service_type': self.service_type.upper(),
                                                      'start_date': self.service_start,
