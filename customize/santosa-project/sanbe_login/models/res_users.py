@@ -80,8 +80,8 @@ class ResUsers(models.Model):
             .verify_and_update(password, hashed)
         if replacement is not None:
             self._set_encrypted_password(self.env.user.id, replacement)
-        # if not valid:
-        #     raise AccessDenied()
+        if not valid:
+            raise AccessDenied()
 
     @classmethod
     def _login(cls, db, login, password, user_agent_env):
