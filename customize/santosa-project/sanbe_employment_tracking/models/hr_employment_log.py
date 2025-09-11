@@ -78,12 +78,12 @@ class HrEmployementlog(models.Model):
                     'context': {'create': False, 'delete': False, 'edit': False},
                 }
 
-    @api.onchange('employee_id')
+    @api.depends('employee_id')
     def _get_nik(self):
         for rec in self:
             if rec.employee_id:
                 rec.nik = rec.employee_id.nik
-                rec.employee_group1s = rec.employee_id.employee_group1s
+                rec.employee_group1s = rec.employee_id.employee_group1s.name
 
     # @api.depends('start_date', 'end_date')
     # def hitung_masa_jabatan(self):
