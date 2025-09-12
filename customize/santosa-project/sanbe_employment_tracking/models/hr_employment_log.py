@@ -50,7 +50,7 @@ class HrEmployementlog(models.Model):
                                    ('transfer_to_group', 'Transfer To Group'),
                                    ('terminated', 'Terminated'),
                                    ('pass_away', 'Pass Away'),
-                                   ('long_illness', 'Long Illness')], default='probation', string='Employement Status')
+                                   ('long_illness', 'Long Illness')], default='probation', string='Status Kekaryawanan')
     emp_status_id = fields.Many2one(comodel_name='hr.emp.status', string='Status Kekaryawanan', tracking=True)
     masa_jabatan = fields.Char('Masa Jabatan', compute='hitung_masa_jabatan', store=False)
     nik = fields.Char('NIK', compute='_get_nik', store=True)
@@ -78,12 +78,12 @@ class HrEmployementlog(models.Model):
                     'context': {'create': False, 'delete': False, 'edit': False},
                 }
 
-    @api.onchange('employee_id')
+    @api.depends('employee_id')
     def _get_nik(self):
         for rec in self:
             if rec.employee_id:
                 rec.nik = rec.employee_id.nik
-                rec.employee_group1s = rec.employee_id.employee_group1s
+                rec.employee_group1s = rec.employee_id.employee_group1s.name
 
     # @api.depends('start_date', 'end_date')
     # def hitung_masa_jabatan(self):
