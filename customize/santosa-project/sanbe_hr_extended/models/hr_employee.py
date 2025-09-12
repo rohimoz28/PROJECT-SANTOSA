@@ -82,7 +82,7 @@ class HrEmployee(models.Model):
     state_id = fields.Char(related='branch_id.state_id')
     zip = fields.Char(related='branch_id.zip')
     country_id = fields.Many2one(related='branch_id.country_id')
-    department_id = fields.Many2one('hr.department', compute = '_find_department_id',  string='Old Departemen', store=True, required=False)
+    department_id = fields.Many2one('hr.department', compute = '_find_department_id',  string='Old Departemen', store=True, required=False, Tracking=False)
     hrms_department_id = fields.Many2one('sanhrms.department', tracking=True, string='Departemen')
     medic_finish_date = fields.Date('SPK Date',store=True)
     
@@ -150,7 +150,7 @@ class HrEmployee(models.Model):
                                    ('terminated', 'Terminated'),
                                    ('pass_away', 'Pass Away'),
                                    ('long_illness', 'Long Illness')
-                                   ], tracking=True, string='Employment Status')
+                                   ], string='Employment Status')
     ws_month = fields.Integer('Working Service Month', compute="_compute_service_duration_display", readonly=True)
     ws_year = fields.Integer('Working Service Year', compute="_compute_service_duration_display", readonly=True)
     ws_day = fields.Integer('Working Service Day', compute="_compute_service_duration_display", readonly=True)
@@ -537,6 +537,10 @@ class HrEmployee(models.Model):
                 dat.write({
                     'employee_id': self.id
                 })
+
+        if 'department_id' in vals:
+            self = self.with_context(tracking_disable=True)    
+
         res = super(HrEmployee, self).write(vals)
 
         return res
