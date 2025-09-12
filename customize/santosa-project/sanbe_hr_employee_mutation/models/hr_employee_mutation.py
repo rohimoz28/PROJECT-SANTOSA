@@ -373,9 +373,9 @@ class HrEmployeeMutation(models.Model):
                 record.service_speciality = employee.seciality.id
                 record.service_area = employee.area.id
                 record.service_bisnisunit = employee.hrms_department_id.branch_id.id or employee.branch_id.id
-                record.service_directorate_id = employee.directorate_id.id
-                record.service_departmentid = employee.hrms_department_id.id
-                record.service_division_id = employee.division_id.id
+                record.service_directorate_id = False
+                record.service_departmentid = False
+                record.service_division_id = False
                 record.service_jobtitle = False
                 record.service_parent_id = employee.parent_id.id
                 record.service_jobstatus = False
