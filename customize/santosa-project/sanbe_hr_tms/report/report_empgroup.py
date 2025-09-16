@@ -71,17 +71,18 @@ class ReportEmpgroupXlsx(models.AbstractModel):
                 try:
                     # Get value_id and value_name for each row
                     current_value = self.env['value.group'].search([], order='id desc', limit=1)
-                    
+                    value_name = current_value['value_name']
+
                     # Prepare row data
                     data_row = [
-                        current_value.value_name or '',
+                        value_name or '',
                         obj.name or 'Tidak Diketahui',
                         obj.nik or 'Tidak Diketahui',
                         obj.job_id.name or 'Tidak Diketahui',
                         # obj.workingday or 0,
-                        obj.wdcode or 'Tidak Diketahui',
-                        obj.valid_from.strftime('%d-%m-%Y') ,
-                        obj.valid_to.strftime('%d-%m-%Y') ,
+                        obj.wd_id.code or 'Tidak Diketahui',
+                        obj.wd_valid_from.strftime('%d-%m-%Y') if obj.wd_valid_from else '',
+                        obj.wd_valid_to.strftime('%d-%m-%Y') if obj.wd_valid_to else '',
                         # obj.wd_id.code or 'Tidak Diketahui',
                         # obj.wd_valid_from.strftime('%d-%m-%Y') ,
                         # obj.wd_valid_to.strftime('%d-%m-%Y') ,
