@@ -18,7 +18,8 @@ class ReportEmpgroupXlsx(models.AbstractModel):
             # Determine lines to process
             if not lines:
                 active_ids = self.env.context.get('active_ids', [])
-                active_model = self.env.context.get('active_model', 'hr.employee')
+                # active_model = self.env.context.get('active_model', 'hr.employee')
+                active_model = self.env.context.get('active_model', 'hr.empgroup.details')
                 lines = self.env[active_model].browse(active_ids) if active_ids else []
 
             _logger.info(f"Total lines retrieved: {len(lines)}")
@@ -76,10 +77,14 @@ class ReportEmpgroupXlsx(models.AbstractModel):
                         current_value.value_name or '',
                         obj.name or 'Tidak Diketahui',
                         obj.nik or 'Tidak Diketahui',
-                        obj.job_title or 'Tidak Diketahui',
-                        obj.workingday or 0,
-                        '01/12/2024',
-                        '01/12/2024'
+                        obj.job_id.name or 'Tidak Diketahui',
+                        # obj.workingday or 0,
+                        obj.wdcode or 'Tidak Diketahui',
+                        obj.valid_from.strftime('%d-%m-%Y') ,
+                        obj.valid_to.strftime('%d-%m-%Y') ,
+                        # obj.wd_id.code or 'Tidak Diketahui',
+                        # obj.wd_valid_from.strftime('%d-%m-%Y') ,
+                        # obj.wd_valid_to.strftime('%d-%m-%Y') ,
                     ]
 
                     _logger.info(f"Processing row {data_row}")

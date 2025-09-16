@@ -176,7 +176,6 @@ class HrCariEmployeeDepartment(models.TransientModel):
                     'approve_time_from': self.approve_time_from,
                     'approve_time_to': self.approve_time_to,
                 })
-
             self.env['hr.overtime.employees'].sudo().create(employee_data)
 
             return {
@@ -214,7 +213,9 @@ class HrCariEmployeeDepartment(models.TransientModel):
                     'valid_from': self.valid_from,
                     'valid_to': self.valid_to,
                 })
-
+                emp.employee_id.wd_id = self.wdcode.id
+                emp.employee_id.wd_valid_from = self.valid_from
+                emp.employee_id.wd_valid_to = self.valid_to
             self.env['hr.empgroup.details'].sudo().create(employee_data)
             return True
 
