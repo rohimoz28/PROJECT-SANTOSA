@@ -139,6 +139,20 @@ class HREmpGroupSetting(models.Model):
         for rec in self:
             rec.state = 'approved'
     
+    # def unlink(self):
+    #     # Optional: do something before deleting
+    #     for record in self:
+    #         # Example: log message on each related empgroup_id
+    #         if record.empgroup_ids:
+    #             for empgroup in record.empgroup_ids:
+    #                 empgroup._message_log(
+    #                     body="Unlinking group setting associated with this empgroup.",
+    #                     subject="Group Setting Unlinked",
+    #                     message_type="notification"
+    #                 )
+    #     return super(HREmpGroupSetting, self).unlink()
+
+    
     def btn_process(self):
         for res in self:
             for recx in res.empgroup_ids:
@@ -345,9 +359,16 @@ class HREmpGroupSetting(models.Model):
             tms_summary_domain.append(('area', '=', self.area_id.id))
         if self.branch_id:
             tms_summary_domain.append(('branch_id', '=', self.branch_id.id))
-        if self.department_id:
-            tms_summary_domain.append(('department_id', '=', self.department_id.id))
+        # if self.department_id:
+        #     tms_summary_domain.append(('department_id', '=', self.department_id.id))
+        if self.directorate_id:
+            tms_summary_domain.append(('directorate_id', '=', self.directorate_id.id))
+        if self.division_id:
+            tms_summary_domain.append(('division_id', '=', self.division_id.id))
+        if self.hrms_department_id:
+            tms_summary_domain.append(('hrms_department_id', '=', self.hrms_department_id.id))
         
+        # tms_summaries = self.env['hr.employee'].search(tms_summary_domain)
         tms_summaries = self.env['hr.employee'].search(tms_summary_domain)
         _logger.info(f"Domain: {tms_summary_domain}")
         _logger.info(f"TMS Summaries: {tms_summaries}")
@@ -365,7 +386,7 @@ class HREmpGroupSetting(models.Model):
             'type': 'ir.actions.report',
             'report_name': 'sanbe_hr_tms.rekap_empgroup_xls',
             'report_type': 'xlsx',
-            'report_file': f'Rekap_Empgroup_{self.department_id.name or "All"}',
+            'report_file': f'Rekap_Empgroup_{self.division_id.name or "All"}',
             'context': {
                 'active_model': 'hr.tmsentry.summary',
                 'active_ids': tms_summaries.ids,
@@ -416,10 +437,22 @@ class HREmpGroupSetting(models.Model):
                 if 'area_id' in vals:
                     area = vals.get('area_id')
                     department = vals.get('department_id')
+                    # directorate = vals.get('directorate_id')
+                    # hrms_department = vals.get('hrms_department_id')
+                    division = vals.get('division_id')
                     branch_id = vals.get('branch_id')
                     dt_area = self.env['res.territory'].sudo().search([('id','=',int(area))],limit=1)
                     dept = self.env['hr.department'].sudo().search([('id','=',int(department))],limit=1)
                     department_code = dept.department_code
+
+                    hrms_division = self.env['sanhrms.division'].sudo().search([('id','=',int(division))],limit=1)
+                    hrms_division_code = hrms_division.division_code
+                    # hrms_dept = self.env['sanhrms.department'].sudo().search([('id','=',int(hrms_department))],limit=1)
+                    # hrms_department_code = hrms_dept.department_code
+
+                    # hrms_directorate = self.env['sanhrms.directorate'].sudo().search([('id','=',int(directorate))],limit=1)
+                    # hrms_directorate_code = hrms_directorate.department_code
+
                     branch = self.env['res.branch'].sudo().search([('id','=',int(branch_id))],limit=1)
                     branch_unit_id = branch.unit_id
                     if dt_area:
@@ -427,7 +460,7 @@ class HREmpGroupSetting(models.Model):
                         tahun = str(tgl.year)[2:]
                         bulan = str(tgl.month)
                         # vals['name'] = cdo + str(tahun) + str(self.env['ir.sequence'].next_by_code('hr.overtime.planning'))
-                        vals['name'] = f"{tahun}/{bulan}/{branch_unit_id}/EG/{department_code}/{self.env['ir.sequence'].next_by_code('hr.empgroup')}"
+                        vals['name'] = f"{tahun}/{bulan}/{branch_unit_id}/EG/{hrms_division_code}/{self.env['ir.sequence'].next_by_code('hr.empgroup')}"
                         print(">>>>>>>>>>>>")
                         print("sequence:",vals['name'])
                         print(">>>>>>>>>>>>")
@@ -539,12 +572,25 @@ class HREmpGroupSettingDetails(models.Model):
             if datecek:
                 raise UserError('Valid to over lap with existing data')
     
+    @api.onchange('employee_id', 'wdcode', 'valid_from', 'valid_to')
+    def _write_off_employee(self):
+        for rec in self:
+            if rec.employee_id and rec.wdcode and rec.valid_from and rec.valid_to:
+                rec.employee_id.sudo().write({
+                    'wd_id': rec.wdcode.id,
+                    'wd_valid_from': rec.valid_from,
+                    'wd_valid_to': rec.valid_to,
+                })
+
     @api.onchange('employee_id')
     def isi_employee(self):
         for allrec in self:
             if not allrec.employee_id:
                 return
             allrec.nik = allrec.employee_id.nik
+            allrec.directorate_id = allrec.employee_id.directorate_id.id
+            allrec.hrms_department_id = allrec.employee_id.hrms_department_id.id
+            allrec.division_id = allrec.employee_id.division_id.id
             allrec.department_id = allrec.employee_id.department_id.id
             allrec.job_id = allrec.employee_id.job_id.id
 
