@@ -358,8 +358,8 @@ class HREmpGroupSetting(models.Model):
         self.ensure_one()
         tms_summary_domain = []
         tms_summary_domain.append(('empgroup_id', '=', self.id))
-        if self.area_id:
-            tms_summary_domain.append(('area_id', '=', self.area_id.id))
+        # if self.area_id:
+        #     tms_summary_domain.append(('area_id', '=', self.area_id.id))
         if self.branch_id:
             tms_summary_domain.append(('branch_id', '=', self.branch_id.id))
         if self.directorate_id:
