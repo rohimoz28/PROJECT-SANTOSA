@@ -63,6 +63,9 @@ class ReportEmpgroupXlsx(models.AbstractModel):
 
             for obj in lines:
                 # Skip employees with certain status
+                if  not obj.emp_status :
+                    _logger.info(f"Skipping employee {obj.name} with status {obj.emp_status}")
+                    continue
                 if obj.emp_status not in ['confirmed', 'probation']:
                     _logger.info(f"Skipping employee {obj.name} with status {obj.emp_status}")
                     continue

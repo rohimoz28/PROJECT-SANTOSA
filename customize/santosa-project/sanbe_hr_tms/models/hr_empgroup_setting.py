@@ -500,7 +500,7 @@ class HREmpGroupSettingDetails(models.Model):
             
             allwds = self.env['hr.working.days'].sudo().search([('area_id','=',allrecs.area_id.id),('available_for','in',allrecs.branch_id.ids),('is_active','=',True)])
             allrecs.wdcode_ids = [Command.set(allwds.ids)]
-    name = fields.Char(string='Name', reladet='employee_id.name',)
+    name = fields.Char(string='Name', related='employee_id.name',store=True)
     empgroup_id = fields.Many2one('hr.empgroup',string='Employee Group Setting ID', index=True,tracking=True)
     empgroup_name = fields.Char(string='Empgroup Name', required=False,tracking=True)
     branch_ids = fields.Many2many('res.branch', 'res_branch_emp_detail_rel', string='AllBranch', copy=True, compute='_isi_semua_branch', store=False,tracking=True)
@@ -520,14 +520,7 @@ class HREmpGroupSettingDetails(models.Model):
     job_id = fields.Many2one('hr.job',string='Job Position',index=True,tracking=True)
     valid_from = fields.Date('Valid From', required=True, copy=True,tracking=True)
     valid_to = fields.Date('To', required=True, copy=True,tracking=True)
-    emp_status = fields.Selection([('probation','Probation'),
-                                   ('confirmed','Confirmed'),
-                                   ('probation', 'Probation'),
-                                   ('end_contract', 'End Of Contract'),
-                                   ('resigned', 'Resigned'),
-                                   ('retired', 'Retired'),
-                                   ('terminated', 'Terminated'),
-                                   ],string='Employment Status',related='employee_id.emp_status',store=False,tracking=True)
+    emp_status = fields.Selection(string='Employment Status',related='employee_id.emp_status',store=False,tracking=True)
     #periode_id = fields.Many2one('hr.opening.closing',string='Periode ID',index=True)
     state = fields.Selection([('draft','Draft'),('approved','Approved'),('close','Close')], string='State',related='empgroup_id.state',store=True,tracking=True)
 
