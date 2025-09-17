@@ -570,16 +570,6 @@ class HREmpGroupSettingDetails(models.Model):
             
             if datecek:
                 raise UserError('Valid to over lap with existing data')
-    
-    @api.onchange('employee_id', 'wdcode', 'valid_from', 'valid_to')
-    def _write_off_employee(self):
-        for rec in self:
-            if rec.employee_id and rec.wdcode and rec.valid_from and rec.valid_to:
-                rec.employee_id.sudo().write({
-                    'wd_id': rec.wdcode.id,
-                    'wd_valid_from': rec.valid_from,
-                    'wd_valid_to': rec.valid_to,
-                })
 
     @api.onchange('employee_id')
     def isi_employee(self):
