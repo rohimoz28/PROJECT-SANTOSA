@@ -16,7 +16,7 @@
 
         <record id="rekap_empgroup_report_xlsx" model="ir.actions.report">
             <field name="name">Rekap Emp Group</field>
-            <field name="model">hr.employee</field>
+            <field name="model">hr.empgroup.details</field>
             <field name="report_type">xlsx</field>
             <field name="report_name">sanbe_hr_tms.rekap_empgroup_xls</field>
             <field name="report_file">sanbe_hr_tms.rekap_empgroup_xls</field>

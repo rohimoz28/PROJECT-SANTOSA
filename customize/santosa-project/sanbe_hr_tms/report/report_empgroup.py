@@ -1,5 +1,6 @@
 from odoo import _, api, fields, models
 import datetime
+from odoo.exceptions import UserError
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -18,12 +19,10 @@ class ReportEmpgroupXlsx(models.AbstractModel):
             # Determine lines to process
             if not lines:
                 active_ids = self.env.context.get('active_ids', [])
-                # active_model = self.env.context.get('active_model', 'hr.employee')
                 active_model = self.env.context.get('active_model', 'hr.empgroup.details')
                 lines = self.env[active_model].browse(active_ids) if active_ids else []
 
             _logger.info(f"Total lines retrieved: {len(lines)}")
-
             # Workbook formatting
             format_header = workbook.add_format({
                 'font_size': 12,
@@ -72,20 +71,15 @@ class ReportEmpgroupXlsx(models.AbstractModel):
                     # Get value_id and value_name for each row
                     current_value = self.env['value.group'].search([], order='id desc', limit=1)
                     value_name = current_value['value_name']
-
                     # Prepare row data
                     data_row = [
                         value_name or '',
-                        obj.name or 'Tidak Diketahui',
-                        obj.nik or 'Tidak Diketahui',
-                        obj.job_id.name or 'Tidak Diketahui',
-                        # obj.workingday or 0,
-                        obj.wd_id.code or 'Tidak Diketahui',
-                        obj.wd_valid_from.strftime('%d-%m-%Y') if obj.wd_valid_from else '',
-                        obj.wd_valid_to.strftime('%d-%m-%Y') if obj.wd_valid_to else '',
-                        # obj.wd_id.code or 'Tidak Diketahui',
-                        # obj.wd_valid_from.strftime('%d-%m-%Y') ,
-                        # obj.wd_valid_to.strftime('%d-%m-%Y') ,
+                        obj.employee_id.name or '',
+                        obj.nik or '',
+                        obj.job_id.name or '',
+                        obj.wdcode.code or '',
+                        obj.valid_from.strftime('%d-%m-%Y')  if obj.valid_from else '',
+                        obj.valid_to.strftime('%d-%m-%Y')  if obj.valid_from else '',
                     ]
 
                     _logger.info(f"Processing row {data_row}")

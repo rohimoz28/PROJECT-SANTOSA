@@ -75,7 +75,7 @@
                                     type="object" class="oe_highlight" data-hotkey="p" invisible="state != 'approved'"/> -->
                             </group>
                             <group>
-                            <button name="action_export_excel" string="Export to Excel"
+                            <button name="action_export_excel_empgroups" string="Export to Excel"
                                         type="object" class="oe_highlight" data-hotkey="q"/>
                             </group>
                         </group>

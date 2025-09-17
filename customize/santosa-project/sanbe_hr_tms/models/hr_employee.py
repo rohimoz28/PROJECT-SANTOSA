@@ -16,6 +16,3 @@ class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
     badges_nos = fields.Many2many('hr.machine.details','name','employee_id',string='Badges Number')
-    wd_id = fields.Many2one('hr.working.days',string='Working Day')
-    wd_valid_from = fields.Date('Valid From', copy=True)
-    wd_valid_to = fields.Date('To', copy=True)
