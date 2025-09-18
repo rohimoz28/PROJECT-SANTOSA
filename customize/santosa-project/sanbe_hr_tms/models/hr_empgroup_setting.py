@@ -139,6 +139,20 @@ class HREmpGroupSetting(models.Model):
         for rec in self:
             rec.state = 'approved'
     
+    # def unlink(self):
+    #     # Optional: do something before deleting
+    #     for record in self:
+    #         # Example: log message on each related empgroup_id
+    #         if record.empgroup_ids:
+    #             for empgroup in record.empgroup_ids:
+    #                 empgroup._message_log(
+    #                     body="Unlinking group setting associated with this empgroup.",
+    #                     subject="Group Setting Unlinked",
+    #                     message_type="notification"
+    #                 )
+    #     return super(HREmpGroupSetting, self).unlink()
+
+    
     def btn_process(self):
         for res in self:
             for recx in res.empgroup_ids:
@@ -337,21 +351,26 @@ class HREmpGroupSetting(models.Model):
             _logger.error("Error calling stored procedure: %s", str(e))
             raise UserError("Error executing the function: %s" % str(e))
 
-    def action_export_excel(self, model_id=None):
+    # fungsi ini digunakan sebagai template import file excel yang di download oleh user
+    # data berupa hasil dari hr_employee kemudian di import ke hr_empgroup_details
+    # Note : bukan result dari hr empgroup details
+    def action_export_excel_empgroups(self, model_id=None):
         self.ensure_one()
-        # value_id = self.value_id
         tms_summary_domain = []
-        if self.area_id:
-            tms_summary_domain.append(('area', '=', self.area_id.id))
+        tms_summary_domain.append(('empgroup_id', '=', self.id))
+        # if self.area_id:
+        #     tms_summary_domain.append(('area_id', '=', self.area_id.id))
         if self.branch_id:
             tms_summary_domain.append(('branch_id', '=', self.branch_id.id))
-        if self.department_id:
-            tms_summary_domain.append(('department_id', '=', self.department_id.id))
-        
-        tms_summaries = self.env['hr.employee'].search(tms_summary_domain)
+        if self.directorate_id:
+            tms_summary_domain.append(('directorate_id', '=', self.directorate_id.id))
+        if self.division_id:
+            tms_summary_domain.append(('division_id', '=', self.division_id.id))
+        if self.hrms_department_id:
+            tms_summary_domain.append(('hrms_department_id', '=', self.hrms_department_id.id))
+        tms_summaries = self.env['hr.empgroup.details'].search(tms_summary_domain)
         _logger.info(f"Domain: {tms_summary_domain}")
         _logger.info(f"TMS Summaries: {tms_summaries}")
-        
         # _logger.info(f"ID: {value_id}")
         value = self.env['value.group'].create({
                 'value_id': self.id,
@@ -365,9 +384,9 @@ class HREmpGroupSetting(models.Model):
             'type': 'ir.actions.report',
             'report_name': 'sanbe_hr_tms.rekap_empgroup_xls',
             'report_type': 'xlsx',
-            'report_file': f'Rekap_Empgroup_{self.department_id.name or "All"}',
+            'report_file': f'Rekap_Empgroup_{self.division_id.name or "All"}',
             'context': {
-                'active_model': 'hr.tmsentry.summary',
+                'active_model': 'hr.empgroup.details',
                 'active_ids': tms_summaries.ids,
             }
         }
@@ -416,10 +435,22 @@ class HREmpGroupSetting(models.Model):
                 if 'area_id' in vals:
                     area = vals.get('area_id')
                     department = vals.get('department_id')
+                    # directorate = vals.get('directorate_id')
+                    # hrms_department = vals.get('hrms_department_id')
+                    division = vals.get('division_id')
                     branch_id = vals.get('branch_id')
                     dt_area = self.env['res.territory'].sudo().search([('id','=',int(area))],limit=1)
                     dept = self.env['hr.department'].sudo().search([('id','=',int(department))],limit=1)
                     department_code = dept.department_code
+
+                    hrms_division = self.env['sanhrms.division'].sudo().search([('id','=',int(division))],limit=1)
+                    hrms_division_code = hrms_division.division_code
+                    # hrms_dept = self.env['sanhrms.department'].sudo().search([('id','=',int(hrms_department))],limit=1)
+                    # hrms_department_code = hrms_dept.department_code
+
+                    # hrms_directorate = self.env['sanhrms.directorate'].sudo().search([('id','=',int(directorate))],limit=1)
+                    # hrms_directorate_code = hrms_directorate.department_code
+
                     branch = self.env['res.branch'].sudo().search([('id','=',int(branch_id))],limit=1)
                     branch_unit_id = branch.unit_id
                     if dt_area:
@@ -427,7 +458,7 @@ class HREmpGroupSetting(models.Model):
                         tahun = str(tgl.year)[2:]
                         bulan = str(tgl.month)
                         # vals['name'] = cdo + str(tahun) + str(self.env['ir.sequence'].next_by_code('hr.overtime.planning'))
-                        vals['name'] = f"{tahun}/{bulan}/{branch_unit_id}/EG/{department_code}/{self.env['ir.sequence'].next_by_code('hr.empgroup')}"
+                        vals['name'] = f"{tahun}/{bulan}/{branch_unit_id}/EG/{hrms_division_code}/{self.env['ir.sequence'].next_by_code('hr.empgroup')}"
                         print(">>>>>>>>>>>>")
                         print("sequence:",vals['name'])
                         print(">>>>>>>>>>>>")
@@ -469,12 +500,13 @@ class HREmpGroupSettingDetails(models.Model):
             
             allwds = self.env['hr.working.days'].sudo().search([('area_id','=',allrecs.area_id.id),('available_for','in',allrecs.branch_id.ids),('is_active','=',True)])
             allrecs.wdcode_ids = [Command.set(allwds.ids)]
-
+    name = fields.Char(string='Name', related='employee_id.name',store=True)
     empgroup_id = fields.Many2one('hr.empgroup',string='Employee Group Setting ID', index=True,tracking=True)
     empgroup_name = fields.Char(string='Empgroup Name', required=False,tracking=True)
     branch_ids = fields.Many2many('res.branch', 'res_branch_emp_detail_rel', string='AllBranch', copy=True, compute='_isi_semua_branch', store=False,tracking=True)
     branch_id = fields.Many2one('res.branch',string='Bisnis Unit', copy=True,index=True,domain="[('id','in',branch_ids)]",tracking=True)
     area_id = fields.Many2one("res.territory", string='Area ID', copy=True, index=True,tracking=True)
+    area = fields.Many2one("res.territory", string='Area ID', copy=True, index=True,tracking=True)
     alldepartment = fields.Many2many('hr.department','hr_department_emp_detail_set_rel', string='All Department', copy=True,compute='_isi_department_branch',store=False,tracking=True)
     department_id = fields.Many2one('hr.department',string='Sub Department',copy=True,index=True,domain="[('id','in',alldepartment)]",tracking=True)
     division_id = fields.Many2one('sanhrms.division',string='Divisi', store=True)
@@ -482,20 +514,13 @@ class HREmpGroupSettingDetails(models.Model):
     directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', store=True)
     wdcode_ids = fields.Many2many('hr.working.days','wd_emp_detail_rel',string='WD Code All', copy=True,compute='_isi_department_branch', store=False,tracking=True)
     wdcode = fields.Many2one('hr.working.days',domain="[('id','in',wdcode_ids)]",string='WD Code', copy=True,index=True,tracking=True)
-    wdcode_name = fields.Char(string='WD Code Name', required=False,tracking=True)
+    wdcode_name = fields.Char(string='WD Code Name', related='wdcode.code', required=False,store=True)
     employee_id = fields.Many2one('hr.employee',string='Employee Name',index=True,domain="[('area','=',area_id),('branch_id','=',branch_id),('department_id','=',department_id),('state','=','approved')]",tracking=True)
     nik = fields.Char('NIK',tracking=True)
     job_id = fields.Many2one('hr.job',string='Job Position',index=True,tracking=True)
     valid_from = fields.Date('Valid From', required=True, copy=True,tracking=True)
     valid_to = fields.Date('To', required=True, copy=True,tracking=True)
-    emp_status = fields.Selection([('probation','Probation'),
-                                   ('confirmed','Confirmed'),
-                                   ('probation', 'Probation'),
-                                   ('end_contract', 'End Of Contract'),
-                                   ('resigned', 'Resigned'),
-                                   ('retired', 'Retired'),
-                                   ('terminated', 'Terminated'),
-                                   ],string='Employment Status',related='employee_id.emp_status',store=False,tracking=True)
+    emp_status = fields.Selection(string='Employment Status',related='employee_id.emp_status',store=False,tracking=True)
     #periode_id = fields.Many2one('hr.opening.closing',string='Periode ID',index=True)
     state = fields.Selection([('draft','Draft'),('approved','Approved'),('close','Close')], string='State',related='empgroup_id.state',store=True,tracking=True)
 
@@ -538,13 +563,16 @@ class HREmpGroupSettingDetails(models.Model):
             
             if datecek:
                 raise UserError('Valid to over lap with existing data')
-    
+
     @api.onchange('employee_id')
     def isi_employee(self):
         for allrec in self:
             if not allrec.employee_id:
                 return
             allrec.nik = allrec.employee_id.nik
+            allrec.directorate_id = allrec.employee_id.directorate_id.id
+            allrec.hrms_department_id = allrec.employee_id.hrms_department_id.id
+            allrec.division_id = allrec.employee_id.division_id.id
             allrec.department_id = allrec.employee_id.department_id.id
             allrec.job_id = allrec.employee_id.job_id.id
 
