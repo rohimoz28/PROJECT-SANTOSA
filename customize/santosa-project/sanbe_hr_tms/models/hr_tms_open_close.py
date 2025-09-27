@@ -228,21 +228,25 @@ class HRTmsOpenClose(models.Model):
 
     def action_closing_periode(self):
         for data in self:
-            summary = self.env['hr.tmsentry.summary'].search([('periode_id','=',data.id)])
-            # import pdb
-            # pdb.set_trace()
-            for record in summary:
-                record.write({'state': 'done'})
-                attendances = self.env['sb.tms.tmsentry.details'].search([('tmsentry_id','=',record.id)])
-                for attn in attendances:
-                    attn.write({'status': 'done'})
-                permissions = self.env['hr.permission.entry'].search([('periode_id','=',record.periode_id.id)])
-                for perm in permissions:
-                    # perm.write({'permission_status': 'done'})
-                    perm.write({'permission_status': 'close'})
-                overtime = self.env['hr.overtime.planning'].search([('periode_id','=',data.id)])
-                for ot in overtime:
-                    ot.write({'state': 'done'})
+            
+            # permintaan dari pa Gilang untuk menonaktifkan validasi dan proses closing kecuali update status
+            # karena prosesnya disamakan dengan proses yang ada di ERP sanbe (27 Sept 2025)
+            
+            # summary = self.env['hr.tmsentry.summary'].search([('periode_id','=',data.id)])
+            # # import pdb
+            # # pdb.set_trace()
+            # for record in summary:
+            #     record.write({'state': 'done'})
+            #     attendances = self.env['sb.tms.tmsentry.details'].search([('tmsentry_id','=',record.id)])
+            #     for attn in attendances:
+            #         attn.write({'status': 'done'})
+            #     permissions = self.env['hr.permission.entry'].search([('periode_id','=',record.periode_id.id)])
+            #     for perm in permissions:
+            #         # perm.write({'permission_status': 'done'})
+            #         perm.write({'permission_status': 'close'})
+            #     overtime = self.env['hr.overtime.planning'].search([('periode_id','=',data.id)])
+            #     for ot in overtime:
+            #         ot.write({'state': 'done'})
 
             data.write({'state_process': 'done', 'isopen': 'false'})
             data.write({'isopen': 0})
