@@ -20,7 +20,41 @@ export class OdooOWLListController extends ListController {
         target: 'new'
     });
    }
+
+   showImportEmployee() {
+        this.env.services.action.doAction({
+            type: 'ir.actions.act_window',
+            name: 'Search Employee',
+            res_model: 'wiz.employee.shift',
+            view_mode: 'form', 
+            view_id: 'sanbe_hr_tms.wiz_employee_shift_wizard_view_form',
+            views: [[false, 'form']],
+            target: 'new', 
+            context: {
+                default_target_models: 'sb.employee.shift',
+                default_target_process: 'generate',
+            } 
+        });
+    }
+
+   showImportxls() {
+        this.env.services.action.doAction({
+            type: 'ir.actions.act_window',
+            name: 'Search Employee',
+            res_model: 'wiz.employee.shift',
+            view_mode: 'form', 
+            view_id: 'sanbe_hr_tms.wiz_employee_shift_wizard_view_form',
+            views: [[false, 'form']],
+            target: 'new', 
+            context: {
+                default_target_models: 'sb.employee.shift',
+                default_target_process: 'process xls',
+            } 
+        });
+    }
+
 }
+
 
 
 const viewRegistry = registry.category("views");

@@ -43,7 +43,7 @@ class HrCariEmployeeDepartment(models.TransientModel):
         store=False
     )
     alldepartment = fields.Many2many(
-        'hr.department',
+        'sanhrms.department',
         'hr_department_plan_ot_rel',
         string='All Department',
         compute='_isi_department_branch',

@@ -40,4 +40,5 @@ from . import sb_leave_allocation
 from . import sb_leave_allocation_request
 from . import st_master_leave
 from . import account_analytic
+from . import hr_tms_employee_shift
 

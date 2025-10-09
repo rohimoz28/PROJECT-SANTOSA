@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_employee_shift_tree" model="ir.ui.view">
+        <field name="name">hr.employee.shift.tree</field>
+        <field name="model">sb.employee.shift</field>
+        <field name="arch" type="xml">
+            <!-- <tree string="Employee Shifts" decoration-success="state == 'approved'" decoration-info="state == 'review'" decoration-muted="state == 'reject'" class="o_horizontal_scroll" create="false" editable="bottom" limit="180"> -->
+            <tree string="Employee Shifts" create="false" editable="bottom" limit="180" class="o_horizontal_shift">
+                <!-- <field name="is_select"/> -->
+                <field name="periode_id" options="{'no_open': True}" readonly="1" />
+                <field name="period_text" options="{'no_open': True}" readonly="1" column_invisible="1"/>
+                <field name="employee_id" options="{'no_open': True}" readonly="1" />
+                <field name="nik" readonly="1"/>
+                <field name="branch_id" options="{'no_open': True}" readonly="1" column_invisible="1"/>
+                <field name="area_id" options="{'no_open': True}" readonly="1" column_invisible="1"/>
+                <field name="directorate_id" options="{'no_open': True}" readonly="1" />
+                <field name="hrms_department_id" options="{'no_open': True}" readonly="1" />
+                <field name="division_id" options="{'no_open': True}" readonly="1" />
+                <field name="job_id" readonly="1" />
+                <field name="jabatan" readonly="1" column_invisible="1"/>
+                <field name="date_21" string="21" class="shift_highlight_group_a"/>
+                <field name="date_22" string="22" class="shift_highlight_group_a"/>
+                <field name="date_23" string="23" class="shift_highlight_group_a"/>
+                <field name="date_24" string="24" class="shift_highlight_group_a"/>
+                <field name="date_25" string="25" class="shift_highlight_group_a"/>
+                <field name="date_26" string="26" class="shift_highlight_group_a"/>
+                <field name="date_27" string="27" class="shift_highlight_group_a"/>
+                <field name="date_28" string="28" class="shift_highlight_group_a"/>
+                <field name="date_29" string="29" class="shift_highlight_group_a"/>
+                <field name="date_30" string="30" class="shift_highlight_group_a"/>
+                <field name="date_31" string="31" class="shift_highlight_group_a"/>
+                <field name="date_01" string="01" class="shift_highlight_group_b"/>
+                <field name="date_02" string="02" class="shift_highlight_group_b"/>
+                <field name="date_03" string="03" class="shift_highlight_group_b"/>
+                <field name="date_04" string="04" class="shift_highlight_group_b"/>
+                <field name="date_05" string="05" class="shift_highlight_group_b"/>
+                <field name="date_06" string="06" class="shift_highlight_group_b"/>
+                <field name="date_07" string="07" class="shift_highlight_group_b"/>
+                <field name="date_08" string="08" class="shift_highlight_group_b"/>
+                <field name="date_09" string="09" class="shift_highlight_group_b"/>
+                <field name="date_10" string="10" class="shift_highlight_group_b"/>
+                <field name="date_11" string="11" class="shift_highlight_group_b"/>
+                <field name="date_12" string="12" class="shift_highlight_group_b"/>
+                <field name="date_13" string="13" class="shift_highlight_group_b"/>
+                <field name="date_14" string="14" class="shift_highlight_group_b"/>
+                <field name="date_15" string="15" class="shift_highlight_group_b"/>
+                <field name="date_16" string="16" class="shift_highlight_group_b"/>
+                <field name="date_17" string="17" class="shift_highlight_group_b"/>
+                <field name="date_18" string="18" class="shift_highlight_group_b"/>
+                <field name="date_19" string="19" class="shift_highlight_group_b"/>
+                <field name="date_20" string="20" class="shift_highlight_group_b"/>
+                <field name="state" widget="badge" decoration-success="state == 'approved'" decoration-info="state == 'review'" decoration-danger="state == 'reject'"/>
+                <button name="action_review" type="object" string="Send to Approved" groups="sanbe_hr_tms.group_shift_staff,sanbe_hr_tms.group_shift_hrd" invisible="state != 'draft'"/>
+                <button name="action_approve" type="object" string="Approved by HRD" class="oe_highlight" groups="sanbe_hr_tms.group_shift_hrd,sanbe_hr_tms.group_shift_manager" invisible="state != 'review'"/>
+                <!-- <button name="action_reject" type="object" string="Reject" groups="base_territory.group_branch_user_manager,base_territory.group_branch_user" invisible="state not in ('draft')"/> -->
+                <button name="action_set_to_draft" type="object" string="Set to Draft" groups="sanbe_hr_tms.group_shift_hrd,sanbe_hr_tms.group_shift_manager" invisible="state == 'draft'"/>
+                <field name="create_uid" string="Created by"/>
+                <field name="write_uid" string="Last Update by"/>
+                <field name="write_date" string="Last Update"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record id="view_hr_employee_shift_ext" model="ir.ui.view">
+        <field name="name">hr.employee.shift.tree.ext</field>
+        <field name="model">sb.employee.shift</field>
+        <field name="inherit_id" ref="sanbe_hr_tms.view_hr_employee_shift_tree"/>
+        <field name="mode">extension</field>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">owl_list_controller</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_hr_employee_shift_search" model="ir.ui.view">
+        <field name="name">hr.employee.shift.search</field>
+        <field name="model">sb.employee.shift</field>
+        <field name="arch" type="xml">
+            <search string="Cari Shift Karyawan">
+                <field name="employee_id" filter_domain="['|', '|','|', ('employee_id.name', 'ilike', self), ('nik', 'ilike', self), ('period_text', 'ilike', self),('jabatan', 'ilike', self)]" string="Karyawan/NIK/Periode"/>
+                <field name="nik" operator="ilike"/>
+                <field name="periode_id"/>
+                <field name="branch_id"/>
+                <field name="directorate_id" string="Direktorat"/>
+                <field name="hrms_department_id" string="Departemen"/>
+                <field name="division_id" string="Divisi"/>
+                <field name="state"/>
+
+                <filter string="Perlu Review" name="filter_review" domain="[('state', '=', 'draft')]"/>
+                <filter string="Tobe Approved" name="filter_tobe_approved" domain="[('state', '=', 'review')]"/>
+                <filter string="Disetujui" name="filter_approved" domain="[('state', '=', 'review')]"/>
+                <filter string="Ditolak" name="filter_reject" domain="[('state', '=', 'reject')]"/>
+                <filter string="Dibuat oleh"  name="create_uid" domain="[('create_uid', 'ilike', self)]"/>
+
+                <group expand="0" string="Kelompokkan Berdasarkan">
+                    <filter string="Periode" name="group_periode" context="{'group_by':'period_text'}"/>
+                    <filter string="Unit Bisnis" name="group_branch" context="{'group_by':'branch_id'}"/>
+                    <filter string="Direktorat" name="group_directorat" context="{'group_by':'directorate_id'}"/>
+                    <filter string="Departemen" name="group_department" context="{'group_by':'hrms_department_id'}"/>
+                    <filter string="Divisi" name="group_division" context="{'group_by':'division_id'}"/>
+                    <filter string="Status" name="group_status" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hr_employee_shift" model="ir.actions.act_window">
+        <field name="name">Employee Shift Entries</field>
+        <field name="res_model">sb.employee.shift</field>
+        <field name="view_mode">tree</field>
+        <field name="domain">[]</field>
+        <field name="context">
+            {'group_by': 'period_text',
+            'order': 'periode_id, directorate_id, hrms_department_id, division_id, jabatan, employee_id, state'}
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new employee shift schedule.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_hr_employee_shift_entries" name="Data Shift Karyawan" sequence="5" parent="hr_menu_tms_administration" action="action_hr_employee_shift" />
+
+</odoo>
