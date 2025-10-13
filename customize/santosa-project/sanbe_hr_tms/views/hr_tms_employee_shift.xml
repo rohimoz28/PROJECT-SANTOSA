@@ -91,7 +91,7 @@
                 <filter string="Tobe Approved" name="filter_tobe_approved" domain="[('state', '=', 'review')]"/>
                 <filter string="Disetujui" name="filter_approved" domain="[('state', '=', 'review')]"/>
                 <filter string="Ditolak" name="filter_reject" domain="[('state', '=', 'reject')]"/>
-                <filter string="Dibuat oleh"  name="create_uid" domain="[('create_uid', 'ilike', self)]"/>
+                <filter string="Dibuat oleh"  name="create_uid" domain="[('create_uid', 'ilike', uid)]"/>
 
                 <group expand="0" string="Kelompokkan Berdasarkan">
                     <filter string="Periode" name="group_periode" context="{'group_by':'period_text'}"/>
