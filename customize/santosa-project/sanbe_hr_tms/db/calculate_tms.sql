@@ -42,13 +42,13 @@ begin
     DELETE FROM hr_tmsentry_summary WHERE periode_id = period and area_id = l_area and branch_id = branch;
     delete from sb_tms_tmsentry_details where tmsentry_id is null;
 
-    update sb_employee_shift
-    set active = False
-    where periode_id != period;
+    -- update sb_employee_shift
+    -- set active = False
+    -- where periode_id != period;
 
-    update sb_employee_shift
-    set active = True
-    where periode_id = period;
+    -- update sb_employee_shift
+    -- set active = True
+    -- where periode_id = period;
 
 
 --     insert tms summary | header
