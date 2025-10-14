@@ -14,6 +14,19 @@ begin
 --	   delete temp_sb_tms_tmsentry_details
     DELETE FROM temp_sb_tms_tmsentry_details;
 
+-- hapus table temporary
+    DROP TABLE IF EXISTS temp_hr_tmsentry_summary;
+    DROP TABLE IF EXISTS temp_sb_tms_tmsentry_details;
+
+-- create table temporary with no data
+    CREATE TABLE temp_hr_tmsentry_summary AS
+        TABLE hr_tmsentry_summary
+        WITH NO DATA;
+
+    CREATE TABLE temp_sb_tms_tmsentry_details AS
+        TABLE sb_tms_tmsentry_details
+        WITH NO DATA;
+
 --     insert to temp_hr_tmsentry_summary
     INSERT INTO temp_hr_tmsentry_summary
     SELECT distinct hts.*
