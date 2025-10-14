@@ -475,6 +475,33 @@
             <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_leave_allocation_supervisor'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_leave_allocation"/>
         </record>
+        
+        
+        <!-- TMS Leave Allocation -->
+        <record model="ir.module.category" id="module_tms_employee_shift">
+            <field name="name">Employee Shift</field>
+            <field name="parent_id" ref="sanbe_hr_tms.module_category_time_management_system"/>
+            <field name="description">Access Right for Processing employee shifting</field>
+        </record>
+
+        <record model="res.groups" id="group_shift_staff">
+            <field name="name">Staff</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+            <field name="category_id" ref="sanbe_hr_tms.module_tms_employee_shift"/>
+        </record>
+
+        <record model="res.groups" id="group_shift_hrd">
+            <field name="name">HRD</field>
+            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.group_shift_staff'))]"/>
+            <field name="category_id" ref="sanbe_hr_tms.module_tms_employee_shift"/>
+        </record>
+
+        <record model="res.groups" id="group_shift_manager">
+            <field name="name">Manager</field>
+            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.group_shift_hrd'))]"/>
+            <field name="category_id" ref="sanbe_hr_tms.module_tms_employee_shift"/>
+        </record>
+
 
         <!-- END Time Management System -->
 

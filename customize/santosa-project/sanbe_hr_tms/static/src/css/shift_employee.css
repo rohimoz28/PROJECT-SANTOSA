@@ -1,0 +1,65 @@
+.o_list_view {
+    /* Menargetkan sel (td) di dalam class shift_highlight_group_a */
+    td.shift_highlight_group_a {
+        background-color: #dccaf5 !important;
+        
+        /* Pengaturan Lebar: Terapkan lebar seragam 40px */
+        width: 180px !important; 
+        min-width: 180px !important;
+        max-width: 180px !important;
+        text-align: center !important; /* Opsional: Membuat teks di tengah */
+    }
+    
+    /* Menargetkan sel (td) di dalam class shift_highlight_group_b */
+    td.shift_highlight_group_b {
+        background-color: #9173aa !important;
+        color: #FFFFFF !important; 
+        
+        /* Pengaturan Lebar: Terapkan lebar seragam 40px */
+        width: 180px !important; 
+        min-width: 180px !important;
+        max-width: 180px !important;
+        text-align: center !important;
+    }
+
+    /* PENTING: Juga targetkan header kolom (th) agar judulnya seragam */
+    th.shift_highlight_group_a,
+    th.shift_highlight_group_b {
+        width: 180px !important; 
+        min-width: 180px !important;
+        max-width: 180px !important;
+        text-align: center !important;
+    }
+}
+.o_horizontal_shift {
+    overflow-x: auto;
+    max-width: 100%;
+    overflow-y: auto; 
+    max-height: 100%;
+}
+
+.o_horizontal_shift table {
+    width: 100%;
+    table-layout: auto !important;
+    min-width: 0;
+}
+
+.o_horizontal_shift th {
+    width: auto !important;
+    max-width: none !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    position: relative; 
+    cursor: col-resize; 
+}
+
+.o_horizontal_shift .o_resize {
+    width: 5px;
+    cursor: col-resize;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+}

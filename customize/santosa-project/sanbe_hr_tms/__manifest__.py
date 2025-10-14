@@ -64,6 +64,7 @@
         'report/report_ot_bundling_html.xml',
         'report/report_ot_bundling_excel.xml',
         'wizards/export_excel_tms.xml',
+        'wizards/list_employee_shift_wizard.xml',
         'wizards/export_excel_ot_attendance.xml',
         'wizards/export_excel_ot_bundling_wizard.xml',
         'wizards/cari_employee_department.xml',
@@ -86,10 +87,12 @@
         'db/functions.sql',
         'views/tmsentry_details.xml',
         'security/ir.model.access.csv',
+        'views/hr_tms_employee_shift.xml',
     ],
     'assets': {
             'web.assets_backend': [
                 'hr_holidays/static/src/**/*',
+                'sanbe_hr_tms/static/src/css/shift_employee.css',
                 'sanbe_hr_tms/static/src/xml/export_button.xml',
                 'sanbe_hr_tms/static/src/xml/export_button_ot_attendance.xml',
                 'sanbe_hr_tms/static/src/xml/export_button_ot_bundling.xml',
