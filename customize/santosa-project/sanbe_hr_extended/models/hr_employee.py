@@ -7,12 +7,15 @@
 #################################################################################
 import pytz
 from odoo import api, fields, models, _, Command, tools
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from odoo.osv import expression
 from datetime import date
 from decimal import Decimal, ROUND_DOWN
+
+import logging
+_logger = logging.getLogger(__name__)
 
 EMP_GROUP1 = [
     ('Group1', 'Group 1 - Harian(pak Deni)'),
@@ -329,14 +332,12 @@ class HrEmployee(models.Model):
     
     # @api.depends("employee_skill_ids")
 
-    _sql_constraints = [
-        ('nik_uniq', 'check(1=1)', "The NIK  must be unique, this one is already assigned to another employee."),
-        ('no_ktp_uniq', 'check(1=1)', "The NO KTP  must be unique, this one is already assigned to another employee."),
-        ('no_npwp_uniq', 'check(1=1)',
-         "The NO NPWP  must be unique, this one is already assigned to another employee."),
-        ('identification_id_uniq', 'check(1=1)',
-         "The Identification ID  must be unique, this one is already assigned to another employee."),
-    ]
+    # _sql_constraints = [
+    #     ('nik_uniq', 'unique(nik)', "The NIK  must be unique, this one is already assigned to another employee."),
+    #     ('no_ktp_uniq', 'unique(no_ktp)', "Nomor KTP sudah terdaftar di (SHBC/SHBK). Harap gunakan nomor unik."),
+    #     ('no_npwp_uniq', 'unique(no_npwp)', "Nomor NPWP sudah terdaftar di (SHBC/SHBK). Harap gunakan nomor unik."),
+    #     ('identification_id_uniq', 'unique(identification_id)', "The Identification ID  must be unique, this one is already assigned to another employee."),
+    # ]
 
     # @api.constrains('emp_status')
     # def _check_emp_status(self):
@@ -367,8 +368,60 @@ class HrEmployee(models.Model):
             self.kontrak_medis = False
             self.sip = False 
 
+    @api.constrains('no_ktp', 'no_npwp', 'employee_category')
+    def _check_unique_ktp_npwp(self):
+        restricted_categories = ['nakes', 'perawat', 'back_office']
 
+        for rec in self:
+            # Dokter boleh duplikat
+            if rec.employee_category == 'dokter':
+                if rec.no_ktp:
+                    conflict_ktp = self.env['hr.employee'].search_count([
+                        ('id', '!=', rec.id),
+                        ('no_ktp', '=', rec.no_ktp),
+                        ('employee_category', '!=', 'dokter'),
+                    ])
+                    if conflict_ktp > 0:
+                        raise ValidationError(_(
+                            "Nomor KTP '%s' sudah digunakan oleh karyawan non-dokter di SHBC/SHBK. "
+                            "Dokter hanya boleh menggunakan nomor miliknya sendiri."
+                        ) % rec.no_ktp)
 
+                if rec.no_npwp:
+                    conflict_npwp = self.env['hr.employee'].search_count([
+                        ('id', '!=', rec.id),
+                        ('no_npwp', '=', rec.no_npwp),
+                        ('employee_category', '!=', 'dokter'),
+                    ])
+                    if conflict_npwp > 0:
+                        raise ValidationError(_(
+                            "Nomor NPWP '%s' sudah digunakan oleh karyawan non-dokter di SHBC/SHBK. "
+                            "Dokter hanya boleh menggunakan nomor miliknya sendiri."
+                        ) % rec.no_npwp)
+            else:
+                # DUPE KTP
+                if rec.no_ktp:
+                    dup_ktp_count = self.env['hr.employee'].search_count([
+                        ('id', '!=', rec.id),
+                        ('no_ktp', '=', rec.no_ktp),
+                    ])
+                    if dup_ktp_count > 0:
+                        raise ValidationError(_(
+                            "Nomor KTP '%s' sudah digunakan oleh karyawan lain di SHBK/SHBC. "
+                            "Harap gunakan nomor unik."
+                        ) % rec.no_ktp)
+                # DUPE NPWP
+                if rec.no_npwp:    
+                    dup_npwp_count = self.env['hr.employee'].search_count([
+                        ('id', '!=', rec.id),
+                        ('no_npwp', '=', rec.no_npwp),
+                    ])
+                    if dup_npwp_count > 0:
+                        raise ValidationError(_(
+                            "Nomor NPWP '%s' sudah digunakan oleh karyawan lain di SHBK/SHBC. "
+                            "Harap gunakan nomor unik."
+                        ) % rec.no_npwp)
+                
     @api.model
     def default_get(self, default_fields):
         res = super(HrEmployee, self).default_get(default_fields)
