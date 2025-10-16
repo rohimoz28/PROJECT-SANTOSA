@@ -332,12 +332,12 @@ class HrEmployee(models.Model):
     
     # @api.depends("employee_skill_ids")
 
-    # _sql_constraints = [
-    #     ('nik_uniq', 'unique(nik)', "The NIK  must be unique, this one is already assigned to another employee."),
-    #     ('no_ktp_uniq', 'unique(no_ktp)', "Nomor KTP sudah terdaftar di (SHBC/SHBK). Harap gunakan nomor unik."),
-    #     ('no_npwp_uniq', 'unique(no_npwp)', "Nomor NPWP sudah terdaftar di (SHBC/SHBK). Harap gunakan nomor unik."),
-    #     ('identification_id_uniq', 'unique(identification_id)', "The Identification ID  must be unique, this one is already assigned to another employee."),
-    # ]
+    _sql_constraints = [
+        ('nik_uniq', 'unique(nik)', "The NIK  must be unique, this one is already assigned to another employee."),
+        # ('no_ktp_uniq', 'unique(no_ktp)', "Nomor KTP sudah terdaftar di (SHBC/SHBK). Harap gunakan nomor unik."),
+        # ('no_npwp_uniq', 'unique(no_npwp)', "Nomor NPWP sudah terdaftar di (SHBC/SHBK). Harap gunakan nomor unik."),
+        # ('identification_id_uniq', 'unique(identification_id)', "The Identification ID  must be unique, this one is already assigned to another employee."),
+    ]
 
     # @api.constrains('emp_status')
     # def _check_emp_status(self):
