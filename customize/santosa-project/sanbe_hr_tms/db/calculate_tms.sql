@@ -14,6 +14,19 @@ begin
 --	   delete temp_sb_tms_tmsentry_details
     DELETE FROM temp_sb_tms_tmsentry_details;
 
+-- hapus table temporary
+    DROP TABLE IF EXISTS temp_hr_tmsentry_summary;
+    DROP TABLE IF EXISTS temp_sb_tms_tmsentry_details;
+
+-- create table temporary with no data
+    CREATE TABLE temp_hr_tmsentry_summary AS
+        TABLE hr_tmsentry_summary
+        WITH NO DATA;
+
+    CREATE TABLE temp_sb_tms_tmsentry_details AS
+        TABLE sb_tms_tmsentry_details
+        WITH NO DATA;
+
 --     insert to temp_hr_tmsentry_summary
     INSERT INTO temp_hr_tmsentry_summary
     SELECT distinct hts.*
@@ -42,13 +55,13 @@ begin
     DELETE FROM hr_tmsentry_summary WHERE periode_id = period and area_id = l_area and branch_id = branch;
     delete from sb_tms_tmsentry_details where tmsentry_id is null;
 
-    update sb_employee_shift
-    set active = False
-    where periode_id != period;
+    -- update sb_employee_shift
+    -- set active = False
+    -- where periode_id != period;
 
-    update sb_employee_shift
-    set active = True
-    where periode_id = period;
+    -- update sb_employee_shift
+    -- set active = True
+    -- where periode_id = period;
 
 
 --     insert tms summary | header
