@@ -184,3 +184,57 @@ class HrTMSEmployeeShift(models.Model):
                            'review_date':False})
 
         return True
+    
+    def action_delete(self):
+        for record in self:
+            record.unlink()
+            
+    # def action_mass_review(self):
+    #     invalid_records = self.filtered(lambda r: r.state != 'draft')
+    #     if invalid_records:
+    #         names = ', '.join(invalid_records.mapped('display_name'))
+    #         raise UserError(f'Tidak bisa approve, beberapa record tidak dalam state Submit: {names}')
+        
+    #     self.write({'state': 'review',
+    #                 'review_by':self.env.user.id,
+    #                 'review_date':datetime.today()})
+            
+    # def action_mass_approve(self):
+    #     invalid_records = self.filtered(lambda r: r.state != 'review')
+    #     if invalid_records:
+    #         names = ', '.join(invalid_records.mapped('display_name'))
+    #         raise UserError(f'Tidak bisa approve, beberapa record tidak dalam state HRD Review: {names}')
+        
+    #     self.write({'state': 'approved',
+    #                 'approved_by':self.env.user.id,
+    #                 'approved_date':datetime.today()})
+    
+    
+    def action_mass_review(self):
+        current_branch_id = self.env.user.branch_id.id
+        valid_records = self.filtered(lambda r: r.branch_id.id == current_branch_id)
+        if valid_records:
+            invalid_state = valid_records.filtered(lambda r: r.state != 'draft')
+            if invalid_state:
+                names = ', '.join(invalid_state.mapped('display_name'))
+                raise UserError(f'Tidak bisa approve, beberapa record tidak dalam state Submit: {names}')
+            
+            valid_records.write({
+                'state': 'review',
+                'review_by': self.env.user.id,
+                'review_date': datetime.today()
+            })
+
+    def action_mass_approve(self):
+        current_branch_id = self.env.user.branch_id.id
+        valid_records = self.filtered(lambda r: r.branch_id.id == current_branch_id)
+        if valid_records:
+            invalid_state = valid_records.filtered(lambda r: r.state != 'review')
+            if invalid_state:
+                names = ', '.join(invalid_state.mapped('display_name'))
+                raise UserError(f'Tidak bisa approve, beberapa record tidak dalam state HRD Review: {names}')
+            valid_records.write({
+                'state': 'approved',
+                'approved_by': self.env.user.id,
+                'approved_date': datetime.today()
+            })

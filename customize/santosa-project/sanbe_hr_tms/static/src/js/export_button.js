@@ -37,10 +37,25 @@ export class OdooOWLListController extends ListController {
         });
     }
 
+    showShifttoEMPgroup() {
+        this.env.services.action.doAction({
+            type: 'ir.actions.act_window',
+            name: 'Process Shift to EMPGroup',
+            res_model: 'wiz.employee.shift',
+            view_mode: 'form', 
+            view_id: 'sanbe_hr_tms.wiz_employee_shift_wizard_view_form',
+            views: [[false, 'form']],
+            target: 'new', 
+            context: {
+                default_target_models: 'sb.employee.shift',
+                default_target_process: 'shif to EMP',
+            } 
+        });
+    }
    showImportxls() {
         this.env.services.action.doAction({
             type: 'ir.actions.act_window',
-            name: 'Search Employee',
+            name: 'Import XLS to Shift',
             res_model: 'wiz.employee.shift',
             view_mode: 'form', 
             view_id: 'sanbe_hr_tms.wiz_employee_shift_wizard_view_form',
