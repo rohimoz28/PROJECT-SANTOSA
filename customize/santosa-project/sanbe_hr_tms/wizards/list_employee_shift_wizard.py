@@ -23,7 +23,9 @@ class HrCariEmployeeShift(models.TransientModel):
         domain="[('state_process','in',('draft','running')),('branch_id','=',branch_id)]" 
     )
     period_text = fields.Char(string='Period Text', compute='_compute_period_text', store=True, index=True)
-    target_process = fields.Selection([('generate','Generate Data'),('process xls','Process XLS')],'Process',default='generate')
+    target_process = fields.Selection([('generate','Generate Data'),
+                                       ('shif to EMP','Process shift to EMP'),
+                                       ('process xls','Process XLS')],'Process',default='generate')
     area_id = fields.Many2one('res.territory', string='Area ID', index=True, default=lambda self: self.env.user.branch_id.territory_id.id)
     branch_id = fields.Many2one('res.branch', string='Bisnis Unit', index=True, domain="[('id','in',branch_ids)]", default=lambda self: self.env.user.branch_id.id)
     department_id = fields.Many2one('hr.department', domain="[('id','in',alldepartment)]", string='Sub Department', index=True)
@@ -50,7 +52,73 @@ class HrCariEmployeeShift(models.TransientModel):
         auto_join=True,
         string='Cari Employee Details'
     )
-    
+    # empgroup_id = fields.Many2one('hr.empgroup', string='Cari Employee Group')
+
+    # @api.onchange('periode_id')
+    # def _onchange_periode_id(self):
+    #     if self.periode_id:
+    #         branch_id = self.periode_id.branch_id.id
+    #         shifts = self.env['sb.employee.shift'].search([('periode_id', '=', self.periode_id.id)])
+    #         directorate_ids = shifts.mapped('directorate_id.id')
+    #         department_ids = shifts.mapped('hrms_department_id.id')
+    #         division_ids = shifts.mapped('division_id.id')
+
+    #         domain = [
+    #             ('branch_id', '=', branch_id),
+    #             ('directorate_id', 'in', directorate_ids),
+    #             ('hrms_department_id', 'in', department_ids),
+    #             ('division_id', 'in', division_ids),
+    #             ('state', '=', 'draft'),
+    #         ]
+    #         return {'domain': {'empgroup_id': domain}}
+    #     else:
+    #         return {'domain': {'empgroup_id': []}}
+
+    empgroup_id = fields.Many2one(
+        'hr.empgroup',
+        string='Cari Employee Group',
+        domain=lambda self:self.find_periode_id()
+    )
+
+    @api.depends('periode_id')
+    def find_periode_id(self):
+        if self.periode_id:
+            branch_id = self.periode_id.branch_id.id
+            shifts = self.env['sb.employee.shift'].search([('periode_id', '=', self.periode_id.id)])
+            directorate_ids = shifts.mapped('directorate_id.id')
+            department_ids = shifts.mapped('hrms_department_id.id')
+            division_ids = shifts.mapped('division_id.id')
+
+            domain = [
+                ('branch_id', '=', branch_id),
+                ('directorate_id', 'in', directorate_ids),
+                ('hrms_department_id', 'in', department_ids),
+                ('division_id', 'in', division_ids),
+                ('state', '=', 'draft'),
+            ]
+            empgroups = self.env('hr.empgroup').search(domain)
+            return  [('id', 'in', [empgroups.ids])]
+
+
+    # @api.onchange('periode_id')
+    # def _onchange_periode_id(self):
+    #     if self.periode_id:
+    #         branch_id = self.periode_id.branch_id.id
+    #         shifts = self.env['sb.employee.shift'].search([('periode_id', '=', self.periode_id.id)])
+    #         directorate_ids = shifts.mapped('directorate_id.id')
+    #         department_ids = shifts.mapped('hrms_department_id.id')
+    #         division_ids = shifts.mapped('division_id.id')
+
+    #         domain = [
+    #             ('branch_id', '=', branch_id),
+    #             ('directorate_id', 'in', directorate_ids),
+    #             ('hrms_department_id', 'in', department_ids),
+    #             ('division_id', 'in', division_ids),
+    #             ('state', '=', 'draft'),
+    #         ]
+    #     else:
+    #         domain = [('state', '=', 'draft'),]
+    #     return {'domain': {'empgroup_id': domain}}
 
     def _get_running_periode(self):
         """Mendapatkan periode 'running' yang aktif untuk Branch pengguna saat ini."""
@@ -76,7 +144,6 @@ class HrCariEmployeeShift(models.TransientModel):
             allrecs.branch_ids =[Command.set(allbranch.ids)]
     
     
-    
 
     def _get_filtered_employees_domain(self):
         """
@@ -97,33 +164,38 @@ class HrCariEmployeeShift(models.TransientModel):
     
     def btn_search(self):
         for line in self: 
-            line.employee_ids = False               
-            domain = line._get_filtered_employees_domain()
-            employees = self.env['hr.employee'].search(domain)
-            if len(employees) <1:
-                raise UserError('Employee Not Found')
-            for emp in employees:
-                self.env['wiz.employee.shift.detail'].create({
-                    'cari_id': self.id,
-                    'employee_id': emp.id,
-                    'nik': emp.nik,
-                    'directorate_id':emp.directorate_id.id,
-                    'hrms_department_id':emp.hrms_department_id.id,
-                    'division_id':emp.division_id.id,   
-                    'department_id':emp.department_id.id,
-                    'job_id':emp.job_id.id,
-                    'is_selected': False
-                })
-            return {
-                'type': 'ir.actions.act_window',
-                'name': _('Search Employee'),
-                'res_model': 'wiz.employee.shift',
-                'view_mode': 'form',
-                'target': 'new',
-                'res_id': self.id,
-                'views': [(False, 'form')],
-            }
-        
+            line.employee_ids = False     
+            
+            if line.target_process == 'generate':          
+                domain = line._get_filtered_employees_domain()
+                employees = self.env['hr.employee'].search(domain)
+                if len(employees) <1:
+                    raise UserError('Employee Not Found')
+                for emp in employees:
+                    self.env['wiz.employee.shift.detail'].create({
+                        'cari_id': self.id,
+                        'employee_id': emp.id,
+                        'nik': emp.nik,
+                        'directorate_id':emp.directorate_id.id,
+                        'hrms_department_id':emp.hrms_department_id.id,
+                        'division_id':emp.division_id.id,   
+                        'department_id':emp.department_id.id,
+                        'job_id':emp.job_id.id,
+                        'is_selected': False
+                    })
+                return {
+                    'type': 'ir.actions.act_window',
+                    'name': _('Search Employee'),
+                    'res_model': 'wiz.employee.shift',
+                    'view_mode': 'form',
+                    'target': 'new',
+                    'res_id': self.id,
+                    'views': [(False, 'form')],
+                }
+            elif line.target_process == 'shif to EMP':
+                pass
+            else:
+                pass
         
     def btn_select_all(self):
         for line in self:
@@ -161,6 +233,15 @@ class HrCariEmployeeShift(models.TransientModel):
                     'target': 'current',
                     'views': [(False, 'tree')],
                 }
+            elif line.target_process == 'shif to EMP':
+                if line.period_id.id and line.empgroup_id.id:
+                    try:
+                        self.env.cr.execute("CALL generate_empgroup(%s, %s)", (line.period_id.id, line.empgroup_id.id))
+                        self.env.cr.commit()
+                        _logger.info("Stored procedure executed successfully for period_id: %s to Group Employee", line.period_id.name,line.empgroup_id.code)
+                    except Exception as e:
+                        _logger.error("Error calling stored procedure: %s", str(e))
+                        raise UserError("Error executing the function: %s" % str(e))
             else:
                 pass
                 # """

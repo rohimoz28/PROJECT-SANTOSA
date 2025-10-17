@@ -84,31 +84,86 @@ class HRTmsOpenClose(models.Model):
     def create(self, values):
         for vals in values:
             if ('branch_id' in vals) and ('open_periode_from' in vals):
-                if 'open_periode_from' in vals:
-                    br = self.env['res.branch'].sudo().search([('id', '=', vals['branch_id'])])
-                    date_obj = datetime.strptime(vals['open_periode_to'], "%Y-%m-%d")
-                    vals['name'] = date_obj.strftime("%B %Y") + ' | ' + br['name']
-                    check = self.env['hr.tmsentry.summary'].sudo().search([
-                        ('branch_id', '=', br.id),
-                        ('date_from', '<=', datetime.strptime(str(vals['open_periode_from']),"%Y-%m-%d").date()),
-                        ('date_to', '>=', datetime.strptime(str(vals['open_periode_from']), "%Y-%m-%d").date())
-                    ])
-                    if check:
-                        raise UserError('Open Periode From for This Branch Already Used')
-                    check = self.env['hr.tmsentry.summary'].sudo().search([
-                        ('branch_id', '=', br.id),
-                        ('date_from', '<=', datetime.strptime(str(vals['open_periode_to']), "%Y-%m-%d").date()),
-                        ('date_to', '>=', datetime.strptime(str(vals['open_periode_to']), "%Y-%m-%d").date())])
-                    if check:
-                        raise UserError('Tanggal period ini sudah di gunakan')
+                br = self.env['res.branch'].sudo().search([('id', '=', vals['branch_id'])])
+                date_obj = datetime.strptime(vals['open_periode_to'], "%Y-%m-%d")
+                vals['name'] = date_obj.strftime("%B %Y") + ' | ' + br['name']
+
+                check1 = self.env['hr.tmsentry.summary'].sudo().search([
+                    ('branch_id', '=', br.id),
+                    ('date_from', '<=', datetime.strptime(str(vals['open_periode_from']), "%Y-%m-%d").date()),
+                    ('date_to', '>=', datetime.strptime(str(vals['open_periode_from']), "%Y-%m-%d").date())
+                ])
+                if check1:
+                    raise UserError('Open Periode From for This Branch Already Used')
+
+                check2 = self.env['hr.tmsentry.summary'].sudo().search([
+                    ('branch_id', '=', br.id),
+                    ('date_from', '<=', datetime.strptime(str(vals['open_periode_to']), "%Y-%m-%d").date()),
+                    ('date_to', '>=', datetime.strptime(str(vals['open_periode_to']), "%Y-%m-%d").date())
+                ])
+                if check2:
+                    raise UserError('Tanggal periode ini sudah digunakan')
             else:
                 raise UserError('Branch or Open Periode From Not Selected')
 
             existing_record = self.search([('branch_id', '=', vals['branch_id']), ('state_process', '=', 'running')])
             if existing_record:
-                raise UserError(_("A record with the same branch and running state already exists."))
+                return {
+                    'name': 'Konfirmasi Pembuatan Periode TMS',
+                    'type': 'ir.actions.act_window',
+                    'res_model': 'wizard.open.periode.confirmation',
+                    'view_mode': 'form',
+                    'view_id': self.env.ref('sanbe_hr_tms.view_open_periode_confirmation').id,
+                    'target': 'new',
+                    'context': {
+                        'default_data_values': vals,
+                    }
+                }
         res = super(HRTmsOpenClose, self).create(values)
         return res
+    
+    # @api.model_create_multi
+    # def create(self, values):
+    #     for vals in values:
+    #         if ('branch_id' in vals) and ('open_periode_from' in vals):
+    #             if 'open_periode_from' in vals:
+    #                 br = self.env['res.branch'].sudo().search([('id', '=', vals['branch_id'])])
+    #                 date_obj = datetime.strptime(vals['open_periode_to'], "%Y-%m-%d")
+    #                 vals['name'] = date_obj.strftime("%B %Y") + ' | ' + br['name']
+    #                 check = self.env['hr.tmsentry.summary'].sudo().search([
+    #                     ('branch_id', '=', br.id),
+    #                     ('date_from', '<=', datetime.strptime(str(vals['open_periode_from']),"%Y-%m-%d").date()),
+    #                     ('date_to', '>=', datetime.strptime(str(vals['open_periode_from']), "%Y-%m-%d").date())
+    #                 ])
+    #                 if check:
+    #                     raise UserError('Open Periode From for This Branch Already Used')
+    #                 check = self.env['hr.tmsentry.summary'].sudo().search([
+    #                     ('branch_id', '=', br.id),
+    #                     ('date_from', '<=', datetime.strptime(str(vals['open_periode_to']), "%Y-%m-%d").date()),
+    #                     ('date_to', '>=', datetime.strptime(str(vals['open_periode_to']), "%Y-%m-%d").date())])
+    #                 if check:
+    #                     raise UserError('Tanggal period ini sudah di gunakan')
+    #         else:
+    #             raise UserError('Branch or Open Periode From Not Selected')
+
+    #         existing_record = self.search([('branch_id', '=', vals['branch_id']), ('state_process', '=', 'running')])
+    #         if existing_record:
+    #             return {
+    #                 'name': 'Konfirmasi Pembuatan Periode TMS',
+    #                 'type': 'ir.actions.act_window',
+    #                 'res_model': 'wizard.open.periode.confirmation',
+    #                 'view_mode': 'form',
+    #                 'view_id': self.env.ref('sanbe_hr_tms.view_open_periode_confirmation').id,
+    #                 'target': 'new',
+    #                 'context': {
+    #                     'default_branch_id': vals['branch_id'],
+    #                     'default_data_values': vals,  # bisa dipakai untuk lanjut proses jika diperlukan
+    #                 }
+    #             }
+
+    #     # Jika tidak ada data open, lanjutkan proses create
+    #     res = super(HRTmsOpenClose, self).create(values)
+    #     return res
 
     #def init(self):
     #    dat = self.env['hr.opening.closing'].sudo().search([])
@@ -214,6 +269,10 @@ class HRTmsOpenClose(models.Model):
 
             if len(employee_group) > 1:
                 raise UserError('Ensure all employee groups have been approved.')
+
+            existing_record = self.search([('branch_id', '=', branch_id), ('state_process', '=', 'running'),('id','!=',data.id)])
+            if existing_record:
+                raise UserError('A record with the same branch and running state already exists.')
 
             # try:
             #     self.env.cr.execute("CALL calculate_tms(%s, %s, %s)", (period_id, area_id.id, branch_id.id))
