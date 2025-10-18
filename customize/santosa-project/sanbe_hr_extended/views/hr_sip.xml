@@ -66,6 +66,7 @@
                             <field name='division_id' force_save="1"/>
                             <field name='branch_id' string='Unit Bisnis' force_save="1"/>
                             <field name='job_id' force_save="1"/>
+                            <field name="practice_day" force_save="1"/>
                         </group>
                         <group name="top_info_right">
                             <field name='sip' force_save="1"/>
@@ -97,6 +98,8 @@
                             <field name="specialization" readonly="state != 'draft'"/>
                             <!-- <field name="professional_title" readonly="state != 'draft'"/> -->
                             <field name='competence' readonly="state != 'draft'"/>
+                            <field name="work_start" force_save="1" widget="easy_timepicker"/>
+                            <field name="work_end" force_save="1" widget="easy_timepicker"/>
                         </group>
                     </group>
                     <group name="bottom_info" string="Catatan">
