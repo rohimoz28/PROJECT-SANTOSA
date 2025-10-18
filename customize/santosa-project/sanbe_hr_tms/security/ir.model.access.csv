@@ -77,6 +77,6 @@ access_export_excel_tms,sanbe_hr_tms.export.excel.tms,model_export_excel_tms,bas
 access_export_excel_ot_attendance,sanbe_hr_tms.export.excel.ot.attendance,model_export_excel_ot_attendance,base.group_user,1,1,1,1
 access_export_excel_ot_bundling,sanbe_hr_tms.export.excel.ot.bundling,model_export_excel_ot_bundling,base.group_user,1,1,1,1
 access_value_group,sanbe_hr_tms.value.group,model_value_group,base.group_user,1,1,1,1
-
+access_running_confirmation_wizard,wizard_running_confirmation_wizard,model_running_confirmation_wizard,base.group_user,1,1,1,1
 access_stg_transform_absent,access.stg.transform.absent,model_stg_transform_absent,base.group_user,1,1,1,1
 access_st_master_leave,access.st.master.leave,model_st_master_leave,base.group_user,1,1,1,1

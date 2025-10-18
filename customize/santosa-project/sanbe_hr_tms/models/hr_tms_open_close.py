@@ -17,7 +17,7 @@ import dateutil.parser
 import holidays
 from datetime import datetime
 date_format = "%Y-%m-%d"
-from odoo.exceptions import AccessError, MissingError, UserError
+from odoo.exceptions import AccessError, MissingError, UserError,RedirectWarning
 import requests
 import logging
 
@@ -49,12 +49,12 @@ class HRTmsOpenClose(models.Model):
     #         record.branch_ids = branch.id
 
     name = fields.Char('Period Name')
-    area_id = fields.Many2one('res.territory',string='Area', index=True )
+    area_id = fields.Many2one('res.territory',string='Area', index=True,store=True )
     branch_ids = fields.Many2many('res.branch', 'res_branch_rel', string='AllBranch', compute='_isi_semua_branch',
                                   store=False)
-    branch_id = fields.Many2one('res.branch',string='Business Unit',index=True,domain="[('id','in',branch_ids)]")
-    open_periode_from = fields.Date('Opening Periode From')
-    open_periode_to = fields.Date('Opening Periode To')
+    branch_id = fields.Many2one('res.branch',string='Business Unit',index=True,domain="[('id','in',branch_ids)]",store=True)
+    open_periode_from = fields.Date('Opening Periode From',store=True)
+    open_periode_to = fields.Date('Opening Periode To',store=True)
     close_periode_from = fields.Date('Closing Periode From')
     close_periode_to = fields.Date('Closing Periode To')
     isopen = fields.Boolean('Is Open',default=False)
@@ -82,10 +82,11 @@ class HRTmsOpenClose(models.Model):
     
     @api.model_create_multi
     def create(self, values):
+        records_to_create = []
         for vals in values:
             if ('branch_id' in vals) and ('open_periode_from' in vals):
                 br = self.env['res.branch'].sudo().search([('id', '=', vals['branch_id'])])
-                date_obj = datetime.strptime(vals['open_periode_to'], "%Y-%m-%d")
+                date_obj = datetime.strptime(str(vals['open_periode_to']), "%Y-%m-%d")
                 vals['name'] = date_obj.strftime("%B %Y") + ' | ' + br['name']
 
                 check1 = self.env['hr.tmsentry.summary'].sudo().search([
@@ -104,22 +105,23 @@ class HRTmsOpenClose(models.Model):
                 if check2:
                     raise UserError('Tanggal periode ini sudah digunakan')
             else:
-                raise UserError('Branch or Open Periode From Not Selected')
-
-            existing_record = self.search([('branch_id', '=', vals['branch_id']), ('state_process', '=', 'running')])
+                raise UserError('Branch or Open Periode From Not Selected')# --- Cek Periode Running (Logic Wizard) ---
+            existing_record = self.env['hr.opening.closing'].sudo().search([
+                ('area_id', '=', vals.get('area_id')), 
+                ('branch_id', '=', vals['branch_id']), 
+                ('state_process', '=', 'running')
+            ], limit=1)
+            
             if existing_record:
-                return {
-                    'name': 'Konfirmasi Pembuatan Periode TMS',
-                    'type': 'ir.actions.act_window',
-                    'res_model': 'wizard.open.periode.confirmation',
-                    'view_mode': 'form',
-                    'view_id': self.env.ref('sanbe_hr_tms.view_open_periode_confirmation').id,
-                    'target': 'new',
-                    'context': {
-                        'default_data_values': vals,
-                    }
-                }
-        res = super(HRTmsOpenClose, self).create(values)
+                wizard_action = self.env['running.confirmation.wizard'].action_show_warning(existing_record.display_name, vals)
+            
+                raise RedirectWarning(
+                    _('Periode Running ditemukan. Mohon konfirmasi.'),
+                    wizard_action, 
+                    _('Continue Process') 
+                )
+                
+        res =  super(HRTmsOpenClose, self).create(records_to_create)
         return res
     
     # @api.model_create_multi
