@@ -4,13 +4,11 @@
         <field name="name">hr.employee.shift.tree</field>
         <field name="model">sb.employee.shift</field>
         <field name="arch" type="xml">
-            <!-- <tree string="Employee Shifts" decoration-success="state == 'approved'" decoration-info="state == 'review'" decoration-muted="state == 'reject'" class="o_horizontal_scroll" create="false" editable="bottom" limit="180"> -->
             <tree string="Employee Shifts" create="false" editable="bottom" limit="180" class="o_horizontal_shift">
                 <header>
-                    <button name="action_mass_review" type="object" string="Send to Approved" groups="sanbe_hr_tms.group_shift_staff,sanbe_hr_tms.group_shift_hrd"/>
-                    <button name="action_mass_approve" type="object" string="Approved by HRD" groups="sanbe_hr_tms.group_shift_hrd,sanbe_hr_tms.group_shift_manager"/>
+                    <!-- <button name="action_mass_review" type="object" string="Send to Approved" groups="sanbe_hr_tms.group_shift_staff,sanbe_hr_tms.group_shift_hrd"/> -->
+                    <button name="action_mass_approve" type="object" string="Mass Approved" groups="sanbe_hr_tms.group_shift_hrd,sanbe_hr_tms.group_shift_manager"/>
                 </header>
-                <!-- <field name="is_select"/> -->
                 <field name="periode_id" options="{'no_open': True}" readonly="1" />
                 <field name="period_text" options="{'no_open': True}" readonly="1" column_invisible="1"/>
                 <field name="employee_id" options="{'no_open': True}" readonly="1" />
@@ -90,14 +88,11 @@
                 <field name="directorate_id" string="Direktorat"/>
                 <field name="hrms_department_id" string="Departemen"/>
                 <field name="division_id" string="Divisi"/><field name="state" string="Status"/>
-
                 <!-- Filters -->
                 <filter string="Perlu Review" name="filter_review" domain="[('state', '=', 'draft')]"/>
                 <filter string="Tobe Approved" name="filter_tobe_approved" domain="[('state', '=', 'review')]"/>
                 <filter string="Disetujui" name="filter_approved" domain="[('state', '=', 'approved')]"/>
                 <filter string="Dibuat oleh Saya" name="filter_by_creator" domain="[('create_uid', '=', uid)]"/>
-
-
                 <group expand="0" string="Kelompokkan Berdasarkan">
                     <filter string="Periode" name="group_periode" context="{'group_by':'period_text'}"/>
                     <filter string="Unit Bisnis" name="group_branch" context="{'group_by':'branch_id'}"/>
