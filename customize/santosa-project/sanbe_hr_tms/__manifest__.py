@@ -27,7 +27,6 @@
     ],
     'data': [
         'data/ir_cron_data.xml',
-        'wizards/wiz_periode_confirmation.xml',
         'wizards/export_excel_tms.xml',
         'wizards/list_employee_shift_wizard.xml',
         'wizards/export_excel_ot_attendance.xml',
@@ -83,6 +82,7 @@
         'db/function_calculate_leave_alloc.sql',
         'db/procedure_leave_alloc.sql',
         'db/generate_empgroup.sql',
+        'db/generate_shift_empgroup_detail.sql',
         'db/generate_ot_request.sql',
         'db/temporary_table.sql',
         'db/functions.sql',

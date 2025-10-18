@@ -82,9 +82,24 @@ class HRTmsOpenClose(models.Model):
     
     @api.model_create_multi
     def create(self, values):
-        records_to_create = []
         for vals in values:
             if ('branch_id' in vals) and ('open_periode_from' in vals):
+                
+                open_periode_to = datetime.strptime(str(vals['open_periode_to']), "%Y-%m-%d")
+                today = datetime.today()
+
+                current_month = today.month
+                current_year = today.year
+
+                next_month = current_month + 1 if current_month < 12 else 1
+                next_month_year = current_year if current_month < 12 else current_year + 1
+
+                # Cek apakah bulan dan tahun dari open_periode_to sesuai
+                if not ((open_periode_to.month == current_month and open_periode_to.year == current_year) or
+                        (open_periode_to.month == next_month and open_periode_to.year == next_month_year)):
+                    raise UserError(_('Tanggal "Open Periode To" hanya boleh di bulan ini atau bulan depan.'))
+                
+                
                 br = self.env['res.branch'].sudo().search([('id', '=', vals['branch_id'])])
                 date_obj = datetime.strptime(str(vals['open_periode_to']), "%Y-%m-%d")
                 vals['name'] = date_obj.strftime("%B %Y") + ' | ' + br['name']
@@ -113,59 +128,15 @@ class HRTmsOpenClose(models.Model):
             ], limit=1)
             
             if existing_record:
-                wizard_action = self.env['running.confirmation.wizard'].action_show_warning(existing_record.display_name, vals)
-            
-                raise RedirectWarning(
-                    _('Periode Running ditemukan. Mohon konfirmasi.'),
-                    wizard_action, 
-                    _('Continue Process') 
-                )
-                
-        res =  super(HRTmsOpenClose, self).create(records_to_create)
-        return res
-    
-    # @api.model_create_multi
-    # def create(self, values):
-    #     for vals in values:
-    #         if ('branch_id' in vals) and ('open_periode_from' in vals):
-    #             if 'open_periode_from' in vals:
-    #                 br = self.env['res.branch'].sudo().search([('id', '=', vals['branch_id'])])
-    #                 date_obj = datetime.strptime(vals['open_periode_to'], "%Y-%m-%d")
-    #                 vals['name'] = date_obj.strftime("%B %Y") + ' | ' + br['name']
-    #                 check = self.env['hr.tmsentry.summary'].sudo().search([
-    #                     ('branch_id', '=', br.id),
-    #                     ('date_from', '<=', datetime.strptime(str(vals['open_periode_from']),"%Y-%m-%d").date()),
-    #                     ('date_to', '>=', datetime.strptime(str(vals['open_periode_from']), "%Y-%m-%d").date())
-    #                 ])
-    #                 if check:
-    #                     raise UserError('Open Periode From for This Branch Already Used')
-    #                 check = self.env['hr.tmsentry.summary'].sudo().search([
-    #                     ('branch_id', '=', br.id),
-    #                     ('date_from', '<=', datetime.strptime(str(vals['open_periode_to']), "%Y-%m-%d").date()),
-    #                     ('date_to', '>=', datetime.strptime(str(vals['open_periode_to']), "%Y-%m-%d").date())])
-    #                 if check:
-    #                     raise UserError('Tanggal period ini sudah di gunakan')
-    #         else:
-    #             raise UserError('Branch or Open Periode From Not Selected')
-
-    #         existing_record = self.search([('branch_id', '=', vals['branch_id']), ('state_process', '=', 'running')])
-    #         if existing_record:
-    #             return {
-    #                 'name': 'Konfirmasi Pembuatan Periode TMS',
-    #                 'type': 'ir.actions.act_window',
-    #                 'res_model': 'wizard.open.periode.confirmation',
-    #                 'view_mode': 'form',
-    #                 'view_id': self.env.ref('sanbe_hr_tms.view_open_periode_confirmation').id,
-    #                 'target': 'new',
-    #                 'context': {
-    #                     'default_branch_id': vals['branch_id'],
-    #                     'default_data_values': vals,  # bisa dipakai untuk lanjut proses jika diperlukan
-    #                 }
-    #             }
-
-    #     # Jika tidak ada data open, lanjutkan proses create
-    #     res = super(HRTmsOpenClose, self).create(values)
-    #     return res
+                existing_draft_record = self.env['hr.opening.closing'].sudo().search([
+                    ('area_id', '=', vals.get('area_id')), 
+                    ('branch_id', '=', vals['branch_id']), 
+                    ('state_process', '=', 'draft')
+                ])
+                if len(existing_draft_record)>=1:
+                    raise UserError(_('Allowed just 1 Running and 1 Draft Periode'))
+            res =  super(HRTmsOpenClose, self).create(vals)
+            return res
 
     #def init(self):
     #    dat = self.env['hr.opening.closing'].sudo().search([])

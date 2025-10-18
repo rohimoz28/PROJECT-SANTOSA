@@ -6,6 +6,9 @@ import tempfile
 import base64
 from odoo import fields, models, api, _, Command
 from odoo.exceptions import ValidationError,UserError
+import logging
+
+_logger = logging.getLogger(__name__)
 
 from xlrd import open_workbook
 
@@ -234,11 +237,11 @@ class HrCariEmployeeShift(models.TransientModel):
                     'views': [(False, 'tree')],
                 }
             elif line.target_process == 'shif to EMP':
-                if line.period_id.id and line.empgroup_id.id:
+                if line.periode_id.id and line.empgroup_id.id:
                     try:
-                        self.env.cr.execute("CALL generate_empgroup(%s, %s)", (line.period_id.id, line.empgroup_id.id))
+                        self.env.cr.execute("select generate_shift_empgroup(%s, %s)", (line.periode_id.id, line.empgroup_id.id))
                         self.env.cr.commit()
-                        _logger.info("Stored procedure executed successfully for period_id: %s to Group Employee", line.period_id.name,line.empgroup_id.code)
+                        _logger.info("Stored procedure executed successfully for period: %s to Group Employee %s", line.periode_id.name,line.empgroup_id.name)
                     except Exception as e:
                         _logger.error("Error calling stored procedure: %s", str(e))
                         raise UserError("Error executing the function: %s" % str(e))
