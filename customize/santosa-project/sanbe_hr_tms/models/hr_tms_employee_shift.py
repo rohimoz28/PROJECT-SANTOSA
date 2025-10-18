@@ -212,7 +212,7 @@ class HrTMSEmployeeShift(models.Model):
     
     def action_mass_review(self):
         current_branch_id = self.env.user.branch_id.id
-        valid_records = self.filtered(lambda r: r.branch_id.id == current_branch_id)
+        valid_records = self.filtered(lambda r: r.branch_id.id == current_branch_id) # approve per branch jika diperlukan
         if valid_records:
             invalid_state = valid_records.filtered(lambda r: r.state != 'draft')
             if invalid_state:
@@ -226,15 +226,18 @@ class HrTMSEmployeeShift(models.Model):
             })
 
     def action_mass_approve(self):
-        current_branch_id = self.env.user.branch_id.id
-        valid_records = self.filtered(lambda r: r.branch_id.id == current_branch_id)
-        if valid_records:
+        
+        # current_branch_id = self.env.user.branch_id.id
+        # valid_records = self.filtered(lambda r: r.branch_id.id == current_branch_id) # approve per branch jika diperlukan
+        # if valid_records:
             invalid_state = valid_records.filtered(lambda r: r.state != 'review')
             if invalid_state:
                 names = ', '.join(invalid_state.mapped('display_name'))
                 raise UserError(f'Tidak bisa approve, beberapa record tidak dalam state HRD Review: {names}')
             valid_records.write({
                 'state': 'approved',
+                'review_by': self.env.user.id,
+                'review_date': datetime.today(),
                 'approved_by': self.env.user.id,
                 'approved_date': datetime.today()
             })

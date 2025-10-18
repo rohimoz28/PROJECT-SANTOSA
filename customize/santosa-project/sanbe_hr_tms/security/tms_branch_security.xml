@@ -251,9 +251,7 @@
             <field name="name">HR Employee shift Staff</field>
             <field name="model_id" ref="sanbe_hr_tms.model_sb_employee_shift"/>
             <field name="global" eval="True" />
-            <!-- <field name="domain_force">[(1,'=',1)]</field> -->
             <field name="domain_force">[('branch_id','=',user.branch_id.id)]</field>
-            <!-- FIX: Replace with correct module and group -->
             <field name="groups" eval="[(4, ref('sanbe_hr_tms.group_shift_staff'))]" />
         </record>
 
