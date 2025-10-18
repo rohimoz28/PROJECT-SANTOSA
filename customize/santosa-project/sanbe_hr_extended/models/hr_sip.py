@@ -80,7 +80,7 @@ class SuratIzipPraktek(models.Model):
     professional_title = fields.Char(string='Gelar Profesi')
     practice_day = fields.Char(string='Hari Praktek')
     work_start = fields.Float(string='Jam Kerja dari')
-    work_end = fields.Float(string='Jam Kerja ke')
+    work_end = fields.Float(string='Jam Kerja hingga')
 
 
     def unlink_sip(self):
