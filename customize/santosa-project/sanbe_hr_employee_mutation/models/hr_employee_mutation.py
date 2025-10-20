@@ -151,6 +151,8 @@ class HrEmployeeMutation(models.Model):
         ],
         string='Kategori',
     )
+    service_substitute = fields.Many2one(comodel_name='hr.employee', string='Posisi Pengganti', tracking=True)
+
 
     @api.depends('hrms_department_id')
     def _find_department_id(self):
