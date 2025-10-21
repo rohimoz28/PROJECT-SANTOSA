@@ -10,21 +10,22 @@
                         <field name="target_models" invisible="1"/> 
                         <field name="target_process" invisible="1"/>
                             <group id="info" invisible="target_process == 'process xls'" >
-                                <field name="area_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" readonly="1"/>
+                                <field name="area_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" readonly="1" invisible="target_process != 'generate'"/>
                                 <field name="branch_ids" options="{'no_edit': True, 'no_create': True, 'no_open': True}" invisible="1"/>
-                                <field name="branch_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" required="target_process != 'process xls'"/>
+                                <field name="branch_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" required="target_process != 'process xls'" invisible="target_process in ('process xls','shif to EMP')"/>
                                 <field name="alldepartment" options="{'no_edit': True, 'no_create': True, 'no_open': True}" invisible="1"/>
                                 <field name="department_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" invisible="1"/>
-                                <field name="directorate_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" string = "Direktorat" required="target_process != 'process xls'" domain="['|',('branch_id', '=', branch_id),('branch_id', '=', False)]"/>
-                                <field name="hrms_department_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" string = "Departemen" required="target_process != 'process xls'" domain="['|',('directorate_id', '=', directorate_id),('directorate_id', '=', False)]"/>
-                                <field name="division_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" string = "Divisi" domain="['|',('department_id', '=', hrms_department_id),('department_id', '=', False)]"/>
-                                <field name="periode_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" required="target_process != 'process xls'"/>
+                                <field name="directorate_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" string = "Direktorat" invisible="target_process != 'generate'" required="target_process == 'generate'" domain="['|',('branch_id', '=', branch_id),('branch_id', '=', False)]"/>
+                                <field name="hrms_department_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" string = "Departemen" invisible="target_process != 'generate'" required="target_process == 'generate'" domain="['|',('directorate_id', '=', directorate_id),('directorate_id', '=', False)]"/>
+                                <field name="division_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" string = "Divisi" domain="['|',('department_id', '=', hrms_department_id),('department_id', '=', False)]" invisible="target_process in ('process xls','shif to EMP')"/>
+                                <field name="periode_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" required="target_process != 'process xls'" invisible="target_process == 'process xls'" />
                                 <field name="period_text" options="{'no_edit': True, 'no_create': True, 'no_open': True}" invisible="1"/>
+                                <field name="empgroup_id" string='Code EMPGroup' options="{'no_edit': True, 'no_create': True, 'no_open': True}" required="target_process == 'shif to EMP'" invisible="target_process != 'shif to EMP'"/>
                             </group>
                             <group id="export" invisible="target_process != 'process xls'" >
-                                <!-- <field name="files_data" required="target_process == 'process xls'"/> -->
+                                <field name="files_data" required="target_process == 'process xls'"/>
                             </group>
-                            <notebook invisible="target_process == 'process xls'" >
+                            <notebook invisible="target_process in ('process xls','shif to EMP')" >
                                 <page string="Employee List" name="empgroup_list">
                                     <button name="btn_search" string="Search" type="object" class="oe_highlight fa fa-search"/>
                                     <button name="btn_select_all" string="Selected All" type="object" class="btn-secondary fa fa-check"/>
@@ -46,8 +47,8 @@
                         <field name="id" readonly="1" invisible="1"/>
                     </sheet>
                     <footer>
-                        <button name="action_process" string="Apply" type="object" class="oe_highlight" data-hotkey="a" invisible="target_process == 'process xls'"/>
-                        <button name="action_process" string="Process" type="object" class="oe_highlight" data-hotkey="a" invisible="target_process != 'process xls'"/>
+                        <!-- <button name="action_process" string="Apply" type="object" class="oe_highlight" data-hotkey="a" invisible="target_process == 'process xls'"/> -->
+                        <button name="action_process" string="Process" type="object" class="oe_highlight" data-hotkey="p"/>
                         <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
                     </footer>
                 </form>
