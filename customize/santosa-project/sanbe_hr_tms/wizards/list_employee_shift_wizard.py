@@ -31,10 +31,10 @@ class HrCariEmployeeShift(models.TransientModel):
                                        ('process xls','Process XLS')],'Process',default='generate')
     area_id = fields.Many2one('res.territory', string='Area ID', index=True, default=lambda self: self.env.user.branch_id.territory_id.id)
     branch_id = fields.Many2one('res.branch', string='Bisnis Unit', index=True, domain="[('id','in',branch_ids)]", default=lambda self: self.env.user.branch_id.id)
-    department_id = fields.Many2one('hr.department', domain="[('id','in',alldepartment)]", string='Sub Department', index=True)
-    division_id = fields.Many2one('sanhrms.division',string='Divisi', store=True)
-    hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen', store=True)
-    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', store=True)
+    department_id = fields.Many2one('hr.department', domain="[('id','in',alldepartment)]", string='Sub Department', index=True, default=lambda self: self.env.user.employee_id.department_id.id)
+    division_id = fields.Many2one('sanhrms.division',string='Divisi', store=True, default=lambda self: self.env.user.employee_id.division_id.id)
+    hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen', store=True, default=lambda self: self.env.user.employee_id.hrms_department_id.id)
+    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', store=True, default=lambda self: self.env.user.employee_id.directorate_id.id)
     files_name = fields.Char(string='File Upload', store=True)
     files_data = fields.Binary('File Upload')
     branch_ids = fields.Many2many(
@@ -55,7 +55,7 @@ class HrCariEmployeeShift(models.TransientModel):
         auto_join=True,
         string='Cari Employee Details'
     )
-    # empgroup_id = fields.Many2one('hr.empgroup', string='Cari Employee Group')
+    # empgroup_id = fields.Many2one('hr.empgroup', string='Cari Employee Group',)
 
     # @api.onchange('periode_id')
     # def _onchange_periode_id(self):
@@ -79,8 +79,8 @@ class HrCariEmployeeShift(models.TransientModel):
 
     empgroup_id = fields.Many2one(
         'hr.empgroup',
-        string='Cari Employee Group',
-        domain=lambda self:self.find_periode_id()
+        string='Cari Employee Group', domain="[('state','=','draft')]", 
+        # domain=lambda self:self.find_periode_id()
     )
 
     @api.depends('periode_id')
@@ -94,34 +94,34 @@ class HrCariEmployeeShift(models.TransientModel):
 
             domain = [
                 ('branch_id', '=', branch_id),
-                ('directorate_id', 'in', directorate_ids),
-                ('hrms_department_id', 'in', department_ids),
-                ('division_id', 'in', division_ids),
+                ('directorate_id', 'in', directorate_ids or False),
+                ('hrms_department_id', 'in', department_ids or False),
+                ('division_id', 'in', division_ids or False),
                 ('state', '=', 'draft'),
             ]
             empgroups = self.env('hr.empgroup').search(domain)
             return  [('id', 'in', [empgroups.ids])]
 
 
-    # @api.onchange('periode_id')
-    # def _onchange_periode_id(self):
-    #     if self.periode_id:
-    #         branch_id = self.periode_id.branch_id.id
-    #         shifts = self.env['sb.employee.shift'].search([('periode_id', '=', self.periode_id.id)])
-    #         directorate_ids = shifts.mapped('directorate_id.id')
-    #         department_ids = shifts.mapped('hrms_department_id.id')
-    #         division_ids = shifts.mapped('division_id.id')
+    @api.onchange('periode_id')
+    def _onchange_periode_id(self):
+        if self.periode_id:
+            branch_id = self.periode_id.branch_id.id
+            shifts = self.env['sb.employee.shift'].search([('periode_id', '=', self.periode_id.id)])
+            directorate_ids = shifts.mapped('directorate_id.id')
+            department_ids = shifts.mapped('hrms_department_id.id')
+            division_ids = shifts.mapped('division_id.id')
 
-    #         domain = [
-    #             ('branch_id', '=', branch_id),
-    #             ('directorate_id', 'in', directorate_ids),
-    #             ('hrms_department_id', 'in', department_ids),
-    #             ('division_id', 'in', division_ids),
-    #             ('state', '=', 'draft'),
-    #         ]
-    #     else:
-    #         domain = [('state', '=', 'draft'),]
-    #     return {'domain': {'empgroup_id': domain}}
+            domain = [
+                ('branch_id', '=', branch_id),
+                ('directorate_id', 'in', directorate_ids or False),
+                ('hrms_department_id', 'in', department_ids or False),
+                ('division_id', 'in', division_ids or False),
+                ('state', '=', 'draft'),
+            ]
+        else:
+            domain = [('state', '=', 'draft'),]
+        return {'domain': {'empgroup_id': domain}}
 
     def _get_running_periode(self):
         """Mendapatkan periode 'running' yang aktif untuk Branch pengguna saat ini."""
@@ -472,6 +472,7 @@ class HrCariEmployeeShiftDetails(models.TransientModel):
     _description = 'Search Employee Shift Wizard'
 
     cari_id = fields.Many2one('wiz.employee.shift', string='Employee Cari ID', ondelete='cascade', index=True)
+    branch_id = fields.Many2one('res.branch', string='Bisnis Unit', index=True, domain="[('id','in',branch_ids)]", related='cari_id.branch_id')
     employee_id = fields.Many2one('hr.employee', string='Employee Name', index=True)
     directorate_id = fields.Many2one(related='employee_id.directorate_id', string='Direktorat', store=True, index=True, readonly=True)
     hrms_department_id = fields.Many2one(related='employee_id.hrms_department_id', string='Departemen', store=True, index=True, readonly=True)

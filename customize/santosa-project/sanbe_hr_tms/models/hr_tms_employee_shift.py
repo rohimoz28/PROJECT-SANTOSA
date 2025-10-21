@@ -78,37 +78,37 @@ class HrTMSEmployeeShift(models.Model):
     
     is_select = fields.Boolean(default=False)
     
-    date_21 = fields.Many2one('hr.working.days', string='21', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_22 = fields.Many2one('hr.working.days', string='22', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_23 = fields.Many2one('hr.working.days', string='23', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_24 = fields.Many2one('hr.working.days', string='24', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_25 = fields.Many2one('hr.working.days', string='25', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_26 = fields.Many2one('hr.working.days', string='26', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_27 = fields.Many2one('hr.working.days', string='27', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_28 = fields.Many2one('hr.working.days', string='28', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_29 = fields.Many2one('hr.working.days', string='29', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_30 = fields.Many2one('hr.working.days', string='30', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_31 = fields.Many2one('hr.working.days', string='31', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_01 = fields.Many2one('hr.working.days', string='01', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_02 = fields.Many2one('hr.working.days', string='02', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_03 = fields.Many2one('hr.working.days', string='03', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_04 = fields.Many2one('hr.working.days', string='04', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_05 = fields.Many2one('hr.working.days', string='05', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_06 = fields.Many2one('hr.working.days', string='06', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_07 = fields.Many2one('hr.working.days', string='07', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_08 = fields.Many2one('hr.working.days', string='08', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_09 = fields.Many2one('hr.working.days', string='09', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_10 = fields.Many2one('hr.working.days', string='10', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_11 = fields.Many2one('hr.working.days', string='11', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_12 = fields.Many2one('hr.working.days', string='12', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_13 = fields.Many2one('hr.working.days', string='13', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_14 = fields.Many2one('hr.working.days', string='14', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_15 = fields.Many2one('hr.working.days', string='15', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_16 = fields.Many2one('hr.working.days', string='16', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_17 = fields.Many2one('hr.working.days', string='17', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_18 = fields.Many2one('hr.working.days', string='18', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_19 = fields.Many2one('hr.working.days', string='19', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
-    date_20 = fields.Many2one('hr.working.days', string='20', domain="[('area_id','=',area_id),'|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_21 = fields.Many2one('hr.working.days', string='21', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_22 = fields.Many2one('hr.working.days', string='22', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_23 = fields.Many2one('hr.working.days', string='23', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_24 = fields.Many2one('hr.working.days', string='24', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_25 = fields.Many2one('hr.working.days', string='25', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_26 = fields.Many2one('hr.working.days', string='26', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_27 = fields.Many2one('hr.working.days', string='27', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_28 = fields.Many2one('hr.working.days', string='28', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_29 = fields.Many2one('hr.working.days', string='29', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_30 = fields.Many2one('hr.working.days', string='30', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_31 = fields.Many2one('hr.working.days', string='31', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_01 = fields.Many2one('hr.working.days', string='01', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_02 = fields.Many2one('hr.working.days', string='02', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_03 = fields.Many2one('hr.working.days', string='03', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_04 = fields.Many2one('hr.working.days', string='04', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_05 = fields.Many2one('hr.working.days', string='05', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_06 = fields.Many2one('hr.working.days', string='06', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_07 = fields.Many2one('hr.working.days', string='07', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_08 = fields.Many2one('hr.working.days', string='08', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_09 = fields.Many2one('hr.working.days', string='09', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_10 = fields.Many2one('hr.working.days', string='10', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_11 = fields.Many2one('hr.working.days', string='11', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_12 = fields.Many2one('hr.working.days', string='12', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_13 = fields.Many2one('hr.working.days', string='13', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_14 = fields.Many2one('hr.working.days', string='14', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_15 = fields.Many2one('hr.working.days', string='15', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_16 = fields.Many2one('hr.working.days', string='16', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_17 = fields.Many2one('hr.working.days', string='17', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_18 = fields.Many2one('hr.working.days', string='18', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_19 = fields.Many2one('hr.working.days', string='19', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+    date_20 = fields.Many2one('hr.working.days', string='20', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
     
     
     active = fields.Boolean(default=True, string='Active')
@@ -188,27 +188,6 @@ class HrTMSEmployeeShift(models.Model):
     def action_delete(self):
         for record in self:
             record.unlink()
-            
-    # def action_mass_review(self):
-    #     invalid_records = self.filtered(lambda r: r.state != 'draft')
-    #     if invalid_records:
-    #         names = ', '.join(invalid_records.mapped('display_name'))
-    #         raise UserError(f'Tidak bisa approve, beberapa record tidak dalam state Submit: {names}')
-        
-    #     self.write({'state': 'review',
-    #                 'review_by':self.env.user.id,
-    #                 'review_date':datetime.today()})
-            
-    # def action_mass_approve(self):
-    #     invalid_records = self.filtered(lambda r: r.state != 'review')
-    #     if invalid_records:
-    #         names = ', '.join(invalid_records.mapped('display_name'))
-    #         raise UserError(f'Tidak bisa approve, beberapa record tidak dalam state HRD Review: {names}')
-        
-    #     self.write({'state': 'approved',
-    #                 'approved_by':self.env.user.id,
-    #                 'approved_date':datetime.today()})
-    
     
     def action_mass_review(self):
         current_branch_id = self.env.user.branch_id.id
@@ -218,7 +197,6 @@ class HrTMSEmployeeShift(models.Model):
             if invalid_state:
                 names = ', '.join(invalid_state.mapped('display_name'))
                 raise UserError(f'Tidak bisa approve, beberapa record tidak dalam state Submit: {names}')
-            
             valid_records.write({
                 'state': 'review',
                 'review_by': self.env.user.id,
@@ -226,18 +204,15 @@ class HrTMSEmployeeShift(models.Model):
             })
 
     def action_mass_approve(self):
-        
-        # current_branch_id = self.env.user.branch_id.id
-        # valid_records = self.filtered(lambda r: r.branch_id.id == current_branch_id) # approve per branch jika diperlukan
-        # if valid_records:
-            invalid_state = valid_records.filtered(lambda r: r.state != 'review')
-            if invalid_state:
-                names = ', '.join(invalid_state.mapped('display_name'))
-                raise UserError(f'Tidak bisa approve, beberapa record tidak dalam state HRD Review: {names}')
+        """ 
+        Filter by branch and check when it's not review sementara di non aktifkan
+        """
+        valid_records = self
+        if valid_records:
             valid_records.write({
-                'state': 'approved',
-                'review_by': self.env.user.id,
-                'review_date': datetime.today(),
-                'approved_by': self.env.user.id,
-                'approved_date': datetime.today()
-            })
+                    'state': 'approved',
+                    'review_by': self.env.user.id,
+                    'review_date': datetime.today(),
+                    'approved_by': self.env.user.id,
+                    'approved_date': datetime.today()
+                })

@@ -118,7 +118,7 @@ class HRTmsOpenClose(models.Model):
                     ('date_to', '>=', datetime.strptime(str(vals['open_periode_to']), "%Y-%m-%d").date())
                 ])
                 if check2:
-                    raise UserError('Tanggal periode ini sudah digunakan')
+                    raise UserError('A record with the same branch and running state already exsist')
             else:
                 raise UserError('Branch or Open Periode From Not Selected')# --- Cek Periode Running (Logic Wizard) ---
             existing_record = self.env['hr.opening.closing'].sudo().search([
@@ -243,7 +243,7 @@ class HRTmsOpenClose(models.Model):
             if len(employee_group) > 1:
                 raise UserError('Ensure all employee groups have been approved.')
 
-            existing_record = self.search([('branch_id', '=', branch_id), ('state_process', '=', 'running'),('id','!=',data.id)])
+            existing_record = self.search([('branch_id', '=', branch_id.id), ('state_process', '=', 'running'),('id','!=',data.id)])
             if existing_record:
                 raise UserError('A record with the same branch and running state already exists.')
 
