@@ -97,7 +97,7 @@ class HrContract(models.Model):
                                 ('3','3'),
                                 ('4','4'),
                                 ('5','5')],string='# of PKWT',ondelete='cascade')
-
+    no_pkwt_int = fields.Integer(string='# of PKWT', ondelete='cascade')
     # user_id = fields.Many2one(comodel_name='res.users', string="User", 
     #                           default=lambda self: self.env.user, readonly=True)
 
