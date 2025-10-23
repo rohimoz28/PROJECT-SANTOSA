@@ -142,6 +142,16 @@ class HrEmployeeMutation(models.Model):
     service_work_unit = fields.Char('Unit Kerja')
     service_work_unit_id = fields.Many2one('hr.work.unit', string='Posisi Unit Kerja', tracking=True)
     service_coach_id = fields.Many2one('parent.hr.employee', string='Atasan Unit Kerja', tracking=True)
+    service_employee_category = fields.Selection(
+        selection=[
+            ('nakes', 'Nakes'),
+            ('perawat', 'Perawat'),
+            ('dokter', 'Dokter'),
+            ('back_office', 'Back Office'),
+        ],
+        string='Kategori',
+    )
+    service_substitute = fields.Many2one(comodel_name='hr.employee', string='Posisi Pengganti', tracking=True)
 
 
     @api.depends('hrms_department_id')
