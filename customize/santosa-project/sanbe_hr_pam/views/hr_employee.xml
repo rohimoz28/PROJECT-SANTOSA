@@ -20,30 +20,30 @@
             <xpath expr="//field[@name='address_id']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
-            <xpath expr="//field[@name='allowance_nightshift_amount']" position="after">
+            <!-- <xpath expr="//field[@name='allowance_nightshift_amount']" position="after">
                 <field name="workingday" />
-             </xpath>
-             <xpath expr="//field[@name='allowance_ot']" position="replace">
+             </xpath> -->
+             <!-- <xpath expr="//field[@name='allowance_ot']" position="replace">
                 <field name="allowance_ot" invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='allowance_ot']" position="after">
                 <field name="allowance_ot_flat" invisible="1"/>
-            </xpath>
+            </xpath> -->
             <xpath expr="//field[@name='ptkp']" position="replace">
                 <field name="ptkp" widget="radio" options="{'horizontal': true}"/>
             </xpath>
             <xpath expr="//field[@name='no_sim']" position="after">
                 <field name="exp_sim_no" string="Masa berlaku SIM Hingga"/>
             </xpath>
-            <xpath expr="//field[@name='allowance_ot_flat']" position="after">
+            <!-- <xpath expr="//field[@name='allowance_ot_flat']" position="after">
                 <field name="allowance_ot1" invisible="1"/>
-            </xpath>
-            <xpath expr="//field[@name='allowance_ot1']" position="after">
+            </xpath> -->
+            <!-- <xpath expr="//field[@name='allowance_ot1']" position="after">
                 <field name="overtime" widget="radio" options="{'horizontal': true}"/>
-            </xpath>
-            <xpath expr="//field[@name='overtime']" position="after">
+            </xpath> -->
+            <!-- <xpath expr="//field[@name='overtime']" position="after">
                 <field name="leave_calculation" widget="radio" options="{'horizontal': true}"/>
-            </xpath>
+            </xpath> -->
         </field>
     </record>
 </odoo>

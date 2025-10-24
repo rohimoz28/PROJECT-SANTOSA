@@ -15,5 +15,20 @@
                 </xpath>
             </field>
         </record>
+        <record id="hr_employee_tmss_forms" model="ir.ui.view">
+            <field name="name">hr.employee.tmss.forms</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='wd_type']" position="after">
+                    <label for="workingdays_id" string="Working Day" 
+                    invisible="wd_type != 'wd'"
+                    />
+                    <field name="workingdays_id" 
+                    required="wd_type == 'wd'" invisible="wd_type != 'wd'"
+                    />
+                </xpath>
+            </field>
+        </record>
     </data>
 </odoo>

@@ -178,24 +178,27 @@ class HrEmployee(models.Model):
     attende_premie_amount = fields.Float(digits='Product Price', string='Jumlah Premi Kehadiran')
     allowance_jemputan = fields.Boolean('Jemputan')
     max_ot = fields.Float('Jam Lembur Maksimal', digits=(16, 1), default=0)
-    
-    @api.constrains('max_ot')
-    def _check_max_ot(self):
-        for rec in self:
-            if rec.max_ot:
-                if rec.max_ot <0:            
-                    raise UserError("Values cannot be below zero")  
-            value = Decimal(str(rec.max_ot))
-            rounded = value.quantize(Decimal('0.1'), rounding=ROUND_DOWN)
-            if value != rounded:
-                raise UserError("Maximum of 1 digits allowed after decimal point.")
-            if (value % Decimal('0.5')) != 0:
-                raise UserError("Value must be a multiple of 0.5 Hours")
-    
+    max_ot_month = fields.Float('Jam Lembur Maksimal', default=0)
+    max_hours_week = fields.Float('Total Jam Week', digits=(200, 1), default=40)
+    max_days_month = fields.Integer('Total Hari Kerja Month', digits=(31, 1), default=22)
+    dates_holidays = fields.Selection([('21','21'), ('22','22'),('23','23'),('24','24'),('25','25'),('26','26'),('27','27'),('28','28'),
+                                     ('29','29'),('30','30'),('31','31'),('1','01'),('2','02'),('3','03'),('4','04'),('5','05'),('6','0'),
+                                     ('7','07'), ('8','08'),('9','09'),('10','10'),('11','11'),('12','12'),('13','13'),('14','14'), ('15','15'),
+                                     ('16','16'),('17','17'),('18','18'),('19','19'),('20','20'),],'Tanggal Penambahan Cuti',default='1')
+    date_count_holiday = fields.Integer('Tanggal Penambahan Cuti', digits=(31, 1), default=1)
+    overtime = fields.Selection(selection=[('allowance_ot', "OT"),
+                                ('allowance_ot_flat', "OT Flat"),
+                                ('allowance_ot1', "OT 1"),
+                                ('none', "None"),],
+                                string="Lembur")
+
     allowance_ot = fields.Boolean('OT')
     allowance_transport = fields.Boolean('Transport')
     allowance_meal = fields.Boolean('Uang Makan')
     jemputan_remarks = fields.Char('Keterangan Penjemputan')
+    allowance_ot_flat = fields.Boolean('OT Flat')
+    allowance_ot1 = fields.Boolean('OT 1')
+    
     ot_remarks = fields.Char('Keterangan Lembur')
     transport_remarks = fields.Char('Keterangan Transport')
     meal_remarks = fields.Char('Keterangan Makan')
@@ -299,6 +302,13 @@ class HrEmployee(models.Model):
         string='Kategori',
     )
 
+    leave_calculation = fields.Selection(selection=[('contract_based', "Contract Based"),
+                                    ('first_month', "First Month"),('others', "Others"),],
+                                    string="Perhitungan Saldo Cuti")
+    
+    wd_type = fields.Selection(selection=[('shift', "Shift"),
+                                    ('wd', "Normal WD"),],
+                                    string="Tipe WD",default='shift', required=True)
 
     # wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.", group_operator="avg")
     # contract_wage = fields.Monetary('Contract Wage', compute='_compute_contract_wage')
@@ -359,6 +369,26 @@ class HrEmployee(models.Model):
     #    #for allemps in myemployees:
     #    #    allemps.write({'nik_lama': ''})
 
+    
+    @api.onchange('overtime')
+    def _onchange_ot(self):
+        if self.overtime == 'allowance_ot':
+            self.allowance_ot = True
+            self.allowance_ot_flat = False
+            self.allowance_ot1 = False
+        elif self.overtime == 'allowance_ot_flat':
+            self.allowance_ot = False
+            self.allowance_ot_flat = True
+            self.allowance_ot1 = False
+        elif self.overtime == 'allowance_ot1':
+            self.allowance_ot = False
+            self.allowance_ot_flat = False
+            self.allowance_ot1 = True
+        else:
+            self.allowance_ot = False
+            self.allowance_ot_flat = False
+            self.allowance_ot1 = False
+            
     @api.onchange('job_status')
     def _onchange_job_status(self):
         if self.job_status == 'partner_doctor':
@@ -367,6 +397,41 @@ class HrEmployee(models.Model):
         else:
             self.kontrak_medis = False
             self.sip = False 
+
+    @api.onchange('leave_calculation','dates_holidays')
+    def get_date_count_holiday(self):
+        for line in self:
+            if line.leave_calculation == 'contract_based' and line.contract_datefrom:
+                line.date_count_holiday = int(line.contract_datefrom.strftime('%d'))
+            elif line.leave_calculation == 'others' and line.dates_holidays:
+                line.date_count_holiday = int(line.dates_holidays)
+            else:
+                line.date_count_holiday = 1
+            
+    @api.constrains('date_count_holiday')
+    def _check_date_count(self):
+        for rec in self:
+            if rec.date_count_holiday > 31 or rec.date_count_holiday < 1:
+                raise UserError('Please Input date of Calendar')
+
+    @api.onchange('max_days_month')
+    def _change_max_days_month(self):
+        for line in self:
+            if line.max_days_month:
+                line.workingday = line.max_days_month
+    
+    @api.constrains('max_ot')
+    def _check_max_ot(self):
+        for rec in self:
+            if rec.max_ot:
+                if rec.max_ot <0:            
+                    raise UserError("Values cannot be below zero")  
+            value = Decimal(str(rec.max_ot))
+            rounded = value.quantize(Decimal('0.1'), rounding=ROUND_DOWN)
+            if value != rounded:
+                raise UserError("Maximum of 1 digits allowed after decimal point.")
+            if (value % Decimal('0.5')) != 0:
+                raise UserError("Value must be a multiple of 0.5 Hours")
 
     @api.constrains('no_ktp', 'no_npwp', 'employee_category')
     def _check_unique_ktp_npwp(self):
