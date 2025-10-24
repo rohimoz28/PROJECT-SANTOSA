@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION public.generate_empgroup(p_periode_id integer, p_empgroup_id integer)
+CREATE OR REPLACE FUNCTION public.generate_shift_empgroup(p_periode_id integer, p_empgroup_id integer)
 RETURNS VOID
 LANGUAGE plpgsql
 AS $$

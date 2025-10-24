@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_open_periode_confirmation" model="ir.ui.view">
+        <field name="name">Konfirmasi Pembuatan Periode</field>
+        <field name="model">wizard.open.periode.confirmation</field>
+        <field name="arch" type="xml">
+            <form string="Konfirmasi Pembuatan Periode TMS">
+                <group>
+                    <p>
+                        Masih ada data yang berstatus terbuka atau draft.
+                    </p>
+                    <p class="text-muted">
+                        Apakah Anda yakin ingin melanjutkan pembuatan data baru?
+                    </p>
+                </group>
+                <footer>
+                    <button name="process" string="Lanjutkan" type="object" class="oe_highlight"/>
+                    <button string="Batal" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
