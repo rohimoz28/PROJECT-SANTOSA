@@ -170,7 +170,6 @@ class HrCariEmployeeShift(models.TransientModel):
             if line.target_process == 'generate':          
                 domain = line._get_filtered_employees_domain()
                 employees = self.env['hr.employee'].search(domain)
-                print(domain)
                 if len(employees) <1:
                     raise UserError('Employee Not Found')
                 for emp in employees:
