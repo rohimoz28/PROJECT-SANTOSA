@@ -408,6 +408,9 @@
                                 <field name="end_date" optional="show"/>
                                 <field name="no_sip_to" optional="hide"/>
                                 <field name="specialization" optional="show"/>
+                                <field name="practice_day"/>
+                                <field name="work_start" widget="easy_timepicker"/>
+                                <field name="work_end" widget="easy_timepicker"/>
                                 <field name="competence" optional="hide"/>
                                 <field name="state" widget="badge"
                                     decoration-info="state == 'draft'" 
