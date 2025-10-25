@@ -128,7 +128,7 @@ BEGIN
             -- Rollback otomatis untuk semua perubahan di dalam fungsi
             RAISE NOTICE 'Error inserting data for periode_id=%, empgroup_id=%. Semua perubahan dibatalkan. Error: %', 
                 p_periode_id, p_empgroup_id, SQLERRM;
-            ROLLBACK; -- membatalkan seluruh transaksi aktif
+            -- ROLLBACK; -- membatalkan seluruh transaksi aktif
             RETURN;
     END;
 END;
