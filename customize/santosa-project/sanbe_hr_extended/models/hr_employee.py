@@ -37,6 +37,10 @@ EMP_GROUP2 = [
 EMP_GROUP3 = [
     ('Group3', 'Group3 - Pusat')
 ]
+RANGE_DATES_HOLIDAYS = (
+        [(str(i), f"{i:02d}") for i in range(21, 32)] +
+        [(str(i), f"{i:02d}") for i in range(1, 21)]
+)
 
 
 class HrEmployee(models.Model):
@@ -181,10 +185,7 @@ class HrEmployee(models.Model):
     max_ot_month = fields.Float('Jam Lembur Maksimal', default=0)
     max_hours_week = fields.Float('Total Jam Week', digits=(200, 1), default=40)
     max_days_month = fields.Integer('Total Hari Kerja Month', digits=(31, 1), default=22)
-    dates_holidays = fields.Selection([('21','21'), ('22','22'),('23','23'),('24','24'),('25','25'),('26','26'),('27','27'),('28','28'),
-                                     ('29','29'),('30','30'),('31','31'),('1','01'),('2','02'),('3','03'),('4','04'),('5','05'),('6','0'),
-                                     ('7','07'), ('8','08'),('9','09'),('10','10'),('11','11'),('12','12'),('13','13'),('14','14'), ('15','15'),
-                                     ('16','16'),('17','17'),('18','18'),('19','19'),('20','20'),],'Tanggal Penambahan Cuti',default='1')
+    dates_holidays = fields.Selection(selection=RANGE_DATES_HOLIDAYS, string='Tanggal Penambahan Cuti', default='1')
     date_count_holiday = fields.Integer('Tanggal Penambahan Cuti', digits=(31, 1), default=1)
     overtime = fields.Selection(selection=[('allowance_ot', "OT"),
                                 ('allowance_ot_flat', "OT Flat"),
