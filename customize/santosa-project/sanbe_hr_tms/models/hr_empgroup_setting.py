@@ -83,7 +83,11 @@ class HREmpGroupSetting(models.Model):
                                   ondelete='cascade', index=True)
     # employee_ids = fields.One2many('hr.employee', 'emp_group_id', string='employee')
     empgroup_ids = fields.One2many('hr.empgroup.details','empgroup_id',auto_join=True,string='Employee Group Setting Details', copy=True,tracking=True)
-    # periode_id = fields.Many2one('hr.opening.closing',string='Periode ID',index=True)
+    # periode_id = fields.Many2one('hr.opening.closing', 
+    #                              string='Periode ID', 
+    #                              index=True, 
+    #                              default=lambda self:self._get_running_periode(), 
+    #                              domain="[('state_process','in',('draft','running')),('branch_id','=',branch_id)]")
 
     @api.depends('value_id')
     def _compute_value_id(self):
