@@ -16,3 +16,4 @@ class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
     badges_nos = fields.Many2many('hr.machine.details','name','employee_id',string='Badges Number')
+    workingdays_id =  fields.Many2one('hr.working.days', domain="['|',('available_for','in',branch_id),('available_for','=',False)]")

@@ -320,20 +320,49 @@
                     <page name="Tunjangan dan Manfaat" class="o_hr_contract_salary_information">
                         <group name="salary_info">
                             <group string="Tunjangan">
-                                <field name="attende_premie"   readonly="(state !='draft')" />
+                                <field name="attende_premie" invisible="1" readonly="(state !='draft')" />
                                 <!-- <field name="allowance_jemputan"  readonly="(state !='draft')" /> -->
                                 <field name="allowance_ot"   readonly="(state !='draft')" />
-                                <label for="max_ot" string="Total Jam Lembur Maksimal" invisible="not allowance_ot" />
-                                <div class="o_row" invisible="not allowance_ot">
+                                <field name="overtime" widget="radio" options="{'horizontal': true}"/>
+                                <label for="max_ot" string="Max OT / Hari" invisible="(overtime not in ('allowance_ot','allowance_ot1'))" />
+                                <div class="o_row" invisible="(overtime not in ('allowance_ot','allowance_ot1'))">
                                     <field name="max_ot" readonly="(state !='draft')" /> 
                                     <label for="max_ot" string="Jam"/>
                                 </div>
-                                <field name="allowance_transport"   readonly="(state !='draft')" />
-                                <field name="allowance_meal"   readonly="(state !='draft')" />
-                                <field name="allowance_night_shift"  readonly="(state !='draft')" />
-                                <field name="allowance_nightshift_amount" invisible="allowance_night_shift == False"/>
+                                <label for="max_ot_month" string="Max OT / Bulan" invisible="(overtime not in ('allowance_ot','allowance_ot1'))" />
+                                <div class="o_row" invisible="(overtime not in ('allowance_ot','allowance_ot1'))">
+                                    <field name="max_ot_month" readonly="(state !='draft')" />
+                                    <label for="max_ot_month" string="Jam"/>
+                                </div>
+                                <field name="leave_calculation" widget="radio" options="{'horizontal': true}"/>
+                                <field name="dates_holidays" string="Tanggal Penambahan Cuti" invisible="leave_calculation != 'others'" required="leave_calculation == 'others'" readonly="(state !='draft')" />
+                                <field name="date_count_holiday" invisible="1" readonly="(state !='draft')" />
+                                <field name="contract_datefrom" string="Tanggal Kontrak" invisible="leave_calculation == 'first_month'" readonly="1" />
+                                <field name="allowance_transport" invisible="1" readonly="(state !='draft')" />
+                                <field name="allowance_meal" invisible="1" readonly="(state !='draft')" />
+                                <label for="allowance_night_shift" string="Dinas Malam"/>
+                                <div class="o_row">
+                                    <field name="allowance_night_shift" readonly="(state !='draft')" />
+                                    <label for="allowance_nightshift_amount" string="Premi Dinas Malam" invisible="allowance_night_shift == False"/>
+                                    <field name="allowance_nightshift_amount" invisible="allowance_night_shift == False"/>
+                                </div>
+
+                                <label for="max_days_month" string="Jml Hari Kerja/Bulan"/>
+                                <div class="o_row">
+                                    <field name="max_days_month" readonly="(state !='draft')" />
+                                    <label for="max_days_month" string="Hari"/>
+                                </div>
+                                <label for="max_hours_week" string="Jml Jam/Minggu"/>
+                                <div class="o_row">
+                                    <field name="max_hours_week" readonly="(state !='draft')" />
+                                    <label for="max_hours_week" string="Jam"/>
+                                </div>
+                                <label for="wd_type" string="Tipe WD"/>
+                                <div class="o_row">
+                                    <field name="wd_type" widget="radio" options="{'horizontal': true}"/>
+                                </div>
                             </group>
-                            <group string="Manfaat">
+                            <group string="Manfaat" invisible="1">
                                 <field name="attende_premie_amount" invisible="attende_premie == False" required="attende_premie == True"/>
                                 <field name="jemputan_remarks"   readonly="(state !='draft')" />
                                 <field name="ot_remarks"   readonly="(state !='draft')" />

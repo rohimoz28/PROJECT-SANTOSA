@@ -21,16 +21,6 @@ class HrEmployee(models.Model):
     exp_sim_no = fields.Date('License Expiration Date')
     emp_status_id = fields.Many2one('hr.emp.status', string='Employment Status', tracking=True)
     status = fields.Char(related='emp_status_id.status')
-    allowance_ot_flat = fields.Boolean('OT Flat')
-    allowance_ot1 = fields.Boolean('OT 1')
-    overtime = fields.Selection(selection=[('allowance_ot', "OT"),
-                                    ('allowance_ot_flat', "OT Flat"),
-                                    ('allowance_ot1', "OT 1"),
-                                    ('none', "None"),],
-                                    string="Lembur")
-    leave_calculation = fields.Selection(selection=[('contract_based', "Contract Based"),
-                                    ('first_month', "First Month"),],
-                                    string="Perhitungan Saldo Cuti")
 
     _sql_constraints = [
         # ('nik_uniq', 'check(1=1)', "The NIK  must be unique, this one is already assigned to another employee."),
@@ -41,25 +31,6 @@ class HrEmployee(models.Model):
         #  "The Identification ID  must be unique, this one is already assigned to another employee."),
         ('contract_id_unique', 'UNIQUE(contract_id)', "Contract must be unique, this one is already assigned to another employee."),
     ]
-    
-    @api.onchange('overtime')
-    def _onchange_ot(self):
-        if self.overtime == 'allowance_ot':
-            self.allowance_ot = True
-            self.allowance_ot_flat = False
-            self.allowance_ot1 = False
-        elif self.overtime == 'allowance_ot_flat':
-            self.allowance_ot = False
-            self.allowance_ot_flat = True
-            self.allowance_ot1 = False
-        elif self.overtime == 'allowance_ot1':
-            self.allowance_ot = False
-            self.allowance_ot_flat = False
-            self.allowance_ot1 = True
-        else:
-            self.allowance_ot = False
-            self.allowance_ot_flat = False
-            self.allowance_ot1 = False
 
     @api.model
     def write(self, vals):
