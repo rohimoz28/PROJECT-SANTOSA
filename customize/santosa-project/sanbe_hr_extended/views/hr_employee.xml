@@ -492,22 +492,28 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_tree" />
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='job_id']" position="replace"/>
                 <xpath expr="//field[@name='department_id']" position="replace">
-                    <field name="hrms_department_id" />
+                    <field name="hrms_department_id" column_invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="string">Nama Karyawan</attribute>
                 </xpath>
                 <xpath expr="//field[@name='name']" position="before">
-                    <field name="employee_id" readonly="1"/>
+                    <field name="employee_id" readonly="1" string="ID Karyawan"/>
                     <field name="nik" />
-                    <field name="no_ktp" />
                 </xpath>
-                <xpath expr="//field[@name='job_id']" position="replace" />
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="job_id" string="Jabatan"/>
+                    <field name="no_ktp" string="KTP"/>
+                </xpath>
                 <xpath expr="//field[@name='hrms_department_id']" position="after">
                     <field name="alldepartment" column_invisible="1" />
-                    <field name="job_id" />
-                    <field name="job_status" />
+                    <field name="job_status" string="Status Hub Kerja"/>
                     <field name="emp_status" />
                     <field name="employee_levels"/>
                     <field name="employee_group1s" />
+                    <field name="state"/>
                 </xpath>
                 <xpath expr="//field[@name='work_phone']" position="replace" />
                 <xpath expr="//field[@name='work_email']" position="replace" />
@@ -516,10 +522,9 @@
                 </xpath> -->
                 <xpath expr="//field[@name='activity_ids']" position="replace"/>
                 <xpath expr="//field[@name='country_id']" position="after">
-                    <field name="activity_ids" widget="list_activity" optional="show"/>
+                    <field name="activity_ids" widget="list_activity" optional="hide"/>
                 </xpath>
                 <xpath expr="//field[@name='activity_date_deadline']" position="replace"/>
-                <xpath expr="//field[@name='job_id']" position="replace" />
                 <xpath expr="//field[@name='parent_id']" position="replace" />
                 <xpath expr="//field[@name='coach_id']" position="replace" />
             </field>
