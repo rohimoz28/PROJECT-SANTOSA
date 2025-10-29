@@ -60,15 +60,15 @@
                     <div class="oe_title">
                         <label for="name"/>
                         <h2>
-                            <field name="name" readonly="1" placeholder="Transaction Number"/>
+                            <field name="name" readonly="1" string="No Transaksi" placeholder="No Transaksi"/>
                         </h2>
                         <label for="letter_no"/>
                         <h1>
-                            <field name="letter_no" readonly="state not in ['draft']" placeholder="Reference Number"/>
+                            <field name="letter_no" readonly="state not in ['draft']" string="Reff Number" placeholder="Reff Number"/>
                         </h1>
                         <label for="resignation_type"/>
                         <!-- <h1> -->
-                            <field name="resignation_type" string="Type" required="1"
+                            <field name="resignation_type" string="Tipe Pengunduran Diri" required="1"
                                    groups="hr.group_hr_user"
                                    readonly="state not in ['draft']"/>
                         <!-- </h1> -->
@@ -91,6 +91,7 @@
                 </xpath>
                 <xpath expr="//field[@name='expected_revealing_date']" position="attributes">
                     <attribute name="required">True</attribute>
+                    <attribute name="string">Hari Terakhir Kerja</attribute>
                 </xpath>
                 <xpath expr="//field[@name='employee_id']" position="before">
                     <field name="alldepartment" invisible="1"/>
@@ -125,6 +126,7 @@
                 </xpath>
                 <xpath expr="//field[@name='approved_revealing_date']" position="attributes">
                     <attribute name="readonly">state in ['approved']</attribute>
+                    <attribute name="string">Approval Last Day</attribute>
                 </xpath>
                 <xpath expr="//field[@name='employee_contract']" position="after">
                     <field name="job_status" readonly="state in ['approved']" />
@@ -227,10 +229,28 @@
                 <xpath expr="//field[@name='employee_id']" position="attributes">
                     <attribute name="string">Nama Karyawan</attribute>
                 </xpath>
+
                 <xpath expr="//field[@name='employee_id']" position="before">
-                    <field name="name"/>
-                    <field name="letter_no"/>
+                    <field name="name" string="No Transaksi"/>
+                    <field name="letter_no" string="Reff Number"/>
+                    <field name="emp_id" />
+                    <field name="emp_nik" />
                 </xpath>
+
+                <xpath expr="//field[@name='resignation_type']" position="replace"/>
+                <xpath expr="//field[@name='expected_revealing_date']" position="replace"/>
+                <xpath expr="//field[@name='approved_revealing_date']" position="replace"/>
+
+                <xpath expr="//field[@name='employee_id']" position="after">
+                    <field name="job_id"/>
+                    <field name="resignation_type" string="Tipe Pengunduran Diri"/>
+                    <field name="expected_revealing_date" string="Hari Terakhir Kerja"/>
+                    <field name="approved_revealing_date" string="Approval Last Day"/>
+                </xpath>
+
+                <xpath expr="//field[@name='department_id']" position="replace"/>
+                <xpath expr="//field[@name='employee_contract']" position="replace"/>
+                <xpath expr="//field[@name='joined_date']" position="replace"/>
             </field>
         </record>
     </data>
