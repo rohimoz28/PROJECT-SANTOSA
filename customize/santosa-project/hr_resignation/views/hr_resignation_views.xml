@@ -89,7 +89,7 @@
     </record>
     <!--Action for the 'hr.resignation' model.-->
     <record id="hr_resignation_action" model="ir.actions.act_window">
-        <field name="name">Employee Exit</field>
+        <field name="name">Karyawan Keluar</field>
         <field name="res_model">hr.resignation</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('state', 'in', ('draft',
