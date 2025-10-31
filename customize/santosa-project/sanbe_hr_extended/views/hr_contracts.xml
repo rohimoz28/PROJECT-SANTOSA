@@ -276,11 +276,32 @@
             <field name="model">hr.contract</field>
             <field name="inherit_id" ref="hr_contract.hr_contract_view_tree"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='employee_id']" position="after">
+                <xpath expr="//field[@name='name']" position="replace"/>
+                <xpath expr="//field[@name='job_id']" position="replace"/>
+                <xpath expr="//field[@name='contract_type_id']" position="replace"/>
+                <xpath expr="//field[@name='resource_calendar_id']" position="replace"/>
+
+                <xpath expr="//field[@name='employee_id']" position="before">
+                    <field name="name"/>
                     <field name="emp_id"/>
+                    <field name="nik" string="NIK"/>
                 </xpath>
+
+                <xpath expr="//field[@name='employee_id']" position="after">
+                    <field name="job_id"/>
+                    <field name="contract_type_id" string="Tipe Kontrak"/>
+                </xpath>
+
+                <xpath expr="//field[@name='date_start']" position="attributes">
+                    <attribute name="string">Tanggal Mulai Kontrak</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='date_end']" position="attributes">
+                    <attribute name="string">Tanggal Berakhir Kontrak</attribute>
+                </xpath>
+
                 <xpath expr="//field[@name='department_id']" position="replace">
-                    <field name="hrms_department_id"/>
+                    <field name="hrms_department_id" optional="hide"/>
                 </xpath>
             </field>
         </record>
