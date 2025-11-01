@@ -8,26 +8,21 @@
         <field name="arch" type="xml">
             <tree default_order="territory_id,branch_id,time_limit,hrms_department_id,employee_id" 
                   create="false" edit="false" class="o_tree_table">
-
-                <!-- <field name="territory_id" string="Area" optional="show"/> -->
-                <!-- <field name="branch_id" string="Unit Bisnis" optional="show"/> -->
-                <field name="employee_id" string="Nama Karyawan" optional="show"/>
-                <field name="parent_id" optional="show"/>
+                <field name="contract_name" string="Contract Reference" optional="show"/>
                 <field name="emp_id" optional="show"/>
-                <field name="contract_name" optional="show"/>
-                <field name="hrms_department_id" optional="show"/>
+                <field name="nik_employee" string="NIK" optional="show"/>
+                <field name="employee_id" string="Nama Karyawan" optional="show"/>
                 <field name="job_id" optional="show"/>
-                <field name="date_start" optional="show"/>
-                <field name="date_end" optional="show"/>
                 <field name="contract_type_id" optional="show"/>
-                <field name="resource_calendar_id" optional="show"/>
-                <field 
-                    name="state" 
-                    optional="show" 
-                    widget="badge"
-                    decoration-info="state == 'draft'" 
-                    decoration-warning="state == 'close'" 
+                <field name="date_start" string="Tanggal Mulai Kontrak" optional="show"/>
+                <field name="date_end" string="Tanggal Berakhir Kontrak" optional="show"/>
+                <field name="state" optional="show" widget="badge"
+                    decoration-info="state == 'draft'"
+                    decoration-warning="state == 'close'"
                     decoration-success="state == 'open'"/>
+                <field name="parent_id" optional="hide"/>
+                <field name="hrms_department_id" optional="hide"/>
+                <field name="resource_calendar_id" optional="hide"/>
             </tree>
         </field>
     </record>
