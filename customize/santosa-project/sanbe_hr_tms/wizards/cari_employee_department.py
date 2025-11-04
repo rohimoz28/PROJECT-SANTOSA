@@ -2,6 +2,16 @@
 from odoo import fields, models, api, _, Command
 from odoo.exceptions import ValidationError,UserError
 
+OT_HOURS_SELECTION = [
+    ('h_morning', "H - Lembur Pagi : 07.00 - 15.00"),
+    ('h_afternoon', "H - Lembur Siang : 15.00 - 22.00"),
+    ('h_night', "H - Lembur Malam  : 22.00 - 06.00"),
+    ('r_s1', "R - S1 : 15.30 - 19.30"),
+    ('r_s2', "R - S2 : 11.00 - 15.00"),
+    ('r_s3', "R - S3 : 19.00 - 22.00"),
+    ('others', "Others"),
+]
+
 
 class HrCariEmployeeDepartment(models.TransientModel):
     _name = 'hr.employeedepartment'
@@ -10,25 +20,25 @@ class HrCariEmployeeDepartment(models.TransientModel):
     # name = fields.Char(string="Name")
     area_id = fields.Many2one('res.territory', string='Area ID', index=True)
     branch_id = fields.Many2one('res.branch', string='Bisnis Unit', index=True, domain="[('id','in',branch_ids)]")
-    department_id = fields.Many2one('hr.department', domain="[('id','in',alldepartment)]", string='Sub Department', index=True)
+    department_id = fields.Many2one('hr.department', domain="[('id','in',alldepartment)]", string='Sub Department')
     division_id = fields.Many2one('sanhrms.division',string='Divisi', store=True)
     hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen', store=True)
     directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', store=True)
-    empgroup_id = fields.Many2one('hr.empgroup', string='Employee Group Setting', index=True)
+    empgroup_id = fields.Many2one('hr.empgroup', string='Employee Group Setting')
     plan_id = fields.Many2one('hr.overtime.planning', string='Planning OT', index=True)
-    plann_date_from = fields.Date('Plann Date From')
-    plann_date_to = fields.Date('Plann Date To')
-    ot_plann_from = fields.Float('OT Plann From')
-    ot_plann_to = fields.Float('OT Plann To')
+    plann_date_from = fields.Date('Tanggal SPL',default=fields.Date.today(),)
+    plann_date_to = fields.Date('Plann Date To',default=fields.Date.today(),)
+    ot_plann_from = fields.Float('Jam SPL Dari',)
+    ot_plann_to = fields.Float('Jam SPL Hingga')
     approve_time_from = fields.Float('Approve Time From')
     approve_time_to = fields.Float('Approve Time To')
     machine = fields.Char('Machine')
-    work_plann = fields.Char('Work Plann')
-    output_plann = fields.Char('Output Plann')
+    work_plann = fields.Char('Rencana SPL')
+    output_plann = fields.Char('Output SPL')
     transport = fields.Boolean('Transport')
     meals = fields.Boolean('Meal')
-    valid_from = fields.Date('Valid From', copy=True)
-    valid_to = fields.Date('To', copy=True)
+    valid_from = fields.Date('Valid From', copy=True,default=fields.Date.today(),)
+    valid_to = fields.Date('To', copy=True,default=fields.Date.today(),)
     wdcode = fields.Many2one(
         'hr.working.days',
         domain="[('id','in',wdcode_ids)]",
@@ -66,9 +76,35 @@ class HrCariEmployeeDepartment(models.TransientModel):
         compute='_isi_department_branch',
         store=False
     )
-    
+    default_ot_hours = fields.Selection(
+        selection=OT_HOURS_SELECTION,
+        string='Default Jam OT')
     # @api.models(self,vals)
     # def create(self)
+
+    @api.onchange('default_ot_hours')
+    def onchange_default_ot_hours(self):
+        if self.default_ot_hours == 'h_morning':
+            self.ot_plann_from = 7.0
+            self.ot_plann_to = 15.0
+        elif self.default_ot_hours == 'h_afternoon':
+            self.ot_plann_from = 15.0
+            self.ot_plann_to = 22.0
+        elif self.default_ot_hours == 'h_night':
+            self.ot_plann_from = 22.0
+            self.ot_plann_to = 6.0
+        elif self.default_ot_hours == 'r_s1':
+            self.ot_plann_from = 15.5
+            self.ot_plann_to = 19.5
+        elif self.default_ot_hours == 'r_s2':
+            self.ot_plann_from = 11.0
+            self.ot_plann_to = 15.0
+        elif self.default_ot_hours == 'r_s3':
+            self.ot_plann_from = 19.0
+            self.ot_plann_to = 22.0
+        else:
+            self.ot_plann_from = 0.0
+            self.ot_plann_to = 0.0
 
     @api.depends('area_id')
     def _isi_semua_branch(self):
@@ -86,7 +122,7 @@ class HrCariEmployeeDepartment(models.TransientModel):
         for allrecs in self:
             if allrecs.branch_id:
                 # Get all departments in a single query
-                allbranch = self.env['hr.department'].sudo().search(['|',('branch_id', '=', allrecs.branch_id.id),('branch_id', '=', False)])
+                allbranch = self.env['sanhrms.department'].sudo().search(['|',('branch_id', '=', allrecs.branch_id.id),('branch_id', '=', False)])
                 allrecs.alldepartment = [Command.set(allbranch.ids)]
             else:
                 allrecs.alldepartment = [Command.clear()]
@@ -149,8 +185,6 @@ class HrCariEmployeeDepartment(models.TransientModel):
         context_field = self._context.get('fieldname')
         employee_data = []
 
-        # if context_field == 'plan_id':
-            # Processing for 'plan_id' context
         if self.modelname == 'hr.overtime.planning':
             for emp in self.employee_ids.filtered(lambda e: e.is_selected):
                 employee_data.append({
@@ -177,7 +211,6 @@ class HrCariEmployeeDepartment(models.TransientModel):
                     'approve_time_to': self.approve_time_to,
                 })
             self.env['hr.overtime.employees'].sudo().create(employee_data)
-
             return {
                 'type': 'ir.actions.act_window',
                 'res_model': 'hr.overtime.planning',
@@ -186,7 +219,6 @@ class HrCariEmployeeDepartment(models.TransientModel):
                 'res_id': self.plan_id.id,
                 'views': [[False, 'form']],
             }
-
         else:
             # Ensure required fields are set
             if not self.wdcode and self.modelname != 'hr.overtime.planning':
@@ -237,19 +269,20 @@ class HrCariEmployeeDepartmentDetails(models.TransientModel):
     _description = 'Search Employee Department Wizard'
 
     cari_id = fields.Many2one('hr.employeedepartment', string='Employee Cari ID', ondelete='cascade', index=True)
-    department_id = fields.Many2one('hr.department', string='Department ID', index=True)
+    department_id = fields.Many2one('hr.department', string='Department ID')
     employee_id = fields.Many2one('hr.employee', string='Employee Name', index=True)
-    division_id = fields.Many2one('sanhrms.division',string='Divisi', related='employee_id.division_id', store=True)
-    hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen',  related='employee_id.hrms_department_id', store=True)
-    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', related='employee_id.directorate_id', store=True)
+    division_id = fields.Many2one('sanhrms.division', string='Divisi', related='employee_id.division_id', store=True)
+    hrms_department_id = fields.Many2one('sanhrms.department', string='Departemen',
+                                         related='employee_id.hrms_department_id', store=True)
+    directorate_id = fields.Many2one('sanhrms.directorate', string='Direktorat', related='employee_id.directorate_id',
+                                     store=True)
     nik = fields.Char('NIK')
     job_id = fields.Many2one('hr.job', string='Job Position', index=True)
     is_selected = fields.Boolean('Select', default=False)
-    
+
     def btn_select_all(self):
         dt_emp = self.env['hr.employeedepartment.details'].sudo().search([('cari_id', '=', self.cari_id.id)])
         if dt_emp:
             dt_emp.write({
                 'is_selected': True
             })
-            

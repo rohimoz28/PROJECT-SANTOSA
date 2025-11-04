@@ -4,8 +4,13 @@ access_hr_tmsentry_users,access.hr.tmsentry.users,model_hr_tmsentry_summary,base
 access_hr_employeegroup_users,access.hr.employeegroup.users,model_hr_empgroup,base.group_user,1,1,1,1
 access_hr_employeegroup_details_users,access.hr.employeegroup.details.users,model_hr_empgroup_details,base.group_user,1,1,1,1
 
-access_hr_overtime_request_planning_users,access.hr.request.planning.users,model_hr_overtime_planning,base.group_user,1,1,1,1
-access_hr_overtime_employees_users,access.hr.overtime.employees.users,model_hr_overtime_employees,base.group_user,1,1,1,1
+access_overtime_staff,overtime.staff,model_hr_overtime_planning,sanbe_hr_tms.module_sub_category_overtime_request_staff,1,1,1,1
+access_overtime_supervisor,overtime.supervisor,model_hr_overtime_planning,sanbe_hr_tms.module_sub_category_overtime_request_supervisor,1,1,0,1
+access_overtime_manager,overtime.manager,model_hr_overtime_planning,sanbe_hr_tms.module_sub_category_overtime_request_manager,1,1,1,1
+
+access_hr_overtime_employees_staff,access.hr.overtime.employees..staff,model_hr_overtime_employees,sanbe_hr_tms.module_sub_category_overtime_request_staff,1,1,1,1
+access_hr_overtime_employees_supervisor,access.hr.overtime.employees..supervisor,model_hr_overtime_employees,sanbe_hr_tms.module_sub_category_overtime_request_supervisor,1,1,1,1
+access_hr_overtime_employees_manager,access.hr.overtime.employees..manager,model_hr_overtime_employees,sanbe_hr_tms.module_sub_category_overtime_request_manager,1,1,1,1
 
 access_hr_permission_entry_users,access.hr.permission.entry.users,model_hr_permission_entry,base.group_user,1,1,1,1
 
