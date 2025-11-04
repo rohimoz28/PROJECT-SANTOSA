@@ -9,9 +9,10 @@ class SuratIzipPraktek(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
 
-    sip_number = fields.Char(string='Nomor SIP / Sertipikasi', required=True, tracking=True)
+    sip_number = fields.Char(string='Nomor SIP', required=True, tracking=True)
     contract_type_id = fields.Many2one('hr.contract.type', "Tipe Kontrak", tracking=True)
     employee_id = fields.Many2one(comodel_name='hr.employee', string='Nama Karyawan', tracking=True)
+    employee_name = fields.Char('Nama Karyawan', related='employee_id.name', readonly=True, store=True) # untuk filter sip
     emp_selected_id = fields.Char(
         related='employee_id.employee_id',
         string='ID Karyawan',
