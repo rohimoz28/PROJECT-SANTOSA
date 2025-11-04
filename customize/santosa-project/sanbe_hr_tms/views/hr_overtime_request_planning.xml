@@ -5,134 +5,114 @@
             <field name="name">hr.overtime.planning.form</field>
             <field name="model">hr.overtime.planning</field>
             <field name="arch" type="xml">
-                <form string="Overtime Request" create="0">
+                <form string="Surat Perintah Lembur" create="0">
                 <!-- <sheet> -->
                     <header>
-                        <button string="Approved By HCM" name="btn_approved" type="object" class="oe_highlight" invisible="state != 'approved_pmr'" groups="sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
-                        <button string="Draft" name="btn_backdraft" type="object" invisible="state in ('draft', 'approved_mgr', 'approved_pmr')" groups="sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
-                        <button string="Approved By Manager" name="btn_approved_mgr" type="object" class="oe_highlight" invisible="state != 'draft'" groups="sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
-                        <button string="Approved By Plan Manager" name="btn_approved_pmr" type="object" class="oe_highlight" invisible="state != 'approved_mgr'" groups="sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
-                        <button string="Reject" name="btn_reject" type="object" class="btn-danger" invisible="state in ('reject', 'approved')" groups="sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
-                        <button name="btn_print_pdf" type="object" class="btn-bf" invisible="state in ('reject')" groups="sanbe_hr_tms.module_sub_category_overtime_request_manager">
+                        <button string="Draft" name="btn_backdraft" type="object" invisible="state not in ('done','reject')" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
+                        <button string="Approved" name="btn_approved_pmr" type="object" class="oe_highlight" invisible="state != 'draft'" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager"/>-->
+                        <button string="Approved" name="btn_approved_mgr" type="object" class="oe_highlight" invisible="state != 'approved_pmr'" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
+                        <button string="Verified" name="btn_verified" type="object" class="oe_highlight" invisible="state != 'approved_mgr'" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
+                        <button string="Approved" name="btn_approved" type="object" class="oe_highlight" invisible="state != 'verified'" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
+                        <button string="Complete" name="btn_complete" type="object" class="oe_highlight" invisible="state != 'approved'" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
+                        <!-- <button string="Done" name="btn_done" type="object" class="oe_highlight" invisible="state != 'approved'" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager"/> -->
+                        <!-- <button name="act_force_validate" string="Force Validate" type="object" class="btn-primary" groups="base.user_root"/> -->
+                        <button string="Reject" name="btn_reject" type="object" class="btn-danger" invisible="state in ('reject', 'approved')" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
+                        <button name="btn_print_pdf" type="object" class="btn-bf" invisible="state != 'approved'" groups="sanbe_hr_tms.module_sub_category_overtime_request_staff,sanbe_hr_tms.module_sub_category_overtime_request_manager">
                             <i class="fa fa-print"/> Print PDF
                         </button>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,done,reject"/>
+                        <field name="show_approval_l1_button" invisible="1"/>
+                        <field name="show_approval_l2_button" invisible="1"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,approved_pmr,approved_mgr,verified,approved,complete,done"/>
                     </header>
                     <!--<sheet>-->
-                    <group string="TMS Overtime Planning Entry" name="entry_planning">
+                    <group string="Surat Perintah Lembur" name="entry_planning">
                         <group>
                             <!-- <field name="area_id"
                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
                                    required="1"
                                    readonly="state == 'approved' or state == 'done'"  /> -->
-                            <field name="area_id" invisible="1" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
-                                   readonly="state == 'approved' or state == 'done'"  />
-                            <field name="branch_ids" invisible="1"/>
-                            <field name="alldepartment" invisible="1"/>
-                            <!-- <field name="branch_id"
+                            <field name="area_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" invisible="1"/>
+                            <field name="branch_id" required="1"
                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
-                                   readonly="state == 'approved' or state == 'done'" /> -->
-                            <field name="branch_id"
-                                   options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
-                                   readonly="state == 'approved' or state == 'done'" />
-                            <field name="department_id"
-                                   options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
-                                   readonly="state == 'approved' or state == 'done'" invisible="1"/>
-                            <field name="directorate_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" domain="['|',('branch_id','=',branch_id),('branch_id','=',False)]" readonly="state == 'approved' or state == 'done'"/>
-                            <field name="hrms_department_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" domain="[('directorate_id','=',directorate_id)]" readonly="state == 'approved' or state == 'done'"/>
-                            <field name="division_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" domain="[('department_id','=',hrms_department_id)]"         readonly="state == 'approved' or state == 'done'"/>
-                            <field name="approve1" readonly="state == 'done'"/>
-                            <field name="approve2" readonly="state == 'done'"/>
-                            <field name="approve3" readonly="state == 'done'"/>
+                                   readonly="state != 'draft'"/>
+                            <field name="directorate_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" domain="['|',('branch_id','=',branch_id),('branch_id','=',False)]" readonly="state != 'draft'" />
+                            <field name="hrms_department_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" domain="[('directorate_id','=',directorate_id)]" readonly="state != 'draft'" />
+                            <field name="division_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" domain="[('department_id','=',hrms_department_id)]" readonly="state != 'draft'" />
+                            <field name="employee_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" domain="[('state','=','approved'),('division_id','=',division_id)]" readonly="state != 'draft'"/>
+
+                            <label string="Approval L1" for="approverst_id"/>
+                            <div for="approverst_id" class="o_row">
+                                <field name="approve1" invisible="1"/>
+                                <field name="approverst_id"  options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"/>
+                            </div>
+                            <label string="Approval L2" for="approvernd_id"/>
+                            <div for="approverst_id" class="o_row">
+                                <field name="approve2" invisible="1"/>
+                                <field name="approvernd_id"  options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"/>
+                            </div>
+                            <label string="Approval HCM" for="approverhrd_id"/>
+                            <div for="approverhrd_id" class="o_row" 
+                                   readonly="state != 'draft'" >
+                                <field name="approve3" invisible="1"/>
+                                <field name="approverhrd_id" readonly="state != 'draft'" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"/>
+                            </div>
                         </group>
                         <group>
                             <field name="name"/>
-                            <field name="request_date" readonly="state == 'done'"/>
-                            <field name="periode_id" domain="[('state_process', '=', 'running')]"  readonly="state == 'approved' or state == 'done'" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"/>
-                            <!--field name="employee_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"/-->
-                            <field name="periode_from" readonly="state == 'done'"/>
-                            <field name="periode_to" readonly="state == 'done'"/>
+                            <field name="request_date" readonly="state != 'draft'"/>
+                            <field name="periode_id" domain="[('state_process', 'in', ('draft','running'))]"  readonly="state == 'approved' or state == 'done'"  options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" invisible="1"/>
+                            <field name="periode_from" readonly="state == 'approved' or state == 'done'"  />
+                            <field name="periode_to" string="Perintah Lembur Hingga" readonly="state == 'approved' or state == 'done'"  />
                         </group>
-                        <!-- <group>
-                            <field name="approve1" readonly="state == 'done'"/>
-                            <field name="approve2" readonly="state == 'done'"/>
-                            <field name="approve3" readonly="state == 'done'"/>
-                        </group> -->
-                        <group>
-                            <button name="action_search_employee" string="Search Employee"
-                                    type="object" class="oe_highlight" data-hotkey="q"
-                                    invisible="state == 'approved' or state == 'done'"/>
-                            <button name="action_generate_ot" string="Generate OT Request"
-                                    type="object" class="oe_highlight" data-hotkey="q"
-                                    invisible="state == 'approved' or state == 'done'"/>
-                        </group>
+                        <!-- format FEOR Berubah dari banyak employee ke generate berdasarkan filter menjadi per satu employee -->
+
+<!--                        <group>-->
+<!--                            <button name="action_search_employee" string="Search Employee"-->
+<!--                                    type="object" class="oe_highlight" data-hotkey="q"-->
+<!--                                    invisible="state == 'approved' or state == 'done'" groups="sanbe_hr_tms.module_sub_category_overtime_request_staff,sanbe_hr_tms.module_sub_category_overtime_request_manager"/>-->
+<!--                            <button name="action_generate_ot" string="Generate OT Request"-->
+<!--                                    type="object" class="oe_highlight" data-hotkey="q"-->
+<!--                                    invisible="state == 'approved' or state == 'done'" groups="sanbe_hr_tms.module_sub_category_overtime_request_staff,sanbe_hr_tms.module_sub_category_overtime_request_manager"/>-->
+<!--                        </group>-->
                     </group>
                     <notebook>
-                        <page string="Request" name="overtime_request">
-                            <field name="hr_ot_planning_ids" readonly="state == 'approved' or state == 'done'"
-                                   context="{'default_area_id': area_id, 'default_branch_id': branch_id, 'default_directorate_id': directorate_id, 'default_hrms_department_id': hrms_department_id, 'default_division_id': division_id}">
-                                <tree editable="bottom" create="false" delete="false">
-                                    <field name="ot_type" optional="show"/>
+                        <page string="Permintaan" name="overtime_request">
+                            <field name="hr_ot_planning_ids"  readonly="state == 'approved' or state == 'done'"  context="{'editable_in_readonly': True,'default_area_id': area_id, 'default_branch_id': branch_id, 'default_directorate_id': directorate_id, 'default_hrms_department_id': hrms_department_id, 'default_division_id': division_id}">
+                                <tree editable="bottom" class="o_horizontal_shift">
+                                    <field name="ot_type" readonly="state != 'draft'" optional="show" required="1"/>
                                     <field name="planning_id" column_invisible="1"/>
-                                    <field name="employee_ids" column_invisible="1"/>
-                                    <field name="employee_id"
-                                           options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" optional="show"/>
+                                    <field name="employee_id" readonly="1" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" optional="show"/>
                                     <field name="nik" readonly="1" force_save="1" optional="show"/>
-                                    <field name="plann_date_from" widget="date" optional="show"/>
-                                    <field name="plann_date_to" widget="date" optional="show"/>
-                                    <!-- <field name="ot_plann_from" widget="easy_timepicker"/>
-                                    <field name="ot_plann_to" widget="easy_timepicker"/>
-                                    <field name="approve_time_from" widget="easy_timepicker"/>
-                                    <field name="approve_time_to" widget="easy_timepicker"/> -->
-                                    <field name="ot_plann_from" widget="float_time" optional="show"/>
-                                    <field name="ot_plann_to" widget="float_time" optional="show"/>
-                                    <field name="approve_time_from" widget="float_time" optional="show"/>
-                                    <field name="approve_time_to" widget="float_time" optional="show"/>
-                                    <field name="machine" optional="show"/>
-                                    <field name="work_plann" optional="show"/>
-                                    <field name="output_plann" optional="show"/>
-                                    <field name="area_id"
-                                           options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
-                                           force_save="1" optional="show"/>
-                                    <field name="areah_id"
-                                           options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
-                                           column_invisible="1"/>
-                                    <field name="branch_ids"
-                                           options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
-                                           column_invisible="1"/>
-                                    <field name="branchh_id"
-                                           options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
-                                           column_invisible="1"/>
-                                    <field name="alldepartment"
-                                           options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
-                                           column_invisible="1"/>
-                                    <field name="departmenth_id"
-                                           options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
-                                           column_invisible="1"/>
-                                    <field name="branch_id" context="{'default_branch_id': branch_id}"
-                                           options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
-                                           force_save="1" optional="show"/>
-                                    <field name="department_id" context="{'default_department_id': department_id}"
-                                           options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
-                                           force_save="1" column_invisible="1"/>
-                                    <field name="directorate_id" context="{'default_directorate_id': directorate_id}" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" force_save="1" optional="show"/>
-                                    <field name="hrms_department_id" context="{'default_hrms_department_id': hrms_department_id}" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" force_save="1" optional="show"/>
-                                    <field name="division_id" context="{'default_division_id': division_id}" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" force_save="1" optional="show"/>
-                                    <field name="bundling_ot" optional="show"/>
-                                    <field name="transport" optional="show"/>
-                                    <field name="meals" optional="show"/>
-                                    <field name="meals_cash" optional="show"/>
+                                    <field name="max_ot" readonly="1" force_save="1" optional="show" widget="float_time"/>
+                                    <field name="plann_date_from" readonly="state != 'draft'" widget="date" optional="show"/>
+                                    <field name="ot_plann_from" readonly="state != 'draft'" string="Jam SPL Dari" widget="float_time" optional="show"/>
+                                    <field name="ot_plann_to" readonly="state != 'draft'" string="Jam SPL Hingga" widget="float_time" optional="show"/>
+                                    <field name="work_plann" force_save="1" readonly="state == 'approved' or state == 'done'" optional="show"/>
+                                    <field name="output_plann" force_save="1" readonly="state == 'approved' or state == 'done'" optional="show"/>
+                                    <field name="realization_date" readonly="1" string="Tanggal Hadir" widget="date" optional="show"/>
+                                    <field name="realization_time_from" widget="date" optional="show" readonly="1"/>
+                                    <field name="realization_time_to" widget="date" optional="show" readonly="1"/>
+                                    <field name="output_realization" optional="show"  readonly="state != 'approved_mgr'" />
+                                    <field name="verify_time_from" readonly="state != 'approved_mgr'" optional="show" widget="float_time"/>
+                                    <field name="verify_time_to" readonly="state != 'approved_mgr'" optional="show" widget="float_time"/>
+                                    <field name="approverst_id" string="Approver lt1" readonly="1" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" column_invisible="1"/>
+                                    <field name="approvernd_id" string="Approver lt2" readonly="1" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" column_invisible="1"/>
+                                    <field name="is_approval" optional="show" widget="badge" decoration-success="is_approval == 'approved'" decoration-danger="is_approval != 'approved'" on_change="1"/>
+                                    <field name="state" optional="hide" widget="badge"/>
+                                    <button string="Detail" name="act_detail" type="object"/>
                                 </tree>
                             </field>
                         </page>
+                        <page string="Approval" name="overtime_approval" invisible="1">
+                            <field name="list_approver_st_ids" readonly="1" widget="many2many_tags"/>
+                            <field name="list_approver_nd_ids" readonly="1" widget="many2many_tags"/>
+                        </page>
                     </notebook>
-                    <!--</sheet>-->
                     <div class="oe_chatter">
                         <field name="message_follower_ids"/>
                         <field name="activity_ids"/>
                         <field name="message_ids"/>
                     </div>
-                <!-- </sheet> -->
                 </form>
             </field>
         </record>
@@ -142,37 +122,112 @@
             <field name="model">hr.overtime.planning</field>
             <field name="arch" type="xml">
                 <tree string="Overtime Request" default_order="periode_id desc">
-                    <field name="area_id" optional="show"/>
+                    <field name="branch_id" optional="show"/>
                     <field name="name" optional="show"/>
                     <field name="request_date" optional="show"/>
-                    <field name="state" string="Status" optional="show"/>
                     <field name="department_id" column_invisible="1"/>
                     <field name="directorate_id" optional="show"/>
                     <field name="hrms_department_id" optional="show"/>
                     <field name="division_id" optional="show"/>
-                    <field name="branch_id" optional="show"/>
-                    <field name="periode_id" optional="show"/>
+                    <field name="employee_id" optional="show"/>
                     <field name="periode_from" optional="show"/>
                     <field name="periode_to" optional="show"/>
+                    <field name="state" string="Status" optional="show"/>
                 </tree>
             </field>
         </record>
 
 
+        <record id="hr_overtime_employees_form" model="ir.ui.view">
+            <field name="name">hr.overtime.employees.form</field>
+            <field name="model">hr.overtime.employees</field>
+            <field name="arch" type="xml">
+                <form string="Informasi Lembur karyawan" create="0">
+                    <group string="Informasi Lembur karyawan" name="group_ot_employee">
+                        <group>
+                            <field name="ot_type"/>
+                            <field name="employee_id" readonly="1"/>
+                            <field name="nik" />
+                            <field name="max_ot"/>
+                            <field name="plann_date_from"/>
+                            <label string="Jam SPL Dari" for="plann_date_from"/>
+                            <div for="plann_date_from" class="o_row">
+                                <field name="plann_date_from" widget="float_time"/>
+                                Hingga
+                                <field name="plann_date_to" widget="float_time"/>
+                            </div>
+                            <label string="Disetujui Lembur dari" for="ot_plann_from" invisible="1"/>
+                            <div for="ot_plann_from" class="o_row" invisible="1">
+                                <field name="ot_plann_from" widget="float_time"/>
+                                Hingga
+                                <field name="ot_plann_to" widget="float_time"/>
+                            </div>
+                            <field name="realization_date" string="Tanggal Hadir" readonly="1"/>
+                            <label string="Jam Hadir dari" for="realization_time_from"/>
+                            <div for="realization_time_from" class="o_row">
+                                <field name="realization_time_from" readonly="1" widget="float_time"/>
+                                Hingga
+                                <field name="realization_time_to" readonly="1" widget="float_time"/>
+                            </div>
+                            <label string="Verifikasi Jam dari" for="verify_time_from"/>
+                            <div for="verify_time_from" class="o_row">
+                                <field name="verify_time_from" widget="float_time"/>
+                                Hingga
+                                <field name="verify_time_to" widget="float_time"/>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="work_plann"/>
+                            <field name="output_plann"/>
+                            <field name="output_realization"/>
+                            <field name="explanation_deviation" invisible="1"/>
+                            <field name="branch_id"/>
+                            <field name="branch_ids" invisible="1"/>
+                            <field name="directorate_id"/>
+                            <field name="hrms_department_id"/>
+                            <field name="division_id"/>
+                            <field name="transport" invisible="1"/>
+                            <field name="route_id"  invisible="1"/>
+                            <field name="meals" invisible="1"/>
+                            <field name="meals_cash" invisible="1"/>
+                            <field name="is_approval" widget="radio" options="{'horizontal': true}"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
         <record id="action_hr_overtime_planning" model="ir.actions.act_window">
-            <field name="name">Overtime Request</field>
+            <field name="name">Surat Perintah Lembur</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.overtime.planning</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('branch_id', '=', uid.branch_id.id),('division_id', '=', uid.employee_id.division_id.id)]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Surat Perintah Lembur
+                </p>
+                <p>
+                    Buat Surat Perintah Lembur
+                </p>
+            </field>
+        </record>
+
+        <record id="action_hr_overtime_manager" model="ir.actions.act_window">
+            <field name="name">Surat Perintah Lembur</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.overtime.planning</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Overtime Request
+                    Surat Perintah Lembur
                 </p>
                 <p>
-                    Create New Overtime Request
+                    Buat Surat Perintah Lembur
                 </p>
             </field>
         </record>
+
 
     </data>
 </odoo>
