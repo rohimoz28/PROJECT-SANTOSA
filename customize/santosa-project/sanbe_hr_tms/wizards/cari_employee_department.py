@@ -78,7 +78,7 @@ class HrCariEmployeeDepartment(models.TransientModel):
     )
     default_ot_hours = fields.Selection(
         selection=OT_HOURS_SELECTION,
-        string='Default Jam OT')
+        string='Default Jam OT',store=True)
     # @api.models(self,vals)
     # def create(self)
 
