@@ -866,9 +866,10 @@ class ParentEmployee(models.Model):
 
 
     display_name = fields.Char(string='Cari', compute="_compute_display_name", store=True)
-    id = fields.Many2one('hr.employee', required=True)
-    employee_id = fields.Many2one('hr.employee', string='Employee', required=True)
-    name = fields.Char('Nama Karyawan', required=True)
+    id = fields.Many2one('hr.employee', required=True, store=True)
+    employee_id = fields.Many2one('hr.employee', string='Employee', required=True, store=True)
+    parent_id = fields.Many2one('parent.hr.employee', string='Atasan', required=True, store=True)
+    name = fields.Char('Nama Karyawan', required=True, store=True)
     nik = fields.Char('NIK Karyawan', required=True)
     company_id = fields.Many2one('res.company', string='Company')
     branch_id = fields.Many2one('res.branch', string='Unit Bisnis')
@@ -898,6 +899,7 @@ class ParentEmployee(models.Model):
                     id,
                     id AS employee_id,
                     name,
+                    parent_id,
                     nik,
                     company_id,
                     branch_id,
