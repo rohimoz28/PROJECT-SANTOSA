@@ -165,8 +165,8 @@ class HREmpOvertimeRequest(models.Model):
                         or user.has_group('sanbe_hr_tms.module_sub_category_overtime_request_manager') ):
                 if admin_user == user:
                     check = True
-                if user.has_group('sanbe_hr_tms.module_sub_category_overtime_request_manager'):
-                    check = True
+                # if user.has_group('sanbe_hr_tms.module_sub_category_overtime_request_manager'):
+                #     check = True
                 else:
                     if user.id == feor.user_approverst_id.id:
                         check = True
@@ -181,8 +181,8 @@ class HREmpOvertimeRequest(models.Model):
                     and (user.has_group('sanbe_hr_tms.module_sub_category_overtime_request_supervisor') ):
                 if admin_user == user:
                     check = True
-                if user.has_group('sanbe_hr_tms.module_sub_category_overtime_request_manager'):
-                    check = True
+                # if user.has_group('sanbe_hr_tms.module_sub_category_overtime_request_manager'):
+                #     check = True
                 else:
                     if user.id == feor.user_approvernd_id.id:
                         check = True
@@ -195,12 +195,11 @@ class HREmpOvertimeRequest(models.Model):
         admin_user = self.env.ref('base.user_root')
         for feor in self:
             if feor.state =='verified' \
-                    and (user.has_group('sanbe_hr_tms.module_sub_category_overtime_request_supervisor') \
-                        or user.has_group('sanbe_hr_tms.module_sub_category_overtime_request_manager') ):
+                    and user.has_group('sanbe_hr_tms.module_sub_category_overtime_request_supervisor') :
                 if admin_user == user:
                     check = True
-                if user.has_group('sanbe_hr_tms.module_sub_category_overtime_request_manager'):
-                    check = True
+                    # if user.has_group('sanbe_hr_tms.module_sub_category_overtime_request_manager'):
+                    #     check = True
                 else:
                     employee_user_ids = self.env['hr.employee'].browse(feor.approverhrd_id.id).id
                     if user.employee_id.id == employee_user_ids:
@@ -324,8 +323,8 @@ class HREmpOvertimeRequest(models.Model):
         self_employee = self.env.user.employee_id.id
         is_nd_approver = self_employee == self.approvernd_id.id
         for rec in self:
-            if self.env.user.has_group('sanbe_hr_tms.module_sub_category_overtime_request_manager'):
-                is_nd_approver = True
+            # if self.env.user.has_group('sanbe_hr_tms.module_sub_category_overtime_request_manager'):
+            #     is_nd_approver = True
             if is_nd_approver:
                 rec.approve2 = True
                 rec.state = 'approved_mgr'
@@ -344,25 +343,28 @@ class HREmpOvertimeRequest(models.Model):
     #         rec.state = 'done'
 
     def btn_verified(self):
+        self_employee = self.env.user.employee_id.id
+        is_st_approver = self_employee == self.approverst_id.id
         for rec in self:
-            rec.state = 'verified'
-            for line in rec.hr_ot_planning_ids:
-                if line.is_approval == 'reject':
-                    line.unlink()
+            if is_st_approver:
+                rec.state = 'verified'
+                for line in rec.hr_ot_planning_ids:
+                    if line.is_approval == 'reject':
+                        line.unlink()
 
     def btn_approved_pmr(self):
         self_employee = self.env.user.employee_id.id
         is_st_approver = self_employee == self.approverst_id.id
         is_nd_approver = self_employee == self.approvernd_id.id
         for rec in self:
-            if self.env.user.has_group('sanbe_hr_tms.module_sub_category_overtime_request_manager'):
-                is_st_approver = True
+            # if self.env.user.has_group('sanbe_hr_tms.module_sub_category_overtime_request_manager'):
+            #     is_st_approver = True
             # user_admin = self.env.ref('base.user_root')
             if is_st_approver:
                 rec.approve1 = True
                 rec.state = 'approved_pmr'
-                if is_nd_approver and is_st_approver:
-                    rec.btn_approved_mgr()
+                # if is_nd_approver and is_st_approver:
+                #     rec.btn_approved_mgr()
                 rec.show_approval_l1_button = False
             else:
                 raise UserError('You are not authorized to approve this request.')
@@ -495,7 +497,7 @@ class HREmpOvertimeRequestEmployee(models.Model):
     output_plann = fields.Char('Output SPL')
     output_realization = fields.Char('Hasil Realisasi')
     explanation_deviation = fields.Char('Explanation Deviation')
-    branch_id = fields.Many2one('res.branch', domain="[('id','in',branch_ids)]", string='Business Unit', index=True)
+    branch_id = fields.Many2one('res.branch', related='planning_id.branch_id', domain="[('id','in',branch_ids)]", string='Business Unit', index=True)
     department_id = fields.Many2one('hr.department', domain="[('id','in',alldepartment)]", string='Sub Department')
     bundling_ot = fields.Boolean(string="Bundling OT")
     transport = fields.Boolean('Transport')

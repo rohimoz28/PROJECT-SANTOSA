@@ -9,10 +9,10 @@
                 <!-- <sheet> -->
                     <header>
                         <button string="Draft" name="btn_backdraft" type="object" invisible="state not in ('done','reject')" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
-                        <button string="Approved" name="btn_approved_pmr" type="object" class="oe_highlight" invisible="state != 'draft'" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager"/>-->
-                        <button string="Approved" name="btn_approved_mgr" type="object" class="oe_highlight" invisible="state != 'approved_pmr'" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
-                        <button string="Verified" name="btn_verified" type="object" class="oe_highlight" invisible="state != 'approved_mgr'" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
-                        <button string="Approved" name="btn_approved" type="object" class="oe_highlight" invisible="state != 'verified'" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
+                        <button string="Approved L1" name="btn_approved_pmr" type="object" class="oe_highlight" invisible="state != 'draft'  and show_approval_l1_button == False" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager"/>-->
+                        <button string="Approved L2" name="btn_approved_mgr" type="object" class="oe_highlight" invisible="state != 'approved_pmr' and show_approval_l2_button == False" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
+                        <button string="Verified " name="btn_verified" type="object" class="oe_highlight" invisible="state != 'approved_mgr'" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
+                        <button string="Approved" name="btn_approved" type="object" class="oe_highlight" invisible="state != 'verified' and show_approval_button == False" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
                         <button string="Complete" name="btn_complete" type="object" class="oe_highlight" invisible="state != 'approved'" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
                         <!-- <button string="Done" name="btn_done" type="object" class="oe_highlight" invisible="state != 'approved'" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager"/> -->
                         <!-- <button name="act_force_validate" string="Force Validate" type="object" class="btn-primary" groups="base.user_root"/> -->
@@ -22,6 +22,7 @@
                         </button>
                         <field name="show_approval_l1_button" invisible="1"/>
                         <field name="show_approval_l2_button" invisible="1"/>
+                        <field name="show_approval_button" invisible="1"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,approved_pmr,approved_mgr,verified,approved,complete,done"/>
                     </header>
                     <!--<sheet>-->
@@ -142,44 +143,45 @@
             <field name="name">hr.overtime.employees.form</field>
             <field name="model">hr.overtime.employees</field>
             <field name="arch" type="xml">
-                <form string="Informasi Lembur karyawan" create="0">
-                    <group string="Informasi Lembur karyawan" name="group_ot_employee">
+                <form string="Informasi Lembur Karyawan" create="0">
+                    <group string="Informasi Lembur Karyawan" name="group_ot_employee">
                         <group>
+                            <field name="state" invisible="1"/>
                             <field name="ot_type"/>
                             <field name="employee_id" readonly="1"/>
-                            <field name="nik" />
+                            <field name="nik"/>
                             <field name="max_ot"/>
                             <field name="plann_date_from"/>
                             <label string="Jam SPL Dari" for="plann_date_from"/>
-                            <div for="plann_date_from" class="o_row">
-                                <field name="plann_date_from" widget="float_time"/>
+                            <div class="o_row">
+                                <field name="ot_plann_from"  widget="float_time"/>
                                 Hingga
-                                <field name="plann_date_to" widget="float_time"/>
+                                <field name="ot_plann_to"  widget="float_time"/>
                             </div>
                             <label string="Disetujui Lembur dari" for="ot_plann_from" invisible="1"/>
-                            <div for="ot_plann_from" class="o_row" invisible="1">
+                            <div class="o_row" invisible="1">
                                 <field name="ot_plann_from" widget="float_time"/>
                                 Hingga
                                 <field name="ot_plann_to" widget="float_time"/>
                             </div>
                             <field name="realization_date" string="Tanggal Hadir" readonly="1"/>
                             <label string="Jam Hadir dari" for="realization_time_from"/>
-                            <div for="realization_time_from" class="o_row">
+                            <div class="o_row">
                                 <field name="realization_time_from" readonly="1" widget="float_time"/>
                                 Hingga
                                 <field name="realization_time_to" readonly="1" widget="float_time"/>
                             </div>
                             <label string="Verifikasi Jam dari" for="verify_time_from"/>
-                            <div for="verify_time_from" class="o_row">
-                                <field name="verify_time_from" widget="float_time"/>
+                            <div class="o_row" readonly="state != 'approved_mgr'">
+                                <field name="verify_time_from" widget="float_time" readonly="state != 'approved_mgr'"/>
                                 Hingga
-                                <field name="verify_time_to" widget="float_time"/>
+                                <field name="verify_time_to" widget="float_time" readonly="state != 'approved_mgr'"/>
                             </div>
                         </group>
                         <group>
                             <field name="work_plann"/>
                             <field name="output_plann"/>
-                            <field name="output_realization"/>
+                            <field name="output_realization" readonly="state != 'approved_mgr'"/>
                             <field name="explanation_deviation" invisible="1"/>
                             <field name="branch_id"/>
                             <field name="branch_ids" invisible="1"/>
@@ -187,7 +189,7 @@
                             <field name="hrms_department_id"/>
                             <field name="division_id"/>
                             <field name="transport" invisible="1"/>
-                            <field name="route_id"  invisible="1"/>
+                            <field name="route_id" invisible="1"/>
                             <field name="meals" invisible="1"/>
                             <field name="meals_cash" invisible="1"/>
                             <field name="is_approval" widget="radio" options="{'horizontal': true}"/>
