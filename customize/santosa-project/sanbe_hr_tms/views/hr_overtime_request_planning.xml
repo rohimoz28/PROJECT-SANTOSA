@@ -9,10 +9,11 @@
                 <!-- <sheet> -->
                     <header>
                         <button string="Draft" name="btn_backdraft" type="object" invisible="state not in ('done','reject')" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
-                        <button string="Approved L1" name="btn_approved_pmr" type="object" class="oe_highlight" invisible="state != 'draft'  and show_approval_l1_button == False" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager"/>-->
-                        <button string="Approved L2" name="btn_approved_mgr" type="object" class="oe_highlight" invisible="state != 'approved_pmr' and show_approval_l2_button == False" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
-                        <button string="Verified " name="btn_verified" type="object" class="oe_highlight" invisible="state != 'approved_mgr'" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
-                        <button string="Approved" name="btn_approved" type="object" class="oe_highlight" invisible="state != 'verified' and show_approval_button == False" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
+                        
+                        <button string="Approved L1" name="btn_approved_l1" type="object" class="oe_highlight" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager" invisible="state != 'draft' or not show_approval_l1_button"/>
+                        <button string="Approved L2" name="btn_approved_l2" type="object" class="oe_highlight" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager" invisible="not show_approval_l2_button"/>
+                        <button string="Verified" name="btn_verified" type="object" class="oe_highlight" invisible="state != 'approved_l2' or not show_approval_l1_button" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
+                        <button string="Approved" name="btn_approved" type="object" class="oe_highlight" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager" invisible="state != 'verified' and not show_approval_button"/>
                         <button string="Complete" name="btn_complete" type="object" class="oe_highlight" invisible="state != 'approved'" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager"/>
                         <!-- <button string="Done" name="btn_done" type="object" class="oe_highlight" invisible="state != 'approved'" groups="sanbe_hr_tms.module_sub_category_overtime_request_supervisor,sanbe_hr_tms.module_sub_category_overtime_request_manager"/> -->
                         <!-- <button name="act_force_validate" string="Force Validate" type="object" class="btn-primary" groups="base.user_root"/> -->
@@ -23,7 +24,7 @@
                         <field name="show_approval_l1_button" invisible="1"/>
                         <field name="show_approval_l2_button" invisible="1"/>
                         <field name="show_approval_button" invisible="1"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,approved_pmr,approved_mgr,verified,approved,complete,done"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,approved_l1,approved_l2,verified,approved,complete,done"/>
                     </header>
                     <!--<sheet>-->
                     <group string="Surat Perintah Lembur" name="entry_planning">
@@ -93,9 +94,9 @@
                                     <field name="realization_date" readonly="1" string="Tanggal Hadir" widget="date" optional="show"/>
                                     <field name="realization_time_from" widget="date" optional="show" readonly="1"/>
                                     <field name="realization_time_to" widget="date" optional="show" readonly="1"/>
-                                    <field name="output_realization" optional="show"  readonly="state != 'approved_mgr'" />
-                                    <field name="verify_time_from" readonly="state != 'approved_mgr'" optional="show" widget="float_time"/>
-                                    <field name="verify_time_to" readonly="state != 'approved_mgr'" optional="show" widget="float_time"/>
+                                    <field name="output_realization" optional="show"  readonly="state != 'approved_l2'" />
+                                    <field name="verify_time_from" readonly="state != 'approved_l2'" optional="show" widget="float_time"/>
+                                    <field name="verify_time_to" readonly="state != 'approved_l2'" optional="show" widget="float_time"/>
                                     <field name="approverst_id" string="Approver lt1" readonly="1" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" column_invisible="1"/>
                                     <field name="approvernd_id" string="Approver lt2" readonly="1" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" column_invisible="1"/>
                                     <field name="is_approval" optional="show" widget="badge" decoration-success="is_approval == 'approved'" decoration-danger="is_approval != 'approved'" on_change="1"/>
@@ -172,16 +173,16 @@
                                 <field name="realization_time_to" readonly="1" widget="float_time"/>
                             </div>
                             <label string="Verifikasi Jam dari" for="verify_time_from"/>
-                            <div class="o_row" readonly="state != 'approved_mgr'">
-                                <field name="verify_time_from" widget="float_time" readonly="state != 'approved_mgr'"/>
+                            <div class="o_row" readonly="state != 'approved_l2'">
+                                <field name="verify_time_from" widget="float_time" readonly="state != 'approved_l2'"/>
                                 Hingga
-                                <field name="verify_time_to" widget="float_time" readonly="state != 'approved_mgr'"/>
+                                <field name="verify_time_to" widget="float_time" readonly="state != 'approved_l2'"/>
                             </div>
                         </group>
                         <group>
                             <field name="work_plann"/>
                             <field name="output_plann"/>
-                            <field name="output_realization" readonly="state != 'approved_mgr'"/>
+                            <field name="output_realization" readonly="state != 'approved_l2'"/>
                             <field name="explanation_deviation" invisible="1"/>
                             <field name="branch_id"/>
                             <field name="branch_ids" invisible="1"/>
