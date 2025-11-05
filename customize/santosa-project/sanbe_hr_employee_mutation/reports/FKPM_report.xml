@@ -20,7 +20,7 @@
     <field name="report_type">qweb-pdf</field>
     <field name="report_name">sanbe_hr_employee_mutation.fkpm_template</field>
     <field name="report_file">sanbe_hr_employee_mutation.fkpm_template</field>
-    <field name="print_report_name">'%s - %s' % (object.employee_name, object.name)</field>
+    <field name="print_report_name">'%s - %s' % (object.employee_id.name, object.name)</field>
     <field name="binding_model_id" ref="model_hr_employee_mutations"/>
     <field name="binding_type">report</field>
     <field name="paperformat_id" ref="sanbe_hr_employee_mutation.paperformat_fkpm_report"/>
