@@ -280,10 +280,7 @@
             <field name="model_id" ref="sanbe_hr_tms.model_hr_overtime_planning"/>
             <field name="global" eval="False"/>
             <field name="domain_force">[
-                ('branch_id', '=', user.branch_id.id),
-                '|',
-                ('division_id', '=', user.employee_id.division_id.id),
-                ('hrms_department_id', '=', user.employee_id.hrms_department_id.id)
+                ('create_uid', '=', user.id)
             ]</field>
             <field name="groups" eval="[(4, ref('sanbe_hr_tms.module_sub_category_overtime_request_staff'))]"/>
             <field name="perm_read" eval="True"/>
@@ -298,7 +295,10 @@
             <field name="model_id" ref="sanbe_hr_tms.model_hr_overtime_planning"/>
             <field name="global" eval="False"/>
             <field name="domain_force">[
-                ('branch_id', '=', user.branch_id.id)
+                ('branch_id', '=', user.branch_id.id),
+                '|','|',('approverst_user_id', '=', user.id),  
+                ('approvernd_user_id', '=', user.id),  
+                ('approverhrd_user_id', '=', user.id)
             ]</field>
             <field name="groups" eval="[(4, ref('sanbe_hr_tms.module_sub_category_overtime_request_supervisor'))]"/>
             <field name="perm_read" eval="True"/>
@@ -312,11 +312,10 @@
             <field name="name">Overtime Request - Manager</field>
             <field name="model_id" ref="sanbe_hr_tms.model_hr_overtime_planning"/>
             <field name="global" eval="False"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">[('branch_id', '=', user.branch_id.id)]</field>
             <field name="groups" eval="[
                 (4, ref('sanbe_hr_tms.module_sub_category_overtime_request_manager')),
-                (4, ref('base.group_system'))
-            ]"/>
+                                (4, ref('base.user_root'))]" />
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
@@ -324,14 +323,11 @@
         </record>
 
         <record id="hr_overtime_rule_employee_staff" model="ir.rule">
-            <field name="name">Overtime Request - Staff</field>
+            <field name="name">Overtime Request Employee - Staff</field>
             <field name="model_id" ref="sanbe_hr_tms.model_hr_overtime_employees"/>
             <field name="global" eval="False"/>
             <field name="domain_force">[
-                ('branch_id', '=', user.branch_id.id),
-                '|',
-                ('division_id', '=', user.employee_id.division_id.id),
-                ('hrms_department_id', '=', user.employee_id.hrms_department_id.id)
+                ('create_uid', '=', user.id)
             ]</field>
             <field name="groups" eval="[(4, ref('sanbe_hr_tms.module_sub_category_overtime_request_staff'))]"/>
             <field name="perm_read" eval="True"/>
@@ -342,12 +338,10 @@
 
         <!-- Supervisor Rule -->
         <record id="hr_overtime_rule_employee_supervisor" model="ir.rule">
-            <field name="name">Overtime Request - Supervisor</field>
+            <field name="name">Overtime Request Employee - Supervisor</field>
             <field name="model_id" ref="sanbe_hr_tms.model_hr_overtime_employees"/>
             <field name="global" eval="False"/>
-            <field name="domain_force">[
-                ('branch_id', '=', user.branch_id.id)
-            ]</field>
+            <field name="domain_force">[(1, '=', 1)]</field>
             <field name="groups" eval="[(4, ref('sanbe_hr_tms.module_sub_category_overtime_request_supervisor'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -357,13 +351,12 @@
 
         <!-- Manager Rule -->
         <record id="hr_overtime_rule_employee_Manager" model="ir.rule">
-            <field name="name">Overtime Request - Manager</field>
+            <field name="name">Overtime Request Employee - Manager</field>
             <field name="model_id" ref="sanbe_hr_tms.model_hr_overtime_employees"/>
             <field name="global" eval="False"/>
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="groups" eval="[
-                (4, ref('sanbe_hr_tms.module_sub_category_overtime_request_manager')),
-                (4, ref('base.group_system'))
+                (4, ref('sanbe_hr_tms.module_sub_category_overtime_request_manager'))
             ]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>

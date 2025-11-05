@@ -91,7 +91,7 @@
 
         <record model="res.groups" id="module_sub_category_overtime_request_supervisor" >
             <field name="name">Approval</field>
-            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_overtime_request_staff'))]"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_overtime_request"/>
         </record>
 

@@ -56,20 +56,28 @@
         />
 
         <menuitem
-                id="menu_hr_overtime_request_entry"
+                id="menu_hr_overtime_request_staff_entry"
                 name="Surat Perintah Lembur"
                 sequence="20"
                 parent="sanbe_hr_tms.hr_menu_tms_administration"
                 action="action_hr_overtime_planning"
-                groups="module_sub_category_overtime_request_staff"
+                groups="module_sub_category_overtime_request_staff,module_sub_category_overtime_request_manager"
         />
         <menuitem
-                id="menu_hr_overtime_request_entry"
+                id="menu_hr_overtime_request_administration_entry"
                 name="Surat Perintah Lembur"
                 sequence="20"
                 parent="sanbe_hr_tms.hr_menu_tms_administration"
                 action="action_hr_overtime_manager"
-                groups="module_sub_category_overtime_request_manager,module_sub_category_overtime_request"
+                groups="module_sub_category_overtime_request_manager"
+        />
+        <menuitem
+                id="menu_hr_overtime_request_manager_entry"
+                name="Surat Perintah Lembur"
+                sequence="20"
+                parent="sanbe_hr_tms.hr_menu_tms_administration"
+                action="action_hr_overtime_approver"
+                groups="module_sub_category_overtime_request"
         />
         <menuitem
                 id="menu_hr_permission_entry"
