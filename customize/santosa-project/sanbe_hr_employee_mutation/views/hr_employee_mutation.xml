@@ -115,6 +115,7 @@
                             <field name="service_speciality" options="{'no_create': True,'no_create_edit': True}" string = "Kategori Khusus" readonly="state in ['approved']"  force_save="1" invisible="service_type in ['conf']"/>
                             <field name="remarks" readonly="state in ['approved']" />
                             <field name="image" readonly="state in ['approved']" widget="many2many_binary" />
+                            <field name="service_employementstatus" invisible="1" force_save="1"/>
                         </group>
                         <group>
                             <field name="service_date" readonly="state in ['approved']" force_save="1" string="Tanggal Transaksi"/>
