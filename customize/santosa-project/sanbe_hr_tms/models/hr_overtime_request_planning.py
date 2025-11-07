@@ -113,7 +113,7 @@ class HREmpOvertimeRequest(models.Model):
         tracking=True,
         default='draft')
     periode_id = fields.Many2one('hr.opening.closing',string='Period',domain="[('branch_id','=',branch_id),('state','in',('draft','running'))]", index=True, default=_get_running_periode)
-    hr_ot_planning_ids = fields.One2many('hr.overtime.employees','planning_id',auto_join=True,index=True,required=True)
+    hr_ot_planning_ids = fields.One2many('hr.overtime.employees','planning_id', auto_join=True, index=True, required=True)
     employee_id = fields.Many2one('hr.employee', string='Nama Karyawan',)
     company_id = fields.Many2one('res.company', string="Company Name", index=True)
     request_day_name = fields.Char('Request Day Name', compute='_compute_req_day_name', store=True)
@@ -151,31 +151,41 @@ class HREmpOvertimeRequest(models.Model):
         admin_user = self.env.ref('base.user_root')
         current_employee = user.employee_id
         current_employee_id = current_employee.id if current_employee else False
-
         for rec in self:
             rec.show_approval_l1_button = False
             rec.show_approval_l2_button = False
             rec.show_approval_button = False
-        
+            if not rec.approverst_user_id :
+                rec.show_approval_l1_button = False
+            if not rec.approvernd_user_id :
+                rec.show_approval_l2_button = False
+            if not rec.approverhrd_user_id:
+                rec.show_approval_button = False
             approverst_employee_id = rec.approverst_id.id
             approvernd_employee_id = rec.approvernd_id.id
             approverhrd_employee_id = rec.approverhrd_id.id
-            has_supervisor_group = user.has_group('sanbe_hr_tms.module_sub_category_overtime_request_supervisor')
+            has_supervisor_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_supervisor')
+            has_namager_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_manager')
             is_approver_st = (current_employee_id and current_employee_id == approverst_employee_id)
-            if rec.state == 'draft' and has_supervisor_group:
-                if user == admin_user or is_approver_st:
-                    rec.show_approval_l1_button = True
-            if rec.state == 'approved_l2' and has_supervisor_group:
-                if user == admin_user or is_approver_st:
-                    rec.show_approval_l1_button = True
-            if rec.state == 'approved_l1' and has_supervisor_group:
-                is_approver_nd = (current_employee_id and current_employee_id == approvernd_employee_id)
-                if user == admin_user or is_approver_nd:
-                    rec.show_approval_l2_button = True
-            if rec.state == 'verified' and has_supervisor_group:
-                is_approver_hrd = (current_employee_id and current_employee_id == approverhrd_employee_id)
-                if user == admin_user or is_approver_hrd:
-                    rec.show_approval_button = True
+            if has_namager_group or has_supervisor_group:
+                if rec.state == 'draft' and has_supervisor_group:
+                    if user == admin_user or is_approver_st:
+                        rec.show_approval_l1_button = True
+                if rec.state == 'approved_l2' and has_supervisor_group:
+                    if user.id == admin_user.id or is_approver_st:
+                        rec.show_approval_l1_button = True
+                if rec.state == 'approved_l1' and has_supervisor_group:
+                    is_approver_nd = (current_employee_id and current_employee_id == approvernd_employee_id)
+                    if user.id == admin_user.id or is_approver_nd:
+                        rec.show_approval_l2_button = True
+                if rec.state == 'verified' and has_supervisor_group:
+                    is_approver_hrd = (current_employee_id and current_employee_id == approverhrd_employee_id)
+                    if user.id == admin_user.id:
+                        rec.show_approval_button = True
+                    elif is_approver_hrd:
+                        rec.show_approval_button = True
+                    else:
+                        rec.show_approval_button = True
 
     @api.onchange('periode_id')
     def _onchange_periode_id(self):
@@ -236,16 +246,23 @@ class HREmpOvertimeRequest(models.Model):
         return super(HREmpOvertimeRequest, self).create(vals_list)
     
     def btn_approved(self):
+        user = self.env.user
         admin_user = self.env.ref('base.user_root')
         self_employee = self.env.user.employee_id.id
         is_rd_approver = self_employee == self.approverhrd_id.id
+        has_supervisor_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_supervisor')
+        has_namager_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_manager')
         for rec in self:
             if rec.approve1 == True and rec.approve2 == True:
-                if self.env.user.has_group('sanbe_hr_tms.module_sub_category_overtime_request_manager'):
-                    is_rd_approver = True
-                if is_rd_approver or admin_user:
-                    rec.state = 'approved'
-                    rec.approve3 = True
+                if has_namager_group:
+                    # is_rd_approver = True
+                    if is_rd_approver or admin_user:
+                        rec.state = 'approved'
+                        rec.approve3 = True
+                elif has_supervisor_group:
+                    if is_rd_approver or admin_user:
+                        rec.state = 'approved'
+                        rec.approve3 = True
                 else:
                     raise UserError('You are not authorized to approve this request.')
             else:
@@ -277,17 +294,20 @@ class HREmpOvertimeRequest(models.Model):
     #         return 'draft,approved_mgr,approved_pmr,approved,done,reject'
 
     def btn_approved_l2(self):
+        user = self.env.user
         admin_user = self.env.ref('base.user_root')
         self_employee = self.env.user.employee_id.id
         is_nd_approver = self_employee == self.approvernd_id.id
+        has_supervisor_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_supervisor')
+        has_namager_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_manager')
         for rec in self:
-            if is_nd_approver  or admin_user:
-                rec.approve2 = True
-                rec.state = 'approved_l2'
-                rec.show_approval_l2_button = False 
+            if has_supervisor_group or has_namager_group:
+                if is_nd_approver  or admin_user:
+                    rec.approve2 = True
+                    rec.state = 'approved_l2'
+                    rec.show_approval_l2_button = False 
             else:
                 raise UserError('You are not authorized to approve this request.')
-
     def btn_complete(self):
         for rec in self:
             rec.state = 'complete'
@@ -295,17 +315,24 @@ class HREmpOvertimeRequest(models.Model):
 
 
     def btn_verified(self):
+        user = self.env.user
         admin_user = self.env.ref('base.user_root')
         self_employee = self.env.user.employee_id.id
         is_st_approver = self_employee == self.approverst_id.id
+        has_supervisor_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_supervisor')
+        has_namager_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_manager')
         for rec in self:
             if len(rec.hr_ot_planning_ids) == 0:
                 raise UserError('Tidak dapat memverifikasi permintaan lembur tanpa rincian karyawan.')
-            if is_st_approver or admin_user:
-                rec.state = 'verified'
+            if has_supervisor_group or has_namager_group:
                 for line in rec.hr_ot_planning_ids:
-                    if line.is_approval == 'reject':
-                        line.unlink()
+                    if not line.verify_time_from or not line.verify_time_to:   
+                        raise UserError('Tidak dapat memverifikasi permintaan lembur dengan rincian karyawan yang belum diverifikasi waktu lemburnya.') 
+                if is_st_approver or admin_user:
+                    rec.state = 'verified'
+                    for line in rec.hr_ot_planning_ids:
+                        if line.is_approval == 'reject':
+                            line.unlink()
 
     def btn_approved_l1(self):
         admin_user = self.env.ref('base.user_root')
@@ -314,6 +341,11 @@ class HREmpOvertimeRequest(models.Model):
         for rec in self:
             if len(rec.hr_ot_planning_ids) == 0:
                 raise UserError('Tidak dapat memverifikasi permintaan lembur tanpa rincian karyawan.')
+            for line in rec.hr_ot_planning_ids:
+                    if not line.output_plann or not line.verify_time_to:   
+                        raise UserError('Tidak dapat memproses permintaan lembur dengan tanpa rencana lembur.') 
+            if len(rec.hr_ot_planning_ids) == 0:
+                raise UserError('Tidak dapat memproses permintaan lembur tanpa rincian karyawan.')
             if is_st_approver or admin_user:
                 rec.approve1 = True
                 rec.state = 'approved_l1'
@@ -332,30 +364,30 @@ class HREmpOvertimeRequest(models.Model):
     def btn_print_pdf(self):
         return self.env.ref('sanbe_hr_tms.overtime_request_report').report_action(self)        
 
-    def action_search_employee(self):
-        wizard = self.env['hr.employeedepartment'].create({
-                    'plan_id': self.id,
-                    'modelname':'hr.overtime.planning',
-                    'area_id':self.area_id.id,
-                    'branch_id':self.branch_id.id,
-                    'department_id':self.department_id.id,
-                    'division_id':self.division_id.id,
-                    'hrms_department_id':self.hrms_department_id.id,
-                    'directorate_id':self.directorate_id.id,
-                    })
-        emp_line = self.env['hr.employeedepartment.details'].search([('cari_id','=',wizard.id)])
-        if not emp_line:
-            wizard._isi_employee()
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Search Employee'),
-            'res_model': 'hr.employeedepartment',
-            'view_mode': 'form',
-            'target': 'new',
-            'res_id': wizard.id,
-            'domain': [('division_id', '=', self.division_id.id),('hrms_department_id', '=', self.hrms_department_id.id),('directorate_id', '=', self.directorate_id.id)],
-            'views': [[False, 'form']]
-        }
+    # def action_search_employee(self):
+    #     wizard = self.env['hr.employeedepartment'].create({
+    #                 'plan_id': self.id,
+    #                 'modelname':'hr.overtime.planning',
+    #                 'area_id':self.area_id.id,
+    #                 'branch_id':self.branch_id.id,
+    #                 'department_id':self.department_id.id,
+    #                 'division_id':self.division_id.id,
+    #                 'hrms_department_id':self.hrms_department_id.id,
+    #                 'directorate_id':self.directorate_id.id,
+    #                 })
+    #     emp_line = self.env['hr.employeedepartment.details'].search([('cari_id','=',wizard.id)])
+    #     if not emp_line:
+    #         wizard._isi_employee()
+    #     return {
+    #         'type': 'ir.actions.act_window',
+    #         'name': _('Search Employee'),
+    #         'res_model': 'hr.employeedepartment',
+    #         'view_mode': 'form',
+    #         'target': 'new',
+    #         'res_id': wizard.id,
+    #         'domain': [('division_id', '=', self.division_id.id),('hrms_department_id', '=', self.hrms_department_id.id),('directorate_id', '=', self.directorate_id.id)],
+    #         'views': [[False, 'form']]
+        # }
 
     def action_generate_ot(self):
         try:
