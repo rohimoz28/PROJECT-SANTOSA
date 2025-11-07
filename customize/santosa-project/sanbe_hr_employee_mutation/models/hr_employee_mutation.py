@@ -55,9 +55,7 @@ class HrEmployeeMutation(models.Model):
                                    ('visitor', 'Visitor'),
                                    ], default='contract', tracking=True, related="employee_id.job_status", string='Status Hubungan Kerja')
     emp_status = fields.Selection(related='employee_id.emp_status', string='Status Karyawan', store=True)
-    emp_status_otheremp_status_actv = fields.Selection(selection=[('', ''),
-                                                                  ('confirmed', 'Confirmed')], 
-                                                       string='Status Karyawan', store=True)
+
     emp_status_other = fields.Selection(selection=[('', ''),
                                                    ('confirmed', 'Confirmed')], 
                                         string='Status Karyawan', store=True)
@@ -114,7 +112,7 @@ class HrEmployeeMutation(models.Model):
                                                   ('resigned', 'Resigned'),
                                                   ('retired', 'Retired'),
                                                   ('terminated', 'Terminated')],
-                                                 string='Status Kekaryawanan')
+                                                 string='Status Kekaryawanan', store=True)
     service_empgroup1 = fields.Selection(selection=[('Group1', 'Group 1 - Harian(pak Deni)'),
                                                     ('Group2', 'Group 2 - bulanan pabrik(bu Felisca)'),
                                                     ('Group3', 'Group 3 - Apoteker and Mgt(pak Ryadi)'),
@@ -185,24 +183,32 @@ class HrEmployeeMutation(models.Model):
     def button_approve(self):
         self.ensure_one()
         # self._update_employee_status()
-        self.env['hr.employment.log'].sudo().create({'employee_id': self.employee_id.id,
-                                                     'service_type': self.service_type.upper(),
-                                                     'start_date': self.service_start,
-                                                     'end_date': self.service_end,
-                                                     'area': self.service_area.id,
-                                                     'bisnis_unit': self.service_bisnisunit.id,
-                                                     'directorate_id': self.service_directorate_id.id,
-                                                     'hrms_department_id': self.service_departmentid.id,
-                                                     'division_id': self.service_division_id.id,
-                                                     'job_title': self.service_jobtitle.name,
-                                                     'parent_id': self.service_parent_id.id,
-                                                     'job_status': self.service_jobstatus,
-                                                     'emp_status': self.service_employementstatus,
-                                                     'model_name': 'hr.employee.mutations',
-                                                     'model_id': self.id,
-                                                     'trx_number': self.name,
-                                                     'doc_number': self.letter_no,
-                                                     })
+
+        # _logger.warning("=== Creating employment log (raw service_employementstatus) === %s", self.service_employementstatus)
+        # _logger.warning("=== FIELDS ON RECORD: %s", self.read()[0])
+
+        emp_status_value = self.service_employementstatus or self.emp_status or False
+        # _logger.info("Computed emp_status for employment.log: %s", emp_status_value)
+
+        self.env['hr.employment.log'].sudo().create({
+            'employee_id': self.employee_id.id,
+            'service_type': self.service_type.upper(),
+            'start_date': self.service_start,
+            'end_date': self.service_end,
+            'area': self.service_area.id,
+            'bisnis_unit': self.service_bisnisunit.id,
+            'directorate_id': self.service_directorate_id.id,
+            'hrms_department_id': self.service_departmentid.id,
+            'division_id': self.service_division_id.id,
+            'job_title': (self.service_jobtitle.name if self.service_jobtitle else False),
+            'parent_id': self.service_parent_id.id,
+            'job_status': self.service_jobstatus,
+            'emp_status': emp_status_value,
+            'model_name': 'hr.employee.mutations',
+            'model_id': self.id,
+            'trx_number': self.name,
+            'doc_number': self.letter_no,
+        })
 
         
         if self.service_area.id != self.employee_id.area.id:
@@ -509,6 +515,9 @@ class HrEmployeeMutation(models.Model):
                 new_emp_status_id = self.env['hr.emp.status'].sudo().search([('emp_status', '=', self.emp_status),('status', '=', False)])
                 if new_emp_status_id:
                     record.employee_id.sudo().write({'emp_status_id': new_emp_status_id.id})
+
+            if record.emp_status_other and record.employee_id:
+                record.service_employementstatus = self.emp_status
 
 
     @api.model
