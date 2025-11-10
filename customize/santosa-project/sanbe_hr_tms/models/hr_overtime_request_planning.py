@@ -312,7 +312,7 @@ class HREmpOvertimeRequest(models.Model):
                 if not employee.parent_id.user_id:
                     raise UserError('Atasan Langsung karyawan belum memiliki user login. Silakan hubungi Administrator.')
                 if not employee.coach_id.user_id:
-                    if not employee.parent_id.parent_id.user_id:
+                    if not self.env['hr.employee'].browse(employee.parent_id).parent_id.user_id:
                         if not employee.parent_id.user_id:
                             raise UserError('Atasan langsung karyawan belum memiliki user login. Silakan hubungi Administrator.')
                 if not approverhrd.user_id:
