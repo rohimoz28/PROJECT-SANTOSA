@@ -69,7 +69,7 @@
                                    options="{'no_create': True,'no_create_edit': True}"
                                    string="Nama Karyawan"
                                    required="1"/>
-                            <field name="emp_id" force_save="1"/>
+                            <field name="emp_id" readonly="1" force_save="1"/>
                             <field name="nik" readonly="1" force_save="1" />
                             <field name="nik_lama" readonly="1" force_save="1" string="NIK Lama"/>
                             <field name="emp_status" readonly="1" force_save="1" />
@@ -96,8 +96,9 @@
                     <group name="emp_service_det" string="Detail Mutasi">
                         <group>
                             <field name="service_type" readonly="state in ['approved']" required="1"/>
+                            <field name="emp_status_to_corr" invisible="service_type not in ['corr']" readonly="state in ['approved']" string="Status Karyawan" force_save="1" required="service_type in ['corr']" placeholder="Wajib diisi"/>
                             <field name="emp_status_other" invisible="service_type not in ['conf']" readonly="state in ['approved']" string="Status Karyawan" force_save="1" required="service_type in ['conf']" placeholder="Wajib diisi"/>
-                            <field name="emp_status_actv" invisible="service_type not in ['corr','actv']" string="Status Karyawan" readonly="state in ['approved']" force_save="1" required="service_type in ['corr', 'actv']" placeholder="Wajib diisi"/>
+                            <field name="emp_status_actv" invisible="service_type not in ['actv']" string="Status Karyawan" readonly="state in ['approved']" force_save="1" required="service_type in ['actv']" placeholder="Wajib diisi"/>
                             <field name="service_name" invisible="service_type not in ['corr']" readonly="state in ['approved']" force_save="1" required="service_type in ['corr']" placeholder="Wajib diisi"/>
                             <field name="service_previous_name" invisible="service_type not in ['corr']" readonly="1" force_save="1" required="service_type in ['corr']" placeholder="Wajib diisi"/>
                             <field name="join_date" invisible="service_type not in ['corr']"  readonly="state in ['approved']" string="Tanggal Bergabung" required="service_type in ['corr']" placeholder="Wajib diisi"/>

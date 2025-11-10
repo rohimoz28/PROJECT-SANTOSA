@@ -55,7 +55,10 @@ class HrEmployeeMutation(models.Model):
                                    ('visitor', 'Visitor'),
                                    ], default='contract', tracking=True, related="employee_id.job_status", string='Status Hubungan Kerja')
     emp_status = fields.Selection(related='employee_id.emp_status', string='Status Karyawan', store=True)
-
+    emp_status_to_corr = fields.Selection([('probation', 'Probation'),
+                                          ('confirmed', 'Confirmed'),
+                                          ], string='Employment Status', compute='_compute_emp_status', store=True,
+                                         tracking=True)
     emp_status_other = fields.Selection(selection=[('', ''),
                                                    ('confirmed', 'Confirmed')], 
                                         string='Status Karyawan', store=True)
@@ -182,33 +185,26 @@ class HrEmployeeMutation(models.Model):
 
     def button_approve(self):
         self.ensure_one()
-        # self._update_employee_status()
+        self._update_employee_status()
 
-        # _logger.warning("=== Creating employment log (raw service_employementstatus) === %s", self.service_employementstatus)
-        # _logger.warning("=== FIELDS ON RECORD: %s", self.read()[0])
-
-        emp_status_value = self.service_employementstatus or self.emp_status or False
-        # _logger.info("Computed emp_status for employment.log: %s", emp_status_value)
-
-        self.env['hr.employment.log'].sudo().create({
-            'employee_id': self.employee_id.id,
-            'service_type': self.service_type.upper(),
-            'start_date': self.service_start,
-            'end_date': self.service_end,
-            'area': self.service_area.id,
-            'bisnis_unit': self.service_bisnisunit.id,
-            'directorate_id': self.service_directorate_id.id,
-            'hrms_department_id': self.service_departmentid.id,
-            'division_id': self.service_division_id.id,
-            'job_title': (self.service_jobtitle.name if self.service_jobtitle else False),
-            'parent_id': self.service_parent_id.id,
-            'job_status': self.service_jobstatus,
-            'emp_status': emp_status_value,
-            'model_name': 'hr.employee.mutations',
-            'model_id': self.id,
-            'trx_number': self.name,
-            'doc_number': self.letter_no,
-        })
+        self.env['hr.employment.log'].sudo().create({'employee_id': self.employee_id.id,
+                                                     'service_type': self.service_type.upper(),
+                                                     'start_date': self.service_start,
+                                                     'end_date': self.service_end,
+                                                     'area': self.service_area.id,
+                                                     'bisnis_unit': self.service_bisnisunit.id,
+                                                     'directorate_id': self.service_directorate_id.id,
+                                                     'hrms_department_id': self.service_departmentid.id,
+                                                     'division_id': self.service_division_id.id,
+                                                     'job_title': (self.service_jobtitle.name if self.service_jobtitle else False),
+                                                     'parent_id': self.service_parent_id.id,
+                                                     'job_status': self.service_jobstatus,
+                                                     'emp_status': self.service_employementstatus,
+                                                     'model_name': 'hr.employee.mutations',
+                                                     'model_id': self.id,
+                                                     'trx_number': self.name,
+                                                     'doc_number': self.letter_no,
+                                                     })
 
         
         if self.service_area.id != self.employee_id.area.id:
@@ -240,13 +236,16 @@ class HrEmployeeMutation(models.Model):
         if self.service_coach_id != self.employee_id.coach_id.id:
             self.employee_id.write({'coach_id': self.service_coach_id})
 
-        if self.service_type == 'conf':
-            self.employee_id.write({'emp_status': 'confirmed'})
-        elif self.service_type in ['actv','corr']:
-            if self.emp_status_actv != self.employee_id.emp_status:
-                self.employee_id.write({'emp_status': self.emp_status_actv})
-        else:            
-            self.employee_id.write({'emp_status': 'confirmed'})
+        # if self.service_type == 'conf':
+        #     self.employee_id.write({'emp_status': self.emp_status_other})
+        # elif self.service_type in ['actv','corr']:
+        #     if self.emp_status_actv != self.employee_id.emp_status:
+        #         self.employee_id.write({'emp_status': self.emp_status_actv})
+        # else:
+        #     self.employee_id.write({'emp_status': 'confirmed'})
+
+        if self.service_employementstatus != self.employee_id.emp_status:
+            employee.write({'emp_status': self.service_employementstatus})
 
         if self.service_jobtitle.id != self.employee_id.job_id.id:
             self.employee_id.write({'job_id': self.service_jobtitle.id})
@@ -368,20 +367,20 @@ class HrEmployeeMutation(models.Model):
                 record.service_work_unit = employee.work_unit
                 record.service_work_unit_id = employee.work_unit_id.id
                 record.service_coach_id = employee.coach_id.id
-                record.service_employementstatus = 'confirmed'
+                record.service_employementstatus = record.emp_status_other
                 record.service_status = 'Draft'
 
             elif record.service_type in ['prom', 'demo', 'rota']:
                 record.join_date = employee.join_date
                 record.service_birthday = employee.birthday
                 record.marital = employee.marital
-                record.service_employee_levels = False
+                record.service_employee_levels = employee.employee_levels.id
                 record.service_identification = employee.identification_id
                 record.service_nik = str(str(employee.nik).replace("('", '')).replace("')", "")
                 record.service_nik_lama = str(str(employee.nik_lama).replace("('", '')).replace("')", "")
                 record.service_no_npwp = employee.no_npwp
                 record.service_no_ktp = employee.no_ktp
-                record.service_employee_group1s = False
+                record.service_employee_group1s = employee.employee_group1s.id
                 record.service_name = employee.name
                 record.service_previous_name = employee.name
                 record.service_medic = employee.medic.id
@@ -389,12 +388,12 @@ class HrEmployeeMutation(models.Model):
                 record.service_speciality = employee.seciality.id
                 record.service_area = employee.area.id
                 record.service_bisnisunit = employee.hrms_department_id.branch_id.id or employee.branch_id.id
-                record.service_directorate_id = False
-                record.service_departmentid = False
-                record.service_division_id = False
-                record.service_jobtitle = False
+                record.service_directorate_id = employee.directorate_id.id
+                record.service_departmentid = employee.hrms_department_id.id
+                record.service_division_id = employee.division_id.id
+                record.service_jobtitle = employee.job_id.id
                 record.service_parent_id = employee.parent_id.id
-                record.service_jobstatus = False
+                record.service_jobstatus = employee.job_status
                 record.service_work_unit = employee.work_unit
                 record.service_work_unit_id = employee.work_unit_id.id
                 record.service_coach_id = employee.coach_id.id
@@ -405,26 +404,26 @@ class HrEmployeeMutation(models.Model):
                 record.join_date = employee.join_date
                 record.service_birthday = employee.birthday
                 record.marital = employee.marital
-                record.service_employee_levels = False
+                record.service_employee_levels = employee.employee_levels.id
                 record.service_identification = employee.identification_id
                 record.service_nik = str(str(employee.nik).replace("('", '')).replace("')", "")
                 record.service_nik_lama = str(str(employee.nik_lama).replace("('", '')).replace("')", "")
                 record.service_no_npwp = employee.no_npwp
                 record.service_no_ktp = employee.no_ktp
-                record.service_employee_group1s = False
+                record.service_employee_group1s = employee.employee_group1s.id
                 record.service_name = employee.name
                 record.service_previous_name = employee.name
                 record.service_medic = employee.medic.id
                 record.service_nurse = employee.nurse.id
                 record.service_speciality = employee.seciality.id
-                record.service_area = False
-                record.service_bisnisunit = False
-                record.service_directorate_id = False
-                record.service_departmentid = False
-                record.service_division_id = False
-                record.service_jobtitle = False
-                record.service_parent_id = False
-                record.service_jobstatus = False
+                record.service_area = employee.area.id
+                record.service_bisnisunit = employee.hrms_department_id.branch_id.id or employee.branch_id.id
+                record.service_directorate_id = employee.directorate_id.id
+                record.service_departmentid = employee.hrms_department_id.id
+                record.service_division_id = employee.division_id.id
+                record.service_jobtitle = employee.job_id.id
+                record.service_parent_id = employee.parent_id.id
+                record.service_jobstatus = employee.job_status
                 record.service_work_unit = employee.work_unit
                 record.service_work_unit_id = employee.work_unit_id.id
                 record.service_coach_id = employee.coach_id.id
@@ -435,60 +434,60 @@ class HrEmployeeMutation(models.Model):
                 record.join_date = employee.join_date
                 record.service_birthday = employee.birthday
                 record.marital = employee.marital
-                record.service_employee_levels = False
-                record.service_identification = False
+                record.service_employee_levels = employee.employee_levels.id
+                record.service_identification = employee.identification_id
                 record.service_nik = str(str(employee.nik).replace("('", '')).replace("')", "")
                 record.service_nik_lama = str(str(employee.nik_lama).replace("('", '')).replace("')", "")
                 record.service_no_npwp = employee.no_npwp
                 record.service_no_ktp = employee.no_ktp
-                record.service_employee_group1s = False
+                record.service_employee_group1s = employee.employee_group1s.id
                 record.service_name = employee.name
                 record.service_previous_name = employee.name
                 record.service_medic = employee.medic.id
                 record.service_nurse = employee.nurse.id
                 record.service_speciality = employee.seciality.id
-                record.service_area = False
-                record.service_bisnisunit = False
-                record.service_directorate_id = False
-                record.service_departmentid = False
-                record.service_division_id = False
-                record.service_jobtitle = False
-                record.service_parent_id = False
-                record.service_jobstatus = False
+                record.service_area = employee.area.id
+                record.service_bisnisunit = employee.hrms_department_id.branch_id.id or employee.branch_id.id
+                record.service_directorate_id = employee.directorate_id.id
+                record.service_departmentid = employee.hrms_department_id.id
+                record.service_division_id = employee.division_id.id
+                record.service_jobtitle = employee.job_id.id
+                record.service_parent_id = employee.parent_id.id
+                record.service_jobstatus = employee.job_status
                 record.service_work_unit = employee.work_unit
                 record.service_work_unit_id = employee.work_unit_id.id
                 record.service_coach_id = employee.coach_id.id
-                record.service_employementstatus = 'confirmed'
+                record.service_employementstatus = record.emp_status_actv
                 record.service_status = 'Draft'
         
             elif record.service_type in ['corr']:
-                record.join_date = False
-                record.service_birthday = False
-                record.marital = False
-                record.service_employee_levels = False
-                record.service_identification = False
+                record.join_date = employee.join_date
+                record.service_birthday = employee.birthday
+                record.marital = employee.marital
+                record.service_employee_levels = employee.employee_levels.id
+                record.service_identification = employee.identification_id
                 record.service_nik = str(str(employee.nik).replace("('", '')).replace("')", "")
                 record.service_nik_lama = str(str(employee.nik_lama).replace("('", '')).replace("')", "")
                 record.service_no_npwp = employee.no_npwp
                 record.service_no_ktp = employee.no_ktp
-                record.service_employee_group1s = False
+                record.service_employee_group1s = employee.employee_group1s.id
                 record.service_name = employee.name
                 record.service_previous_name = employee.name
                 record.service_medic = employee.medic.id
                 record.service_nurse = employee.nurse.id
                 record.service_speciality = employee.seciality.id
-                record.service_area = False
-                record.service_bisnisunit = False
-                record.service_directorate_id = False
-                record.service_departmentid = False
-                record.service_division_id = False
-                record.service_jobtitle = False
-                record.service_parent_id = False
-                record.service_jobstatus = False
+                record.service_area = employee.area.id
+                record.service_bisnisunit = employee.hrms_department_id.branch_id.id or employee.branch_id.id
+                record.service_directorate_id = employee.directorate_id.id
+                record.service_departmentid = employee.hrms_department_id.id
+                record.service_division_id = employee.division_id.id
+                record.service_jobtitle = employee.job_id.id
+                record.service_parent_id = employee.parent_id.id
+                record.service_jobstatus = employee.job_status
                 record.service_work_unit = employee.work_unit
                 record.service_work_unit_id = employee.work_unit_id.id
                 record.service_coach_id = employee.coach_id.id
-                record.service_employementstatus = 'confirmed'
+                record.service_employementstatus = record.emp_status_to_corr
                 record.service_status = 'Draft'        
 
 
@@ -507,18 +506,23 @@ class HrEmployeeMutation(models.Model):
 
     def pencarian_data(self):
         return
-    
+
     def _update_employee_status(self):
         for record in self:
-            if record.emp_status and record.employee_id:
-                record.service_employementstatus = self.emp_status
-                new_emp_status_id = self.env['hr.emp.status'].sudo().search([('emp_status', '=', self.emp_status),('status', '=', False)])
+            if record.emp_status_to_corr and record.employee_id:
+                record.service_employementstatus = self.emp_status_to_corr
+                new_emp_status_id = self.env['hr.emp.status'].sudo().search(
+                    [('emp_status', '=', self.emp_status_to_corr), ('status', '=', False)])
                 if new_emp_status_id:
                     record.employee_id.sudo().write({'emp_status_id': new_emp_status_id.id})
 
-            if record.emp_status_other and record.employee_id:
-                record.service_employementstatus = self.emp_status
-
+    @api.depends('emp_status_actv', 'emp_status_other', 'service_type')
+    def _compute_emp_status(self):
+        for rec in self:
+            if rec.service_type in ['actv']:
+                rec.emp_status_to_corr = rec.emp_status_actv
+            elif rec.service_type not in ['actv', 'corr']:
+                rec.emp_status_to_corr = rec.emp_status_other
 
     @api.model
     def create(self, vals):
