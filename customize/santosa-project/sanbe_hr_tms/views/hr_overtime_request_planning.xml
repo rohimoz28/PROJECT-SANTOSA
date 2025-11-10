@@ -46,20 +46,20 @@
                             <div for="approverst_id" class="o_row">
                                 <field name="approve1" invisible="1"/>
                                 <field name="approverst_id"  options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"/>
-                                <!-- <field name="approver1_id"  options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"  invisible="1"/> -->
+                                <field name="approver1_id"  options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"  invisible="1"/>
                             </div>
                             <label string="Approval L2" for="approvernd_id"/>
                             <div for="approverst_id" class="o_row">
                                 <field name="approve2" invisible="1"/>
                                 <field name="approvernd_id"  options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"/>
-                                <!-- <field name="approver2_id"  options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"  invisible="1"/> -->
+                                <field name="approver2_id"  options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"  invisible="1"/>
                             </div>
                             <label string="Approval HCM" for="approverhrd_id"/>
                             <div for="approverhrd_id" class="o_row" 
                                    readonly="state != 'draft'" >
                                 <field name="approve3" invisible="1"/>
                                 <field name="approverhrd_id" readonly="state != 'draft'" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"/>
-                                <!-- <field name="approver3_id"  options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"  invisible="1"/> -->
+                                <field name="approver3_id"  options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"  invisible="1"/>
                             </div>
                         </group>
                         <group>
@@ -92,8 +92,8 @@
                                     <field name="plann_date_from" readonly="state != 'draft'" widget="date" optional="show"/>
                                     <field name="ot_plann_from" readonly="state != 'draft'" string="Jam SPL Dari" widget="float_time" optional="show"/>
                                     <field name="ot_plann_to" readonly="state != 'draft'" string="Jam SPL Hingga" widget="float_time" optional="show"/>
-                                    <field name="work_plann" force_save="1" readonly="state in ('draft','approved_l1')" optional="show"/>
-                                    <field name="output_plann" force_save="1" readonly="state in ('draft','approved_l1')" optional="show"/>
+                                    <field name="work_plann" force_save="1" readonly="state not in ('draft','approved_l1')" optional="show"/>
+                                    <field name="output_plann" force_save="1" readonly="state not in ('draft','approved_l1')" optional="show"/>
                                     <field name="realization_date" readonly="1" string="Tanggal Hadir" widget="date" optional="show"/>
                                     <field name="realization_time_from" widget="date" optional="show" readonly="1"/>
                                     <field name="realization_time_to" widget="date" optional="show" readonly="1"/>
