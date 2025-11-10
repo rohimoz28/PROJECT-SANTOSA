@@ -286,7 +286,7 @@
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
         </record>
 
         <!-- Supervisor Rule -->
@@ -296,33 +296,16 @@
             <field name="global" eval="False"/>
             <field name="domain_force">[
                 ('branch_id', '=', user.branch_id.id),
-                '|','|',('approverst_user_id', '=', user.id),  
-                ('approvernd_user_id', '=', user.id),  
-                ('approverhrd_user_id', '=', user.id)
+                '|','|',('approver1_id', '=', user.id),  
+                ('approver2_id', '=', user.id),  
+                ('approver3_id', '=', user.id)
             ]</field>
             <field name="groups" eval="[(4, ref('sanbe_hr_tms.module_role_overtime_request_supervisor'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
         </record>
-
-        <!-- Manager Rule -->
-        <!-- <record id="hr_overtime_rule_manager" model="ir.rule">
-            <field name="name">Overtime Request - Manager</field>
-            <field name="model_id" ref="sanbe_hr_tms.model_hr_overtime_planning"/>
-            <field name="global" eval="False"/>
-            <field name="domain_force">[('branch_id', '=', user.branch_id.id)]</field>
-            <field name="groups" eval="[
-                (4, ref('sanbe_hr_tms.module_role_overtime_request_manager'))]" />
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
-        </record> -->
-
-        <!-- Employement Tracking -->
-        <!-- Checking ID -->
 
         <!-- HR Warning Letter -->
         <record id="hr_warning_letter_branch_manager_rule" model="ir.rule">

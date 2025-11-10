@@ -120,12 +120,12 @@ class HREmpOvertimeRequest(models.Model):
     count_record_employees = fields.Integer(string="Total Employees on The List", compute="_compute_record_employees", store=True)
     approverst_id = fields.Many2one('parent.hr.employee', related = 'employee_id.parent_id', string='Atasan Langsung',store=True, index=True)
     approvernd_id = fields.Many2one('parent.hr.employee', string='Atasan', compute = '_get_approver',store=True ,index=True)
-    approverhrd_id = fields.Many2one('hr.employee', string='Atasan', domain="[('hrms_department_id', 'in', (97, 174))]", store=True, index=True)
+    approverhrd_id = fields.Many2one('hr.employee', string='Atasan', domain="[('branch_id','=',branch_id), ('hrms_department_id', 'in',  [97, 174]), ('user_id','!=', False)]", store=True, index=True)
 
     # New fields for user_id
-    approverst_user_id = fields.Many2one('res.users', related='approverst_id.user_id', string='User for Atasan Langsung', store=True)
-    approvernd_user_id = fields.Many2one('res.users', related='approvernd_id.user_id', string='User for Atasan', store=True)
-    approverhrd_user_id = fields.Many2one('res.users', related='approverhrd_id.user_id', string='User for HRD', store=True)
+    approver1_id = fields.Many2one('res.users', related='approverst_id.user_id', string='User for Atasan Langsung', store=True)
+    approver2_id = fields.Many2one('res.users', related='approvernd_id.user_id', string='User for Atasan', store=True)
+    approver3_id = fields.Many2one('res.users', related='approverhrd_id.user_id', string='User for HRD', store=True)
 
     @api.depends('employee_id')
     def _get_approver(self):
@@ -141,51 +141,115 @@ class HREmpOvertimeRequest(models.Model):
                     elif not emp_1:
                         rec.approvernd_id = rec.employee_id.parent_id.id
 
-    show_approval_l1_button = fields.Boolean(compute='_compute_show_approval_buttons',store=False, default=False)
-    show_approval_l2_button = fields.Boolean(compute='_compute_show_approval_buttons',store=False, default=False)
-    show_approval_button = fields.Boolean(compute='_compute_show_approval_buttons',store=False, default=False)
 
-    @api.depends('state', 'approverst_id.user_id', 'approvernd_id.user_id', 'approverhrd_id')
-    def _compute_show_approval_buttons(self):
+    # @api.onchange('employee_id')
+    # def _checking_approver(self):
+        
+
+    show_approval_l1_button = fields.Boolean(compute='_compute_show_approver1',store=False, default=False)
+    show_approval_l2_button = fields.Boolean(compute='_compute_show_approver2',store=False, default=False)
+    show_approval_hrd_button = fields.Boolean(compute='_compute_show_approver_hrd',store=False, default=False)
+
+    # show_approval_l1_button = fields.Boolean(compute='_compute_show_approval_buttons',store=False, default=False)
+    # show_approval_l2_button = fields.Boolean(compute='_compute_show_approval_buttons',store=False, default=False)
+    # show_approval_button = fields.Boolean(compute='_compute_show_approval_buttons',store=False, default=False)
+
+    # @api.depends('state', 'approverst_id.user_id', 'approvernd_id.user_id', 'approverhrd_id')
+    # def _compute_show_approval_buttons(self):
+    #     user = self.env.user
+    #     admin_user = self.env.ref('base.user_root')
+    #     current_employee = user.employee_id
+    #     current_employee_id = current_employee.id if current_employee else False
+    #     for rec in self:
+    #         rec.show_approval_l1_button = False
+    #         rec.show_approval_l2_button = False
+    #         rec.show_approval_button = False
+    #         if not rec.approver1_id :
+    #             rec.show_approval_l1_button = False
+    #         if not rec.approver2_id :
+    #             rec.show_approval_l2_button = False
+    #         if not rec.approver3_id:
+    #             rec.show_approval_button = False
+    #         approverst_employee_id = rec.approverst_id.id
+    #         approvernd_employee_id = rec.approvernd_id.id
+    #         approverhrd_employee_id = rec.approverhrd_id.id
+    #         has_supervisor_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_supervisor')
+    #         has_manager_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_manager')
+    #         is_approver_st = (current_employee_id and current_employee_id == approverst_employee_id)
+    #         is_approver_nd = (current_employee_id and current_employee_id == approvernd_employee_id)
+    #         is_approver_hrd = (current_employee_id and current_employee_id == approverhrd_employee_id)
+    #         if has_manager_group or has_supervisor_group:
+    #             if rec.state == 'draft' and has_supervisor_group:
+    #                 if user == admin_user or is_approver_st:
+    #                     rec.show_approval_l1_button = True
+    #             if rec.state == 'approved_l2' and has_supervisor_group:
+    #                 if user.id == admin_user.id or is_approver_st:
+    #                     rec.show_approval_l1_button = True
+    #             if rec.state == 'approved_l1' and has_supervisor_group:
+    #                 if user.id == admin_user.id or is_approver_nd:
+    #                     rec.show_approval_l2_button = True
+    #             if rec.state == 'verified' and has_supervisor_group:
+    #                 is_approver_hrd = (current_employee_id and current_employee_id == approverhrd_employee_id)
+    #                 if user.id == admin_user.id:
+    #                     rec.show_approval_button = True
+    #                 elif is_approver_hrd:
+    #                     rec.show_approval_button = True
+    #                 else:
+    #                     rec.show_approval_button = True
+
+    @api.depends('state', 'approver1_id')
+    def _compute_show_approver1(self):
         user = self.env.user
         admin_user = self.env.ref('base.user_root')
-        current_employee = user.employee_id
-        current_employee_id = current_employee.id if current_employee else False
+        has_supervisor_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_supervisor')
+        has_manager_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_manager')
         for rec in self:
-            rec.show_approval_l1_button = False
-            rec.show_approval_l2_button = False
-            rec.show_approval_button = False
-            if not rec.approverst_user_id :
+            if (has_manager_group or has_supervisor_group) and len(rec.hr_ot_planning_ids) > 0:
+                if rec.state == 'draft' and user.id == rec.approver1_id.id:
+                        rec.show_approval_l1_button = True
+                elif  rec.state == 'approved_l2' and user.id == rec.approver1_id.id:
+                        rec.show_approval_l1_button = True
+                elif user == admin_user:
+                        rec.show_approval_l1_button = True
+                else:
+                    rec.show_approval_l1_button = False
+            else:
                 rec.show_approval_l1_button = False
-            if not rec.approvernd_user_id :
-                rec.show_approval_l2_button = False
-            if not rec.approverhrd_user_id:
-                rec.show_approval_button = False
-            approverst_employee_id = rec.approverst_id.id
-            approvernd_employee_id = rec.approvernd_id.id
-            approverhrd_employee_id = rec.approverhrd_id.id
-            has_supervisor_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_supervisor')
-            has_namager_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_manager')
-            is_approver_st = (current_employee_id and current_employee_id == approverst_employee_id)
-            if has_namager_group or has_supervisor_group:
-                if rec.state == 'draft' and has_supervisor_group:
-                    if user == admin_user or is_approver_st:
-                        rec.show_approval_l1_button = True
-                if rec.state == 'approved_l2' and has_supervisor_group:
-                    if user.id == admin_user.id or is_approver_st:
-                        rec.show_approval_l1_button = True
-                if rec.state == 'approved_l1' and has_supervisor_group:
-                    is_approver_nd = (current_employee_id and current_employee_id == approvernd_employee_id)
-                    if user.id == admin_user.id or is_approver_nd:
+
+    @api.depends('state', 'approver2_id')
+    def _compute_show_approver2(self):
+        user = self.env.user
+        admin_user = self.env.ref('base.user_root')
+        has_supervisor_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_supervisor')
+        has_manager_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_manager')
+        for rec in self:
+            if has_manager_group or has_supervisor_group:
+                if rec.state == 'approved_l1' and user.id == rec.approver2_id.id:
                         rec.show_approval_l2_button = True
-                if rec.state == 'verified' and has_supervisor_group:
-                    is_approver_hrd = (current_employee_id and current_employee_id == approverhrd_employee_id)
-                    if user.id == admin_user.id:
-                        rec.show_approval_button = True
-                    elif is_approver_hrd:
-                        rec.show_approval_button = True
-                    else:
-                        rec.show_approval_button = True
+                elif user == admin_user:
+                        rec.show_approval_l2_button = True
+                else:
+                    rec.show_approval_l2_button = False
+            else:
+                rec.show_approval_l2_button = False
+    @api.depends('state', 'approver3_id')
+    def _compute_show_approver_hrd(self):
+        user = self.env.user
+        admin_user = self.env.ref('base.user_root')
+        has_supervisor_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_supervisor')
+        has_manager_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_manager')
+        for rec in self:
+            if has_manager_group or has_supervisor_group:
+                if rec.state == 'verified' and user.id == rec.approver3_id.id:
+                        rec.show_approval_hrd_button = True
+                elif user == admin_user:
+                        rec.show_approval_hrd_button = True
+                else:
+                    rec.show_approval_hrd_button = False
+            else:
+                rec.show_approval_hrd_button = False
+
+
 
     @api.onchange('periode_id')
     def _onchange_periode_id(self):
@@ -243,6 +307,16 @@ class HREmpOvertimeRequest(models.Model):
                     bulan = str(tgl.month)
                     sequence_code = self.env['ir.sequence'].next_by_code('hr.overtime.planning')
                     vals['name'] = f"{tahun}/{bulan}/{branch_unit_id}/RA/{department_code}/{sequence_code}"
+                # employee = self.env['hr.employee'].browse(vals['employee_id'])
+                # approverhrd = self.env['hr.employee'].browse(vals['approverhrd_id'])
+                # if not employee.parent_id.user_id:
+                #     raise UserError('Atasan Langsung karyawan belum memiliki user login. Silakan hubungi Administrator.')
+                # if not employee.coach_id.user_id:
+                #     if not employee.parent_id.parent_id.user_id:
+                #         if not employee.parent_id.user_id:
+                #             raise UserError('Atasan langsung karyawan belum memiliki user login. Silakan hubungi Administrator.')
+                # if not approverhrd.user_id:
+                #     raise UserError('Approver HRD karyawan belum memiliki user login. Silakan hubungi Administrator.')
         return super(HREmpOvertimeRequest, self).create(vals_list)
     
     def btn_approved(self):
@@ -251,10 +325,13 @@ class HREmpOvertimeRequest(models.Model):
         self_employee = self.env.user.employee_id.id
         is_rd_approver = self_employee == self.approverhrd_id.id
         has_supervisor_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_supervisor')
-        has_namager_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_manager')
+        has_manager_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_manager')
         for rec in self:
+            for line in rec.hr_ot_planning_ids:
+                if not line.output_realization:
+                    raise UserError('Tidak dapat approve karena hasil tidak di isi.')
             if rec.approve1 == True and rec.approve2 == True:
-                if has_namager_group:
+                if has_manager_group:
                     # is_rd_approver = True
                     if is_rd_approver or admin_user:
                         rec.state = 'approved'
@@ -299,15 +376,16 @@ class HREmpOvertimeRequest(models.Model):
         self_employee = self.env.user.employee_id.id
         is_nd_approver = self_employee == self.approvernd_id.id
         has_supervisor_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_supervisor')
-        has_namager_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_manager')
+        has_manager_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_manager')
         for rec in self:
-            if has_supervisor_group or has_namager_group:
+            if has_supervisor_group or has_manager_group:
                 if is_nd_approver  or admin_user:
                     rec.approve2 = True
                     rec.state = 'approved_l2'
                     rec.show_approval_l2_button = False 
             else:
                 raise UserError('You are not authorized to approve this request.')
+
     def btn_complete(self):
         for rec in self:
             rec.state = 'complete'
@@ -320,14 +398,16 @@ class HREmpOvertimeRequest(models.Model):
         self_employee = self.env.user.employee_id.id
         is_st_approver = self_employee == self.approverst_id.id
         has_supervisor_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_supervisor')
-        has_namager_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_manager')
+        has_manager_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_manager')
         for rec in self:
             if len(rec.hr_ot_planning_ids) == 0:
                 raise UserError('Tidak dapat memverifikasi permintaan lembur tanpa rincian karyawan.')
-            if has_supervisor_group or has_namager_group:
+            if has_supervisor_group or has_manager_group:
                 for line in rec.hr_ot_planning_ids:
                     if not line.verify_time_from or not line.verify_time_to:   
                         raise UserError('Tidak dapat memverifikasi permintaan lembur dengan rincian karyawan yang belum diverifikasi waktu lemburnya.') 
+                    if not line.output_realization:
+                        raise UserError('Tidak dapat diverifikasi karena hasil tidak di isi.')
                 if is_st_approver or admin_user:
                     rec.state = 'verified'
                     for line in rec.hr_ot_planning_ids:
@@ -342,7 +422,7 @@ class HREmpOvertimeRequest(models.Model):
             if len(rec.hr_ot_planning_ids) == 0:
                 raise UserError('Tidak dapat memverifikasi permintaan lembur tanpa rincian karyawan.')
             for line in rec.hr_ot_planning_ids:
-                    if not line.output_plann or not line.verify_time_to:   
+                    if not line.output_plann or not line.work_plann:   
                         raise UserError('Tidak dapat memproses permintaan lembur dengan tanpa rencana lembur.') 
             if len(rec.hr_ot_planning_ids) == 0:
                 raise UserError('Tidak dapat memproses permintaan lembur tanpa rincian karyawan.')
