@@ -307,16 +307,16 @@ class HREmpOvertimeRequest(models.Model):
                     bulan = str(tgl.month)
                     sequence_code = self.env['ir.sequence'].next_by_code('hr.overtime.planning')
                     vals['name'] = f"{tahun}/{bulan}/{branch_unit_id}/RA/{department_code}/{sequence_code}"
-                # employee = self.env['hr.employee'].browse(vals['employee_id'])
-                # approverhrd = self.env['hr.employee'].browse(vals['approverhrd_id'])
-                # if not employee.parent_id.user_id:
-                #     raise UserError('Atasan Langsung karyawan belum memiliki user login. Silakan hubungi Administrator.')
-                # if not employee.coach_id.user_id:
-                #     if not employee.parent_id.parent_id.user_id:
-                #         if not employee.parent_id.user_id:
-                #             raise UserError('Atasan langsung karyawan belum memiliki user login. Silakan hubungi Administrator.')
-                # if not approverhrd.user_id:
-                #     raise UserError('Approver HRD karyawan belum memiliki user login. Silakan hubungi Administrator.')
+                employee = self.env['hr.employee'].browse(vals['employee_id'])
+                approverhrd = self.env['hr.employee'].browse(vals['approverhrd_id'])
+                if not employee.parent_id.user_id:
+                    raise UserError('Atasan Langsung karyawan belum memiliki user login. Silakan hubungi Administrator.')
+                if not employee.coach_id.user_id:
+                    if not employee.parent_id.parent_id.user_id:
+                        if not employee.parent_id.user_id:
+                            raise UserError('Atasan langsung karyawan belum memiliki user login. Silakan hubungi Administrator.')
+                if not approverhrd.user_id:
+                    raise UserError('Approver HRD karyawan belum memiliki user login. Silakan hubungi Administrator.')
         return super(HREmpOvertimeRequest, self).create(vals_list)
     
     def btn_approved(self):
