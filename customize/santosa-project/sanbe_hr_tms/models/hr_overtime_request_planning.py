@@ -114,7 +114,7 @@ class HREmpOvertimeRequest(models.Model):
         default='draft')
     periode_id = fields.Many2one('hr.opening.closing',string='Period',domain="[('branch_id','=',branch_id),('state','in',('draft','running'))]", index=True, default=_get_running_periode)
     hr_ot_planning_ids = fields.One2many('hr.overtime.employees','planning_id', auto_join=True, index=True, required=True)
-    employee_id = fields.Many2one('hr.employee', string='Nama Karyawan',)
+    employee_id = fields.Many2one('hr.employee', string='Nama Karyawan', track_visibility='onchange')
     company_id = fields.Many2one('res.company', string="Company Name", index=True)
     request_day_name = fields.Char('Request Day Name', compute='_compute_req_day_name', store=True)
     count_record_employees = fields.Integer(string="Total Employees on The List", compute="_compute_record_employees", store=True)
