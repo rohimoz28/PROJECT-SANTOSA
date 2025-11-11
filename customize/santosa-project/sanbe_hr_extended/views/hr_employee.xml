@@ -611,6 +611,7 @@
                             <group>
                                 <field name="division_id" string="Divisi"/>
                                 <field name="job_id" string="Jabatan" />
+                                <field name="parent_id" string="Atasan"/>
                             </group>
                         </group>
 
