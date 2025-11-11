@@ -27,6 +27,9 @@
     ],
     'data': [
         'data/ir_cron_data.xml',
+        'security/tms_groups.xml',
+        'security/tms_branch_security.xml',
+        'security/ir.model.access.csv',
         'wizards/export_excel_tms.xml',
         'wizards/list_employee_shift_wizard.xml',
         'wizards/export_excel_ot_attendance.xml',
@@ -74,8 +77,6 @@
         # 'views/hr_transfer_to_payroll.xml',
         'views/hr_employee.xml',
         'views/data_upload_attendance.xml',
-        'security/tms_branch_security.xml',
-        'security/tms_groups.xml',
         'views/hr_tms_overtime_Setting.xml',
         'views/tms_menu.xml',
         'data/tms_seq_number.xml',
@@ -88,7 +89,6 @@
         'db/temporary_table.sql',
         'db/functions.sql',
         'views/tmsentry_details.xml',
-        'security/ir.model.access.csv',
         'views/hr_tms_employee_shift.xml',
     ],
     'assets': {

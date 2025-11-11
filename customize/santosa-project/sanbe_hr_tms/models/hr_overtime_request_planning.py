@@ -11,6 +11,7 @@ from odoo import fields, models, api, _, Command
 from odoo.exceptions import ValidationError,UserError
 from odoo.osv import expression
 import pytz
+from lxml import etree
 from datetime import datetime,time, timedelta
 import logging
 _logger = logging.getLogger(__name__)
@@ -100,7 +101,7 @@ class HREmpOvertimeRequest(models.Model):
     division_id = fields.Many2one('sanhrms.division',string='Divisi', default=lambda self: self.env.user.employee_id.division_id.id , domain="[('hrms_department_id','=',hrms_department_id)]", store=True)
     hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen', default=lambda self: self.env.user.employee_id.hrms_department_id.id, domain="[('directorate_id','=',directorate_id)]", store=True)
     directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', default=lambda self: self.env.user.employee_id.directorate_id.id, domain="['|',('branch_id','=',branch_id),('branch_id','=',False)]", store=True)
-    employee_id = fields.Many2one('hr.employee','nama Karyawan', domain="[('state','=','approved'),('division_id','=',division_id),'|',('branch_id','=',branch_id),('branch_id','=',False)]", store=True)
+    employee_id = fields.Many2one('hr.employee','nama Karyawan', domain="[('state','=','approved'),('division_id','=',division_id)]", store=True)
     periode_from = fields.Date('Perintah Lembur Dari',default=fields.Date.today)
     periode_to = fields.Date('Hingga',default=fields.Date.today)
     approve1 = fields.Boolean('Approval L1',default=False)
@@ -114,7 +115,7 @@ class HREmpOvertimeRequest(models.Model):
         default='draft')
     periode_id = fields.Many2one('hr.opening.closing',string='Period',domain="[('branch_id','=',branch_id),('state','in',('draft','running'))]", index=True, default=_get_running_periode)
     hr_ot_planning_ids = fields.One2many('hr.overtime.employees','planning_id', auto_join=True, index=True, required=True)
-    employee_id = fields.Many2one('hr.employee', string='Nama Karyawan', track_visibility='onchange')
+    employee_id = fields.Many2one('hr.employee', string='Nama Karyawan', tracking=True)
     company_id = fields.Many2one('res.company', string="Company Name", index=True)
     request_day_name = fields.Char('Request Day Name', compute='_compute_req_day_name', store=True)
     count_record_employees = fields.Integer(string="Total Employees on The List", compute="_compute_record_employees", store=True)
@@ -151,7 +152,7 @@ class HREmpOvertimeRequest(models.Model):
 
     # @api.depends('state', 'approverst_id.user_id', 'approvernd_id.user_id', 'approverhrd_id')
     # def _compute_show_approval_buttons(self):
-    #     user = self.env.user
+    #     user = self.env.user    
     #     admin_user = self.env.ref('base.user_root')
     #     current_employee = user.employee_id
     #     current_employee_id = current_employee.id if current_employee else False
@@ -191,6 +192,85 @@ class HREmpOvertimeRequest(models.Model):
     #                     rec.show_approval_button = True
     #                 else:
     #                     rec.show_approval_button = True
+
+    # def _get_view(self, view_id=None, view_type='tree', **options):
+    #     arch, view = super()._get_view(view_id, view_type, **options)
+    #     user = self.env.user
+    #     domain = []
+
+    #     if view_type == 'tree':
+    #         if user.has_group('sanbe_hr_tms.module_role_overtime_request_supervisor'):
+    #             # Supervisor filter: Memilih overtime planning berdasarkan approval yang relevan
+    #             query = """
+    #                 SELECT id 
+    #                 FROM hr_overtime_planning hop 
+    #                 WHERE coalesce(hop.approver1_id,0) = %s OR coalesce(hop.approver2_id,0) = %s OR coalesce(hop.approver3_id,0) = %s
+    #             """
+    #             self._cr.execute(query, (user.id, user.id, user.id))
+    #             tag_results = self._cr.dictfetchall()
+    #             ids = [result['id'] for result in tag_results]
+    #             domain = [('id', 'in', ids)]  
+    #         elif user.has_group('sanbe_hr_tms.hr_overtime_rule_staff'):
+    #             query = """
+    #                 SELECT id 
+    #                 FROM hr_overtime_planning hop 
+    #                 WHERE hop.create_uid = %s OR hop.division_id = %s
+    #             """
+    #             self._cr.execute(query, (user.id, user.employee_id.division_id.id))
+    #             tag_results = self._cr.dictfetchall()
+    #             ids = [result['id'] for result in tag_results]
+    #             domain = [('id', 'in', ids)]  # Filter berdasarkan staff
+    #         elif user.has_group('sanbe_hr_tms.module_role_overtime_request_manager'):
+    #             query = """
+    #                 SELECT id 
+    #                 FROM hr_overtime_planning hop
+    #             """
+    #             self._cr.execute(query)
+    #             tag_results = self._cr.dictfetchall()
+    #             ids = [result['id'] for result in tag_results]
+    #             domain = [('id', 'in', ids)]
+    #         else:
+    #             domain = [('id', '=', False)] 
+    #         view.arch = view.arch.replace('<tree', f'<tree domain="{domain}"')
+    #     return arch, view
+
+    # manakah yang lebih baik?
+
+    # def _get_view(self, view_id=None, view_type='tree', **options):
+    #     """
+    #     Override _get_view untuk menambahkan domain dinamis (force_domain)
+    #     berdasarkan role user (supervisor, staff, manager, dll).
+    #     """
+    #     arch, view = super()._get_view(view_id, view_type, **options)
+    #     user = self.env.user
+    #     domain = []
+    #     if view_type == 'tree':
+    #         try:
+    #             if user.has_group('sanbe_hr_tms.module_role_overtime_request_supervisor'):
+    #                 domain = [
+    #                     '|', '|',
+    #                     ('approver1_id', '=', user.id),
+    #                     ('approver2_id', '=', user.id),
+    #                     ('approver3_id', '=', user.id)
+    #                 ]
+    #             elif user.has_group('sanbe_hr_tms.hr_overtime_rule_staff'):
+    #                 division_id = user.employee_id.division_id.id if user.employee_id and user.employee_id.division_id else False
+    #                 domain = [
+    #                     '|',
+    #                     ('create_uid', '=', user.id),
+    #                     ('division_id', '=', division_id)
+    #                 ] if division_id else [('create_uid', '=', user.id)]
+
+    #             elif user.has_group('sanbe_hr_tms.module_role_overtime_request_manager'):
+    #                 domain = []
+    #             else:
+    #                 domain = [('id', '=', False)]
+    #             # Terapkan domain dengan cara yang benar
+    #             # force_domain akan memastikan domain ini dipakai di view tree
+    #             options['force_domain'] = domain
+    #         except Exception as e:
+    #             _logger.warning("Error applying dynamic domain with force_domain: %s", e)
+    #     return arch, view
 
     @api.depends('state', 'approver1_id')
     def _compute_show_approver1(self):

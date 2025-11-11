@@ -34,13 +34,14 @@
                                    required="1"
                                    readonly="state == 'approved' or state == 'done'"  /> -->
                             <field name="area_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" invisible="1"/>
+                            <field name="create_uid" invisible="1"/>
                             <field name="branch_id" required="1"
                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
-                                   readonly="state != 'draft'"/>
-                            <field name="directorate_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" domain="['|',('branch_id','=',branch_id),('branch_id','=',False)]" readonly="state != 'draft'" />
-                            <field name="hrms_department_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" domain="[('directorate_id','=',directorate_id)]" readonly="state != 'draft'" />
-                            <field name="division_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" domain="[('department_id','=',hrms_department_id)]" readonly="state != 'draft'" />
-                            <field name="employee_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" domain="[('state','=','approved'),('division_id','=',division_id)]" readonly="state != 'draft'" required="1"/>
+                                   readonly="state != 'draft' or create_uid != uid.id"/>
+                            <field name="directorate_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" domain="['|',('branch_id','=',branch_id),('branch_id','=',False)]" readonly="state != 'draft' or create_uid != uid.id"/>
+                            <field name="hrms_department_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" domain="[('directorate_id','=',directorate_id)]" readonly="state != 'draft' or create_uid != uid.id"/>
+                            <field name="division_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" domain="[('department_id','=',hrms_department_id)]" readonly="state != 'draft' or create_uid != uid.id"/>
+                            <field name="employee_id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" domain="[('state','=','approved'),('division_id','=',division_id)]" readonly="state != 'draft' or create_uid != uid.id" required="1"/>
 
                             <label string="Approval L1" for="approverst_id"/>
                             <div for="approverst_id" class="o_row">
@@ -58,13 +59,13 @@
                             <div for="approverhrd_id" class="o_row" 
                                    readonly="state != 'draft'" >
                                 <field name="approve3" invisible="1"/>
-                                <field name="approverhrd_id" readonly="state != 'draft'" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"/>
+                                <field name="approverhrd_id" readonly="state != 'draft' or create_uid != uid.id" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"/>
                                 <field name="approver3_id"  options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"  invisible="1"/>
                             </div>
                         </group>
                         <group>
                             <field name="name"/>
-                            <field name="request_date" readonly="state != 'draft'"/>
+                            <field name="request_date" readonly="state != 'draft' or create_uid != uid.id"/>
                             <field name="periode_id" domain="[('state_process', 'in', ('draft','running'))]"  readonly="state == 'approved' or state == 'done'"  options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" invisible="1"/>
                             <field name="periode_from" readonly="state == 'approved' or state == 'done'"  />
                             <field name="periode_to" string="Perintah Lembur Hingga" readonly="state == 'approved' or state == 'done'"  />
@@ -93,7 +94,7 @@
                                     <field name="ot_plann_from" readonly="state != 'draft'" string="Jam SPL Dari" widget="float_time" optional="show"/>
                                     <field name="ot_plann_to" readonly="state != 'draft'" string="Jam SPL Hingga" widget="float_time" optional="show"/>
                                     <field name="work_plann" force_save="1" readonly="state not in ('draft','approved_l1')" optional="show"/>
-                                    <field name="output_plann" force_save="1" readonly="state not in ('draft','approved_l1')" optional="show"/>
+                                    <field name="output_plann" force_save="1" readonly="state in ('draft','approved_l1')" optional="show"/>
                                     <field name="realization_date" readonly="1" string="Tanggal Hadir" widget="date" optional="show"/>
                                     <field name="realization_time_from" widget="date" optional="show" readonly="1"/>
                                     <field name="realization_time_to" widget="date" optional="show" readonly="1"/>
@@ -115,54 +116,6 @@
                         <field name="message_ids"/>
                     </div>
                 </form>
-            </field>
-        </record>
-
-        <record id="hr_overtime_planning_tree" model="ir.ui.view">
-            <field name="name">hr.overtime.planning.tree</field>
-            <field name="model">hr.overtime.planning</field>
-            <field name="groups_id" eval="[(4, ref('sanbe_hr_tms.module_role_overtime_request_staff'))]"/>
-            <field name="arch" type="xml">
-                <tree string="Overtime Request" default_order="periode_id desc" create="True" duplicate="false" >
-                    <field name="branch_id" optional="hide"/>
-                    <field name="name" optional="show"/>
-                    <field name="request_date" optional="show"/>
-                    <field name="department_id" column_invisible="1"/>
-                    <field name="directorate_id" optional="hide"/>
-                    <field name="hrms_department_id" optional="hide"/>
-                    <field name="division_id" optional="show"/>
-                    <field name="employee_id" optional="show"/>
-                    <field name="approverst_id" string="Approval L1" optional="hide"/>
-                    <field name="approvernd_id" string="Approval L2" optional="hide"/>
-                    <field name="approverhrd_id" string="Approval HRD" optional="hide"/>
-                    <field name="periode_from"  string="Lembur Dari" optional="show"/>
-                    <field name="periode_to"  string="Hingga" optional="show"/>
-                    <field name="state" string="Status" optional="show"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="hr_overtime_planning_supervisor_tree" model="ir.ui.view">
-            <field name="name">hr.overtime.planning.tree</field>
-            <field name="model">hr.overtime.planning</field>
-            <field name="groups_id" eval="[(4, ref('sanbe_hr_tms.module_role_overtime_request_supervisor'))]"/>
-            <field name="arch" type="xml">
-                <tree string="Overtime Request" default_order="periode_id desc" create="False" duplicate="false" >
-                    <field name="branch_id" optional="hide"/>
-                    <field name="name" optional="show"/>
-                    <field name="request_date" optional="hide"/>
-                    <field name="department_id" column_invisible="1"/>
-                    <field name="directorate_id" optional="hide"/>
-                    <field name="hrms_department_id" optional="hide"/>
-                    <field name="division_id" optional="show"/>
-                    <field name="employee_id" optional="show"/>
-                    <field name="approverst_id" string="Approval L1" optional="hide"/>
-                    <field name="approvernd_id" string="Approval L2" optional="hide"/>
-                    <field name="approverhrd_id" string="Approval HRD" optional="hide"/>
-                    <field name="periode_from"  string="Lembur Dari" optional="show"/>
-                    <field name="periode_to"  string="Hingga" optional="show"/>
-                    <field name="state" string="Status" optional="show"/>
-                </tree>
             </field>
         </record>
 
@@ -191,27 +144,105 @@
             </field>
         </record>
 
-        <record id="hr_overtime_planning_manager_tree" model="ir.ui.view">
-            <field name="name">hr.overtime.planning.tree</field>
-            <field name="model">hr.overtime.planning</field>
-            <field name="groups_id" eval="[(4, ref('sanbe_hr_tms.module_role_overtime_request_manager'))]"/>
+        <record id="view_hr_overtime_planning_spv_search" model="ir.ui.view">
+            <field name="name">view.hr.overtime.planning.spv.search</field> <field name="model">hr.overtime.planning</field>
             <field name="arch" type="xml">
-                <tree string="Overtime Request" default_order="periode_id desc" create="True">
+                <search>
+                    <field name="employee_id" string="Employee" filter_domain="['|','|','|','|', ('name', 'ilike', self), ('employee_id.name', 'ilike', self), ('approverst_id.name', 'ilike', self), ('approvernd_id.name', 'ilike', self), ('approverhrd_id.name', 'ilike', self)]"/>
+                    <field name="branch_id" string="Branch" filter_domain="[('branch_id.name', 'ilike', self)]"/>
+                    <field name="directorate_id" string="Directorate" filter_domain="[('directorate_id.name', 'ilike', self)]"/>
+                    <field name="department_id" string="Department" filter_domain="[('hrms_department_id.name', 'ilike', self)]"/>
+                    <field name="division_id" string="Division" filter_domain="[('division_id.name', 'ilike', self)]"/>
+                    <field name="state" string="Status" filter_domain="[('state', 'ilike', self)]"/>
+                    <filter string="Status" name="filter_status" domain="[('state', 'not in', ('draft', 'cancel'))]"/>
+                    <filter string="Need My Approval" 
+                        name="filter_need_my_approval" 
+                        domain="['|', '|', ('approver1_id', '=', uid.id), ('approver2_id', '=', uid.id), ('approver3_id', '=', uid.id)]"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Branch" name="group_branch" domain="[]" context="{'group_by':'branch_id'}"/>
+                        <filter string="Directorate" name="group_directorate" domain="[]" context="{'group_by':'directorate_id'}"/>
+                        <filter string="Department" name="group_department" domain="[]" context="{'group_by':'hrms_department_id'}"/>
+                        <filter string="Division" name="group_division" domain="[]" context="{'group_by':'division_id'}"/>
+                        <filter string="Status" name="group_state" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Employee" name="group_employee" domain="[]" context="{'group_by':'employee_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="hr_overtime_planning_tree" model="ir.ui.view">
+            <field name="name">hr.overtime.planning.staff.tree</field>
+            <field name="model">hr.overtime.planning</field>
+            <field name="groups_id" eval="[(4, ref('sanbe_hr_tms.module_role_overtime_request_staff'))]"/>
+            <field name="arch" type="xml">
+                <tree string="Overtime Request" default_order="periode_id desc" create="1" duplicate="0" delete="0" name="hr_overtime_planning_staff_tree">
                     <field name="branch_id" optional="hide"/>
                     <field name="name" optional="show"/>
                     <field name="request_date" optional="show"/>
                     <field name="department_id" column_invisible="1"/>
                     <field name="directorate_id" optional="hide"/>
                     <field name="hrms_department_id" optional="hide"/>
-                    <field name="division_id" optional="show"/>
+                    <field name="division_id" optional="hide"/>
                     <field name="employee_id" optional="show"/>
-                    <field name="approverst_id" string="Approval L1" optional="hide"/>
-                    <field name="approvernd_id" string="Approval L2" optional="hide"/>
-                    <field name="approverhrd_id" string="Approval HRD" optional="hide"/>
+                    <field name="approver1_id" string="Approval L1" optional="hide"/>
+                    <field name="approver2_id" string="Approval L2" optional="hide"/>
+                    <field name="approver3_id" string="Approval HRD" optional="hide"/>
                     <field name="periode_from"  string="Lembur Dari" optional="show"/>
                     <field name="periode_to"  string="Hingga" optional="show"/>
                     <field name="state" string="Status" optional="show"/>
+                    <field name="create_uid"  column_invisible="1"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="hr_overtime_planning_supervisor_tree" model="ir.ui.view">
+            <field name="name">hr.overtime.planning.supervisor.tree</field>
+            <field name="model">hr.overtime.planning</field>
+            <field name="groups_id" eval="[(4, ref('sanbe_hr_tms.module_role_overtime_request_supervisor'))]"/>
+            <field name="arch" type="xml">
+                <tree string="Overtime Request" default_order="periode_id desc" create="0" duplicate="0" delete="0" name="hr_overtime_planning_supervisor_tree">
+                    <field name="branch_id" invisible="1"/>
+                    <field name="name" />
+                    <field name="request_date"/>
+                    <field name="department_id" column_invisible="1"/>
+                    <field name="directorate_id" optional="hide"/>
+                    <field name="hrms_department_id" optional="hide"/>
+                    <field name="division_id" optional="hide"/>
+                    <field name="employee_id" />
+                    <field name="approver1_id" string="Approval L1" optional="hide"/>
+                    <field name="approver2_id" string="Approval L2"  optional="hide"/>
+                    <field name="approver3_id" string="Approval HRD" optional="hide"/>
+                    <field name="periode_from" string="Lembur Dari"/>
+                    <field name="periode_to" string="Hingga"/>
+                    <field name="state" string="Status"/>
+                    <field name="create_uid"  column_invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="hr_overtime_planning_manager_tree" model="ir.ui.view">
+            <field name="name">hr.overtime.planning.manager.tree</field>
+            <field name="model">hr.overtime.planning</field>
+            <field name="groups_id" eval="[(4, ref('sanbe_hr_tms.module_role_overtime_request_manager'))]"/>
+            <field name="arch" type="xml">
+                <tree string="Overtime Request" default_order="periode_id desc" create="1"  delete="1" name="hr_overtime_planning_manager_tree">
+                    <field name="branch_id" optional="hide"/>
+                    <field name="name" optional="show"/>
+                    <field name="request_date" optional="show"/>
+                    <field name="department_id" column_invisible="1"/>
+                    <field name="directorate_id" optional="hide"/>
+                    <field name="hrms_department_id" optional="hide"/>
+                    <field name="division_id" optional="hide"/>
+                    <field name="employee_id" optional="show"/>
+                    <field name="approver1_id" string="Approval L1" optional="hide"/>
+                    <field name="approver2_id" string="Approval L2" optional="hide"/>
+                    <field name="approver3_id" string="Approval HRD" optional="hide"/>
+                    <field name="periode_from"  string="Lembur Dari" optional="show"/>
+                    <field name="periode_to"  string="Hingga" optional="show"/>
+                    <field name="state" string="Status" optional="show"/>
+                    <field name="create_uid"  column_invisible="1"/>
+               </tree>
             </field>
         </record>
 
@@ -274,85 +305,91 @@
                 </form>
             </field>
         </record>
-
         <record id="action_hr_overtime_planning" model="ir.actions.act_window">
             <field name="name">Surat Perintah Lembur</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.overtime.planning</field>
             <field name="view_mode">tree,form</field>
+            <field name="groups_id" eval="[(4, ref('sanbe_hr_tms.module_role_overtime_request_staff'))]"/>
             <field name="domain">[]</field>
-            <field name="view_ids" eval="[(5, 0, 0),
-                    (0, 0, {'view_mode': 'tree', 'view_id': ref('hr_overtime_planning_tree')}),
-                    (0, 0, {'view_mode': 'form', 'view_id': ref('hr_tms_overtime_planning_form')})
-                ]"/>
-            <field name="context">{
-            'search_default_group_branch': 1, 
-            'search_default_group_department': 1, 
-            'search_default_group_division': 1, 
-            'search_default_group_status': 1, 
-            'group_by': 'division_id',}</field>
+            <field name="view_ids" eval="[
+                (5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('hr_overtime_planning_tree')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('hr_tms_overtime_planning_form')})
+            ]"/>
+            <field name="context">
+                {
+                    'search_default_group_branch': 1,
+                    'search_default_group_department': 1,
+                    'search_default_group_division': 1,
+                    'search_default_group_status': 1,
+                    'group_by': 'division_id'
+                }
+            </field>
             <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    Surat Perintah Lembur
-                </p>
-                <p>
-                    Buat Surat Perintah Lembur
-                </p>
+                <p class="o_view_nocontent_smiling_face">Surat Perintah Lembur</p>
+                <p>Buat Surat Perintah Lembur</p>
             </field>
         </record>
 
-        <record id="action_hr_overtime_approver" model="ir.actions.act_window">
+        <record id="action_hr_overtime_supervisor" model="ir.actions.act_window">
             <field name="name">Surat Perintah Lembur</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.overtime.planning</field>
             <field name="domain">[]</field>
+            <field name="groups_id" eval="[(4, ref('sanbe_hr_tms.module_role_overtime_request_supervisor'))]"/>
+            <field name="search_view_id" ref="view_hr_overtime_planning_spv_search"/>
             <field name="view_mode">tree,form</field>
-            <field name="view_ids" eval="[(5, 0, 0),
+            <field name="view_ids" eval="[
+                (5, 0, 0),
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('hr_overtime_planning_supervisor_tree')}),
                 (0, 0, {'view_mode': 'form', 'view_id': ref('hr_tms_overtime_planning_form')})
             ]"/>
-            <field name="context">{
-                'search_default_group_branch': 1, 
-                'search_default_group_department': 1, 
-                'search_default_group_division': 1, 
-                'search_default_group_status': 1, 
-                'group_by': 'division_id', 
-                'create': False, 'show_create': False}</field>
+            <field name="context">
+                {
+                    'search_default_filter_need_my_approval': 1,
+                    'search_default_group_branch': 1,
+                    'search_default_group_department': 1,
+                    'search_default_group_division': 1,
+                    'search_default_group_status': 1,
+                    'group_by': 'division_id',
+                    'create': False,
+                    'show_create': False
+                }
+            </field>
             <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    Surat Perintah Lembur
-                </p>
-                <p>
-                    Buat Surat Perintah Lembur
-                </p>
+                <p class="o_view_nocontent_smiling_face">Surat Perintah Lembur</p>
+                <p>Buat Surat Perintah Lembur</p>
             </field>
         </record>
-
 
         <record id="action_hr_overtime_manager" model="ir.actions.act_window">
             <field name="name">Surat Perintah Lembur</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.overtime.planning</field>
+            <field name="groups_id" eval="[(4, ref('sanbe_hr_tms.module_role_overtime_request_manager'))]"/>
             <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
-            <field name="view_ids" eval="[(5, 0, 0),
-                    (0, 0, {'view_mode': 'tree', 'view_id': ref('hr_overtime_planning_tree')}),
-                    (0, 0, {'view_mode': 'form', 'view_id': ref('hr_tms_overtime_planning_form')})
-                ]"/>
-            <field name="context">{
-                'search_default_group_branch': 1, 
-                'search_default_group_department': 1, 
-                'search_default_group_division': 1, 
-                'search_default_group_status': 1, 
-                'group_by': 'division_id',}</field>
+            <field name="view_ids" eval="[
+                (5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('hr_overtime_planning_manager_tree')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('hr_tms_overtime_planning_form')})
+            ]"/>
+            <field name="context">
+                {
+                    'search_default_group_branch': 1,
+                    'search_default_group_department': 1,
+                    'search_default_group_division': 1,
+                    'search_default_group_status': 1,
+                    'group_by': 'division_id'
+                }
+            </field>
             <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    Surat Perintah Lembur
-                </p>
-                <p>
-                    Buat Surat Perintah Lembur
-                </p>
+                <p class="o_view_nocontent_smiling_face">Surat Perintah Lembur</p>
+                <p>Buat Surat Perintah Lembur</p>
             </field>
         </record>
+
+
     </data>
 </odoo>
