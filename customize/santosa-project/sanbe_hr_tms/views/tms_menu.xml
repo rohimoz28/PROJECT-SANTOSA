@@ -72,12 +72,12 @@
                 groups="module_role_overtime_request_manager"
         />
         <menuitem
-                id="menu_hr_overtime_request_approver_entry"
+                id="menu_hr_overtime_request_supervisor_entry"
                 name="Surat Perintah Lembur"
                 sequence="22"
                 parent="sanbe_hr_tms.hr_menu_tms_administration"
-                action="action_hr_overtime_approver"
-                groups="module_role_overtime_request_supervisor"
+                action="action_hr_overtime_supervisor"
+                groups="module_role_overtime_request_supervisor,module_role_overtime_request_approver_l1,module_role_overtime_request_approver_l2,module_role_overtime_request_approver_l3,"
         />
         <menuitem
                 id="menu_hr_permission_entry"

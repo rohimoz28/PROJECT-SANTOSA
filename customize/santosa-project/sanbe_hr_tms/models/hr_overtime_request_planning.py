@@ -141,9 +141,9 @@ class HREmpOvertimeRequest(models.Model):
                     elif not emp_1:
                         rec.approvernd_id = rec.employee_id.parent_id.id        
 
-    show_approval_l1_button = fields.Boolean(compute='_compute_show_approver1',store=False, default=False)
-    show_approval_l2_button = fields.Boolean(compute='_compute_show_approver2',store=False, default=False)
-    show_approval_hrd_button = fields.Boolean(compute='_compute_show_approver_hrd',store=False, default=False)
+    show_approval_l1_button = fields.Boolean(compute='_compute_show_approver1',store=True, default=False)
+    show_approval_l2_button = fields.Boolean(compute='_compute_show_approver2',store=True, default=False)
+    show_approval_hrd_button = fields.Boolean(compute='_compute_show_approver_hrd',store=True, default=False)
 
     # show_approval_l1_button = fields.Boolean(compute='_compute_show_approval_buttons',store=False, default=False)
     # show_approval_l2_button = fields.Boolean(compute='_compute_show_approval_buttons',store=False, default=False)
@@ -151,7 +151,7 @@ class HREmpOvertimeRequest(models.Model):
 
     # @api.depends('state', 'approverst_id.user_id', 'approvernd_id.user_id', 'approverhrd_id')
     # def _compute_show_approval_buttons(self):
-    #     user = self.env.user
+    #     user = self.env.user    
     #     admin_user = self.env.ref('base.user_root')
     #     current_employee = user.employee_id
     #     current_employee_id = current_employee.id if current_employee else False
