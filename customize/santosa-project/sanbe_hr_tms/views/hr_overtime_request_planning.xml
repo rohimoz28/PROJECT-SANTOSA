@@ -130,7 +130,7 @@
                     <field name="department_id" column_invisible="1"/>
                     <field name="directorate_id" optional="hide"/>
                     <field name="hrms_department_id" optional="hide"/>
-                    <field name="division_id" optional="show"/>
+                    <field name="division_id" optional="hide"/>
                     <field name="employee_id" optional="show"/>
                     <field name="approver1_id" string="Approval L1" optional="hide"/>
                     <field name="approver2_id" string="Approval L2" optional="hide"/>
@@ -152,14 +152,14 @@
         (4, ref('sanbe_hr_tms.module_role_overtime_request_approver_l3')),
     ]"/>
     <field name="arch" type="xml">
-        <tree string="Overtime Request" default_order="periode_id desc" create="0" duplicate="0" delete="0" domain="['|', '|', ('approver1_id', '=', user.id), ('approver2_id', '=', user.id), ('approver3_id', '=', user.id)]">
+        <tree string="Overtime Request" default_order="periode_id desc" create="0" duplicate="0" delete="0">
             <field name="branch_id" invisible="1"/>
             <field name="name" />
-            <field name="request_date" invisible="1"/>
+            <field name="request_date"/>
             <field name="department_id" column_invisible="1"/>
-            <field name="directorate_id" invisible="1"/>
-            <field name="hrms_department_id" invisible="1"/>
-            <field name="division_id" />
+            <field name="directorate_id" optional="hide"/>
+            <field name="hrms_department_id" optional="hide"/>
+            <field name="division_id" optional="hide"/>
             <field name="employee_id" />
             <field name="approver1_id" string="Approval L1" optional="hide"/>
             <field name="approver2_id" string="Approval L2"  optional="hide"/>
@@ -234,7 +234,7 @@
                     <field name="department_id" column_invisible="1"/>
                     <field name="directorate_id" optional="hide"/>
                     <field name="hrms_department_id" optional="hide"/>
-                    <field name="division_id" optional="show"/>
+                    <field name="division_id" optional="hide"/>
                     <field name="employee_id" optional="show"/>
                     <field name="approver1_id" string="Approval L1" optional="hide"/>
                     <field name="approver2_id" string="Approval L2" optional="hide"/>
