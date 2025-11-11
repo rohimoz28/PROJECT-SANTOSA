@@ -139,12 +139,7 @@ class HREmpOvertimeRequest(models.Model):
                     elif emp_1:
                         rec.approvernd_id = emp_1
                     elif not emp_1:
-                        rec.approvernd_id = rec.employee_id.parent_id.id
-
-
-    # @api.onchange('employee_id')
-    # def _checking_approver(self):
-        
+                        rec.approvernd_id = rec.employee_id.parent_id.id        
 
     show_approval_l1_button = fields.Boolean(compute='_compute_show_approver1',store=False, default=False)
     show_approval_l2_button = fields.Boolean(compute='_compute_show_approver2',store=False, default=False)
@@ -307,18 +302,24 @@ class HREmpOvertimeRequest(models.Model):
                     bulan = str(tgl.month)
                     sequence_code = self.env['ir.sequence'].next_by_code('hr.overtime.planning')
                     vals['name'] = f"{tahun}/{bulan}/{branch_unit_id}/RA/{department_code}/{sequence_code}"
-                employee = self.env['hr.employee'].browse(vals['employee_id'])
-                approverhrd = self.env['hr.employee'].browse(vals['approverhrd_id'])
-                if not employee.parent_id.user_id:
-                    raise UserError('Atasan Langsung karyawan belum memiliki user login. Silakan hubungi Administrator.')
-                if not employee.coach_id.user_id:
-                    if not self.env['hr.employee'].browse(employee.parent_id).parent_id.user_id:
-                        if not employee.parent_id.user_id:
-                            raise UserError('Atasan langsung karyawan belum memiliki user login. Silakan hubungi Administrator.')
-                if not approverhrd.user_id:
-                    raise UserError('Approver HRD karyawan belum memiliki user login. Silakan hubungi Administrator.')
+                # self.checking_atasan(vals_list['employee_id'])
+                # if not vals_list['approver1_id']:
+                #     raise UserError('Approver belum memiliki user login. Silakan hubungi Administrator.')
+                # if not vals_list['approver2_id']:
+                #     raise UserError('Approver belum memiliki user login. Silakan hubungi Administrator.')
+                # approverhrd = self.env['hr.employee'].browse(vals['approverhrd_id'])
+                # if not approverhrd.user_id:
+                #     raise UserError('Approver HRD karyawan belum memiliki user login. Silakan hubungi Administrator.')
         return super(HREmpOvertimeRequest, self).create(vals_list)
-    
+
+    @api.onchange('approver1_id','approver2_id','approverst_id','approvernd_id')
+    def checking_atasan(self):
+        for line in self:
+            if line.approverst_id and not line.approver1_id.id:
+                raise UserError('Approver L1 belum memiliki user login. Silakan hubungi Administrator.')
+            if line.approvernd_id and not line.approver2_id.id:
+                raise UserError('Approver L2 belum memiliki user login. Silakan hubungi Administrator.')
+
     def btn_approved(self):
         user = self.env.user
         admin_user = self.env.ref('base.user_root')
@@ -419,6 +420,7 @@ class HREmpOvertimeRequest(models.Model):
         self_employee = self.env.user.employee_id.id
         is_st_approver = self_employee == self.approverst_id.id
         for rec in self:
+            # self.checking_atasan()
             if len(rec.hr_ot_planning_ids) == 0:
                 raise UserError('Tidak dapat memverifikasi permintaan lembur tanpa rincian karyawan.')
             for line in rec.hr_ot_planning_ids:
