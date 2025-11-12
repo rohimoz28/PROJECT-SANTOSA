@@ -26,6 +26,10 @@
         'report_xlsx', 'sanbe_hr_dashboard'
     ],
     'data': [
+        'security/tms_groups.xml',
+        'security/tms_branch_security.xml',
+        'security/ir.model.access.csv',
+        'views/tms_menu.xml',
         'data/ir_cron_data.xml',
         'security/tms_groups.xml',
         'security/tms_branch_security.xml',
@@ -59,7 +63,6 @@
         # 'views/hr_tms_recapitulation.xml',
         'views/hr_tms_sync_machine.xml',
         'views/hr_tms_processing.xml',
-        'views/hr_overtime_request_planning.xml',
         'report/hr_overtime_request_report_pdf.xml',
         'views/tms_entry.xml',
         'views/hr_tms_open_close.xml',
@@ -78,7 +81,7 @@
         'views/hr_employee.xml',
         'views/data_upload_attendance.xml',
         'views/hr_tms_overtime_Setting.xml',
-        'views/tms_menu.xml',
+        'views/hr_overtime_request_planning.xml',
         'data/tms_seq_number.xml',
         'db/calculate_tms.sql',
         'db/function_calculate_leave_alloc.sql',

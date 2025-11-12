@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <data>
-
+    <data noupdate="0">
         <record model="ir.module.category" id="module_tms_category">
             <field name="name">Time Management System</field>
             <field name="sequence">1</field>
@@ -81,7 +80,8 @@
             <field name="name">Overtime Request</field>
             <field name="parent_id" ref="sanbe_hr_tms.module_category_time_management_system"/>
             <field name="description">Access Right for menu Overtime Request under Administration</field>
-        </record> -->
+        </record>
+
         <!-- TMS Permission -->
         <record model="ir.module.category" id="module_sub_category_permission">
             <field name="name">Permissions</field>
@@ -89,15 +89,15 @@
             <field name="description">Access Right for menu Permission under Administration</field>
         </record>
 
-        <record model="res.groups" id="module_sub_category_permission_staff" >
-            <field name="name">Staff</field>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+        <record model="res.groups" id="module_sub_category_permission_supervisor" >
+            <field name="name">Approver</field>
+            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_permission_staff'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_permission"/>
         </record>
 
-        <record model="res.groups" id="module_sub_category_permission_supervisor" >
-            <field name="name">Supervisor</field>
-            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_permission_staff'))]"/>
+        <record model="res.groups" id="module_sub_category_permission_staff" >
+            <field name="name">Staff/Operator</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_permission"/>
         </record>
 
@@ -139,58 +139,28 @@
             <field name="description">Access Right for menu Upload Data Absen under Upload</field>
         </record>
 
-        <!-- Category: Request Overtime -->
-        <record id="module_sub_category_request_overtime" model="ir.module.category">
-            <field name="name">Request Overtime</field>
-            <field name="parent_id" ref="sanbe_hr_tms.module_category_time_management_system"/>
-            <field name="sequence">20</field>
-            <field name="description">
-                Manage and control access rights related to employee overtime request creation, 
-                approval workflows, and management functions within the Time Management System (TMS).
-            </field>
-        </record>
+        <!-- TMS Upload Data Absen -->
+        <!-- <record model="ir.module.category" id="module_sub_category_request_overtime"> -->
+        <!--     <field name="name">Request Overtime</field> -->
+        <!--     <field name="parent_id" ref="sanbe_hr_tms.module_category_time_management_system"/> -->
+        <!--     <field name="description">Access Right for Processing Request Overtime</field> -->
+        <!-- </record> -->
+        
+        <!-- <record id="module_role_overtime_request_staff" model="res.groups"> -->
+        <!--     <field name="name">Request OT - Staff</field> -->
+        <!--     <field name="category_id" ref="sanbe_hr_tms.module_sub_category_request_overtime"/> -->
 
-        <!-- Staff -->
-        <record id="module_role_overtime_request_staff" model="res.groups">
-            <field name="name">Request OT - Staff</field>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
-            <field name="category_id" ref="sanbe_hr_tms.module_sub_category_request_overtime"/>
-        </record>
+        <!-- </record> -->
+        <!-- <record id="module_role_overtime_request_supervisor" model="res.groups"> -->
+        <!--     <field name="name">Request OT - Approval</field> -->
+        <!--     <field name="category_id" ref="sanbe_hr_tms.module_sub_category_request_overtime"/> -->
+        <!-- </record> -->
 
-        <!-- Supervisor -->
-        <record id="module_role_overtime_request_supervisor" model="res.groups">
-            <field name="name">Request OT - Supervisor</field>
-            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_role_overtime_request_staff'))]"/>
-            <field name="category_id" ref="sanbe_hr_tms.module_sub_category_request_overtime"/>
-        </record>
-
-        <!-- Approval Level 1 -->
-        <record id="module_role_overtime_request_approver_l1" model="res.groups">
-            <field name="name">Request OT - Approval L1</field>
-            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_role_overtime_request_supervisor'))]"/>
-            <field name="category_id" ref="sanbe_hr_tms.module_sub_category_request_overtime"/>
-        </record>
-
-        <!-- Approval Level 2 -->
-        <record id="module_role_overtime_request_approver_l2" model="res.groups">
-            <field name="name">Request OT - Approval L2</field>
-            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_role_overtime_request_approver_l1'))]"/>
-            <field name="category_id" ref="sanbe_hr_tms.module_sub_category_request_overtime"/>
-        </record>
-
-        <!-- Approval Level 3 -->
-        <record id="module_role_overtime_request_approver_l3" model="res.groups">
-            <field name="name">Request OT - Approval L3</field>
-            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_role_overtime_request_approver_l2'))]"/>
-            <field name="category_id" ref="sanbe_hr_tms.module_sub_category_request_overtime"/>
-        </record>
-
-        <!-- Manager -->
-        <record id="module_role_overtime_request_manager" model="res.groups">
-            <field name="name">Request OT - Manager</field>
-            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_role_overtime_request_approver_l3'))]"/>
-            <field name="category_id" ref="sanbe_hr_tms.module_sub_category_request_overtime"/>
-        </record>
+        <!-- <record id="module_role_overtime_request_manager" model="res.groups"> -->
+        <!--     <field name="name">Request OT - Manager</field> -->
+        <!--     <field name="implied_ids" eval="[(4, ref('base.user_root'))]"/> -->
+        <!--     <field name="category_id" ref="sanbe_hr_tms.module_sub_category_request_overtime"/> -->
+        <!-- </record> -->
 
         <record model="res.groups" id="module_sub_category_upload_data_absen_staff" >
             <field name="name">Staff</field>
@@ -433,6 +403,31 @@
             <field name="name">Manager</field>
             <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_overtime_setting_supervisor'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_overtime_setting"/>
+        </record>
+
+        <!-- TMS Surat Perintah Lembur (SPL) -->
+        <record model="ir.module.category" id="module_surat_perintah_lembur">
+            <field name="name">Surat Perintah Lembur</field>
+            <field name="parent_id" ref="sanbe_hr_tms.module_category_time_management_system"/>
+            <field name="description">Access Right for menu Surat Perintah Lembur (SPL)</field>
+        </record>
+
+        <record model="res.groups" id="module_surat_perintah_lembur_approver" >
+            <field name="name">Approver</field>
+            <!-- <field name="implied_ids" eval="[(4, ref('base.group_user'))]" /> -->
+            <field name="category_id" ref="sanbe_hr_tms.module_surat_perintah_lembur"/>
+        </record>
+
+        <record model="res.groups" id="module_surat_perintah_lembur_staff_operator" >
+            <field name="name">Staff/Operator</field>
+            <!-- <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_surat_perintah_lembur_approver'))]"/> -->
+            <field name="category_id" ref="sanbe_hr_tms.module_surat_perintah_lembur"/>
+        </record>
+
+        <record model="res.groups" id="module_surat_perintah_lembur_manager">
+            <field name="name">Manager</field>
+            <!-- <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_surat_perintah_lembur_staff_operator'))]"/> -->
+            <field name="category_id" ref="sanbe_hr_tms.module_surat_perintah_lembur"/>
         </record>
 
         <!-- TMS Allowance Setting -->
