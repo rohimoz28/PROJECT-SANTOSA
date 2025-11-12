@@ -5,6 +5,16 @@
             <field name="name">Time Management System</field>
             <field name="sequence">1</field>
         </record>
+        <!-- <record id="module_role_overtime_request_staff" model="res.groups">
+            <field name="name">Request OT - Staff</field>
+        </record>
+        <record id="module_role_overtime_request_supervisor" model="res.groups">
+            <field name="name">Request OT - Approval</field>
+        </record>
+        <record id="module_role_overtime_request_manager" model="res.groups">
+            <field name="name">Request OT - Manager</field>
+            <field name="implied_ids" eval="[(4, ref('base.user_root'))]"/>
+        </record> -->
 
         <record id="group_tms_user" model="res.groups">
             <field name="name">User</field>
@@ -76,7 +86,7 @@
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_employee_group"/>
         </record>
 
-        <!-- <record model="ir.module.category" id="module_sub_category_overtime_request">
+        <record model="ir.module.category" id="module_role_overtime_request_staff">
             <field name="name">Overtime Request</field>
             <field name="parent_id" ref="sanbe_hr_tms.module_category_time_management_system"/>
             <field name="description">Access Right for menu Overtime Request under Administration</field>

@@ -61,17 +61,30 @@ class HREmpOvertimeRequest(models.Model):
             allrecs.alldepartment =[Command.set(allbranch.ids)]
 
     def _get_running_periode(self):
-        """Mendapatkan periode 'running' yang aktif untuk Branch pengguna saat ini."""
+        """Mendapatkan periode 'running'/'draft' yang aktif untuk Branch pengguna saat ini."""
         user_branch_id = self.env.user.branch_id.id
         if not user_branch_id:
             return False
-
-        return self.env['hr.opening.closing'].search([
-            ('state_process', 'in', ('draft','running')),
+        base_domain = [
             ('branch_id', '=', user_branch_id),
+            ('state_process', 'in', ['draft', 'running'])
+        ]
+        active_domain = base_domain + [
             ('open_periode_from', '<=', fields.Datetime.now()),
             ('open_periode_to', '>=', fields.Datetime.now())
-        ], order='id desc', limit=1)
+        ]
+        periode = self.env['hr.opening.closing'].search(
+            active_domain,
+            order='open_periode_from desc',
+            limit=1
+        )
+        if not periode:
+            periode = self.env['hr.opening.closing'].search(
+                base_domain,
+                order='open_periode_from desc',
+                limit=1
+            )
+        return periode.id if periode else False
 
     name = fields.Char('Nomor Surat Perintah Lembur',default=lambda self: _('New'),
        copy=False, readonly=True, tracking=True, requirement=True)
