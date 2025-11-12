@@ -8,23 +8,23 @@
 from email.policy import default
 
 from odoo import fields, models, api, _, Command
-from odoo.exceptions import ValidationError,UserError
+from odoo.exceptions import ValidationError, UserError
 from odoo.osv import expression
 import pytz
-from datetime import datetime,time, timedelta
+from datetime import datetime, time, timedelta
 import logging
+
 _logger = logging.getLogger(__name__)
 
-
 TMS_OVERTIME_STATE = [
-            ('draft', 'Draft'),
-            ('approved_l1', "Approved L1"),
-            ('approved_l2', "Approved L2"),
-            ('verified', "Verified By L1"),
-            ('approved', 'Approved By HRD'),
-            ('complete', "Complete By HCM"),
-            ('done', "Close"),
-            ('reject', "Reject"),
+    ('draft', 'Draft'),
+    ('approved_l1', "Approved L1"),
+    ('approved_l2', "Approved L2"),
+    ('verified', "Verified By L1"),
+    ('approved', 'Approved By HRD'),
+    ('complete', "Complete By HCM"),
+    ('done', "Close"),
+    ('reject', "Reject"),
 ]
 
 OT_HOURS_SELECTION = [
@@ -36,6 +36,7 @@ OT_HOURS_SELECTION = [
     ('r_s3', "R - Shift 3"),
     ('others', "Others"),
 ]
+
 
 class HREmpOvertimeRequest(models.Model):
     _name = "hr.overtime.planning"
@@ -52,12 +53,12 @@ class HREmpOvertimeRequest(models.Model):
                 databranch.append(mybranch.id)
             allbranch = self.env['res.branch'].sudo().search([('id', 'in', databranch)])
             allrecs.branch_ids = [Command.set(allbranch.ids)]
-            
-    @api.depends('area_id','branch_id')
+
+    @api.depends('area_id', 'branch_id')
     def _isi_department_branch(self):
         for allrecs in self:
-            allbranch = self.env['hr.department'].sudo().search([('branch_id','=', allrecs.branch_id.id)])
-            allrecs.alldepartment =[Command.set(allbranch.ids)]
+            allbranch = self.env['hr.department'].sudo().search([('branch_id', '=', allrecs.branch_id.id)])
+            allrecs.alldepartment = [Command.set(allbranch.ids)]
 
     def _get_running_periode(self):
         """Mendapatkan periode 'running' yang aktif untuk Branch pengguna saat ini."""
@@ -66,14 +67,14 @@ class HREmpOvertimeRequest(models.Model):
             return False
 
         return self.env['hr.opening.closing'].search([
-            ('state_process', 'in', ('draft','running')),
+            ('state_process', 'in', ('draft', 'running')),
             ('branch_id', '=', user_branch_id),
             ('open_periode_from', '<=', fields.Datetime.now()),
             ('open_periode_to', '>=', fields.Datetime.now())
         ], order='id desc', limit=1)
 
-    name = fields.Char('Nomor Surat Perintah Lembur',default=lambda self: _('New'),
-       copy=False, readonly=True, tracking=True, requirement=True)
+    name = fields.Char('Nomor Surat Perintah Lembur', default=lambda self: _('New'),
+                       copy=False, readonly=True, tracking=True, requirement=True)
     request_date = fields.Date('Tanggal Surat Perintah Lembur', default=fields.Date.today(), readonly=True)
     area_id = fields.Many2one(
         "res.territory",
@@ -91,160 +92,300 @@ class HREmpOvertimeRequest(models.Model):
         string='Bisnis Unit',
         copy=True,
         index=True,
-        # domain="[('id','in',self.env.user.branch_id.id)]",
         default=lambda self: self.env.user.branch_id.id,
         tracking=True
     )
-    alldepartment = fields.Many2many('hr.department','hr_department_plan_ot_rel', string='All Department',compute='_isi_department_branch',store=False)
-    department_id = fields.Many2one('hr.department',domain="[('id','in',alldepartment)]", string='Sub Department')
-    division_id = fields.Many2one('sanhrms.division',string='Divisi', default=lambda self: self.env.user.employee_id.division_id.id , domain="[('hrms_department_id','=',hrms_department_id)]", store=True)
-    hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen', default=lambda self: self.env.user.employee_id.hrms_department_id.id, domain="[('directorate_id','=',directorate_id)]", store=True)
-    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', default=lambda self: self.env.user.employee_id.directorate_id.id, domain="['|',('branch_id','=',branch_id),('branch_id','=',False)]", store=True)
-    employee_id = fields.Many2one('hr.employee','nama Karyawan', domain="[('state','=','approved'),('division_id','=',division_id),'|',('branch_id','=',branch_id),('branch_id','=',False)]", store=True)
-    periode_from = fields.Date('Perintah Lembur Dari',default=fields.Date.today)
-    periode_to = fields.Date('Hingga',default=fields.Date.today)
-    approve1 = fields.Boolean('Approval L1',default=False)
-    approve2 = fields.Boolean('Approval L2',default=False)
-    approve3 = fields.Boolean('Approval by HCM',default=False)
+    alldepartment = fields.Many2many('hr.department', 'hr_department_plan_ot_rel', string='All Department',
+                                     compute='_isi_department_branch', store=False)
+    department_id = fields.Many2one('hr.department', domain="[('id','in',alldepartment)]", string='Sub Department')
+    division_id = fields.Many2one('sanhrms.division', string='Divisi',
+                                  default=lambda self: self.env.user.employee_id.division_id.id,
+                                  domain="[('hrms_department_id','=',hrms_department_id)]", store=True)
+    hrms_department_id = fields.Many2one('sanhrms.department', string='Departemen',
+                                         default=lambda self: self.env.user.employee_id.hrms_department_id.id,
+                                         domain="[('directorate_id','=',directorate_id)]", store=True)
+    directorate_id = fields.Many2one('sanhrms.directorate', string='Direktorat',
+                                     default=lambda self: self.env.user.employee_id.directorate_id.id,
+                                     domain="['|',('branch_id','=',branch_id),('branch_id','=',False)]", store=True)
+    periode_from = fields.Date('Perintah Lembur Dari', default=fields.Date.today)
+    periode_to = fields.Date('Hingga', default=fields.Date.today)
+    approve1 = fields.Boolean('Approval L1', default=False)
+    approve2 = fields.Boolean('Approval L2', default=False)
+    approve3 = fields.Boolean('Approval by HCM', default=False)
     state = fields.Selection(
         selection=TMS_OVERTIME_STATE,
         string="TMS Overtime Status",
         readonly=True, copy=False, index=True,
         tracking=True,
         default='draft')
-    periode_id = fields.Many2one('hr.opening.closing',string='Period',domain="[('branch_id','=',branch_id),('state','in',('draft','running'))]", index=True, default=_get_running_periode)
-    hr_ot_planning_ids = fields.One2many('hr.overtime.employees','planning_id', auto_join=True, index=True, required=True)
-    employee_id = fields.Many2one('hr.employee', string='Nama Karyawan', track_visibility='onchange')
+    periode_id = fields.Many2one('hr.opening.closing', string='Period',
+                                 domain="[('branch_id','=',branch_id),('state','in',('draft','running'))]", index=True,
+                                 default=_get_running_periode)
+    hr_ot_planning_ids = fields.One2many('hr.overtime.employees', 'planning_id', auto_join=True, index=True,
+                                         required=True)
+    employee_id = fields.Many2one('hr.employee', string='Nama Karyawan',
+                                  domain="[('state','=','approved'),('division_id','=',division_id),'|',"
+                                         "('branch_id','=',branch_id),('branch_id','=',False)]",
+                                  store=True, track_visibility='onchange')
     company_id = fields.Many2one('res.company', string="Company Name", index=True)
     request_day_name = fields.Char('Request Day Name', compute='_compute_req_day_name', store=True)
-    count_record_employees = fields.Integer(string="Total Employees on The List", compute="_compute_record_employees", store=True)
-    approverst_id = fields.Many2one('parent.hr.employee', related = 'employee_id.parent_id', string='Atasan Langsung',store=True, index=True)
-    approvernd_id = fields.Many2one('parent.hr.employee', string='Atasan', compute = '_get_approver',store=True ,index=True)
-    approverhrd_id = fields.Many2one('hr.employee', string='Atasan', domain="[('branch_id','=',branch_id), ('hrms_department_id', 'in',  [97, 174]), ('user_id','!=', False)]", store=True, index=True)
+    count_record_employees = fields.Integer(string="Total Employees on The List", compute="_compute_record_employees",
+                                            store=True)
+    approverhrd_id = fields.Many2one('hr.employee', string='Approval by HRD',
+                                     domain="[('branch_id','=',branch_id), ('hrms_department_id', 'in',  [97, 174, 235]), ('user_id','!=', False)]",
+                                     store=True, index=True)
+    approval_l1_id = fields.Many2one(
+        comodel_name='hr.employee',
+        string='Approval L1',
+        compute='_get_approver_l1_l2',
+        store=True,
+        required=False)
+    approval_l2_id = fields.Many2one(
+        comodel_name='hr.employee',
+        string='Approval L2',
+        compute='_get_approver_l1_l2',
+        store=True,
+        required=False)
+    can_approve_l1 = fields.Boolean(
+        string='Can Approve L1',
+        compute='_compute_can_approve_l1',
+        help='Check if current user can approve as Atasan')
+    can_approve_l2 = fields.Boolean(
+        string='Can Approve L2',
+        compute='_compute_can_approve_l2',
+        help='Check if current user can approve as Atasan Unit Kerja')
+    can_verified = fields.Boolean(
+        string='Can Verified',
+        compute='_compute_can_verified',
+        help='Check if current user can verified')
+    can_approve_hrd = fields.Boolean(
+        string='Can Approve HRD',
+        compute='_compute_can_approve_hrd',
+        help='Check if current user can approve as HRD')
 
-    # New fields for user_id
-    approver1_id = fields.Many2one('res.users', related='approverst_id.user_id', string='User for Atasan Langsung', store=True)
-    approver2_id = fields.Many2one('res.users', related='approvernd_id.user_id', string='User for Atasan', store=True)
-    approver3_id = fields.Many2one('res.users', related='approverhrd_id.user_id', string='User for HRD', store=True)
+    @api.constrains('approval_l1_id')
+    def _check_approval_l1_has_user(self):
+        """Validate Approver L1 memiliki user login"""
+        for record in self:
+            if record.approval_l1_id and not record.approval_l1_id.user_id:
+                raise UserError(
+                    f'Approver L1 ({record.approval_l1_id.name}) '
+                    f'belum memiliki user login. '
+                    f'Silakan hubungi Administrator untuk mengatur user login.'
+                )
+
+    @api.constrains('approval_l2_id')
+    def _check_approval_l2_has_user(self):
+        """Validate Approver L2 memiliki user login"""
+        for record in self:
+            if record.approval_l2_id and not record.approval_l2_id.user_id:
+                raise UserError(
+                    f'Approver L2 ({record.approval_l2_id.name}) '
+                    f'belum memiliki user login. '
+                    f'Silakan hubungi Administrator untuk mengatur user login.'
+                )
+
+    @api.constrains('approverhrd_id')
+    def _check_approverhrd_has_user(self):
+        """Validate Approver HRD memiliki user login"""
+        for record in self:
+            if record.approverhrd_id and not record.approverhrd_id.user_id:
+                raise UserError(
+                    f'Approver HRD ({record.approverhrd_id.name}) '
+                    f'belum memiliki user login. '
+                    f'Silakan hubungi Administrator untuk mengatur user login.'
+                )
+
+    """
+    Untuk menentukan user mana saja yang boleh klik button approval
+    Dibuatlah compute method :  
+    
+        |  Compute Method          | Field           |
+        | -------------------------|-----------------|        
+        |  _compute_can_approve_l1 | can_approve_l1  |
+        |  _compute_can_approve_l2 | can_approve_l2  |
+        |  _compute_can_verified   | can_verified    |
+        |  _compute_can_approve_hrd| can_approve_hrd |
+        
+    Pada method compute tersebut dibuatlah validasi yang jika lolos , maka akan mengembalikan nilai TRUE
+    Lalu pada view XML, compute field akan dijadikan kondisi pada attribute invisible. (eg. invisible="not can_approve_l2")
+    
+    Dengan cara ini, bisa menghindari kerumitan jika menggunakan teknik overriding method bawaan odoo : _get_view()
+    Namun, tetap memiliki fleksibilitas tinggi terhadap requirement kondisi yang dibutuhkan.
+    """
+
+    @api.depends('state', 'approval_l1_id')
+    def _compute_can_approve_l1(self):
+        """
+        Button Approve (Atasan) muncul jika:
+        1. State = draft
+        2. Field approval_l1_id ada isinya
+        3. Current user == approval_l1_id (atasan)
+        """
+        current_user = self.env.user
+
+        for rec in self:
+            can_approve = (
+                    rec.state == 'draft'
+                    and not rec.approve1
+                    and rec.approval_l1_id
+                    and rec.approval_l1_id.user_id.id == current_user.id
+            )
+            rec.can_approve_l1 = can_approve
+
+    @api.depends('state', 'approval_l2_id')
+    def _compute_can_approve_l2(self):
+        """
+        Button Approve (Atasan Unit Kerja) muncul jika:
+        1. State = approved_atasan
+        2. Current user = approval_l2_id (Atasan Unit Kerja)
+        3. Field approval_l2_id ada isinya && Sudah di approve oleh approval_l1_id
+        """
+        current_user = self.env.user
+
+        for rec in self:
+            can_approve = (
+                    rec.state == 'approved_l1'
+                    and rec.approve1
+                    and not rec.approve2
+                    and rec.approval_l2_id
+                    and rec.approval_l2_id.user_id.id == current_user.id
+            )
+            rec.can_approve_l2 = can_approve
+
+    @api.depends('state', 'approval_l1_id', 'approval_l2_id')
+    def _compute_can_verified(self):
+        """
+        Button Verified muncul jika:
+        1. State = approved_l2
+        2. Current user = approval_l1_id (atasan langsung)
+        3. Field approval_l1_id && approval_l2_id ada isinya
+        4. Sudah di approve oleh approval_l1_id && approval_l2_id
+        """
+        current_user = self.env.user
+
+        for rec in self:
+            can_approve = (
+                    rec.state == 'approved_l2'
+                    and rec.approval_l1_id
+                    and rec.approve1
+                    and rec.approval_l2_id
+                    and rec.approve2
+                    and rec.approval_l1_id.user_id.id == current_user.id
+            )
+            rec.can_verified = can_approve
+
+    @api.depends('state', 'approverhrd_id')
+    def _compute_can_approve_hrd(self):
+        """
+        Button Approve (HR) muncul jika:
+        1. State = verified
+        2. Current user = approverhrd_id
+        3. Field approverhrd_id ada isinya
+        4. Sudah di approve oleh  'approval_l1_id', 'approval_l2_id'
+        """
+        current_user = self.env.user
+
+        for rec in self:
+            can_approve = (
+                    rec.state == 'verified'
+                    and rec.approval_l1_id
+                    and rec.approve1
+                    and rec.approval_l2_id
+                    and rec.approve2
+                    and rec.approverhrd_id.user_id.id == current_user.id
+            )
+            rec.can_approve_hrd = can_approve
+
+    # Query Variables
+    GET_APPROVER_QUERY = """
+                         WITH
+                             -- Ambil data employee utama + user
+                             employee_base AS (SELECT he.id,
+                                                      he.name,
+                                                      he.user_id,
+                                                      he.parent_id,
+                                                      he.coach_id,
+                                                      ru.login AS login,
+                                                      ru.id    AS login_id
+                                               FROM hr_employee he
+                                                        LEFT JOIN res_users ru ON he.user_id = ru.id),
+                             -- Ambil data parent (atasan langsung)
+                             employee_parent AS (SELECT he2.id        AS parent_id,
+                                                        he2.name      AS parent_name,
+                                                        he2.parent_id AS parent_parent_id
+                                                 FROM hr_employee he2),
+                             -- Ambil data coach langsung (bisa dari coach_id)
+                             employee_coach AS (SELECT he3.id   AS coach_id,
+                                                       he3.name AS coach_name
+                                                FROM hr_employee he3),
+                             -- Ambil data coach parent (coach dari parent, jika diisi)
+                             employee_coach_parent AS (SELECT he4.id   AS coach_parent_id,
+                                                              he4.name AS coach_parent_name
+                                                       FROM hr_employee he4)
+
+                         SELECT eb.id                                                    AS employee_id,
+                                eb.name                                                  AS employee,
+                                eb.login,
+                                eb.parent_id,
+                                COALESCE(eb.coach_id, ep.parent_parent_id, eb.parent_id) AS coach_id,
+
+                                -- Mencari nama coach/approver berdasarkan ID yang terpilih
+                                CASE
+                                    WHEN eb.coach_id IS NOT NULL
+                                        THEN (SELECT name FROM hr_employee WHERE id = eb.coach_id)
+                                    WHEN ep.parent_parent_id IS NOT NULL
+                                        THEN (SELECT name FROM hr_employee WHERE id = ep.parent_parent_id)
+                                    ELSE (SELECT name FROM hr_employee WHERE id = eb.parent_id)
+                                    END                                                  AS coach_name
+
+                         FROM employee_base eb
+                                  LEFT JOIN employee_parent ep ON eb.parent_id = ep.parent_id
+
+                         WHERE eb.id = %s; \
+                         """
+
+    # ========================================
+    # Helper Method: Execute Query Above
+    # ========================================
+    def _execute_approver_query(self, employee_id):
+        """
+        Execute approver query dan return hasil
+
+        Args:
+            employee_id: ID dari employee
+
+        Returns:
+            dict: Result dari query atau False jika tidak ada data
+        """
+        if not employee_id:
+            return False
+
+        self.env.cr.execute(self.GET_APPROVER_QUERY, (employee_id,))
+        result = self.env.cr.dictfetchall()
+
+        return result[0] if result else False
 
     @api.depends('employee_id')
-    def _get_approver(self):
+    def _get_approver_l1_l2(self):
+        """
+        Mendapatkan kedua Approver Level 1 & 2 sekaligus
+        """
         for rec in self:
-            if rec.employee_id:
-                emp = self.env['hr.employee'].sudo().search([('id','=',rec.employee_id.id)],limit=1)
-                emp_1 = self.env['hr.employee'].browse(emp.parent_id.id).parent_id.id
-                if emp:
-                    if emp.coach_id:
-                        rec.approvernd_id = emp.coach_id.id
-                    elif emp_1:
-                        rec.approvernd_id = emp_1
-                    elif not emp_1:
-                        rec.approvernd_id = rec.employee_id.parent_id.id        
+            rec.approval_l1_id = False
+            rec.approval_l2_id = False
 
-    show_approval_l1_button = fields.Boolean(compute='_compute_show_approver1',store=False, default=False)
-    show_approval_l2_button = fields.Boolean(compute='_compute_show_approver2',store=False, default=False)
-    show_approval_hrd_button = fields.Boolean(compute='_compute_show_approver_hrd',store=False, default=False)
+            if not rec.employee_id:
+                continue
 
-    # show_approval_l1_button = fields.Boolean(compute='_compute_show_approval_buttons',store=False, default=False)
-    # show_approval_l2_button = fields.Boolean(compute='_compute_show_approval_buttons',store=False, default=False)
-    # show_approval_button = fields.Boolean(compute='_compute_show_approval_buttons',store=False, default=False)
+            employee_id = rec.employee_id.id
+            result = rec._execute_approver_query(employee_id)
 
-    # @api.depends('state', 'approverst_id.user_id', 'approvernd_id.user_id', 'approverhrd_id')
-    # def _compute_show_approval_buttons(self):
-    #     user = self.env.user
-    #     admin_user = self.env.ref('base.user_root')
-    #     current_employee = user.employee_id
-    #     current_employee_id = current_employee.id if current_employee else False
-    #     for rec in self:
-    #         rec.show_approval_l1_button = False
-    #         rec.show_approval_l2_button = False
-    #         rec.show_approval_button = False
-    #         if not rec.approver1_id :
-    #             rec.show_approval_l1_button = False
-    #         if not rec.approver2_id :
-    #             rec.show_approval_l2_button = False
-    #         if not rec.approver3_id:
-    #             rec.show_approval_button = False
-    #         approverst_employee_id = rec.approverst_id.id
-    #         approvernd_employee_id = rec.approvernd_id.id
-    #         approverhrd_employee_id = rec.approverhrd_id.id
-    #         has_supervisor_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_supervisor')
-    #         has_manager_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_manager')
-    #         is_approver_st = (current_employee_id and current_employee_id == approverst_employee_id)
-    #         is_approver_nd = (current_employee_id and current_employee_id == approvernd_employee_id)
-    #         is_approver_hrd = (current_employee_id and current_employee_id == approverhrd_employee_id)
-    #         if has_manager_group or has_supervisor_group:
-    #             if rec.state == 'draft' and has_supervisor_group:
-    #                 if user == admin_user or is_approver_st:
-    #                     rec.show_approval_l1_button = True
-    #             if rec.state == 'approved_l2' and has_supervisor_group:
-    #                 if user.id == admin_user.id or is_approver_st:
-    #                     rec.show_approval_l1_button = True
-    #             if rec.state == 'approved_l1' and has_supervisor_group:
-    #                 if user.id == admin_user.id or is_approver_nd:
-    #                     rec.show_approval_l2_button = True
-    #             if rec.state == 'verified' and has_supervisor_group:
-    #                 is_approver_hrd = (current_employee_id and current_employee_id == approverhrd_employee_id)
-    #                 if user.id == admin_user.id:
-    #                     rec.show_approval_button = True
-    #                 elif is_approver_hrd:
-    #                     rec.show_approval_button = True
-    #                 else:
-    #                     rec.show_approval_button = True
-
-    @api.depends('state', 'approver1_id')
-    def _compute_show_approver1(self):
-        user = self.env.user
-        admin_user = self.env.ref('base.user_root')
-        has_supervisor_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_supervisor')
-        has_manager_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_manager')
-        for rec in self:
-            if (has_manager_group or has_supervisor_group) and len(rec.hr_ot_planning_ids) > 0:
-                if rec.state == 'draft' and user.id == rec.approver1_id.id:
-                        rec.show_approval_l1_button = True
-                elif  rec.state == 'approved_l2' and user.id == rec.approver1_id.id:
-                        rec.show_approval_l1_button = True
-                elif user == admin_user:
-                        rec.show_approval_l1_button = True
-                else:
-                    rec.show_approval_l1_button = False
-            else:
-                rec.show_approval_l1_button = False
-
-    @api.depends('state', 'approver2_id')
-    def _compute_show_approver2(self):
-        user = self.env.user
-        admin_user = self.env.ref('base.user_root')
-        has_supervisor_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_supervisor')
-        has_manager_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_manager')
-        for rec in self:
-            if has_manager_group or has_supervisor_group:
-                if rec.state == 'approved_l1' and user.id == rec.approver2_id.id:
-                        rec.show_approval_l2_button = True
-                elif user == admin_user:
-                        rec.show_approval_l2_button = True
-                else:
-                    rec.show_approval_l2_button = False
-            else:
-                rec.show_approval_l2_button = False
-    @api.depends('state', 'approver3_id')
-    def _compute_show_approver_hrd(self):
-        user = self.env.user
-        admin_user = self.env.ref('base.user_root')
-        has_supervisor_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_supervisor')
-        has_manager_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_manager')
-        for rec in self:
-            if has_manager_group or has_supervisor_group:
-                if rec.state == 'verified' and user.id == rec.approver3_id.id:
-                        rec.show_approval_hrd_button = True
-                elif user == admin_user:
-                        rec.show_approval_hrd_button = True
-                else:
-                    rec.show_approval_hrd_button = False
-            else:
-                rec.show_approval_hrd_button = False
-
-
+            if result:
+                if result.get('parent_id'):
+                    rec.approval_l1_id = result['parent_id']
+                if result.get('coach_id'):
+                    rec.approval_l2_id = result['coach_id']
 
     @api.onchange('periode_id')
     def _onchange_periode_id(self):
@@ -262,19 +403,85 @@ class HREmpOvertimeRequest(models.Model):
                 }
             }
 
-    # restart running number
     def _reset_sequence_overtime_employees(self):
+        """ restart running number """
         sequences = self.env['ir.sequence'].search([('code', '=like', '%hr.overtime.planning%')])
         sequences.write({'number_next_actual': 1})
 
-    def unlink(self):
+    """
+    Button approval, sebisa mungkin digunakan hanya untuk mengubah state atau memberi nilai kepada field.
+    Hindari menggunakan button approval untuk:
+        1. Validasi -> lebih baik gunakan SQL constrains atau Python constrains
+        2. Valuasi -> buat di private method terpisah, 1 method hanya boleh mengerjakan 1 task
+    
+    Approval sangat penting, maka, kode harus sesedikit mungkin untuk 
+    meningkatkan readability sehingga mudah dipahami ketika debugging
+    """
+
+    def btn_approved_l1(self):
+        for rec in self:
+            rec.approve1 = True
+            rec.state = 'approved_l1'
+
+    def btn_approved_l2(self):
+        for rec in self:
+            rec.approve2 = True
+            rec.state = 'approved_l2'
+
+    def btn_verified(self):
+        for rec in self:
+            rec.state = 'verified'
+
+    def btn_approved(self):
+        for rec in self:
+            rec.state = 'approved'
+            rec.approve3 = True
+
+    def btn_done(self):
+        for rec in self:
+            rec.state = 'done'
+
+    def btn_complete(self):
+        for rec in self:
+            rec.state = 'complete'
+
+    def btn_reject(self):
+        for rec in self:
+            rec.state = 'reject'
+
+    def btn_backdraft(self):
+        for rec in self:
+            rec.state = 'draft'
+            rec.approve1 = False
+            rec.approve2 = False
+            rec.approve3 = False
+
+    def btn_print_pdf(self):
+        return self.env.ref('sanbe_hr_tms.overtime_request_report').report_action(self)
+
+    def action_generate_ot(self):
+        try:
+            self.env.cr.execute("CALL generate_ot_request()")
+            self.env.cr.commit()
+            _logger.info("Stored procedure executed successfully.")
+        except Exception as e:
+            _logger.error("Error calling stored procedure: %s", str(e))
+            raise UserError("Error executing the function: %s" % str(e))
+
+    @api.depends('request_date', 'hrms_department_id', 'division_id')
+    def _compute_req_day_name(self):
         for record in self:
-            # Check if there are any detail records linked to this master record
-            if record.hr_ot_planning_ids and record.state != 'draft':
-                raise ValidationError(
-                    _("You cannot delete this record as it has related detail records.")
-                )
-        return super().unlink()
+            if record.request_date and record.hrms_department_id and record.division_id:
+                day_name = record.request_date.strftime('%A')
+                tgl = record.request_date.strftime('%y/%m/%d')
+                record.request_day_name = f"{tgl} - {day_name}"
+            else:
+                record.request_day_name = False
+
+    @api.depends('hr_ot_planning_ids')
+    def _compute_record_employees(self):
+        for record in self:
+            record.count_record_employees = len(record.hr_ot_planning_ids)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -292,7 +499,8 @@ class HREmpOvertimeRequest(models.Model):
                             vals['area_id'] = periode.area_id.id
                             vals['branch_id'] = branch_id
                 hrms_department_id = vals.get('hrms_department_id')
-                department = self.env['sanhrms.department'].sudo().search([('id', '=', int(hrms_department_id))], limit=1)
+                department = self.env['sanhrms.department'].sudo().search([('id', '=', int(hrms_department_id))],
+                                                                          limit=1)
                 branch = self.env['res.branch'].sudo().search([('id', '=', int(branch_id))], limit=1)
                 if department and branch:
                     department_code = department.department_code
@@ -302,204 +510,17 @@ class HREmpOvertimeRequest(models.Model):
                     bulan = str(tgl.month)
                     sequence_code = self.env['ir.sequence'].next_by_code('hr.overtime.planning')
                     vals['name'] = f"{tahun}/{bulan}/{branch_unit_id}/RA/{department_code}/{sequence_code}"
-                # self.checking_atasan(vals_list['employee_id'])
-                # if not vals_list['approver1_id']:
-                #     raise UserError('Approver belum memiliki user login. Silakan hubungi Administrator.')
-                # if not vals_list['approver2_id']:
-                #     raise UserError('Approver belum memiliki user login. Silakan hubungi Administrator.')
-                # approverhrd = self.env['hr.employee'].browse(vals['approverhrd_id'])
-                # if not approverhrd.user_id:
-                #     raise UserError('Approver HRD karyawan belum memiliki user login. Silakan hubungi Administrator.')
         return super(HREmpOvertimeRequest, self).create(vals_list)
 
-    @api.onchange('approver1_id','approver2_id','approverst_id','approvernd_id')
-    def checking_atasan(self):
-        for line in self:
-            if line.approverst_id and not line.approver1_id.id:
-                raise UserError('Approver L1 belum memiliki user login. Silakan hubungi Administrator.')
-            if line.approvernd_id and not line.approver2_id.id:
-                raise UserError('Approver L2 belum memiliki user login. Silakan hubungi Administrator.')
-
-    def btn_approved(self):
-        user = self.env.user
-        admin_user = self.env.ref('base.user_root')
-        self_employee = self.env.user.employee_id.id
-        is_rd_approver = self_employee == self.approverhrd_id.id
-        has_supervisor_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_supervisor')
-        has_manager_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_manager')
-        for rec in self:
-            for line in rec.hr_ot_planning_ids:
-                if not line.output_realization:
-                    raise UserError('Tidak dapat approve karena hasil tidak di isi.')
-            if rec.approve1 == True and rec.approve2 == True:
-                if has_manager_group:
-                    # is_rd_approver = True
-                    if is_rd_approver or admin_user:
-                        rec.state = 'approved'
-                        rec.approve3 = True
-                elif has_supervisor_group:
-                    if is_rd_approver or admin_user:
-                        rec.state = 'approved'
-                        rec.approve3 = True
-                else:
-                    raise UserError('You are not authorized to approve this request.')
-            else:
-                raise UserError('Approve Not Complete')
-    
-    def btn_done(self):
-        for rec in self:
-            rec.state = 'done'
-
-    # @api.model
-    # def _get_visible_states(self):
-    #     """Menentukan state mana yang akan ditampilkan berdasarkan state saat ini"""
-    #     self.ensure_one()
-    #     if self.state == '':
-    #         return 'draft,approved_mgr,done,reject'
-    #     elif self.state == 'draft':
-    #         return 'draft,approved_mgr,done,reject'
-    #     elif self.state == 'approved_mgr':
-    #         return 'draft,approved_mgr,done,reject'
-    #     elif self.state == 'approved_pmr':
-    #         return 'draft,approved_pmr,done,reject'
-    #     elif self.state == 'approved':
-    #         return 'draft,approved,done,reject'
-    #     elif self.state == 'done':
-    #         return 'draft,done,reject'
-    #     elif self.state == 'reject':
-    #         return 'draft,done,reject'
-    #     else:
-    #         return 'draft,approved_mgr,approved_pmr,approved,done,reject'
-
-    def btn_approved_l2(self):
-        user = self.env.user
-        admin_user = self.env.ref('base.user_root')
-        self_employee = self.env.user.employee_id.id
-        is_nd_approver = self_employee == self.approvernd_id.id
-        has_supervisor_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_supervisor')
-        has_manager_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_manager')
-        for rec in self:
-            if has_supervisor_group or has_manager_group:
-                if is_nd_approver  or admin_user:
-                    rec.approve2 = True
-                    rec.state = 'approved_l2'
-                    rec.show_approval_l2_button = False 
-            else:
-                raise UserError('You are not authorized to approve this request.')
-
-    def btn_complete(self):
-        for rec in self:
-            rec.state = 'complete'
-            rec.state = 'done'
-
-
-    def btn_verified(self):
-        user = self.env.user
-        admin_user = self.env.ref('base.user_root')
-        self_employee = self.env.user.employee_id.id
-        is_st_approver = self_employee == self.approverst_id.id
-        has_supervisor_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_supervisor')
-        has_manager_group = user.has_group('sanbe_hr_tms.module_role_overtime_request_manager')
-        for rec in self:
-            if len(rec.hr_ot_planning_ids) == 0:
-                raise UserError('Tidak dapat memverifikasi permintaan lembur tanpa rincian karyawan.')
-            if has_supervisor_group or has_manager_group:
-                for line in rec.hr_ot_planning_ids:
-                    if not line.verify_time_from or not line.verify_time_to:   
-                        raise UserError('Tidak dapat memverifikasi permintaan lembur dengan rincian karyawan yang belum diverifikasi waktu lemburnya.') 
-                    if not line.output_realization:
-                        raise UserError('Tidak dapat diverifikasi karena hasil tidak di isi.')
-                if is_st_approver or admin_user:
-                    rec.state = 'verified'
-                    for line in rec.hr_ot_planning_ids:
-                        if line.is_approval == 'reject':
-                            line.unlink()
-
-    def btn_approved_l1(self):
-        admin_user = self.env.ref('base.user_root')
-        self_employee = self.env.user.employee_id.id
-        is_st_approver = self_employee == self.approverst_id.id
-        for rec in self:
-            # self.checking_atasan()
-            if len(rec.hr_ot_planning_ids) == 0:
-                raise UserError('Tidak dapat memverifikasi permintaan lembur tanpa rincian karyawan.')
-            for line in rec.hr_ot_planning_ids:
-                    if not line.output_plann or not line.work_plann:   
-                        raise UserError('Tidak dapat memproses permintaan lembur dengan tanpa rencana lembur.') 
-            if len(rec.hr_ot_planning_ids) == 0:
-                raise UserError('Tidak dapat memproses permintaan lembur tanpa rincian karyawan.')
-            if is_st_approver or admin_user:
-                rec.approve1 = True
-                rec.state = 'approved_l1'
-                rec.show_approval_l1_button = False
-            else:
-                raise UserError('You are not authorized to approve this request.')
-    
-    def btn_reject(self):
-        for rec in self:
-            rec.state = 'reject'
-    
-    def btn_backdraft(self):
-        for rec in self:
-            rec.state = 'draft'
-
-    def btn_print_pdf(self):
-        return self.env.ref('sanbe_hr_tms.overtime_request_report').report_action(self)        
-
-    # def action_search_employee(self):
-    #     wizard = self.env['hr.employeedepartment'].create({
-    #                 'plan_id': self.id,
-    #                 'modelname':'hr.overtime.planning',
-    #                 'area_id':self.area_id.id,
-    #                 'branch_id':self.branch_id.id,
-    #                 'department_id':self.department_id.id,
-    #                 'division_id':self.division_id.id,
-    #                 'hrms_department_id':self.hrms_department_id.id,
-    #                 'directorate_id':self.directorate_id.id,
-    #                 })
-    #     emp_line = self.env['hr.employeedepartment.details'].search([('cari_id','=',wizard.id)])
-    #     if not emp_line:
-    #         wizard._isi_employee()
-    #     return {
-    #         'type': 'ir.actions.act_window',
-    #         'name': _('Search Employee'),
-    #         'res_model': 'hr.employeedepartment',
-    #         'view_mode': 'form',
-    #         'target': 'new',
-    #         'res_id': wizard.id,
-    #         'domain': [('division_id', '=', self.division_id.id),('hrms_department_id', '=', self.hrms_department_id.id),('directorate_id', '=', self.directorate_id.id)],
-    #         'views': [[False, 'form']]
-        # }
-
-    def action_generate_ot(self):
-        try:
-            self.env.cr.execute("CALL generate_ot_request()")
-            self.env.cr.commit()
-            _logger.info("Stored procedure executed successfully.")
-        except Exception as e:
-            _logger.error("Error calling stored procedure: %s", str(e))
-            raise UserError("Error executing the function: %s" % str(e))
-
-    @api.depends('request_date','hrms_department_id','division_id')
-    def _compute_req_day_name(self):
+    def unlink(self):
         for record in self:
-            if record.request_date and record.hrms_department_id and record.division_id   :
-                day_name = record.request_date.strftime('%A')
-                tgl = record.request_date.strftime('%y/%m/%d')
-                record.request_day_name = f"{tgl} - {day_name}"
-            else:
-                record.request_day_name = False
+            """Check if there are any detail records linked to this master record"""
+            if record.hr_ot_planning_ids and record.state != 'draft':
+                raise ValidationError(
+                    _("You cannot delete this record as it has related detail records.")
+                )
+        return super().unlink()
 
-    # def unlink(self):
-    #     for record in self:
-    #         if record.hr_ot_planning_ids:
-    #             record.hr_ot_planning_ids.unlink()
-    #     return super().unlink()
-
-    @api.depends('hr_ot_planning_ids')
-    def _compute_record_employees(self):
-        for record in self:
-            record.count_record_employees = len(record.hr_ot_planning_ids)   
 
 class HREmpOvertimeRequestEmployee(models.Model):
     _name = "hr.overtime.employees"
@@ -507,39 +528,49 @@ class HREmpOvertimeRequestEmployee(models.Model):
 
     branch_ids = fields.Many2many('res.branch', 'res_branch_rel', string='AllBranch',
                                   store=False)
-    planning_id = fields.Many2one('hr.overtime.planning',string='HR Overtime Request Planning', cascade=True, index=True)
-    areah_id = fields.Many2one('res.territory', string='Area ID Header', related='planning_id.area_id', index=True, readonly=True)
-    approverst_id = fields.Many2one('parent.hr.employee', related = 'employee_id.parent_id', string='Atasan Langsung',store=True, index=True)
-    approvernd_id = fields.Many2one('parent.hr.employee', string='Atasan', compute = '_get_approver',store=True ,index=True)
+    planning_id = fields.Many2one('hr.overtime.planning', string='HR Overtime Request Planning', cascade=True,
+                                  index=True)
+    areah_id = fields.Many2one('res.territory', string='Area ID Header', related='planning_id.area_id', index=True,
+                               readonly=True)
+    approverst_id = fields.Many2one('parent.hr.employee', related='employee_id.parent_id', string='Atasan Langsung',
+                                    store=True, index=True)
+    approvernd_id = fields.Many2one('parent.hr.employee', string='Atasan', compute='_get_approver', store=True,
+                                    index=True)
     state = fields.Selection(related="planning_id.state")
 
     @api.depends('employee_id')
     def _get_approver(self):
         for rec in self:
             if rec.employee_id:
-                emp = self.env['hr.employee'].sudo().search([('id','=',rec.employee_id.id)],limit=1)
+                emp = self.env['hr.employee'].sudo().search([('id', '=', rec.employee_id.id)], limit=1)
                 if emp:
                     if emp.coach_id:
                         rec.approvernd_id = emp.coach_id.id
                     else:
                         rec.approvernd_id = self.env['hr.employee'].browse(emp.parent_id.id).parent_id.id
 
-    area_id = fields.Many2one('res.territory', string='Area',index=True)
-    branchh_id = fields.Many2one('res.branch', related='planning_id.branch_id', string='Bisnis Unit Header', index=True, readonly=True)
-    departmenth_id = fields.Many2one('hr.department', related='planning_id.department_id',string='Department ID Header', index=True, readonly=True)
-    division_id = fields.Many2one('sanhrms.division',string='Divisi', related='planning_id.division_id', store=True)
-    hrms_department_id = fields.Many2one('sanhrms.department',string='Departemen', related='planning_id.hrms_department_id',store=True)
-    directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', related='planning_id.directorate_id',store=True)
-    nik = fields.Char('NIK Karyawan',related='employee_id.nik', index=True, store=True)
-    # employee_ids = fields.Many2many('hr.employee','ov_plan_emp_rel', string='Employee Name',store=False)
-    employee_id = fields.Many2one('hr.employee', domain="[('state','=','approved')]", related='planning_id.employee_id', string='Nama Karyawan',index=True)
+    area_id = fields.Many2one('res.territory', string='Area', index=True)
+    branchh_id = fields.Many2one('res.branch', related='planning_id.branch_id', string='Bisnis Unit Header', index=True,
+                                 readonly=True)
+    departmenth_id = fields.Many2one('hr.department', related='planning_id.department_id',
+                                     string='Department ID Header', index=True, readonly=True)
+    division_id = fields.Many2one('sanhrms.division', string='Divisi', related='planning_id.division_id', store=True)
+    hrms_department_id = fields.Many2one('sanhrms.department', string='Departemen',
+                                         related='planning_id.hrms_department_id', store=True)
+    directorate_id = fields.Many2one('sanhrms.directorate', string='Direktorat', related='planning_id.directorate_id',
+                                     store=True)
+    nik = fields.Char('NIK Karyawan', related='employee_id.nik', index=True, store=True)
+    employee_id = fields.Many2one('hr.employee', domain="[('state','=','approved')]", related='planning_id.employee_id',
+                                  string='Nama Karyawan', index=True)
     max_ot = fields.Float('Jam Lembur Maksimal', related='employee_id.max_ot', digits=(16, 1), default=0, store=True)
-    max_ot_month = fields.Float('Jam Lembur Maksimal',  related='employee_id.max_ot_month', store=True)
-    periode_from = fields.Date('Tanggal OT Dari', related='planning_id.periode_from', store=True, default=fields.Date.today)
-    periode_to = fields.Date('Tanggal OT Hingga', related='planning_id.periode_to', store=True, default=fields.Date.today)
+    max_ot_month = fields.Float('Jam Lembur Maksimal', related='employee_id.max_ot_month', store=True)
+    periode_from = fields.Date('Tanggal OT Dari', related='planning_id.periode_from', store=True,
+                               default=fields.Date.today)
+    periode_to = fields.Date('Tanggal OT Hingga', related='planning_id.periode_to', store=True,
+                             default=fields.Date.today)
     plann_date_from = fields.Date('Tanggal SPL')
     plann_date_to = fields.Date('Jam SPL Dari')
-    ot_plann_from = fields.Float('Jam SPL dari', digits=(4, 1)) 
+    ot_plann_from = fields.Float('Jam SPL dari', digits=(4, 1))
     ot_plann_to = fields.Float('Jam SPL Hingga', digits=(4, 1))
     approve_time_from = fields.Float('OT App From')
     approve_time_to = fields.Float('OT App To')
@@ -553,33 +584,33 @@ class HREmpOvertimeRequestEmployee(models.Model):
     output_plann = fields.Char('Output SPL')
     output_realization = fields.Char('Hasil Realisasi')
     explanation_deviation = fields.Char('Explanation Deviation')
-    branch_id = fields.Many2one('res.branch', related='planning_id.branch_id', domain="[('id','in',branch_ids)]", string='Business Unit', index=True)
+    branch_id = fields.Many2one('res.branch', related='planning_id.branch_id', domain="[('id','in',branch_ids)]",
+                                string='Business Unit', index=True)
     department_id = fields.Many2one('hr.department', domain="[('id','in',alldepartment)]", string='Sub Department')
     bundling_ot = fields.Boolean(string="Bundling OT")
     transport = fields.Boolean('Transport')
     meals = fields.Boolean(string='Meal Dine In')
     meals_cash = fields.Boolean(string='Meal Cash')
     route_id = fields.Many2one('sb.route.master', domain="[('branch_id','=',branch_id)]", string='Rute')
-    ot_type = fields.Selection([('regular','Regular'),('holiday','Holiday')],string='Tipe SPL')
-    is_approval = fields.Selection([('approved','Approved'),('reject','Tolak')], default='approved',string="Approval")
-    is_approved_l2 = fields.Boolean('Approved by MGR',default=True)
-    is_reject_mgr = fields.Boolean('Tolak',compute='rubah_approved_l2',default=False, store=True)
-    planning_req_name = fields.Char(string='Planning Request Name',required=False)
-    # _sql_constraints = [
-    #     ('unique_employee_planning', 'unique(employee_id, planning_id)',
-    #      'An employee cannot have duplicate overtime planning within the same date range and planning request.'),
-    # ]
+    ot_type = fields.Selection([('regular', 'Regular'), ('holiday', 'Holiday')], string='Tipe SPL')
+    is_approval = fields.Selection([('approved', 'Approved'), ('reject', 'Tolak')], default='approved',
+                                   string="Approval")
+    is_approved_l2 = fields.Boolean('Approved by MGR', default=True)
+    planning_req_name = fields.Char(string='Planning Request Name', required=False)
 
-    @api.constrains('ot_plann_from', 'ot_plann_to','max_ot')
+    @api.constrains('ot_plann_from', 'ot_plann_to', 'max_ot')
     def _check_time_range(self):
         """
         Check that the planned overtime hours are between 0.0 and 24.0
         and that the 'from' time is less than the 'to' time.
         """
         for record in self:
-            if not (0.0 <= record.ot_plann_from <= 24.0 and 
+            if not record.ot_plann_from or not record.ot_plann_to:
+                continue
+
+            if not (0.0 <= record.ot_plann_from <= 24.0 and
                     0.0 <= record.ot_plann_to <= 24.0):
-                raise UserError("Waktu harus dalam rentang 0.0 hingga 24.0.")
+                raise UserError("Waktu harus dalam rentang 0.0 hingga 25.0.")
             if record.ot_plann_from >= record.ot_plann_to:
                 raise UserError("Jam SPL 'dari' harus lebih awal dari jam SPL 'Hingga'.")
             if record.max_ot and (record.ot_plann_to - record.ot_plann_from) > record.max_ot:
@@ -589,12 +620,19 @@ class HREmpOvertimeRequestEmployee(models.Model):
     def _check_validation_date(self):
         for line in self:
             if line.plann_date_from and line.periode_from and line.periode_to and \
-               (line.plann_date_from < line.periode_from or line.plann_date_from > line.periode_to):
+                    (line.plann_date_from < line.periode_from or line.plann_date_from > line.periode_to):
                 msg = "Tanggal SPL (%s) harus berada di antara Tanggal OT Dari (%s) dan Tanggal OT Hingga (%s)." % (
                     line.plann_date_from, line.periode_from, line.periode_to
                 )
                 raise UserError(msg)
-                
+
+    @api.constrains('plann_date_from')
+    def _check_validation_date(self):
+        for line in self:
+            if line.plann_date_from > line.planning_id.periode_to and line.plann_date_from < line.planning_id.periode_from:
+                raise UserError(
+                    ('Date Must in between %s and %s') % (line.planning_id.periode_from, line.planning_id.periode_to))
+
     @api.model_create_multi
     def create(self, vals_list):
         records_vals = vals_list if isinstance(vals_list, list) else [vals_list]
@@ -609,8 +647,6 @@ class HREmpOvertimeRequestEmployee(models.Model):
             # === Validation 1: Time Range ===
             if not (0.0 <= ot_from <= 24.0 and 0.0 <= ot_to <= 24.0):
                 raise UserError("Waktu harus dalam rentang 0.0 hingga 24.0.")
-            if ot_from >= ot_to:
-                raise UserError("Jam SPL 'dari' harus lebih awal dari jam SPL 'Hingga'.")
 
             # === Validation 2: Date Range ===
             if plann_date and periode_from and periode_to:
@@ -623,20 +659,12 @@ class HREmpOvertimeRequestEmployee(models.Model):
         # ✅ Correct super() call
         return super(HREmpOvertimeRequestEmployee, self).create(records_vals)
 
-    @api.constrains('plann_date_from')
-    def _check_validation_date(self):
-        for line in self:
-            if line.plann_date_from > line.planning_id.periode_to and line.plann_date_from < line.planning_id.periode_from:
-                raise UserError (('Date Must in between %s and %s')%(line.planning_id.periode_from,line.planning_id.periode_to))
-
     @api.onchange('is_approval')
     def _ubah_approved_l2(self):
         for rec in self:
-            if rec.is_approval=='approved':
+            if rec.is_approval == 'approved':
                 rec.is_approved_l2 = True
-                rec.is_reject_mgr = False
             else:
-                rec.is_reject_mgr = True
                 rec.is_approved_l2 = False
 
     def act_detail(self):
@@ -645,47 +673,9 @@ class HREmpOvertimeRequestEmployee(models.Model):
                 'type': 'ir.actions.act_window',
                 'name': _('Search Employee'),
                 'res_model': 'hr.overtime.employees',
-                'res_model': 'hr.overtime.employees',
                 'view_mode': 'form',
                 'target': 'new',
                 'res_id': line.id,
                 'views': [[False, 'form']],
                 'view_id': self.env.ref('sanbe_hr_tms.hr_overtime_employees_form').id,
             }
-
-    # @api.onchange('employee_id')
-    # def rubah_employee(self):
-    #     for rec in self:
-    #         if rec.employee_id:
-    #             emp = self.env['hr.employee'].sudo().search([('id','=',rec.employee_id.id)],limit=1)
-    #             if emp:
-    #                 rec.nik = emp.nik
-                    #rec.branch_id = emp.branch_id.id
-                    #rec.department_id = emp.department_id.id
-                    #rec.area_id = emp.area.id
-    #
-    # @api.constrains('nik','plann_date_from','plann_date_to')
-    # def check_duplicate_record(self):
-    #     pass
-    #     for rec in self:
-    #         '''Method to avoid duplicate overtime request'''
-    #         duplicate_record = self.search([
-    #             ('nik','=',rec.nik),
-    #             ('plann_date_from','=',rec.plann_date_from),
-    #             ('plann_date_to','=',rec.plann_date_to),
-    #         ])
-    #         if duplicate_record:
-    #             raise ValidationError(f"Duplicate record found for employee {rec.employee_id.name} in {rec.planning_id.name}. "
-    #                                   f"Start date: {rec.plann_date_from} and end date: {rec.plann_date_to}.")
-    #
-    # @api.model
-    # def create(self, vals):
-    #     # Add the duplicate check before creating a new record
-    #     # self.check_duplicate_record()
-    #     return super(HREmpOvertimeRequestEmployee, self).create(vals)
-    #
-    # def write(self, vals):
-    #     # Add the duplicate check before updating a record
-    #     res = super(HREmpOvertimeRequestEmployee, self).write(vals)
-    #     # self.check_duplicate_record()
-    #     return res
