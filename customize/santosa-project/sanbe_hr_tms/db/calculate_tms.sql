@@ -1,7 +1,7 @@
 -- DROP PROCEDURE public.calculate_tms(int4, int4, int4);
 
-CREATE OR REPLACE PROCEDURE public.calculate_tms(period integer, l_area integer, branch integer)
- LANGUAGE plpgsql
+CREATE OR REPLACE PROCEDURE public.calculate_tms(IN period integer, IN l_area integer, IN branch integer)
+    LANGUAGE plpgsql
 AS $procedure$
 begin
 
@@ -116,6 +116,55 @@ begin
       AND rcl.state = 'post'
       AND rcl.area_id = l_area;
 
+
+-- update W , employee_id, empgroup, workingday
+    WITH flag AS (select 'W' as cf,
+                         he.id employee_id ,
+                         he.workingdays_id wdcode,
+                         generate_series(hoc.open_periode_from ::date, hoc.open_periode_to::date, interval '1 day')::date AS wd,
+                         to_char(generate_series(hoc.open_periode_from ::date, hoc.open_periode_to::date, interval '1 day')::date, 'FMDay') AS day_name,
+                         he.branch_id,
+                         he.area,
+                         hwd.fullday_from                                                                  AS schedule_timein,
+                         hwd.fullday_to                                                                    AS schedule_timeout,
+                         type_hari
+                  from
+                      hr_employee he
+                          JOIN hr_working_days hwd ON he.workingdays_id = hwd.id and he.branch_id = branch
+                          join hr_opening_closing hoc on 1 = 1 and hoc.id = period
+                  where
+                      he.wd_type = 'wd'
+                    and he.state = 'approved' ),
+         flags AS (SELECT *
+                   FROM flag
+                   WHERE day_name NOT IN ('Sunday')
+                     AND type_hari = 'fhday'
+                   UNION ALL
+                   SELECT *
+                   FROM flag
+                   WHERE day_name NOT IN ('Sunday', 'Saturday')
+                     AND type_hari = 'fday'
+                   UNION ALL
+                   SELECT *
+                   FROM flag
+                   WHERE type_hari NOT IN ('fhday', 'fday'))
+    UPDATE sb_tms_tmsentry_details ha
+    SET type              = f.cf,
+        -- empgroup_id       = f.empgroup_id,
+        workingday_id     = f.wdcode,
+        schedule_time_in  = f.schedule_timein,
+        schedule_time_out = f.schedule_timeout
+    FROM hr_tmsentry_summary hts,
+         flags f
+    WHERE ha.tmsentry_id = hts.id
+      AND hts.employee_id = f.employee_id
+      AND hts.periode_id = period
+      AND ha.details_date::date = f.wd
+      AND ha.type IS NULL
+      AND hts.area_id = l_area
+      AND hts.branch_id = branch;
+
+
 -- update W , employee_id, empgroup, workingday
     WITH flag AS (SELECT 'W'                                                                               AS cf,
                          hed.employee_id,
@@ -187,24 +236,24 @@ begin
 
     --update hr_tms_summary from temp
     with temp_hts as (
-      select 
-      employee_id, 
-      area_id, 
-      branch_id, 
-      periode_id, 
-      completed_hrd, 
-      completed_ca, 
-      task_hrd, 
-      task_ca 
-    from temp_hr_tmsentry_summary
+        select
+            employee_id,
+            area_id,
+            branch_id,
+            periode_id,
+            completed_hrd,
+            completed_ca,
+            task_hrd,
+            task_ca
+        from temp_hr_tmsentry_summary
     )
     update hr_tmsentry_summary hts
     set task_ca = th.task_ca, task_hrd = th.task_hrd, completed_ca = th.completed_ca, completed_hrd = th.completed_hrd
     from temp_hts th
     where hts.employee_id = th.employee_id
-    and hts.area_id = th.area_id
-    and hts.branch_id = th.branch_id
-    and hts.periode_id = th.periode_id;
+      and hts.area_id = th.area_id
+      and hts.branch_id = th.branch_id
+      and hts.periode_id = th.periode_id;
 
     --update sb_tms_tmsentry_details edited
     WITH temp AS (SELECT distinct tsttd.employee_id,
@@ -290,7 +339,7 @@ begin
                                          WHEN type = 'W' AND (time_in = 0 OR time_in IS NULL) AND
                                               (time_out = 0 OR time_out IS NULL) THEN 'Absent'
                                          WHEN type = 'W' AND ((time_in = 0 OR time_in IS NULL) OR
-                                              (time_out = 0 OR time_out IS NULL)) THEN 'Alpha 1/2'
+                                                              (time_out = 0 OR time_out IS NULL)) THEN 'Alpha 1/2'
                                          ELSE sttd2.status_attendance -- Default status in case no condition matches
                                          END AS status
                               --  EXTRACT(EPOCH FROM (
@@ -347,16 +396,16 @@ begin
                        hts.area_id,
                        hts.branch_id,
                        sttd.details_date,
-                    --    float_to_time(coalesce(sttd.edited_time_in, sttd.time_in))   as time_in,
+                       --    float_to_time(coalesce(sttd.edited_time_in, sttd.time_in))   as time_in,
                        make_time(
-                           floor(coalesce(sttd.edited_time_in, sttd.time_in))::int, -- Hour part
-                           round((coalesce(sttd.edited_time_in, sttd.time_in) - floor(coalesce(sttd.edited_time_in, sttd.time_in))) * 60)::int, -- Minute part
-                           0::int) as time_in, -- Second part
-                    --    float_to_time(coalesce(sttd.edited_time_out, sttd.time_out)) as time_out,
+                               floor(coalesce(sttd.edited_time_in, sttd.time_in))::int, -- Hour part
+                               round((coalesce(sttd.edited_time_in, sttd.time_in) - floor(coalesce(sttd.edited_time_in, sttd.time_in))) * 60)::int, -- Minute part
+                               0::int) as time_in, -- Second part
+                       --    float_to_time(coalesce(sttd.edited_time_out, sttd.time_out)) as time_out,
                        make_time(
-                           floor(coalesce(sttd.edited_time_out, sttd.time_out))::int, -- Hour part
-                           round((coalesce(sttd.edited_time_out, sttd.time_out) - floor(coalesce(sttd.edited_time_out, sttd.time_out))) * 60)::int, -- Minute part
-                           0::int) as time_out,
+                               floor(coalesce(sttd.edited_time_out, sttd.time_out))::int, -- Hour part
+                               round((coalesce(sttd.edited_time_out, sttd.time_out) - floor(coalesce(sttd.edited_time_out, sttd.time_out))) * 60)::int, -- Minute part
+                               0::int) as time_out,
                        sttd.status_attendance
                 from hr_tmsentry_summary hts
                          join sb_tms_tmsentry_details sttd on hts.id = sttd.tmsentry_id
@@ -365,21 +414,21 @@ begin
                   and hts.branch_id = branch),
          bb as (select aa.*,
                        hwd.delay_allow,
-                    --    float_to_time(hwd.fullday_from)                                         as schd_in,
+                       --    float_to_time(hwd.fullday_from)                                         as schd_in,
                        make_time(
-                           floor(hwd.fullday_from)::int, -- Hour part
-                           round((hwd.fullday_from - floor(hwd.fullday_from)) * 60)::int, -- Minute part
-                           0::int) as schd_in, -- Second part
-                    --    float_to_time(hwd.fullday_to)                                           as schd_out,
+                               floor(hwd.fullday_from)::int, -- Hour part
+                               round((hwd.fullday_from - floor(hwd.fullday_from)) * 60)::int, -- Minute part
+                               0::int) as schd_in, -- Second part
+                       --    float_to_time(hwd.fullday_to)                                           as schd_out,
                        make_time(
-                           floor(hwd.fullday_to)::int, -- Hour part
-                           round((hwd.fullday_to - floor(hwd.fullday_to)) * 60)::int, -- Minute part
-                           0::int) as schd_out, -- Second part
-                    --    float_to_time(hwd.fullday_from) + INTERVAL '1 minute' * hwd.delay_allow AS delay_tolerance
+                               floor(hwd.fullday_to)::int, -- Hour part
+                               round((hwd.fullday_to - floor(hwd.fullday_to)) * 60)::int, -- Minute part
+                               0::int) as schd_out, -- Second part
+                       --    float_to_time(hwd.fullday_from) + INTERVAL '1 minute' * hwd.delay_allow AS delay_tolerance
                        make_time(
-                           floor(hwd.fullday_from)::int, -- Hour part
-                           round((hwd.fullday_from - floor(hwd.fullday_from)) * 60)::int, -- Minute part
-                           0::int) + INTERVAL '1 minute' * hwd.delay_allow AS delay_tolerance
+                               floor(hwd.fullday_from)::int, -- Hour part
+                               round((hwd.fullday_from - floor(hwd.fullday_from)) * 60)::int, -- Minute part
+                               0::int) + INTERVAL '1 minute' * hwd.delay_allow AS delay_tolerance
                 from aa
                          join hr_working_days hwd on aa.workingday_id = hwd.id),
          cc as (select bb.*,
@@ -387,10 +436,10 @@ begin
                            when
                                bb.time_in > bb.schd_in
                                then case
-                                        -- when abs(trunc(
-                                        --         EXTRACT(EPOCH FROM (bb.delay_tolerance::time - bb.time_in::time)) /
-                                        --         60)) < bb.delay_allow
-                                        --     then 0
+                               -- when abs(trunc(
+                               --         EXTRACT(EPOCH FROM (bb.delay_tolerance::time - bb.time_in::time)) /
+                               --         60)) < bb.delay_allow
+                               --     then 0
                                         when bb.time_in <= bb.delay_tolerance
                                             then 0
                                         else
@@ -407,8 +456,8 @@ begin
     --     hitung delay level1 dan level 2
 --     delay level1 adalah delay > 5 min dan < 10 min
 --     delay level2 adalah delay > 10 min
-     
-  
+
+
 -- read permission
     WITH permission_dates AS (SELECT he.name,
                                      hpe.employee_id,
@@ -465,7 +514,7 @@ begin
                 where hts.periode_id = period
                   and hts.area_id = l_area
                   and hts.branch_id = branch
-                  /*and hts.employee_id = 48067*/),
+        /*and hts.employee_id = 48067*/),
          bb as (select aa.*,
                        case when aa.delay > 10 then 1 end                  as delay_level2,
                        case when aa.delay > 0 and aa.delay <= 10 then 1 end as delay_level1
@@ -512,267 +561,267 @@ begin
 --      AND sttd.date_out = f.plann_date_to;
 
     --update data longshift
-	with xx as(
-		--row atas
-		select 
-			he."name", 
-			sttd.employee_id,
-			sttd.workingday_id,
-			hwd.code workingday,
-			sttd.details_date, 
-			sttd.date_in, 
-			sttd.date_out, 
-			sttd.schedule_time_in ,
-			sttd.schedule_time_out ,
-			sttd.time_in, 
-			sttd.time_out,
-			sttd.approval_ot_from,
-			sttd.approval_ot_to
-		from sb_tms_tmsentry_details sttd 
-		join sb_tms_tmsentry_details sttd2 on sttd.employee_id = sttd2.employee_id
-		join hr_employee he on sttd.employee_id = he.id
-		left join hr_working_days hwd on sttd.workingday_id = hwd.id
-		where sttd.time_out = sttd2.time_out 
-		and (sttd2.time_in is null or sttd2.time_in = 0) 
-		and sttd2.details_date = sttd.details_date + interval '1 day'
-		and sttd.date_out > sttd.date_in
-		order by he."name"
-	),
-	yy as(
-		--row bawah
-		select 
-			he."name", 
-			sttd2.employee_id,
-			sttd2.workingday_id,
-			hwd.code workingday,
-			sttd2.details_date, 
-			sttd2.date_in, 
-			sttd2.date_out, 
-			sttd2.schedule_time_in ,
-			sttd2.schedule_time_out ,
-			sttd2.time_in, 
-			sttd2.time_out,
-			sttd2.approval_ot_from,
-			sttd2.approval_ot_to
-		from sb_tms_tmsentry_details sttd 
-		join sb_tms_tmsentry_details sttd2 on sttd.employee_id = sttd2.employee_id
-		join hr_employee he on sttd2.employee_id = he.id
-		left join hr_working_days hwd on sttd2.workingday_id = hwd.id
-		where sttd.time_out = sttd2.time_out 
-		and (sttd2.time_in is null or sttd2.time_in = 0) 
-		and sttd2.details_date = sttd.details_date + interval '1 day'
-		and sttd.date_out > sttd.date_in
-		order by he."name"
-	),
-	zz as (
-	select
-	distinct
-		he."name",
-		sttd.employee_id,
-		sttd.workingday_id,
-		sttd.details_date, 
-		sttd.date_in, 
-		sttd.date_out, 
-		sttd.schedule_time_in ,
-		sttd.schedule_time_out ,
-	--	sttd.time_in, 
-	--	sttd.time_out,
-		case
-			when sttd.workingday_id is not null and sttd.employee_id = xx.employee_id and sttd.details_date = xx.details_date then xx.schedule_time_out
-			when sttd.workingday_id is null and sttd.employee_id = xx.employee_id and sttd.details_date = xx.details_date then xx.approval_ot_to
-			else sttd.time_out 
-		end as time_out,
-		case
-			when sttd.workingday_id is not null and sttd.employee_id = yy.employee_id and sttd.details_date = yy.details_date then yy.schedule_time_in
-			when sttd.workingday_id is null and sttd.employee_id = yy.employee_id and sttd.details_date = yy.details_date then yy.approval_ot_from
-			else sttd.time_in
-		end as time_in,
-		sttd.approval_ot_from,
-		sttd.approval_ot_to
-	from sb_tms_tmsentry_details sttd 
-	join xx on sttd.employee_id = xx.employee_id
-	join yy on sttd.employee_id = yy.employee_id 
-	join hr_employee he on sttd.employee_id = he.id
-	where sttd.employee_id in (xx.employee_id, yy.employee_id) and sttd.details_date in (xx.details_date, yy.details_date)
-	)
-	update sb_tms_tmsentry_details sttd 
-	set time_in = zz.time_in, time_out = zz.time_out, date_in = sttd.details_date, remark_edit_attn = 'update long shift', status_attendance = 'Attendee'
-	from zz
-	where sttd.employee_id = zz.employee_id and sttd.details_date = zz.details_date;
+    with xx as(
+        --row atas
+        select
+            he."name",
+            sttd.employee_id,
+            sttd.workingday_id,
+            hwd.code workingday,
+            sttd.details_date,
+            sttd.date_in,
+            sttd.date_out,
+            sttd.schedule_time_in ,
+            sttd.schedule_time_out ,
+            sttd.time_in,
+            sttd.time_out,
+            sttd.approval_ot_from,
+            sttd.approval_ot_to
+        from sb_tms_tmsentry_details sttd
+                 join sb_tms_tmsentry_details sttd2 on sttd.employee_id = sttd2.employee_id
+                 join hr_employee he on sttd.employee_id = he.id
+                 left join hr_working_days hwd on sttd.workingday_id = hwd.id
+        where sttd.time_out = sttd2.time_out
+          and (sttd2.time_in is null or sttd2.time_in = 0)
+          and sttd2.details_date = sttd.details_date + interval '1 day'
+          and sttd.date_out > sttd.date_in
+        order by he."name"
+    ),
+         yy as(
+             --row bawah
+             select
+                 he."name",
+                 sttd2.employee_id,
+                 sttd2.workingday_id,
+                 hwd.code workingday,
+                 sttd2.details_date,
+                 sttd2.date_in,
+                 sttd2.date_out,
+                 sttd2.schedule_time_in ,
+                 sttd2.schedule_time_out ,
+                 sttd2.time_in,
+                 sttd2.time_out,
+                 sttd2.approval_ot_from,
+                 sttd2.approval_ot_to
+             from sb_tms_tmsentry_details sttd
+                      join sb_tms_tmsentry_details sttd2 on sttd.employee_id = sttd2.employee_id
+                      join hr_employee he on sttd2.employee_id = he.id
+                      left join hr_working_days hwd on sttd2.workingday_id = hwd.id
+             where sttd.time_out = sttd2.time_out
+               and (sttd2.time_in is null or sttd2.time_in = 0)
+               and sttd2.details_date = sttd.details_date + interval '1 day'
+               and sttd.date_out > sttd.date_in
+             order by he."name"
+         ),
+         zz as (
+             select
+                 distinct
+                 he."name",
+                 sttd.employee_id,
+                 sttd.workingday_id,
+                 sttd.details_date,
+                 sttd.date_in,
+                 sttd.date_out,
+                 sttd.schedule_time_in ,
+                 sttd.schedule_time_out ,
+                 --	sttd.time_in,
+                 --	sttd.time_out,
+                 case
+                     when sttd.workingday_id is not null and sttd.employee_id = xx.employee_id and sttd.details_date = xx.details_date then xx.schedule_time_out
+                     when sttd.workingday_id is null and sttd.employee_id = xx.employee_id and sttd.details_date = xx.details_date then xx.approval_ot_to
+                     else sttd.time_out
+                     end as time_out,
+                 case
+                     when sttd.workingday_id is not null and sttd.employee_id = yy.employee_id and sttd.details_date = yy.details_date then yy.schedule_time_in
+                     when sttd.workingday_id is null and sttd.employee_id = yy.employee_id and sttd.details_date = yy.details_date then yy.approval_ot_from
+                     else sttd.time_in
+                     end as time_in,
+                 sttd.approval_ot_from,
+                 sttd.approval_ot_to
+             from sb_tms_tmsentry_details sttd
+                      join xx on sttd.employee_id = xx.employee_id
+                      join yy on sttd.employee_id = yy.employee_id
+                      join hr_employee he on sttd.employee_id = he.id
+             where sttd.employee_id in (xx.employee_id, yy.employee_id) and sttd.details_date in (xx.details_date, yy.details_date)
+         )
+    update sb_tms_tmsentry_details sttd
+    set time_in = zz.time_in, time_out = zz.time_out, date_in = sttd.details_date, remark_edit_attn = 'update long shift', status_attendance = 'Attendee'
+    from zz
+    where sttd.employee_id = zz.employee_id and sttd.details_date = zz.details_date;
 
-	-- tes new update aot 1 dengan toleransi 5 menit (+ 0.08333)
-	UPDATE sb_tms_tmsentry_details sttd
-	SET aot1 =
-	    CASE
-	        WHEN sttd.date_in = sttd.date_out THEN
-	            CASE
-	                WHEN COALESCE(sttd.edited_time_in, sttd.time_in) <= (sttd.approval_ot_from + 0.08333) AND
-	                     COALESCE(sttd.edited_time_out, sttd.time_out) >= sttd.approval_ot_to AND
-	                     (sttd.approval_ot_to - sttd.approval_ot_from) >= (hos.aot_to - hos.aot_from)
-	                    THEN FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2
-	                WHEN COALESCE(sttd.edited_time_in, sttd.time_in) <= (sttd.approval_ot_from + 0.08333) AND
-	                     COALESCE(sttd.edited_time_out, sttd.time_out) < sttd.approval_ot_to AND
-	                     (COALESCE(sttd.edited_time_out, sttd.time_out) - sttd.approval_ot_from) >=
-	                     (hos.aot_to - hos.aot_from) THEN FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2
-	                WHEN COALESCE(sttd.edited_time_in, sttd.time_in) > (sttd.approval_ot_from + 0.08333) AND
-	                     COALESCE(sttd.edited_time_out, sttd.time_out) >= sttd.approval_ot_to AND
-	                     (sttd.approval_ot_to - COALESCE(sttd.edited_time_in, sttd.time_in)) >=
-	                     (hos.aot_to - hos.aot_from) THEN FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2
-	                WHEN COALESCE(sttd.edited_time_in, sttd.time_in) > (sttd.approval_ot_from + 0.08333) AND
-	                     COALESCE(sttd.edited_time_out, sttd.time_out) < sttd.approval_ot_to AND
-	                     (COALESCE(sttd.edited_time_out, sttd.time_out) -
-	                      COALESCE(sttd.edited_time_in, sttd.time_in)) >= (hos.aot_to - hos.aot_from)
-	                    THEN FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2
-	                ELSE NULL
-	            END
-	        WHEN sttd.date_in < sttd.date_out THEN
-	            CASE
-	                WHEN COALESCE(sttd.edited_time_in, sttd.time_in) <= (sttd.approval_ot_from + 0.08333) AND
-	                     COALESCE(sttd.edited_time_out, sttd.time_out) + 24 > sttd.approval_ot_to AND
-	                     sttd.approval_ot_from < sttd.approval_ot_to AND
-	                     (sttd.approval_ot_to - sttd.approval_ot_from) >= (hos.aot_to - hos.aot_from)
-	                    THEN FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2
-	                WHEN COALESCE(sttd.edited_time_in, sttd.time_in) <= (sttd.approval_ot_from + 0.08333) AND
-	                     COALESCE(sttd.edited_time_out, sttd.time_out) + 24 > sttd.approval_ot_to + 24 AND
-	                     sttd.approval_ot_from > sttd.approval_ot_to AND
-	                     (24 + sttd.approval_ot_to - sttd.approval_ot_from) >= (hos.aot_to - hos.aot_from)
-	                    THEN FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2
-	                WHEN COALESCE(sttd.edited_time_in, sttd.time_in) <= (sttd.approval_ot_from + 0.08333) AND
-	                     COALESCE(sttd.edited_time_out, sttd.time_out) + 24 < sttd.approval_ot_to + 24 AND
-	                     sttd.approval_ot_from > sttd.approval_ot_to AND
-	                     (24 + COALESCE(sttd.edited_time_out, sttd.time_out) - sttd.approval_ot_from) >=
-	                     (hos.aot_to - hos.aot_from) THEN FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2
-	                WHEN COALESCE(sttd.edited_time_in, sttd.time_in) > (sttd.approval_ot_from + 0.08333) AND
-	                     COALESCE(sttd.edited_time_out, sttd.time_out) + 24 > sttd.approval_ot_to AND
-	                     sttd.approval_ot_from < sttd.approval_ot_to AND
-	                     (sttd.approval_ot_to - COALESCE(sttd.edited_time_in, sttd.time_in)) >=
-	                     (hos.aot_to - hos.aot_from) THEN FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2
-	                WHEN COALESCE(sttd.edited_time_in, sttd.time_in) > (sttd.approval_ot_from + 0.08333) AND
-	                     COALESCE(sttd.edited_time_out, sttd.time_out) + 24 > sttd.approval_ot_to + 24 AND
-	                     sttd.approval_ot_from > sttd.approval_ot_to AND
-	                     (24 + sttd.approval_ot_to - COALESCE(sttd.edited_time_in, sttd.time_in)) >=
-	                     (hos.aot_to - hos.aot_from) THEN FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2
-	                WHEN COALESCE(sttd.edited_time_in, sttd.time_in) > (sttd.approval_ot_from + 0.08333) AND
-	                     COALESCE(sttd.edited_time_out, sttd.time_out) + 24 < sttd.approval_ot_to + 24 AND
-	                     sttd.approval_ot_from > sttd.approval_ot_to AND
-	                     (24 + COALESCE(sttd.edited_time_out, sttd.time_out) -
-	                      COALESCE(sttd.edited_time_in, sttd.time_in)) >= (hos.aot_to - hos.aot_from)
-	                    THEN FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2
-	                ELSE NULL
-	            END
-	        ELSE NULL
-	    END
-	FROM hr_overtime_setting hos
-	WHERE sttd.approval_ot_from IS NOT NULL
-	  AND sttd.approval_ot_to IS NOT NULL
-	  AND sttd.workingday_id IS NOT NULL
-	  AND hos.name = 'AOT1'
-	  AND hos.type = 'reguler';
+    -- tes new update aot 1 dengan toleransi 5 menit (+ 0.08333)
+    UPDATE sb_tms_tmsentry_details sttd
+    SET aot1 =
+            CASE
+                WHEN sttd.date_in = sttd.date_out THEN
+                    CASE
+                        WHEN COALESCE(sttd.edited_time_in, sttd.time_in) <= (sttd.approval_ot_from + 0.08333) AND
+                             COALESCE(sttd.edited_time_out, sttd.time_out) >= sttd.approval_ot_to AND
+                             (sttd.approval_ot_to - sttd.approval_ot_from) >= (hos.aot_to - hos.aot_from)
+                            THEN FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2
+                        WHEN COALESCE(sttd.edited_time_in, sttd.time_in) <= (sttd.approval_ot_from + 0.08333) AND
+                             COALESCE(sttd.edited_time_out, sttd.time_out) < sttd.approval_ot_to AND
+                             (COALESCE(sttd.edited_time_out, sttd.time_out) - sttd.approval_ot_from) >=
+                             (hos.aot_to - hos.aot_from) THEN FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2
+                        WHEN COALESCE(sttd.edited_time_in, sttd.time_in) > (sttd.approval_ot_from + 0.08333) AND
+                             COALESCE(sttd.edited_time_out, sttd.time_out) >= sttd.approval_ot_to AND
+                             (sttd.approval_ot_to - COALESCE(sttd.edited_time_in, sttd.time_in)) >=
+                             (hos.aot_to - hos.aot_from) THEN FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2
+                        WHEN COALESCE(sttd.edited_time_in, sttd.time_in) > (sttd.approval_ot_from + 0.08333) AND
+                             COALESCE(sttd.edited_time_out, sttd.time_out) < sttd.approval_ot_to AND
+                             (COALESCE(sttd.edited_time_out, sttd.time_out) -
+                              COALESCE(sttd.edited_time_in, sttd.time_in)) >= (hos.aot_to - hos.aot_from)
+                            THEN FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2
+                        ELSE NULL
+                        END
+                WHEN sttd.date_in < sttd.date_out THEN
+                    CASE
+                        WHEN COALESCE(sttd.edited_time_in, sttd.time_in) <= (sttd.approval_ot_from + 0.08333) AND
+                             COALESCE(sttd.edited_time_out, sttd.time_out) + 24 > sttd.approval_ot_to AND
+                             sttd.approval_ot_from < sttd.approval_ot_to AND
+                             (sttd.approval_ot_to - sttd.approval_ot_from) >= (hos.aot_to - hos.aot_from)
+                            THEN FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2
+                        WHEN COALESCE(sttd.edited_time_in, sttd.time_in) <= (sttd.approval_ot_from + 0.08333) AND
+                             COALESCE(sttd.edited_time_out, sttd.time_out) + 24 > sttd.approval_ot_to + 24 AND
+                             sttd.approval_ot_from > sttd.approval_ot_to AND
+                             (24 + sttd.approval_ot_to - sttd.approval_ot_from) >= (hos.aot_to - hos.aot_from)
+                            THEN FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2
+                        WHEN COALESCE(sttd.edited_time_in, sttd.time_in) <= (sttd.approval_ot_from + 0.08333) AND
+                             COALESCE(sttd.edited_time_out, sttd.time_out) + 24 < sttd.approval_ot_to + 24 AND
+                             sttd.approval_ot_from > sttd.approval_ot_to AND
+                             (24 + COALESCE(sttd.edited_time_out, sttd.time_out) - sttd.approval_ot_from) >=
+                             (hos.aot_to - hos.aot_from) THEN FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2
+                        WHEN COALESCE(sttd.edited_time_in, sttd.time_in) > (sttd.approval_ot_from + 0.08333) AND
+                             COALESCE(sttd.edited_time_out, sttd.time_out) + 24 > sttd.approval_ot_to AND
+                             sttd.approval_ot_from < sttd.approval_ot_to AND
+                             (sttd.approval_ot_to - COALESCE(sttd.edited_time_in, sttd.time_in)) >=
+                             (hos.aot_to - hos.aot_from) THEN FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2
+                        WHEN COALESCE(sttd.edited_time_in, sttd.time_in) > (sttd.approval_ot_from + 0.08333) AND
+                             COALESCE(sttd.edited_time_out, sttd.time_out) + 24 > sttd.approval_ot_to + 24 AND
+                             sttd.approval_ot_from > sttd.approval_ot_to AND
+                             (24 + sttd.approval_ot_to - COALESCE(sttd.edited_time_in, sttd.time_in)) >=
+                             (hos.aot_to - hos.aot_from) THEN FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2
+                        WHEN COALESCE(sttd.edited_time_in, sttd.time_in) > (sttd.approval_ot_from + 0.08333) AND
+                             COALESCE(sttd.edited_time_out, sttd.time_out) + 24 < sttd.approval_ot_to + 24 AND
+                             sttd.approval_ot_from > sttd.approval_ot_to AND
+                             (24 + COALESCE(sttd.edited_time_out, sttd.time_out) -
+                              COALESCE(sttd.edited_time_in, sttd.time_in)) >= (hos.aot_to - hos.aot_from)
+                            THEN FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2
+                        ELSE NULL
+                        END
+                ELSE NULL
+                END
+    FROM hr_overtime_setting hos
+    WHERE sttd.approval_ot_from IS NOT NULL
+      AND sttd.approval_ot_to IS NOT NULL
+      AND sttd.workingday_id IS NOT NULL
+      AND hos.name = 'AOT1'
+      AND hos.type = 'reguler';
 
-	
-	-- tes new update aot 2 dengan toleransi 5 menit (+ 0.08333)
-	UPDATE sb_tms_tmsentry_details sttd
-	SET aot2 =
-	    CASE
-	        WHEN sttd.date_in = sttd.date_out THEN -- tidak pergantian hari
-	            CASE
-	                WHEN COALESCE(sttd.edited_time_in, sttd.time_in) <= sttd.approval_ot_from + 0.08333 AND
-	                    COALESCE(sttd.edited_time_out, sttd.time_out) >= sttd.approval_ot_to AND
-	                    (sttd.approval_ot_to - sttd.approval_ot_from) > 1 AND
-	                    (sttd.approval_ot_to - sttd.approval_ot_from) < (hos.aot_to - hos.aot_from) THEN
-	                    GREATEST(FLOOR((sttd.approval_ot_to - (sttd.approval_ot_from + 1)::float) * 2) / 2, 0)
-	                WHEN COALESCE(sttd.edited_time_in, sttd.time_in) <= sttd.approval_ot_from + 0.08333 AND
-	                    COALESCE(sttd.edited_time_out, sttd.time_out) < sttd.approval_ot_to AND
-	                    (COALESCE(sttd.edited_time_out, sttd.time_out) - sttd.approval_ot_from) > 1 AND
-	                    (COALESCE(sttd.edited_time_out, sttd.time_out) - sttd.approval_ot_from) < (hos.aot_to - hos.aot_from) THEN
-	                    GREATEST(FLOOR((COALESCE(sttd.edited_time_out, sttd.time_out) - (sttd.approval_ot_from + 1)::float) * 2) / 2, 0)
-	                WHEN COALESCE(sttd.edited_time_in, sttd.time_in) > sttd.approval_ot_from + 0.08333 AND
-	                    COALESCE(sttd.edited_time_out, sttd.time_out) >= sttd.approval_ot_to AND
-	                    (sttd.approval_ot_to - COALESCE(sttd.edited_time_in, sttd.time_in)) > 1 AND
-	                    (sttd.approval_ot_to - COALESCE(sttd.edited_time_in, sttd.time_in)) < (hos.aot_to - hos.aot_from) THEN
-	                    GREATEST(FLOOR((sttd.approval_ot_to - (COALESCE(sttd.edited_time_in, sttd.time_in) + 1)::float) * 2) / 2, 0)
-	                WHEN COALESCE(sttd.edited_time_in, sttd.time_in) > sttd.approval_ot_from + 0.08333 AND
-	                    COALESCE(sttd.edited_time_out, sttd.time_out) < sttd.approval_ot_to AND
-	                    (COALESCE(sttd.edited_time_out, sttd.time_out) - COALESCE(sttd.edited_time_in, sttd.time_in)) > 1 AND
-	                    (COALESCE(sttd.edited_time_out, sttd.time_out) - COALESCE(sttd.edited_time_in, sttd.time_in)) < (hos.aot_to - hos.aot_from) THEN
-	                    GREATEST(FLOOR((COALESCE(sttd.edited_time_out, sttd.time_out) - (COALESCE(sttd.edited_time_in, sttd.time_in) + 1)::float) * 2) / 2, 0)
-	                ELSE NULL
-	            END
-	        WHEN sttd.date_in < sttd.date_out THEN -- pergantian hari
-	            CASE
-	                -- durasi absen lebih dari durasi overtime setting OT 2
-	                WHEN COALESCE(sttd.edited_time_in, sttd.time_in) <= sttd.approval_ot_from + 0.08333 AND
-	                    COALESCE(sttd.edited_time_out, sttd.time_out) + 24 > sttd.approval_ot_to AND
-	                    sttd.approval_ot_from < sttd.approval_ot_to AND
-	                    (sttd.approval_ot_to - sttd.approval_ot_from) >= (hos.aot_to - hos.aot_from) THEN
-	                    GREATEST(FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2, 0)
-	                WHEN COALESCE(sttd.edited_time_in, sttd.time_in) <= sttd.approval_ot_from + 0.08333 AND
-	                    COALESCE(sttd.edited_time_out, sttd.time_out) + 24 > sttd.approval_ot_to + 24 AND
-	                    sttd.approval_ot_from > sttd.approval_ot_to AND
-	                    (24 + sttd.approval_ot_to - sttd.approval_ot_from) >= (hos.aot_to - hos.aot_from) THEN
-	                    GREATEST(FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2, 0)
-	                WHEN COALESCE(sttd.edited_time_in, sttd.time_in) <= sttd.approval_ot_from + 0.08333 AND
-	                    COALESCE(sttd.edited_time_out, sttd.time_out) + 24 < sttd.approval_ot_to + 24 AND
-	                    sttd.approval_ot_from > sttd.approval_ot_to AND
-	                    (24 + COALESCE(sttd.edited_time_out, sttd.time_out) - sttd.approval_ot_from) >= (hos.aot_to - hos.aot_from) THEN
-	                    GREATEST(FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2, 0)
-	                WHEN COALESCE(sttd.edited_time_in, sttd.time_in) > sttd.approval_ot_from + 0.08333 AND
-	                    COALESCE(sttd.edited_time_out, sttd.time_out) + 24 > sttd.approval_ot_to AND
-	                    sttd.approval_ot_from < sttd.approval_ot_to AND
-	                    (sttd.approval_ot_to - COALESCE(sttd.edited_time_in, sttd.time_in)) >= (hos.aot_to - hos.aot_from) THEN
-	                    GREATEST(FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2, 0)
-	                WHEN COALESCE(sttd.edited_time_in, sttd.time_in) > sttd.approval_ot_from + 0.08333 AND
-	                    COALESCE(sttd.edited_time_out, sttd.time_out) + 24 > sttd.approval_ot_to + 24 AND
-	                    sttd.approval_ot_from > sttd.approval_ot_to AND
-	                    (24 + sttd.approval_ot_to - COALESCE(sttd.edited_time_in, sttd.time_in)) >= (hos.aot_to - hos.aot_from) THEN
-	                    GREATEST(FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2, 0)
-	                WHEN COALESCE(sttd.edited_time_in, sttd.time_in) > sttd.approval_ot_from + 0.08333 AND
-	                    COALESCE(sttd.edited_time_out, sttd.time_out) + 24 < sttd.approval_ot_to + 24 AND
-	                    sttd.approval_ot_from > sttd.approval_ot_to AND
-	                    (24 + COALESCE(sttd.edited_time_out, sttd.time_out) - COALESCE(sttd.edited_time_in, sttd.time_in)) >= (hos.aot_to - hos.aot_from) THEN
-	                    GREATEST(FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2, 0)
-	    
-	                -- durasi absen kurang dari durasi overtime setting OT 2
-	                WHEN COALESCE(sttd.edited_time_in, sttd.time_in) <= sttd.approval_ot_from + 0.08333 AND
-	                    COALESCE(sttd.edited_time_out, sttd.time_out) + 24 > sttd.approval_ot_to AND
-	                    sttd.approval_ot_from < sttd.approval_ot_to AND
-	                    (sttd.approval_ot_to - sttd.approval_ot_from) < (hos.aot_to - hos.aot_from) THEN
-	                    GREATEST(FLOOR((sttd.approval_ot_to - (sttd.approval_ot_from + 1)::float) * 2) / 2, 0)
-	                WHEN COALESCE(sttd.edited_time_in, sttd.time_in) <= sttd.approval_ot_from + 0.08333 AND
-	                    COALESCE(sttd.edited_time_out, sttd.time_out) + 24 > sttd.approval_ot_to + 24 AND
-	                    sttd.approval_ot_from > sttd.approval_ot_to AND
-	                    (24 + sttd.approval_ot_to - sttd.approval_ot_from) < (hos.aot_to - hos.aot_from) THEN
-	                    GREATEST(FLOOR((24 + sttd.approval_ot_to - (sttd.approval_ot_from + 1)::float) * 2) / 2, 0)
-	                WHEN COALESCE(sttd.edited_time_in, sttd.time_in) <= sttd.approval_ot_from + 0.08333 AND
-	                    COALESCE(sttd.edited_time_out, sttd.time_out) + 24 < sttd.approval_ot_to + 24 AND
-	                    sttd.approval_ot_from > sttd.approval_ot_to AND
-	                    (24 + COALESCE(sttd.edited_time_out, sttd.time_out) - sttd.approval_ot_from) < (hos.aot_to - hos.aot_from) THEN
-	                    GREATEST(FLOOR((24 + COALESCE(sttd.edited_time_out, sttd.time_out) - (sttd.approval_ot_from + 1)::float) * 2) / 2, 0)
-	                WHEN COALESCE(sttd.edited_time_in, sttd.time_in) > sttd.approval_ot_from + 0.08333 AND
-	                    COALESCE(sttd.edited_time_out, sttd.time_out) + 24 > sttd.approval_ot_to AND
-	                    sttd.approval_ot_from < sttd.approval_ot_to AND
-	                    (sttd.approval_ot_to - COALESCE(sttd.edited_time_in, sttd.time_in)) < (hos.aot_to - hos.aot_from) THEN
-	                    GREATEST(FLOOR((sttd.approval_ot_to - (COALESCE(sttd.edited_time_in, sttd.time_in) + 1)::float) * 2) / 2, 0)
-	                WHEN COALESCE(sttd.edited_time_in, sttd.time_in) > sttd.approval_ot_from + 0.08333 AND
-	                    COALESCE(sttd.edited_time_out, sttd.time_out) + 24 > sttd.approval_ot_to + 24 AND
-	                    sttd.approval_ot_from > sttd.approval_ot_to AND
-	                    (24 + sttd.approval_ot_to - COALESCE(sttd.edited_time_in, sttd.time_in)) < (hos.aot_to - hos.aot_from) THEN
-	                    GREATEST(FLOOR((24 + sttd.approval_ot_to - (COALESCE(sttd.edited_time_in, sttd.time_in) + 1)::float) * 2) / 2, 0)
-	                WHEN COALESCE(sttd.edited_time_in, sttd.time_in) > sttd.approval_ot_from + 0.08333 AND
-	                    COALESCE(sttd.edited_time_out, sttd.time_out) + 24 < sttd.approval_ot_to + 24 AND
-	                    sttd.approval_ot_from > sttd.approval_ot_to AND
-	                    (24 + COALESCE(sttd.edited_time_out, sttd.time_out) - COALESCE(sttd.edited_time_in, sttd.time_in)) < (hos.aot_to - hos.aot_from) THEN
-	                    GREATEST(FLOOR((24 + COALESCE(sttd.edited_time_out, sttd.time_out) - (COALESCE(sttd.edited_time_in, sttd.time_in) + 1)::float) * 2) / 2, 0)
-	                ELSE NULL
-	            END
-	        ELSE NULL
-	    END
-	FROM hr_overtime_setting hos
-	WHERE sttd.approval_ot_from IS NOT NULL
-	  AND sttd.approval_ot_to IS NOT NULL
-	  AND sttd.workingday_id IS NOT NULL
-	  AND hos.name = 'AOT2'
-	  AND hos.type = 'reguler';
+
+    -- tes new update aot 2 dengan toleransi 5 menit (+ 0.08333)
+    UPDATE sb_tms_tmsentry_details sttd
+    SET aot2 =
+            CASE
+                WHEN sttd.date_in = sttd.date_out THEN -- tidak pergantian hari
+                    CASE
+                        WHEN COALESCE(sttd.edited_time_in, sttd.time_in) <= sttd.approval_ot_from + 0.08333 AND
+                             COALESCE(sttd.edited_time_out, sttd.time_out) >= sttd.approval_ot_to AND
+                             (sttd.approval_ot_to - sttd.approval_ot_from) > 1 AND
+                             (sttd.approval_ot_to - sttd.approval_ot_from) < (hos.aot_to - hos.aot_from) THEN
+                            GREATEST(FLOOR((sttd.approval_ot_to - (sttd.approval_ot_from + 1)::float) * 2) / 2, 0)
+                        WHEN COALESCE(sttd.edited_time_in, sttd.time_in) <= sttd.approval_ot_from + 0.08333 AND
+                             COALESCE(sttd.edited_time_out, sttd.time_out) < sttd.approval_ot_to AND
+                             (COALESCE(sttd.edited_time_out, sttd.time_out) - sttd.approval_ot_from) > 1 AND
+                             (COALESCE(sttd.edited_time_out, sttd.time_out) - sttd.approval_ot_from) < (hos.aot_to - hos.aot_from) THEN
+                            GREATEST(FLOOR((COALESCE(sttd.edited_time_out, sttd.time_out) - (sttd.approval_ot_from + 1)::float) * 2) / 2, 0)
+                        WHEN COALESCE(sttd.edited_time_in, sttd.time_in) > sttd.approval_ot_from + 0.08333 AND
+                             COALESCE(sttd.edited_time_out, sttd.time_out) >= sttd.approval_ot_to AND
+                             (sttd.approval_ot_to - COALESCE(sttd.edited_time_in, sttd.time_in)) > 1 AND
+                             (sttd.approval_ot_to - COALESCE(sttd.edited_time_in, sttd.time_in)) < (hos.aot_to - hos.aot_from) THEN
+                            GREATEST(FLOOR((sttd.approval_ot_to - (COALESCE(sttd.edited_time_in, sttd.time_in) + 1)::float) * 2) / 2, 0)
+                        WHEN COALESCE(sttd.edited_time_in, sttd.time_in) > sttd.approval_ot_from + 0.08333 AND
+                             COALESCE(sttd.edited_time_out, sttd.time_out) < sttd.approval_ot_to AND
+                             (COALESCE(sttd.edited_time_out, sttd.time_out) - COALESCE(sttd.edited_time_in, sttd.time_in)) > 1 AND
+                             (COALESCE(sttd.edited_time_out, sttd.time_out) - COALESCE(sttd.edited_time_in, sttd.time_in)) < (hos.aot_to - hos.aot_from) THEN
+                            GREATEST(FLOOR((COALESCE(sttd.edited_time_out, sttd.time_out) - (COALESCE(sttd.edited_time_in, sttd.time_in) + 1)::float) * 2) / 2, 0)
+                        ELSE NULL
+                        END
+                WHEN sttd.date_in < sttd.date_out THEN -- pergantian hari
+                    CASE
+                        -- durasi absen lebih dari durasi overtime setting OT 2
+                        WHEN COALESCE(sttd.edited_time_in, sttd.time_in) <= sttd.approval_ot_from + 0.08333 AND
+                             COALESCE(sttd.edited_time_out, sttd.time_out) + 24 > sttd.approval_ot_to AND
+                             sttd.approval_ot_from < sttd.approval_ot_to AND
+                             (sttd.approval_ot_to - sttd.approval_ot_from) >= (hos.aot_to - hos.aot_from) THEN
+                            GREATEST(FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2, 0)
+                        WHEN COALESCE(sttd.edited_time_in, sttd.time_in) <= sttd.approval_ot_from + 0.08333 AND
+                             COALESCE(sttd.edited_time_out, sttd.time_out) + 24 > sttd.approval_ot_to + 24 AND
+                             sttd.approval_ot_from > sttd.approval_ot_to AND
+                             (24 + sttd.approval_ot_to - sttd.approval_ot_from) >= (hos.aot_to - hos.aot_from) THEN
+                            GREATEST(FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2, 0)
+                        WHEN COALESCE(sttd.edited_time_in, sttd.time_in) <= sttd.approval_ot_from + 0.08333 AND
+                             COALESCE(sttd.edited_time_out, sttd.time_out) + 24 < sttd.approval_ot_to + 24 AND
+                             sttd.approval_ot_from > sttd.approval_ot_to AND
+                             (24 + COALESCE(sttd.edited_time_out, sttd.time_out) - sttd.approval_ot_from) >= (hos.aot_to - hos.aot_from) THEN
+                            GREATEST(FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2, 0)
+                        WHEN COALESCE(sttd.edited_time_in, sttd.time_in) > sttd.approval_ot_from + 0.08333 AND
+                             COALESCE(sttd.edited_time_out, sttd.time_out) + 24 > sttd.approval_ot_to AND
+                             sttd.approval_ot_from < sttd.approval_ot_to AND
+                             (sttd.approval_ot_to - COALESCE(sttd.edited_time_in, sttd.time_in)) >= (hos.aot_to - hos.aot_from) THEN
+                            GREATEST(FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2, 0)
+                        WHEN COALESCE(sttd.edited_time_in, sttd.time_in) > sttd.approval_ot_from + 0.08333 AND
+                             COALESCE(sttd.edited_time_out, sttd.time_out) + 24 > sttd.approval_ot_to + 24 AND
+                             sttd.approval_ot_from > sttd.approval_ot_to AND
+                             (24 + sttd.approval_ot_to - COALESCE(sttd.edited_time_in, sttd.time_in)) >= (hos.aot_to - hos.aot_from) THEN
+                            GREATEST(FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2, 0)
+                        WHEN COALESCE(sttd.edited_time_in, sttd.time_in) > sttd.approval_ot_from + 0.08333 AND
+                             COALESCE(sttd.edited_time_out, sttd.time_out) + 24 < sttd.approval_ot_to + 24 AND
+                             sttd.approval_ot_from > sttd.approval_ot_to AND
+                             (24 + COALESCE(sttd.edited_time_out, sttd.time_out) - COALESCE(sttd.edited_time_in, sttd.time_in)) >= (hos.aot_to - hos.aot_from) THEN
+                            GREATEST(FLOOR((hos.aot_to - hos.aot_from::float) * 2) / 2, 0)
+
+                        -- durasi absen kurang dari durasi overtime setting OT 2
+                        WHEN COALESCE(sttd.edited_time_in, sttd.time_in) <= sttd.approval_ot_from + 0.08333 AND
+                             COALESCE(sttd.edited_time_out, sttd.time_out) + 24 > sttd.approval_ot_to AND
+                             sttd.approval_ot_from < sttd.approval_ot_to AND
+                             (sttd.approval_ot_to - sttd.approval_ot_from) < (hos.aot_to - hos.aot_from) THEN
+                            GREATEST(FLOOR((sttd.approval_ot_to - (sttd.approval_ot_from + 1)::float) * 2) / 2, 0)
+                        WHEN COALESCE(sttd.edited_time_in, sttd.time_in) <= sttd.approval_ot_from + 0.08333 AND
+                             COALESCE(sttd.edited_time_out, sttd.time_out) + 24 > sttd.approval_ot_to + 24 AND
+                             sttd.approval_ot_from > sttd.approval_ot_to AND
+                             (24 + sttd.approval_ot_to - sttd.approval_ot_from) < (hos.aot_to - hos.aot_from) THEN
+                            GREATEST(FLOOR((24 + sttd.approval_ot_to - (sttd.approval_ot_from + 1)::float) * 2) / 2, 0)
+                        WHEN COALESCE(sttd.edited_time_in, sttd.time_in) <= sttd.approval_ot_from + 0.08333 AND
+                             COALESCE(sttd.edited_time_out, sttd.time_out) + 24 < sttd.approval_ot_to + 24 AND
+                             sttd.approval_ot_from > sttd.approval_ot_to AND
+                             (24 + COALESCE(sttd.edited_time_out, sttd.time_out) - sttd.approval_ot_from) < (hos.aot_to - hos.aot_from) THEN
+                            GREATEST(FLOOR((24 + COALESCE(sttd.edited_time_out, sttd.time_out) - (sttd.approval_ot_from + 1)::float) * 2) / 2, 0)
+                        WHEN COALESCE(sttd.edited_time_in, sttd.time_in) > sttd.approval_ot_from + 0.08333 AND
+                             COALESCE(sttd.edited_time_out, sttd.time_out) + 24 > sttd.approval_ot_to AND
+                             sttd.approval_ot_from < sttd.approval_ot_to AND
+                             (sttd.approval_ot_to - COALESCE(sttd.edited_time_in, sttd.time_in)) < (hos.aot_to - hos.aot_from) THEN
+                            GREATEST(FLOOR((sttd.approval_ot_to - (COALESCE(sttd.edited_time_in, sttd.time_in) + 1)::float) * 2) / 2, 0)
+                        WHEN COALESCE(sttd.edited_time_in, sttd.time_in) > sttd.approval_ot_from + 0.08333 AND
+                             COALESCE(sttd.edited_time_out, sttd.time_out) + 24 > sttd.approval_ot_to + 24 AND
+                             sttd.approval_ot_from > sttd.approval_ot_to AND
+                             (24 + sttd.approval_ot_to - COALESCE(sttd.edited_time_in, sttd.time_in)) < (hos.aot_to - hos.aot_from) THEN
+                            GREATEST(FLOOR((24 + sttd.approval_ot_to - (COALESCE(sttd.edited_time_in, sttd.time_in) + 1)::float) * 2) / 2, 0)
+                        WHEN COALESCE(sttd.edited_time_in, sttd.time_in) > sttd.approval_ot_from + 0.08333 AND
+                             COALESCE(sttd.edited_time_out, sttd.time_out) + 24 < sttd.approval_ot_to + 24 AND
+                             sttd.approval_ot_from > sttd.approval_ot_to AND
+                             (24 + COALESCE(sttd.edited_time_out, sttd.time_out) - COALESCE(sttd.edited_time_in, sttd.time_in)) < (hos.aot_to - hos.aot_from) THEN
+                            GREATEST(FLOOR((24 + COALESCE(sttd.edited_time_out, sttd.time_out) - (COALESCE(sttd.edited_time_in, sttd.time_in) + 1)::float) * 2) / 2, 0)
+                        ELSE NULL
+                        END
+                ELSE NULL
+                END
+    FROM hr_overtime_setting hos
+    WHERE sttd.approval_ot_from IS NOT NULL
+      AND sttd.approval_ot_to IS NOT NULL
+      AND sttd.workingday_id IS NOT NULL
+      AND hos.name = 'AOT2'
+      AND hos.type = 'reguler';
 
 
     -- update aot1 aot2 - delay
@@ -1198,7 +1247,7 @@ begin
                                           0::int) AS time_out
                            FROM hr_tmsentry_summary hts
                                     JOIN sb_tms_tmsentry_details sttd ON hts.id = sttd.tmsentry_id
-									                  join hr_working_days hwd on sttd.workingday_id = hwd.id --tambahan
+                                    join hr_working_days hwd on sttd.workingday_id = hwd.id --tambahan
                                     JOIN hr_employee he ON hts.employee_id = he.id
                            WHERE /*hts.employee_id = 48051
                              AND*/ hts.periode_id = period
@@ -1207,7 +1256,7 @@ begin
                              and he.allowance_night_shift is true
                              and sttd.empgroup_id is not null
                              and sttd.workingday_id is not null
-							               and hwd.type_hari = 'shift' --tambahan
+                             and hwd.type_hari = 'shift' --tambahan
                              and hwd.code like '%2%'), --tambahan
          summary as (SELECT t.*,
                             sa.area_id      as area,
@@ -1230,17 +1279,17 @@ begin
                              floor(sad.time_from)::int,
                              round((sad.time_from - floor(sad.time_from)) * 60)::int,
                              0::int)::time
-                                AND t.time_out >= make_time(
+                         AND t.time_out >= make_time(
                                  floor(sad.time_to)::int,
                                  round((sad.time_to - floor(sad.time_to)) * 60)::int,
                                  0::int)::time /*OR time_out >= '21:00:00'*/)
-                            OR (t.time_in <= make_time( --tambahan
-                                            floor(sad.time_from)::int, --tambahan
-                                            round((sad.time_from - floor(sad.time_from)) * 60)::int, --tambahan
-                                            0::int)::time --tambahan
-                                            and t.time_out > '00:00:00' --tambahan
-                                            and t.date_out > t.date_in) --tambahan
-                            )
+                         OR (t.time_in <= make_time( --tambahan
+                                 floor(sad.time_from)::int, --tambahan
+                                 round((sad.time_from - floor(sad.time_from)) * 60)::int, --tambahan
+                                 0::int)::time --tambahan
+                             and t.time_out > '00:00:00' --tambahan
+                             and t.date_out > t.date_in) --tambahan
+                         )
                      ORDER BY t.details_date)
     update sb_tms_tmsentry_details s
     set night_shift = summary.night_shift
@@ -1308,7 +1357,7 @@ begin
                              floor(sad.time_from)::int,
                              round((sad.time_from - floor(sad.time_from)) * 60)::int,
                              0::int)::time
-                                AND t.time_out >= make_time(
+                         AND t.time_out >= make_time(
                                  floor(sad.time_to)::int,
                                  round((sad.time_to - floor(sad.time_to)) * 60)::int,
                                  0::int)::time /*OR time_out >= '21:00:00'*/)
@@ -1362,7 +1411,7 @@ begin
                                           0::int) AS time_out
                            FROM hr_tmsentry_summary hts
                                     JOIN sb_tms_tmsentry_details sttd ON hts.id = sttd.tmsentry_id
-									                  join hr_working_days hwd on sttd.workingday_id = hwd.id --tambahan
+                                    join hr_working_days hwd on sttd.workingday_id = hwd.id --tambahan
                                     JOIN hr_employee he ON hts.employee_id = he.id
                            WHERE /*hts.employee_id = 48066
                              AND*/ hts.periode_id = period
@@ -1371,7 +1420,7 @@ begin
                              and he.allowance_night_shift is true
                              and sttd.empgroup_id is not null
                              and sttd.workingday_id is not null
-							               and hwd.type_hari = 'shift' --tambahan
+                             and hwd.type_hari = 'shift' --tambahan
                              and hwd.code like '%3%' --tambahan
                              and sttd.date_in != sttd.date_out),
          summary as (SELECT t.*,
@@ -1395,7 +1444,7 @@ begin
                              floor(sad.time_from)::int,
                              round((sad.time_from - floor(sad.time_from)) * 60)::int,
                              0::int)::time
-                                AND t.time_out >= make_time(
+                         AND t.time_out >= make_time(
                                  floor(sad.time_to)::int,
                                  round((sad.time_to - floor(sad.time_to)) * 60)::int,
                                  0::int)::time /*OR time_out >= '02:00:00'*/)
@@ -1468,7 +1517,7 @@ begin
                              floor(sad.time_from)::int,
                              round((sad.time_from - floor(sad.time_from)) * 60)::int,
                              0::int)::time
-                                AND t.time_out >= make_time(
+                         AND t.time_out >= make_time(
                                  floor(sad.time_to)::int,
                                  round((sad.time_to - floor(sad.time_to)) * 60)::int,
                                  0::int)::time /*OR time_out >= '02:00:00'*/)
@@ -1509,81 +1558,81 @@ begin
     --   and hts.area_id = l_area
     --   and hts.branch_id = branch;
 
-	--update deduction
-	with flag as (
-    SELECT 
-        sttd.employee_id,
-        sttd.tmsentry_id,
-        COUNT(CASE WHEN sttd.delay > hwd.delay_allow THEN 1 END) AS count_delay,
-        SUM(sttd.delay) AS sum_delay,
-        CASE 
-            WHEN FLOOR(COUNT(CASE WHEN sttd.delay > hwd.delay_allow THEN 1 END) / 5) > FLOOR(SUM(sttd.delay) / 50) THEN FLOOR(COUNT(CASE WHEN sttd.delay > hwd.delay_allow THEN 1 END) / 5)
-            ELSE FLOOR(SUM(sttd.delay) / 50)
-        END AS total_deduction
-    FROM sb_tms_tmsentry_details sttd
-    JOIN hr_working_days hwd ON sttd.workingday_id = hwd.id
-    WHERE sttd.delay > 0
-    GROUP BY sttd.employee_id, sttd.tmsentry_id
+    --update deduction
+    with flag as (
+        SELECT
+            sttd.employee_id,
+            sttd.tmsentry_id,
+            COUNT(CASE WHEN sttd.delay > hwd.delay_allow THEN 1 END) AS count_delay,
+            SUM(sttd.delay) AS sum_delay,
+            CASE
+                WHEN FLOOR(COUNT(CASE WHEN sttd.delay > hwd.delay_allow THEN 1 END) / 5) > FLOOR(SUM(sttd.delay) / 50) THEN FLOOR(COUNT(CASE WHEN sttd.delay > hwd.delay_allow THEN 1 END) / 5)
+                ELSE FLOOR(SUM(sttd.delay) / 50)
+                END AS total_deduction
+        FROM sb_tms_tmsentry_details sttd
+                 JOIN hr_working_days hwd ON sttd.workingday_id = hwd.id
+        WHERE sttd.delay > 0
+        GROUP BY sttd.employee_id, sttd.tmsentry_id
     )
     update hr_tmsentry_summary hts
-    set is_deduction = 
-        case 
-          when f.total_deduction > 0 then true
-          else false
-        end,
-      total_deduction = f.total_deduction
+    set is_deduction =
+            case
+                when f.total_deduction > 0 then true
+                else false
+                end,
+        total_deduction = f.total_deduction
     from flag f
     where f.tmsentry_id = hts.id
-    and f.employee_id = hts.employee_id 
-    and hts.area_id = l_area
-    and hts.branch_id = branch
-    and hts.periode_id = period;
+      and f.employee_id = hts.employee_id
+      and hts.area_id = l_area
+      and hts.branch_id = branch
+      and hts.periode_id = period;
 
     --update sheet atendee, permission, overtime, night shift dan absent
     with xx as(
-      select
-      sttd.employee_id,
-      sttd.workingday_id,
-      hwd.code,
-      sttd.details_date,
-      sttd.status_attendance,
-      sttd.approval_ot_from,
-      sttd.approval_ot_to,
-      sttd.details_date as d_date,
-      TRIM(BOTH '.' FROM CONCAT(
-            CASE 
-                WHEN sttd.status_attendance = 'Attendee' THEN '10' 
-                ELSE '' 
-            END,
-            CASE 
-                WHEN sttd.status_attendance NOT IN ('Attendee', 'Absent') AND sttd.status_attendance IS NOT NULL THEN '.20' 
-                ELSE '' 
-            END,
-            CASE 
-                WHEN sttd.aot1 IS NOT NULL OR sttd.aot2 IS NOT NULL THEN '.30' 
-                ELSE '' 
-            END,
-            CASE 
-                WHEN sttd.night_shift IS NOT NULL OR sttd.night_shift2 IS NOT NULL THEN '.40' 
-                ELSE '' 
-            END,
-            CASE 
-                WHEN sttd.status_attendance IN ('Absent', 'Alpha 1/2') THEN '.50' 
-                ELSE '' 
-            END
-        )) AS flag
-    from sb_tms_tmsentry_details sttd 
-    left join hr_working_days hwd on sttd.workingday_id = hwd.id
+        select
+            sttd.employee_id,
+            sttd.workingday_id,
+            hwd.code,
+            sttd.details_date,
+            sttd.status_attendance,
+            sttd.approval_ot_from,
+            sttd.approval_ot_to,
+            sttd.details_date as d_date,
+            TRIM(BOTH '.' FROM CONCAT(
+                    CASE
+                        WHEN sttd.status_attendance = 'Attendee' THEN '10'
+                        ELSE ''
+                        END,
+                    CASE
+                        WHEN sttd.status_attendance NOT IN ('Attendee', 'Absent') AND sttd.status_attendance IS NOT NULL THEN '.20'
+                        ELSE ''
+                        END,
+                    CASE
+                        WHEN sttd.aot1 IS NOT NULL OR sttd.aot2 IS NOT NULL THEN '.30'
+                        ELSE ''
+                        END,
+                    CASE
+                        WHEN sttd.night_shift IS NOT NULL OR sttd.night_shift2 IS NOT NULL THEN '.40'
+                        ELSE ''
+                        END,
+                    CASE
+                        WHEN sttd.status_attendance IN ('Absent', 'Alpha 1/2') THEN '.50'
+                        ELSE ''
+                        END
+                               )) AS flag
+        from sb_tms_tmsentry_details sttd
+                 left join hr_working_days hwd on sttd.workingday_id = hwd.id
     )
     update sb_tms_tmsentry_details sttd
     set flag = xx.flag
     from xx, hr_tmsentry_summary hts
     where sttd.employee_id = xx.employee_id
-    and sttd.tmsentry_id = hts.id
-    and sttd.details_date = xx.d_date
-    and hts.periode_id = period
-    and hts.area_id = l_area
-    and hts.branch_id = branch;
+      and sttd.tmsentry_id = hts.id
+      and sttd.details_date = xx.d_date
+      and hts.periode_id = period
+      and hts.area_id = l_area
+      and hts.branch_id = branch;
 
     --update total summary detail (footer) || code ini harus selalu paling bawah
     WITH flag AS (SELECT he.name,
@@ -1662,9 +1711,9 @@ begin
                        sttd.date_out,
                        coalesce(sttd.edited_time_out, sttd.time_out) as time_out,
                        sttd.status_attendance,
-                        hts.division_id,
-                        hts.hrms_department_id,
-                        hts.directorate_id
+                       hts.division_id,
+                       hts.hrms_department_id,
+                       hts.directorate_id
                 from hr_tmsentry_summary hts
                          join sb_tms_tmsentry_details sttd on hts.id = sttd.tmsentry_id
                 where coalesce(sttd.edited_time_in, sttd.time_in) is null
@@ -1718,9 +1767,9 @@ begin
                        sttd.date_out,
                        coalesce(sttd.edited_time_out, sttd.time_out) as time_out,
                        sttd.status_attendance,
-                        hts.division_id,
-                        hts.hrms_department_id,
-                        hts.directorate_id
+                       hts.division_id,
+                       hts.hrms_department_id,
+                       hts.directorate_id
                 from hr_tmsentry_summary hts
                          join sb_tms_tmsentry_details sttd on hts.id = sttd.tmsentry_id
                          join hr_department hd on hts.department_id = hd.id
@@ -1763,8 +1812,8 @@ begin
     from sb_employee_attendance sea
     where sea.periode_id = period and sea.area_id = l_area and sea.branch_id = branch;
 
-    insert into sb_employee_attendance(employee_id, area_id, branch_id, department_id, division_id, 
-                                        hrms_department_id, directorate_id, empgroup_id, nik,
+    insert into sb_employee_attendance(employee_id, area_id, branch_id, department_id, division_id,
+                                       hrms_department_id, directorate_id, empgroup_id, nik,
                                        details_date, time_in, time_out, status_attendance, periode_id)
     select hts.employee_id,
            hts.area_id,
@@ -1790,8 +1839,8 @@ begin
 
     -- detail koreksi absensi
     insert into sb_attendance_correction_details as sacd (attn_correction_id, period_id, area_id,
-                                                          branch_id, department_id, division_id, 
-                                                           hrms_department_id, directorate_id, job_id, wdcode, empgroup_id,
+                                                          branch_id, department_id, division_id,
+                                                          hrms_department_id, directorate_id, job_id, wdcode, empgroup_id,
                                                           nik, name, remark, tgl_time_in, tgl_time_out, time_in,
                                                           edited_time_in,
                                                           time_out, edited_time_out, delay)
@@ -1833,8 +1882,8 @@ begin
       and soa.area_id = l_area
       and soa.branch_id = branch;
 
-    insert into sb_overtime_attendance as soa ( area_id, branch_id, department_id, division_id, 
-                                                           hrms_department_id, directorate_id, periode_id, no_request
+    insert into sb_overtime_attendance as soa ( area_id, branch_id, department_id, division_id,
+                                                hrms_department_id, directorate_id, periode_id, no_request
                                               , nik, req_date, employee_id, req_time_fr, req_time_to, rlz_time_fr
                                               , rlz_time_to, approve_time_from, approve_time_to, state)
     select hts.area_id,
