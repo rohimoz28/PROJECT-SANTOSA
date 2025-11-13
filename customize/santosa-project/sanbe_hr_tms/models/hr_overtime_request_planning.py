@@ -237,7 +237,7 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                    rec.state == 'approved_l2'
+                    rec.state == 'verified'
                     and rec.approval_l1_id
                     and rec.approve1
                     and rec.approval_l2_id
