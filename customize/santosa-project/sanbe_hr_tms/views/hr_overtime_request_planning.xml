@@ -15,7 +15,7 @@
                         <button string="Approved L2" name="btn_approved_l2" type="object" class="oe_highlight"
                                 invisible="not can_approve_l2" groups="sanbe_hr_tms.module_surat_perintah_lembur_approver"/>
                         <button string="Verified" name="btn_verified" type="object" class="oe_highlight"
-                                invisible="not can_verified" groups="sanbe_hr_tms.module_surat_perintah_lembur_staff_operator" />
+                                invisible="not can_verified" groups="sanbe_hr_tms.module_surat_perintah_lembur_approver" />
                         <button string="Approved HRD" name="btn_approved" type="object" class="oe_highlight"
                                 invisible="not can_approve_hrd" groups="sanbe_hr_tms.module_surat_perintah_lembur_approver"/>
                         <button string="Complete" name="btn_complete" type="object" class="oe_highlight" invisible="state != 'approved'"/>
