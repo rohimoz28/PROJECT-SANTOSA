@@ -946,9 +946,12 @@ class HREmpOvertimeRequestEmployee(models.Model):
         and that the 'from' time is less than the 'to' time.
         """
         for record in self:
-            if not (0.0 <= record.ot_plann_from <= 24.0 and 
+            if not record.ot_plann_from or not record.ot_plann_to:
+                continue
+
+            if not (0.0 <= record.ot_plann_from <= 24.0 and
                     0.0 <= record.ot_plann_to <= 24.0):
-                raise UserError("Waktu harus dalam rentang 0.0 hingga 24.0.")
+                raise UserError("Waktu harus dalam rentang 0.0 hingga 25.0.")
             if record.ot_plann_from >= record.ot_plann_to:
                 raise UserError("Jam SPL 'dari' harus lebih awal dari jam SPL 'Hingga'.")
             if record.max_ot and (record.ot_plann_to - record.ot_plann_from) > record.max_ot:
