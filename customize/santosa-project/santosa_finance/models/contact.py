@@ -27,7 +27,7 @@ class ResPartner(models.Model):
     ar_tracking_ids = fields.One2many(
         comodel_name='santosa_finance.transaction_tracking',
         inverse_name='partner_id', domain=[('flag','=',40)], help="AR"
-        )
+        ) # tidak dipakai karena pakai differed income
     ump_tracking_ids = fields.One2many(
         comodel_name='santosa_finance.transaction_tracking',
         inverse_name='partner_id', domain=[('flag','=',50)], help="UMP"
