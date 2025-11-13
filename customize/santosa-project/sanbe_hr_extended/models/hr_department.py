@@ -142,6 +142,32 @@ class HRJob(models.Model):
                     })
                     line.department_id = Department.id
 
+    @api.depends("company_id")
+    def _compute_allowed_user_ids(self):
+        # Copy code solusi di atas
+        all_users = self.env["res.users"].search([("share", "=", False)])
+
+        company_ids = self.company_id.ids
+        if not company_ids:
+            for job in self:
+                job.allowed_user_ids = all_users
+            return
+
+        domain = [("share", "=", False), ("company_ids", "in", company_ids)]
+        users_by_company = dict(
+            self.env["res.users"]._read_group(
+                domain=domain,
+                groupby=["company_id"],
+                aggregates=["id:recordset"],
+            ),
+        )
+
+        for job in self:
+            if job.company_id:
+                job.allowed_user_ids = users_by_company.get(job.company_id, all_users)
+            else:
+                job.allowed_user_ids = all_users
+
     @api.model
     def create(self, vals):
         res = super(HRJob, self).create(vals)
