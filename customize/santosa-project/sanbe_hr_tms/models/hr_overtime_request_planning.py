@@ -124,7 +124,7 @@ class HREmpOvertimeRequest(models.Model):
     # approverst_id = fields.Many2one('parent.hr.employee', related = 'employee_id.parent_id', string='Atasan Langsung',store=True, index=True)
     # approvernd_id = fields.Many2one('parent.hr.employee', string='Atasan', compute = '_get_approver',store=True ,index=True)
     approverhrd_id = fields.Many2one('hr.employee', string='Approval by HRD',
-                                     domain="[('branch_id','=',branch_id), ('hrms_department_id', 'in',  [97, 174]), ('user_id','!=', False)]",
+                                     domain="[('branch_id','=',branch_id), ('hrms_department_id', 'in',  [97, 174, 235]), ('user_id','!=', False)]",
                                      store=True, index=True)
 
     # New fields for user_id
