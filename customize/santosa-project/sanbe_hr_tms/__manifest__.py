@@ -29,7 +29,7 @@
         'security/tms_groups.xml',
         'security/tms_branch_security.xml',
         'security/ir.model.access.csv',
-        'views/tms_menu.xml',
+        'views/sb_docter_scheduling.xml',
         'data/ir_cron_data.xml',
         'wizards/export_excel_tms.xml',
         'wizards/list_employee_shift_wizard.xml',
@@ -67,6 +67,9 @@
         'views/hr_machine_details.xml',
         'views/st_master_leave.xml',
         'views/sb_route_master.xml',
+        'views/tmsentry_details.xml',
+        'views/hr_tms_employee_shift.xml',
+        'views/tms_menu.xml',
         'report/report_kehadiran_templates.xml',
         'report/report_kehadiran_html.xml',
         'report/report_ot_attendance_html.xml',
@@ -88,23 +91,21 @@
         'db/generate_ot_request.sql',
         'db/temporary_table.sql',
         'db/functions.sql',
-        'views/tmsentry_details.xml',
-        'views/hr_tms_employee_shift.xml',
     ],
     'assets': {
-            'web.assets_backend': [
-                'hr_holidays/static/src/**/*',
-                'sanbe_hr_tms/static/src/css/shift_employee.css',
-                'sanbe_hr_tms/static/src/xml/export_button.xml',
-                'sanbe_hr_tms/static/src/xml/export_button_ot_attendance.xml',
-                'sanbe_hr_tms/static/src/xml/export_button_ot_bundling.xml',
-                'sanbe_hr_tms/static/src/js/export_button.js',
-                'sanbe_hr_tms/static/src/js/export_button_ot_attendance.js',
-                'sanbe_hr_tms/static/src/js/export_button_ot_bundling.js',
-                'sanbe_hr_tms/static/src/js/report_esm.js',
-                'sanbe_hr_tms/static/src/js/report_action.js'
-                
-            ],
+        'web.assets_backend': [
+            'hr_holidays/static/src/**/*',
+            'sanbe_hr_tms/static/src/css/shift_employee.css',
+            'sanbe_hr_tms/static/src/xml/export_button.xml',
+            'sanbe_hr_tms/static/src/xml/export_button_ot_attendance.xml',
+            'sanbe_hr_tms/static/src/xml/export_button_ot_bundling.xml',
+            'sanbe_hr_tms/static/src/js/export_button.js',
+            'sanbe_hr_tms/static/src/js/export_button_ot_attendance.js',
+            'sanbe_hr_tms/static/src/js/export_button_ot_bundling.js',
+            'sanbe_hr_tms/static/src/js/report_esm.js',
+            'sanbe_hr_tms/static/src/js/report_action.js'
+
+        ],
         'web.assets_qweb': [
         ],
     },
