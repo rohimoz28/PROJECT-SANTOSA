@@ -13,13 +13,6 @@
         <!-- MENU ROOT -->
 
         <!-- TRANSACTION -->
-        <!-- <menuitem
-                id="hr_menu_tms_transaction"
-                name="Transaction"
-                sequence="2"
-                parent="hr_menu_tms_root"
-                groups="base.group_user"
-        /> -->
         <menuitem
                 id="hr_menu_tms_transaction"
                 name="Transaction"
@@ -56,12 +49,12 @@
         />
 
         <menuitem
-                id="menu_hr_overtime_request_entry"
-                name="Overtime Request"
+                id="menu_hr_overtime_request_staff_entry"
+                name="Surat Perintah Lembur"
                 sequence="20"
                 parent="sanbe_hr_tms.hr_menu_tms_administration"
                 action="action_hr_overtime_planning"
-                groups="module_sub_category_overtime_request_manager,module_sub_category_overtime_request_supervisor,module_sub_category_overtime_request_staff"
+                groups="module_surat_perintah_lembur_approver,module_surat_perintah_lembur_staff_operator,module_surat_perintah_lembur_manager"
         />
 
         <menuitem
@@ -99,14 +92,6 @@
                 parent="hr_menu_tms_root"
                 groups="base.group_user"
         />
-
-        <!-- <menuitem
-                id="menu_hr_overtime_request_entry"
-                name="Overtime Request"
-                sequence="30"
-                parent="sanbe_hr_tms.hr_menu_tms_approval"
-                action="action_hr_overtime_planning"
-        /> -->
         <!-- END APPROVAL -->
 
 
@@ -257,7 +242,7 @@
                 groups="module_sub_category_allowance_setting_manager,module_sub_category_allowance_setting_supervisor"
         />
 
-        <menuitem 
+        <menuitem
                 id="st_master_leave_menu"
                 name="Master Cuti"
                 sequence="60"

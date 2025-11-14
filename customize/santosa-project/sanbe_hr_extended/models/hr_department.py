@@ -75,20 +75,29 @@ class HRJob(models.Model):
     branch_id = fields.Many2one('res.branch',domain="[('id','in',branch_ids)]", string='Bisnis Unit')
     directorate_id = fields.Many2one('sanhrms.directorate', tracking=True, string='Direktorat')
     directorate_code = fields.Char('Directorate Code',related='directorate_id.directorate_code')
-
+    
+    allowed_user_ids = fields.Many2many('res.users',compute='_compute_allowed_user_ids', readonly=True)
+    interviewer_ids = fields.Many2many('res.users', domain="[('id', 'in', allowed_user_ids)]",)
     department_id = fields.Many2one('hr.department', compute = '_find_department_id',  string='Departemen', store=True, required=False)
     hrms_department_id = fields.Many2one('sanhrms.department', tracking=True, string='Departemen')
     department_code = fields.Char('Departemen Code', related='hrms_department_id.department_code')
     division_id = fields.Many2one('sanhrms.division', tracking=True, string='Divisi')
     division_code = fields.Char('Divisi Code', related='division_id.division_code')
     display_name = fields.Char(compute='_compute_display_name', string='Display Name', store=True, readonly=True)
-
+    user_id = fields.Many2one(
+        "res.users",
+        "Recruiter",
+        tracking=True,
+        help="The Recruiter will be the default value for all Applicants Recruiter's field in this job position. The Recruiter is automatically added to all meetings with the Applicant.",
+    )
     _sql_constraints = [
         ('name_company_uniq', 'check(1=1)', 'The name of the job position must be unique per department in company!'),
         ('no_of_recruitment_positive', 'CHECK(no_of_recruitment >= 0)',
          'The expected number of new employees must be positive.')
     ]
 
+    def _compute_allowed_user_ids(self):
+        return self.env.user.id
 
     # @api.model
     def unlink(self):
@@ -132,6 +141,32 @@ class HRJob(models.Model):
                         'company_id': self.env.user.company_id.id,
                     })
                     line.department_id = Department.id
+
+    @api.depends("company_id")
+    def _compute_allowed_user_ids(self):
+        # Copy code solusi di atas
+        all_users = self.env["res.users"].search([("share", "=", False)])
+
+        company_ids = self.company_id.ids
+        if not company_ids:
+            for job in self:
+                job.allowed_user_ids = all_users
+            return
+
+        domain = [("share", "=", False), ("company_ids", "in", company_ids)]
+        users_by_company = dict(
+            self.env["res.users"]._read_group(
+                domain=domain,
+                groupby=["company_id"],
+                aggregates=["id:recordset"],
+            ),
+        )
+
+        for job in self:
+            if job.company_id:
+                job.allowed_user_ids = users_by_company.get(job.company_id, all_users)
+            else:
+                job.allowed_user_ids = all_users
 
     @api.model
     def create(self, vals):

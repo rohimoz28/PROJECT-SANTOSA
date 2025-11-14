@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <data>
-
+    <data noupdate="0">
         <record model="ir.module.category" id="module_tms_category">
             <field name="name">Time Management System</field>
             <field name="sequence">1</field>
@@ -34,13 +33,13 @@
             <field name="description">Access Right for menu TMS Entry Summary under Transaction</field>
         </record>
 
-        <record model="res.groups" id="module_sub_category_tmsentry_summary_staff" >
+        <record model="res.groups" id="module_sub_category_tmsentry_summary_staff">
             <field name="name">Staff</field>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_tmsentry_summary"/>
         </record>
 
-        <record model="res.groups" id="module_sub_category_tmsentry_summary_supervisor" >
+        <record model="res.groups" id="module_sub_category_tmsentry_summary_supervisor">
             <field name="name">Supervisor</field>
             <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_tmsentry_summary_staff'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_tmsentry_summary"/>
@@ -48,7 +47,8 @@
 
         <record model="res.groups" id="module_sub_category_tmsentry_summary_manager">
             <field name="name">Manager</field>
-            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_tmsentry_summary_supervisor'))]"/>
+            <field name="implied_ids"
+                   eval="[(4, ref('sanbe_hr_tms.module_sub_category_tmsentry_summary_supervisor'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_tmsentry_summary"/>
         </record>
 
@@ -59,13 +59,13 @@
             <field name="description">Access Right for menu Employee Group under Administration</field>
         </record>
 
-        <record model="res.groups" id="module_sub_category_employee_group_staff" >
+        <record model="res.groups" id="module_sub_category_employee_group_staff">
             <field name="name">Staff</field>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_employee_group"/>
         </record>
 
-        <record model="res.groups" id="module_sub_category_employee_group_supervisor" >
+        <record model="res.groups" id="module_sub_category_employee_group_supervisor">
             <field name="name">Supervisor</field>
             <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_employee_group_staff'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_employee_group"/>
@@ -77,29 +77,10 @@
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_employee_group"/>
         </record>
 
-        <!-- TMS Overtime Request -->
         <record model="ir.module.category" id="module_sub_category_overtime_request">
             <field name="name">Overtime Request</field>
             <field name="parent_id" ref="sanbe_hr_tms.module_category_time_management_system"/>
             <field name="description">Access Right for menu Overtime Request under Administration</field>
-        </record>
-
-        <record model="res.groups" id="module_sub_category_overtime_request_staff" >
-            <field name="name">Staff</field>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
-            <field name="category_id" ref="sanbe_hr_tms.module_sub_category_overtime_request"/>
-        </record>
-
-        <record model="res.groups" id="module_sub_category_overtime_request_supervisor" >
-            <field name="name">Supervisor</field>
-            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_overtime_request_staff'))]"/>
-            <field name="category_id" ref="sanbe_hr_tms.module_sub_category_overtime_request"/>
-        </record>
-
-        <record model="res.groups" id="module_sub_category_overtime_request_manager">
-            <field name="name">Manager</field>
-            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_overtime_request_supervisor'))]"/>
-            <field name="category_id" ref="sanbe_hr_tms.module_sub_category_overtime_request"/>
         </record>
 
         <!-- TMS Permission -->
@@ -109,15 +90,15 @@
             <field name="description">Access Right for menu Permission under Administration</field>
         </record>
 
-        <record model="res.groups" id="module_sub_category_permission_staff" >
-            <field name="name">Staff</field>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+        <record model="res.groups" id="module_sub_category_permission_supervisor">
+            <field name="name">Approver</field>
+            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_permission_staff'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_permission"/>
         </record>
 
-        <record model="res.groups" id="module_sub_category_permission_supervisor" >
-            <field name="name">Supervisor</field>
-            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_permission_staff'))]"/>
+        <record model="res.groups" id="module_sub_category_permission_staff">
+            <field name="name">Staff/Operator</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_permission"/>
         </record>
 
@@ -134,13 +115,13 @@
             <field name="description">Access Right for menu Adjusment Request under Administration</field>
         </record>
 
-        <record model="res.groups" id="module_sub_category_adjusment_request_staff" >
+        <record model="res.groups" id="module_sub_category_adjusment_request_staff">
             <field name="name">Staff</field>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_adjusment_request"/>
         </record>
 
-        <record model="res.groups" id="module_sub_category_adjusment_request_supervisor" >
+        <record model="res.groups" id="module_sub_category_adjusment_request_supervisor">
             <field name="name">Supervisor</field>
             <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_adjusment_request_staff'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_adjusment_request"/>
@@ -148,7 +129,8 @@
 
         <record model="res.groups" id="module_sub_category_adjusment_request_manager">
             <field name="name">Manager</field>
-            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_adjusment_request_supervisor'))]"/>
+            <field name="implied_ids"
+                   eval="[(4, ref('sanbe_hr_tms.module_sub_category_adjusment_request_supervisor'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_adjusment_request"/>
         </record>
 
@@ -159,13 +141,14 @@
             <field name="description">Access Right for menu Upload Data Absen under Upload</field>
         </record>
 
-        <record model="res.groups" id="module_sub_category_upload_data_absen_staff" >
+        <!-- TMS Upload Data Absen -->
+        <record model="res.groups" id="module_sub_category_upload_data_absen_staff">
             <field name="name">Staff</field>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_upload_data_absen"/>
         </record>
 
-        <record model="res.groups" id="module_sub_category_upload_data_absen_supervisor" >
+        <record model="res.groups" id="module_sub_category_upload_data_absen_supervisor">
             <field name="name">Supervisor</field>
             <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_upload_data_absen_staff'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_upload_data_absen"/>
@@ -173,7 +156,8 @@
 
         <record model="res.groups" id="module_sub_category_upload_data_absen_manager">
             <field name="name">Manager</field>
-            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_upload_data_absen_supervisor'))]"/>
+            <field name="implied_ids"
+                   eval="[(4, ref('sanbe_hr_tms.module_sub_category_upload_data_absen_supervisor'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_upload_data_absen"/>
         </record>
 
@@ -184,21 +168,23 @@
             <field name="description">Access Right for menu Result of Uploaded Attendance under Upload</field>
         </record>
 
-        <record model="res.groups" id="module_sub_category_result_upload_data_absen_staff" >
+        <record model="res.groups" id="module_sub_category_result_upload_data_absen_staff">
             <field name="name">Staff</field>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_result_upload_data_absen"/>
         </record>
 
-        <record model="res.groups" id="module_sub_category_result_upload_data_absen_supervisor" >
+        <record model="res.groups" id="module_sub_category_result_upload_data_absen_supervisor">
             <field name="name">Supervisor</field>
-            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_result_upload_data_absen_staff'))]"/>
+            <field name="implied_ids"
+                   eval="[(4, ref('sanbe_hr_tms.module_sub_category_result_upload_data_absen_staff'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_result_upload_data_absen"/>
         </record>
 
         <record model="res.groups" id="module_sub_category_result_upload_data_absen_manager">
             <field name="name">Manager</field>
-            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_result_upload_data_absen_supervisor'))]"/>
+            <field name="implied_ids"
+                   eval="[(4, ref('sanbe_hr_tms.module_sub_category_result_upload_data_absen_supervisor'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_result_upload_data_absen"/>
         </record>
 
@@ -209,21 +195,23 @@
             <field name="description">Access Right for menu Result of Absen Tidak Lengkap under Monitoring</field>
         </record>
 
-        <record model="res.groups" id="module_sub_category_data_absen_tidak_lengkap_staff" >
+        <record model="res.groups" id="module_sub_category_data_absen_tidak_lengkap_staff">
             <field name="name">Staff</field>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_data_absen_tidak_lengkap"/>
         </record>
 
-        <record model="res.groups" id="module_sub_category_data_absen_tidak_lengkap_supervisor" >
+        <record model="res.groups" id="module_sub_category_data_absen_tidak_lengkap_supervisor">
             <field name="name">Supervisor</field>
-            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_data_absen_tidak_lengkap_staff'))]"/>
+            <field name="implied_ids"
+                   eval="[(4, ref('sanbe_hr_tms.module_sub_category_data_absen_tidak_lengkap_staff'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_data_absen_tidak_lengkap"/>
         </record>
 
         <record model="res.groups" id="module_sub_category_data_absen_tidak_lengkap_manager">
             <field name="name">Manager</field>
-            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_data_absen_tidak_lengkap_supervisor'))]"/>
+            <field name="implied_ids"
+                   eval="[(4, ref('sanbe_hr_tms.module_sub_category_data_absen_tidak_lengkap_supervisor'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_data_absen_tidak_lengkap"/>
         </record>
 
@@ -234,13 +222,13 @@
             <field name="description">Access Right for menu Result of Koreksi Absen under Monitoring</field>
         </record>
 
-        <record model="res.groups" id="module_sub_category_koreksi_absen_staff" >
+        <record model="res.groups" id="module_sub_category_koreksi_absen_staff">
             <field name="name">Staff</field>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_koreksi_absen"/>
         </record>
 
-        <record model="res.groups" id="module_sub_category_koreksi_absen_supervisor" >
+        <record model="res.groups" id="module_sub_category_koreksi_absen_supervisor">
             <field name="name">Supervisor</field>
             <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_koreksi_absen_staff'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_koreksi_absen"/>
@@ -259,13 +247,13 @@
             <field name="description">Access Right for menu Result of Monitor Kehadiran under Monitoring</field>
         </record>
 
-        <record model="res.groups" id="module_sub_category_monitor_kehadiran_staff" >
+        <record model="res.groups" id="module_sub_category_monitor_kehadiran_staff">
             <field name="name">Staff</field>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_monitor_kehadiran"/>
         </record>
 
-        <record model="res.groups" id="module_sub_category_monitor_kehadiran_supervisor" >
+        <record model="res.groups" id="module_sub_category_monitor_kehadiran_supervisor">
             <field name="name">Supervisor</field>
             <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_monitor_kehadiran_staff'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_monitor_kehadiran"/>
@@ -273,7 +261,8 @@
 
         <record model="res.groups" id="module_sub_category_monitor_kehadiran_manager">
             <field name="name">Manager</field>
-            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_monitor_kehadiran_supervisor'))]"/>
+            <field name="implied_ids"
+                   eval="[(4, ref('sanbe_hr_tms.module_sub_category_monitor_kehadiran_supervisor'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_monitor_kehadiran"/>
         </record>
 
@@ -284,21 +273,23 @@
             <field name="description">Access Right for menu Request vs Realization under Monitoring</field>
         </record>
 
-        <record model="res.groups" id="module_sub_category_request_vs_realization_staff" >
+        <record model="res.groups" id="module_sub_category_request_vs_realization_staff">
             <field name="name">Staff</field>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_request_vs_realization"/>
         </record>
 
-        <record model="res.groups" id="module_sub_category_request_vs_realization_supervisor" >
+        <record model="res.groups" id="module_sub_category_request_vs_realization_supervisor">
             <field name="name">Supervisor</field>
-            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_request_vs_realization_staff'))]"/>
+            <field name="implied_ids"
+                   eval="[(4, ref('sanbe_hr_tms.module_sub_category_request_vs_realization_staff'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_request_vs_realization"/>
         </record>
 
         <record model="res.groups" id="module_sub_category_request_vs_realization_manager">
             <field name="name">Manager</field>
-            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_request_vs_realization_supervisor'))]"/>
+            <field name="implied_ids"
+                   eval="[(4, ref('sanbe_hr_tms.module_sub_category_request_vs_realization_supervisor'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_request_vs_realization"/>
         </record>
 
@@ -309,13 +300,13 @@
             <field name="description">Access Right for menu Working Day under Setting</field>
         </record>
 
-        <record model="res.groups" id="module_sub_category_working_day_staff" >
+        <record model="res.groups" id="module_sub_category_working_day_staff">
             <field name="name">Staff</field>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_working_day"/>
         </record>
 
-        <record model="res.groups" id="module_sub_category_working_day_supervisor" >
+        <record model="res.groups" id="module_sub_category_working_day_supervisor">
             <field name="name">Supervisor</field>
             <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_working_day_staff'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_working_day"/>
@@ -334,13 +325,13 @@
             <field name="description">Access Right for menu Calendar Day under Setting</field>
         </record>
 
-        <record model="res.groups" id="module_sub_category_calendar_day_staff" >
+        <record model="res.groups" id="module_sub_category_calendar_day_staff">
             <field name="name">Staff</field>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_calendar_day"/>
         </record>
 
-        <record model="res.groups" id="module_sub_category_calendar_day_supervisor" >
+        <record model="res.groups" id="module_sub_category_calendar_day_supervisor">
             <field name="name">Supervisor</field>
             <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_calendar_day_staff'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_calendar_day"/>
@@ -359,13 +350,13 @@
             <field name="description">Access Right for menu Permission Code under Setting</field>
         </record>
 
-        <record model="res.groups" id="module_sub_category_permission_code_staff" >
+        <record model="res.groups" id="module_sub_category_permission_code_staff">
             <field name="name">Staff</field>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_permission_code"/>
         </record>
 
-        <record model="res.groups" id="module_sub_category_permission_code_supervisor" >
+        <record model="res.groups" id="module_sub_category_permission_code_supervisor">
             <field name="name">Supervisor</field>
             <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_permission_code_staff'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_permission_code"/>
@@ -384,13 +375,13 @@
             <field name="description">Access Right for menu Overtime Setting under Setting</field>
         </record>
 
-        <record model="res.groups" id="module_sub_category_overtime_setting_staff" >
+        <record model="res.groups" id="module_sub_category_overtime_setting_staff">
             <field name="name">Staff</field>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_overtime_setting"/>
         </record>
 
-        <record model="res.groups" id="module_sub_category_overtime_setting_supervisor" >
+        <record model="res.groups" id="module_sub_category_overtime_setting_supervisor">
             <field name="name">Supervisor</field>
             <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_overtime_setting_staff'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_overtime_setting"/>
@@ -398,8 +389,31 @@
 
         <record model="res.groups" id="module_sub_category_overtime_setting_manager">
             <field name="name">Manager</field>
-            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_overtime_setting_supervisor'))]"/>
+            <field name="implied_ids"
+                   eval="[(4, ref('sanbe_hr_tms.module_sub_category_overtime_setting_supervisor'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_overtime_setting"/>
+        </record>
+
+        <!-- TMS Surat Perintah Lembur (SPL) -->
+        <record model="ir.module.category" id="module_surat_perintah_lembur">
+            <field name="name">Surat Perintah Lembur</field>
+            <field name="parent_id" ref="sanbe_hr_tms.module_category_time_management_system"/>
+            <field name="description">Access Right for menu Surat Perintah Lembur (SPL)</field>
+        </record>
+
+        <record model="res.groups" id="module_surat_perintah_lembur_approver">
+            <field name="name">Approver</field>
+            <field name="category_id" ref="sanbe_hr_tms.module_surat_perintah_lembur"/>
+        </record>
+
+        <record model="res.groups" id="module_surat_perintah_lembur_staff_operator">
+            <field name="name">Staff/Operator</field>
+            <field name="category_id" ref="sanbe_hr_tms.module_surat_perintah_lembur"/>
+        </record>
+
+        <record model="res.groups" id="module_surat_perintah_lembur_manager">
+            <field name="name">Manager</field>
+            <field name="category_id" ref="sanbe_hr_tms.module_surat_perintah_lembur"/>
         </record>
 
         <!-- TMS Allowance Setting -->
@@ -409,13 +423,13 @@
             <field name="description">Access Right for menu Allowance Setting under Setting</field>
         </record>
 
-        <record model="res.groups" id="module_sub_category_allowance_setting_staff" >
+        <record model="res.groups" id="module_sub_category_allowance_setting_staff">
             <field name="name">Staff</field>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_allowance_setting"/>
         </record>
 
-        <record model="res.groups" id="module_sub_category_allowance_setting_supervisor" >
+        <record model="res.groups" id="module_sub_category_allowance_setting_supervisor">
             <field name="name">Supervisor</field>
             <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_allowance_setting_staff'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_allowance_setting"/>
@@ -423,7 +437,8 @@
 
         <record model="res.groups" id="module_sub_category_allowance_setting_manager">
             <field name="name">Manager</field>
-            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_allowance_setting_supervisor'))]"/>
+            <field name="implied_ids"
+                   eval="[(4, ref('sanbe_hr_tms.module_sub_category_allowance_setting_supervisor'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_allowance_setting"/>
         </record>
 
@@ -434,13 +449,13 @@
             <field name="description">Access Right for menu Processing and Period under Processing Period</field>
         </record>
 
-        <record model="res.groups" id="group_processing_period_staff" >
+        <record model="res.groups" id="group_processing_period_staff">
             <field name="name">Staff</field>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.group_processing_period"/>
         </record>
 
-        <record model="res.groups" id="group_processing_period_supervisor" >
+        <record model="res.groups" id="group_processing_period_supervisor">
             <field name="name">Supervisor</field>
             <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.group_processing_period_staff'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.group_processing_period"/>
@@ -452,19 +467,19 @@
             <field name="category_id" ref="sanbe_hr_tms.group_processing_period"/>
         </record>
 
-          <!-- TMS Leave Allocation -->
+        <!-- TMS Leave Allocation -->
         <record model="ir.module.category" id="module_sub_category_leave_allocation">
             <field name="name">Leave Allocation</field>
             <field name="parent_id" ref="sanbe_hr_tms.module_category_time_management_system"/>
             <field name="description">Access Right for menu Leave Allocation under Settings</field>
         </record>
 
-        <record model="res.groups" id="module_sub_category_leave_allocation_staff" >
+        <record model="res.groups" id="module_sub_category_leave_allocation_staff">
             <field name="name">Staff</field>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_leave_allocation"/>
         </record>
 
-        <record model="res.groups" id="module_sub_category_leave_allocation_supervisor" >
+        <record model="res.groups" id="module_sub_category_leave_allocation_supervisor">
             <field name="name">Supervisor</field>
             <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_leave_allocation_staff'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_leave_allocation"/>
@@ -472,11 +487,11 @@
 
         <record model="res.groups" id="module_sub_category_leave_allocation_manager">
             <field name="name">Manager</field>
-            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_sub_category_leave_allocation_supervisor'))]"/>
+            <field name="implied_ids"
+                   eval="[(4, ref('sanbe_hr_tms.module_sub_category_leave_allocation_supervisor'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_leave_allocation"/>
         </record>
-        
-        
+
         <!-- TMS Sifting employee -->
         <record model="ir.module.category" id="module_tms_employee_shift">
             <field name="name">Employee Shift</field>
@@ -486,19 +501,19 @@
 
         <record model="res.groups" id="group_shift_staff">
             <field name="name">Staff</field>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_tms_employee_shift"/>
         </record>
 
         <record model="res.groups" id="group_shift_hrd">
             <field name="name">HRD</field>
-            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.group_shift_staff'))]" />
+            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.group_shift_staff'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_tms_employee_shift"/>
         </record>
 
         <record model="res.groups" id="group_shift_manager">
             <field name="name">Manager</field>
-            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.group_shift_hrd'))]" />
+            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.group_shift_hrd'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_tms_employee_shift"/>
         </record>
 
