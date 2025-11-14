@@ -138,7 +138,7 @@
         <record model="ir.module.category" id="module_sub_category_upload_data_absen">
             <field name="name">Upload Data Absen</field>
             <field name="parent_id" ref="sanbe_hr_tms.module_category_time_management_system"/>
-            <field name="description">Access Right for menu Upload Data Absen under Upload</field>
+            <field name="description">Access Right for menu Upload Data Absen under Upload</field> 
         </record>
 
         <!-- TMS Upload Data Absen -->
@@ -159,6 +159,31 @@
             <field name="implied_ids"
                    eval="[(4, ref('sanbe_hr_tms.module_sub_category_upload_data_absen_supervisor'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_sub_category_upload_data_absen"/>
+        </record>
+
+        <!-- TMS Result Upload Data Absen -->
+        <record model="ir.module.category" id="module_category_scheduling_docter">
+            <field name="name">Master Jadwal Praktek Dokter </field>
+            <field name="parent_id" ref="sanbe_hr_tms.module_category_time_management_system"/>
+            <field name="description">Access Right for menu Result of Uploaded Attendance under Upload</field>
+        </record>
+
+        <record model="res.groups" id="module_staff_scheduling_docter">
+            <field name="name">Staff</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="category_id" ref="sanbe_hr_tms.module_category_scheduling_docter"/>
+        </record>
+
+        <record model="res.groups" id="module_spv_scheduling_docter">
+            <field name="name">Supervisor</field>
+            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_staff_scheduling_docter'))]"/>
+            <field name="category_id" ref="sanbe_hr_tms.module_category_scheduling_docter"/>
+        </record>
+
+        <record model="res.groups" id="module_mgr_scheduling_docter">
+            <field name="name">Manager</field>
+            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_spv_scheduling_docter')),(4,ref('base.group_system'))]"/>
+            <field name="category_id" ref="sanbe_hr_tms.module_category_scheduling_docter"/>
         </record>
 
         <!-- TMS Result Upload Data Absen -->
