@@ -64,6 +64,7 @@
                     </group>
                     <group name="emp_det" string="Detail Karyawan">
                         <group>
+                            <field name="employee_ids" invisible="1"/>
                             <field name="employee_id" 
                                    readonly="state not in ['draft']" 
                                    options="{'no_create': True,'no_create_edit': True}"
