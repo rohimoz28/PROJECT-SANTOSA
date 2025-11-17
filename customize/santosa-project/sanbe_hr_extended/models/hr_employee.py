@@ -299,6 +299,7 @@ class HrEmployee(models.Model):
             ('perawat', 'Perawat'),
             ('dokter', 'Dokter'),
             ('back_office', 'Back Office'),
+            ('front_office', 'Front Office'),
         ],
         string='Kategori',
     )
