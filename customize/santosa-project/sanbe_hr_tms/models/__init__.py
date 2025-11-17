@@ -42,4 +42,3 @@ from . import st_master_leave
 from . import account_analytic
 from . import hr_tms_employee_shift
 from . import sb_route_master
-from . import sb_docter_schedule
