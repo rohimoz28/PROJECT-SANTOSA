@@ -97,8 +97,7 @@ class HrEmployeeMutation(models.Model):
     service_directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat')
     service_departmentid = fields.Many2one('sanhrms.department', string='Departemen')
     service_division_id = fields.Many2one('sanhrms.division',string='Divisi')
-    service_jobtitle = fields.Many2one('hr.job.view', string='Jabatan', index=True, domain="[('branch_id', '=', service_bisnisunit),"
-                                                                                           "('directorate_id', '=', service_directorate_id),"
+    service_jobtitle = fields.Many2one('hr.job.view', string='Jabatan', index=True, domain="[('directorate_id', '=', service_directorate_id),"
                                                                                            "('hrms_department_id', '=', service_departmentid),"
                                                                                            "('division_id', '=', service_division_id)]")
     service_parent_id = fields.Many2one('parent.hr.employee', string='Atasan Langsung', tracking=True)
