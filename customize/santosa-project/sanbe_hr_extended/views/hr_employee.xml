@@ -61,7 +61,8 @@
                 </xpath>
                 
                 <xpath expr="//field[@name='coach_id']" position="before">
-                    <field name="work_unit" string="Unit Kerja"  readonly="(state !='draft')" />
+                    <field name="work_unit" string="Unit Kerja"  readonly="(state !='draft')" invisible="1"/>
+                    <field name="work_unit_ids" string="Unit Kerja"  options="{'no_create': True,'no_create_edit': True}" readonly="(state !='draft')" widget="many2many_tags"/>
                     <field name="work_unit_id" string="Posisi Unit Kerja" options="{'no_create': True,'no_create_edit': True}"  readonly="(state != 'draft')" />
                 </xpath>
                 <xpath expr="//field[@name='coach_id']" position="attributes">

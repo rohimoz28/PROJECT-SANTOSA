@@ -38,8 +38,8 @@ EMP_GROUP3 = [
     ('Group3', 'Group3 - Pusat')
 ]
 RANGE_DATES_HOLIDAYS = (
-        [(str(i), f"{i:02d}") for i in range(21, 32)] +
-        [(str(i), f"{i:02d}") for i in range(1, 21)]
+    [(str(i), f"{i:02d}") for i in range(21, 32)] +
+    [(str(i), f"{i:02d}") for i in range(1, 21)]
 )
 
 
@@ -51,16 +51,19 @@ class HrEmployee(models.Model):
         for allrecs in self:
             databranch = []
             for allrec in allrecs.area.branch_id:
-                mybranch = self.env['res.branch'].search([('name', '=', allrec.name)], limit=1)
+                mybranch = self.env['res.branch'].search(
+                    [('name', '=', allrec.name)], limit=1)
                 databranch.append(mybranch.id)
-            allbranch = self.env['res.branch'].sudo().search([('id', 'in', databranch)])
+            allbranch = self.env['res.branch'].sudo().search(
+                [('id', 'in', databranch)])
             allrecs.branch_ids = [Command.set(allbranch.ids)]
 
     @api.depends('area', 'branch_id')
     def _isi_department_branch(self):
         for allrecs in self:
             databranch = []
-            allbranch = self.env['hr.department'].sudo().search([('branch_id', '=', allrecs.branch_id.id)])
+            allbranch = self.env['hr.department'].sudo().search(
+                [('branch_id', '=', allrecs.branch_id.id)])
             allrecs.alldepartment = [Command.set(allbranch.ids)]
 
     @api.model
@@ -73,31 +76,40 @@ class HrEmployee(models.Model):
         # else:
         #    return  EMP_GROUP1
 
-    area = fields.Many2one('res.territory', string='Area', tracking=True, required=True)
+    area = fields.Many2one('res.territory', string='Area',
+                           tracking=True, required=True)
     branch_ids = fields.Many2many('res.branch', 'res_branch_rel', string='AllBranch', compute='_isi_semua_branch',
                                   store=False)
     alldepartment = fields.Many2many('hr.department', 'hr_department_rel', string='All Department',
                                      compute='_isi_department_branch', store=False)
-    branch_id = fields.Many2one('res.branch', string='unit Bisnis', domain="[('id','in',branch_ids)]", tracking=True, default=lambda self: self.env.user.branch_id, required=True)
-    medic = fields.Many2one('hr.profesion.medic', 'Profesi Medis',tracking=True, )
-    nurse = fields.Many2one('hr.profesion.nurse', 'Profesi Perawat',tracking=True, )
-    seciality = fields.Many2one('hr.profesion.special', 'Kategori Khusus',tracking=True, )
-    group_unit_id = fields.Many2one('mst.group.unit.pelayanan',tracking=True, )
+    branch_id = fields.Many2one('res.branch', string='unit Bisnis',
+                                domain="[('id','in',branch_ids)]", tracking=True, default=lambda self: self.env.user.branch_id, required=True)
+    medic = fields.Many2one('hr.profesion.medic',
+                            'Profesi Medis', tracking=True, )
+    nurse = fields.Many2one('hr.profesion.nurse',
+                            'Profesi Perawat', tracking=True, )
+    seciality = fields.Many2one(
+        'hr.profesion.special', 'Kategori Khusus', tracking=True, )
+    group_unit_id = fields.Many2one(
+        'mst.group.unit.pelayanan', tracking=True, )
     street = fields.Char(related='branch_id.street')
     street2 = fields.Char(related='branch_id.street2')
     city = fields.Char(related='branch_id.city')
     state_id = fields.Char(related='branch_id.state_id')
     zip = fields.Char(related='branch_id.zip')
     country_id = fields.Many2one(related='branch_id.country_id')
-    department_id = fields.Many2one('hr.department', compute = '_find_department_id',  string='Old Departemen', store=True, required=False, Tracking=False)
-    hrms_department_id = fields.Many2one('sanhrms.department', tracking=True, string='Departemen')
-    medic_finish_date = fields.Date('SPK Date',store=True)
-    
+    department_id = fields.Many2one('hr.department', compute='_find_department_id',
+                                    string='Old Departemen', store=True, required=False, Tracking=False)
+    hrms_department_id = fields.Many2one(
+        'sanhrms.department', tracking=True, string='Departemen')
+    medic_finish_date = fields.Date('SPK Date', store=True)
+
     @api.depends('hrms_department_id')
     def _find_department_id(self):
         for line in self:
             if line.hrms_department_id:
-                Department = self.env['hr.department'].search([('name', 'ilike', line.division_id.name)], limit=1)
+                Department = self.env['hr.department'].search(
+                    [('name', 'ilike', line.division_id.name)], limit=1)
                 if Department:
                     line.department_id = Department.id
                 else:
@@ -107,17 +119,19 @@ class HrEmployee(models.Model):
                         'company_id': self.env.user.company_id.id,
                     })
                     line.department_id = Department.id
-                     
-    division_id = fields.Many2one('sanhrms.division', tracking=True, string='Divisi')
-    directorate_id = fields.Many2one('sanhrms.directorate', tracking=True, string='Direktorat')
+
+    division_id = fields.Many2one(
+        'sanhrms.division', tracking=True, string='Divisi')
+    directorate_id = fields.Many2one(
+        'sanhrms.directorate', tracking=True, string='Direktorat')
     employee_id = fields.Char('Employee ID', default='New')
     nik = fields.Char('NIK', index=True, tracking=True)
     nik_lama = fields.Char('NIK Lama')
     no_ktp = fields.Char('No KTP', tracking=True)
     spk = fields.Char('No. SPK', tracking=True, store=True)
-    spk_start = fields.Date('SPK Date',store=True)
-    spk_finish = fields.Date('SPK Finish',store=True)
-    skills_ids = fields.Many2many('hr.skill','hr_skills_emp_rel')
+    spk_start = fields.Date('SPK Date', store=True)
+    spk_finish = fields.Date('SPK Finish', store=True)
+    skills_ids = fields.Many2many('hr.skill', 'hr_skills_emp_rel')
     doc_ktp = fields.Many2many('ir.attachment', 'hr_employee_rel', string='KTP Document',
                                help="You may attach files to with this")
     no_npwp = fields.Char('No NPWP', tracking=True)
@@ -137,17 +151,18 @@ class HrEmployee(models.Model):
                                    ('partner_doctor', 'Dokter Mitra'),
                                    ('visitor', 'Visitor'),
                                    ], default='contract', tracking=True, string='Status Hubungan Kerja', required=True)
-    job_title = fields.Char(string='Job Title', compute='_compute_job_title',  store=True)
+    job_title = fields.Char(
+        string='Job Title', compute='_compute_job_title',  store=True)
 
     @api.onchange('job_id')
     def _onchange_job_id(self):
         self._compute_job_title()
-    
+
     @api.depends('job_id')
     def _compute_job_title(self):
         for rec in self:
             rec.job_title = str(rec.job_id.display_name or '')
-            
+
     emp_status = fields.Selection([('probation', 'Probation'),
                                    ('confirmed', 'Confirmed'),
                                    ('end_contract', 'End Of Contract'),
@@ -158,35 +173,52 @@ class HrEmployee(models.Model):
                                    ('pass_away', 'Pass Away'),
                                    ('long_illness', 'Long Illness')
                                    ], string='Employment Status')
-    ws_month = fields.Integer('Working Service Month', compute="_compute_service_duration_display", readonly=True)
-    ws_year = fields.Integer('Working Service Year', compute="_compute_service_duration_display", readonly=True)
-    ws_day = fields.Integer('Working Service Day', compute="_compute_service_duration_display", readonly=True)
-    contract_id = fields.Many2one('hr.contract', string='Contract', index=True, tracking=True)
-    contract_datefrom = fields.Date('Contract Date From', related='contract_id.date_start', tracking=True,  store=True)
-    contract_dateto = fields.Date('Contract Date To', related='contract_id.date_end', tracking=True, store=True)
-    attachment_contract = fields.Binary(string='Contract Document', attachment=True)
-    employee_group1s = fields.Many2one('emp.group', string='Employee P Group', tracking=True)
+    ws_month = fields.Integer(
+        'Working Service Month', compute="_compute_service_duration_display", readonly=True)
+    ws_year = fields.Integer(
+        'Working Service Year', compute="_compute_service_duration_display", readonly=True)
+    ws_day = fields.Integer(
+        'Working Service Day', compute="_compute_service_duration_display", readonly=True)
+    contract_id = fields.Many2one(
+        'hr.contract', string='Contract', index=True, tracking=True)
+    contract_datefrom = fields.Date(
+        'Contract Date From', related='contract_id.date_start', tracking=True,  store=True)
+    contract_dateto = fields.Date(
+        'Contract Date To', related='contract_id.date_end', tracking=True, store=True)
+    attachment_contract = fields.Binary(
+        string='Contract Document', attachment=True)
+    employee_group1s = fields.Many2one(
+        'emp.group', string='Employee P Group', tracking=True)
     employee_group1 = fields.Selection(selection=_selection1,
                                        default='Group2',
                                        string='Old Employee P Group')
-    parent_id = fields.Many2one('parent.hr.employee', tracking=True, string='Atasan Langsung')
-    coach_id = fields.Many2one('parent.hr.employee', tracking=True, string='Atasan Unit Kerja')
-    coor_unit_id = fields.Many2one('parent.hr.employee', string='Atasan Unit Koordinasi', tracking=True)
-    employee_levels = fields.Many2one('employee.level', string='Employee Level', index=True, store=True, tracking=True)
+    parent_id = fields.Many2one(
+        'parent.hr.employee', tracking=True, string='Atasan Langsung')
+    coach_id = fields.Many2one(
+        'parent.hr.employee', tracking=True, string='Atasan Unit Kerja')
+    coor_unit_id = fields.Many2one(
+        'parent.hr.employee', string='Atasan Unit Koordinasi', tracking=True)
+    employee_levels = fields.Many2one(
+        'employee.level', string='Employee Level', index=True, store=True, tracking=True)
     insurance = fields.Char('BPJS No')
     jamsostek = fields.Char('Jamsostek')
     ptkp = fields.Char('PTKP')
     back_title = fields.Char('Back Title')
     no_sim = fields.Char('Driving Lisence #')
     attende_premie = fields.Boolean('Premi Kehadiran', default=False)
-    attende_premie_amount = fields.Float(digits='Product Price', string='Jumlah Premi Kehadiran')
+    attende_premie_amount = fields.Float(
+        digits='Product Price', string='Jumlah Premi Kehadiran')
     allowance_jemputan = fields.Boolean('Jemputan')
     max_ot = fields.Float('Jam Lembur Maksimal', digits=(16, 1), default=0)
     max_ot_month = fields.Float('Jam Lembur Maksimal', default=0)
-    max_hours_week = fields.Float('Total Jam Week', digits=(200, 1), default=40)
-    max_days_month = fields.Integer('Total Hari Kerja Month', digits=(31, 1), default=22)
-    dates_holidays = fields.Selection(selection=RANGE_DATES_HOLIDAYS, string='Tanggal Penambahan Cuti', default='1')
-    date_count_holiday = fields.Integer('Tanggal Penambahan Cuti', digits=(31, 1), default=1)
+    max_hours_week = fields.Float(
+        'Total Jam Week', digits=(200, 1), default=40)
+    max_days_month = fields.Integer(
+        'Total Hari Kerja Month', digits=(31, 1), default=22)
+    dates_holidays = fields.Selection(
+        selection=RANGE_DATES_HOLIDAYS, string='Tanggal Penambahan Cuti', default='1')
+    date_count_holiday = fields.Integer(
+        'Tanggal Penambahan Cuti', digits=(31, 1), default=1)
     overtime = fields.Selection(selection=[('allowance_ot', "OT"),
                                 ('allowance_ot_flat', "OT Flat"),
                                 ('allowance_ot1', "OT 1"),
@@ -199,7 +231,7 @@ class HrEmployee(models.Model):
     jemputan_remarks = fields.Char('Keterangan Penjemputan')
     allowance_ot_flat = fields.Boolean('OT Flat')
     allowance_ot1 = fields.Boolean('OT 1')
-    
+
     ot_remarks = fields.Char('Keterangan Lembur')
     transport_remarks = fields.Char('Keterangan Transport')
     meal_remarks = fields.Char('Keterangan Makan')
@@ -220,37 +252,47 @@ class HrEmployee(models.Model):
         default='draft')
     nama_pekerjaans = fields.Char(related='job_id.name', store=True)
     gender_selection = fields.Selection([('male', 'Laki-Laki'),
-                            ('female', 'Perempuan'),],compute="_get_gender_status",
-                            inverse='onchange_gender_selection', string='Jenis Kelamin')
+                                         ('female', 'Perempuan'),], compute="_get_gender_status",
+                                        inverse='onchange_gender_selection', string='Jenis Kelamin')
     marital = fields.Selection([('single', 'Single'),
-                            ('married', 'Married'),
-                            ('seperate', 'Seperate')], string='Status Pernikahan', default=False)
-    
-    marital_status = fields.Selection([('single', 'Belum Menikah'),
-                            ('married', 'Menikah'),
-                            ('seperate', 'Bercerai')],compute="_get_marital_status",
-                            inverse='onchange_marital_status',
-                             string='Status Perkawinan')
+                                ('married', 'Married'),
+                                ('seperate', 'Seperate')], string='Status Pernikahan', default=False)
 
-    
-    @api.onchange('marital_status')        
+    marital_status = fields.Selection([('single', 'Belum Menikah'),
+                                       ('married', 'Menikah'),
+                                       ('seperate', 'Bercerai')], compute="_get_marital_status",
+                                      inverse='onchange_marital_status',
+                                      string='Status Perkawinan')
+
+    @api.onchange('marital_status')
     def onchange_marital_status(self):
         self.marital = self.marital_status
-    
-    @api.depends('marital')    
+
+    @api.depends('marital')
     def _get_marital_status(self):
         self.marital_status = self.marital
 
-    @api.onchange('gender_selection')    
+    @api.onchange('gender_selection')
     def onchange_gender_selection(self):
         self.gender = self.gender_selection
-    
-    @api.depends('gender')    
+
+    @api.depends('gender')
     def _get_gender_status(self):
         self.gender_selection = self.gender
-    
-    work_unit = fields.Char('Work Unit')
-    work_unit_id = fields.Many2one('hr.work.unit','Work Unit',tracking=True, )
+
+    work_unit = fields.Char(
+        'Work Unit', compute='_compute_work_unit', store=True)
+    work_unit_ids = fields.Many2many(
+        'mst.group.unit.pelayanan', string='Work Unit')
+
+    @api.depends('work_unit_ids', 'work_unit_ids.name')
+    def _compute_work_unit(self):
+        for rec in self:
+            names = rec.work_unit_ids.mapped('name')
+            rec.work_unit = ', '.join(names) if names else ''
+
+    work_unit_id = fields.Many2one(
+        'hr.work.unit', 'Work Unit', tracking=True, )
     berat_badan = fields.Integer('Berat Badan (Kg)')
     tinggi_badan = fields.Integer('Tinggi Badan (Cm)')
     kpi_kategory = fields.Selection([('direct_spv', "Direct"),
@@ -268,19 +310,19 @@ class HrEmployee(models.Model):
         help='Jumlah Hari Kerja Dalam Satu Bulan',
         required=False)
     kontrak_medis = fields.Boolean(string="Kontrak Medis", tracking=True)
-    
-    @api.constrains('no_ktp','no_sim','no_npwp','identification_id')
+
+    @api.constrains('no_ktp', 'no_sim', 'no_npwp', 'identification_id')
     def _check_numeric_reference(self):
         for record in self:
-            if record.no_ktp and not record.no_ktp.isdigit() :
+            if record.no_ktp and not record.no_ktp.isdigit():
                 raise UserError("No. KTP harus Numerik.")
-            if record.no_npwp and not record.no_npwp.isdigit() :
+            if record.no_npwp and not record.no_npwp.isdigit():
                 raise UserError("No. NPWP harus Numerik")
-            if record.no_sim and not record.no_sim.isdigit() :
+            if record.no_sim and not record.no_sim.isdigit():
                 raise UserError("No. SIM harus Numerik")
-            if record.identification_id and not record.identification_id.isdigit() :
+            if record.identification_id and not record.identification_id.isdigit():
                 raise UserError("No. Kartu Keluarga harus Numerik")
-            
+
     kontrak_medis_id = fields.Many2one('hr.service.contract')
     medical_contract_ids = fields.One2many(
         comodel_name='hr.service.contract',
@@ -305,12 +347,12 @@ class HrEmployee(models.Model):
     )
 
     leave_calculation = fields.Selection(selection=[('contract_based', "Contract Based"),
-                                    ('first_month', "First Month"),('others', "Others"),],
-                                    string="Perhitungan Saldo Cuti")
-    
+                                                    ('first_month', "First Month"), ('others', "Others"),],
+                                         string="Perhitungan Saldo Cuti")
+
     wd_type = fields.Selection(selection=[('shift', "Shift"),
-                                    ('wd', "Normal WD"),],
-                                    string="Tipe WD",default='shift', required=True)
+                                          ('wd', "Normal WD"),],
+                               string="Tipe WD", default='shift', required=True)
 
     # wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.", group_operator="avg")
     # contract_wage = fields.Monetary('Contract Wage', compute='_compute_contract_wage')
@@ -341,11 +383,12 @@ class HrEmployee(models.Model):
     # def _get_contract_wage_field(self):
     #     self.ensure_one()
     #     return 'wage'
-    
+
     # @api.depends("employee_skill_ids")
 
     _sql_constraints = [
-        ('nik_uniq', 'unique(nik)', "The NIK  must be unique, this one is already assigned to another employee."),
+        ('nik_uniq', 'unique(nik)',
+         "The NIK  must be unique, this one is already assigned to another employee."),
         # ('no_ktp_uniq', 'unique(no_ktp)', "Nomor KTP sudah terdaftar di (SHBC/SHBK). Harap gunakan nomor unik."),
         # ('no_npwp_uniq', 'unique(no_npwp)', "Nomor NPWP sudah terdaftar di (SHBC/SHBK). Harap gunakan nomor unik."),
         # ('identification_id_uniq', 'unique(identification_id)', "The Identification ID  must be unique, this one is already assigned to another employee."),
@@ -371,7 +414,6 @@ class HrEmployee(models.Model):
     #    #for allemps in myemployees:
     #    #    allemps.write({'nik_lama': ''})
 
-    
     @api.onchange('overtime')
     def _onchange_ot(self):
         if self.overtime == 'allowance_ot':
@@ -390,7 +432,7 @@ class HrEmployee(models.Model):
             self.allowance_ot = False
             self.allowance_ot_flat = False
             self.allowance_ot1 = False
-            
+
     @api.onchange('job_status')
     def _onchange_job_status(self):
         if self.job_status == 'partner_doctor':
@@ -398,18 +440,19 @@ class HrEmployee(models.Model):
             self.sip = True
         else:
             self.kontrak_medis = False
-            self.sip = False 
+            self.sip = False
 
-    @api.onchange('leave_calculation','dates_holidays')
+    @api.onchange('leave_calculation', 'dates_holidays')
     def get_date_count_holiday(self):
         for line in self:
             if line.leave_calculation == 'contract_based' and line.contract_datefrom:
-                line.date_count_holiday = int(line.contract_datefrom.strftime('%d'))
+                line.date_count_holiday = int(
+                    line.contract_datefrom.strftime('%d'))
             elif line.leave_calculation == 'others' and line.dates_holidays:
                 line.date_count_holiday = int(line.dates_holidays)
             else:
                 line.date_count_holiday = 1
-            
+
     @api.constrains('date_count_holiday')
     def _check_date_count(self):
         for rec in self:
@@ -421,17 +464,18 @@ class HrEmployee(models.Model):
         for line in self:
             if line.max_days_month:
                 line.workingday = line.max_days_month
-    
+
     @api.constrains('max_ot')
     def _check_max_ot(self):
         for rec in self:
             if rec.max_ot:
-                if rec.max_ot <0:            
-                    raise UserError("Values cannot be below zero")  
+                if rec.max_ot < 0:
+                    raise UserError("Values cannot be below zero")
             value = Decimal(str(rec.max_ot))
             rounded = value.quantize(Decimal('0.1'), rounding=ROUND_DOWN)
             if value != rounded:
-                raise UserError("Maximum of 1 digits allowed after decimal point.")
+                raise UserError(
+                    "Maximum of 1 digits allowed after decimal point.")
             if (value % Decimal('0.5')) != 0:
                 raise UserError("Value must be a multiple of 0.5 Hours")
 
@@ -478,7 +522,7 @@ class HrEmployee(models.Model):
                             "Harap gunakan nomor unik."
                         ) % rec.no_ktp)
                 # DUPE NPWP
-                if rec.no_npwp:    
+                if rec.no_npwp:
                     dup_npwp_count = self.env['hr.employee'].search_count([
                         ('id', '!=', rec.id),
                         ('no_npwp', '=', rec.no_npwp),
@@ -488,7 +532,7 @@ class HrEmployee(models.Model):
                             "Nomor NPWP '%s' sudah digunakan oleh karyawan lain di SHBK/SHBC. "
                             "Harap gunakan nomor unik."
                         ) % rec.no_npwp)
-                
+
     @api.model
     def default_get(self, default_fields):
         res = super(HrEmployee, self).default_get(default_fields)
@@ -627,7 +671,8 @@ class HrEmployee(models.Model):
                 dalamtahun = service_duration.years
                 dalambulan = service_duration.months
                 dalamhari = service_duration.days
-                alldata.write({'ws_month': dalambulan, 'ws_year': dalamtahun, 'ws_day': dalamhari})
+                alldata.write(
+                    {'ws_month': dalambulan, 'ws_year': dalamtahun, 'ws_day': dalamhari})
             else:
                 alldata.write({'ws_month': 0, 'ws_year': 0})
         return True
@@ -652,14 +697,15 @@ class HrEmployee(models.Model):
             except:
                 pass
                 nos = noss[0][1]
-            dat = self.env['hr.machine.details'].sudo().search([('id', '=', nos)], limit=1)
+            dat = self.env['hr.machine.details'].sudo().search(
+                [('id', '=', nos)], limit=1)
             if dat:
                 dat.write({
                     'employee_id': self.id
                 })
 
         if 'department_id' in vals:
-            self = self.with_context(tracking_disable=True)    
+            self = self.with_context(tracking_disable=True)
 
         res = super(HrEmployee, self).write(vals)
 
@@ -708,21 +754,23 @@ class HrEmployee(models.Model):
                     vals['retire_age'] = 0
                     vals['periode_probation'] = 0
                     vals['joining_date'] = False
-            
+
             res = super(HrEmployee, self).create(vals_list)
             if vals.get('contract_id'):
                 contractid = vals.get('contract_id')
-                existing = self.env['hr.employee'].sudo().search([('name', '=', vals.get('name'))])
+                existing = self.env['hr.employee'].sudo().search(
+                    [('name', '=', vals.get('name'))])
                 mycontract = self.env['hr.contract'].browse(contractid)
                 mycontract.write({'employee_id': res.id})
             # else:
             #     print('ini kemari ', vals.get('name'))
             #     return super(HrEmployee,self).create(vals_list)
-        
+
             if existing:
                 #     print('ini bener ',existing.name)
                 mycontract = self.env['hr.contract'].browse(contractid)
-                myemps = self.env['hr.employee'].sudo().browse(mycontract.employee_id.id)
+                myemps = self.env['hr.employee'].sudo().browse(
+                    mycontract.employee_id.id)
                 myemps.unlink()
                 mycontract.write({'employee_id': res.id})
             return res
@@ -749,7 +797,8 @@ class HrEmployee(models.Model):
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)
         if view_type in ('tree', 'form'):
-            group_name = self.env['res.groups'].search([('name', '=', 'HRD CA')])
+            group_name = self.env['res.groups'].search(
+                [('name', '=', 'HRD CA')])
             cekgroup = self.env.user.id in group_name.users.ids
             if cekgroup:
                 for node in arch.xpath("//field"):
@@ -765,10 +814,12 @@ class HrEmployee(models.Model):
             if len(parts) == 2:
                 emp_id = parts[0][1:]
                 emp_name = parts[1]
-                name_domain = ['|',('employee_id', operator, emp_id), ('name', operator, emp_name)]
+                name_domain = [
+                    '|', ('employee_id', operator, emp_id), ('name', operator, emp_name)]
                 return self._search(expression.AND([name_domain, domain]), limit=limit, order=order)
             else:
-                name_domain = ['|',('employee_id', operator, name), ('name', operator, name)]
+                name_domain = [
+                    '|', ('employee_id', operator, name), ('name', operator, name)]
                 return self._search(expression.AND([name_domain, domain]), limit=limit, order=order)
         return super()._name_search(name, domain, operator, limit, order)
 
@@ -781,7 +832,8 @@ class HrEmployee(models.Model):
         for employee in self:
             tz = pytz.timezone(employee.tz or 'UTC')
             now_tz = now_utc.astimezone(tz)
-            start_tz = now_tz.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+            start_tz = now_tz.replace(
+                day=1, hour=0, minute=0, second=0, microsecond=0)
             start_naive = start_tz.astimezone(pytz.utc).replace(tzinfo=None)
             end_tz = now_tz
             end_naive = end_tz.astimezone(pytz.utc).replace(tzinfo=None)
@@ -792,7 +844,6 @@ class HrEmployee(models.Model):
             employee.hours_last_month_display = "%g" % employee.hours_last_month
 
 
-
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
     hr_employee_id = fields.Many2one('hr.employee', string='Employee ID')
@@ -800,7 +851,8 @@ class IrAttachment(models.Model):
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)
         if view_type in ('tree', 'form'):
-            group_name = self.env['res.groups'].search([('name', '=', 'HRD CA')])
+            group_name = self.env['res.groups'].search(
+                [('name', '=', 'HRD CA')])
             cekgroup = self.env.user.id in group_name.users.ids
             if cekgroup:
                 for node in arch.xpath("//field"):
@@ -814,13 +866,15 @@ class IrConfigParameter(models.Model):
     """Per-database storage of configuration key-value pairs."""
     _inherit = 'ir.config_parameter'
 
+
 class ResUsers(models.Model):
     _inherit = "res.users"
 
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)
         if view_type in ('tree', 'form'):
-            group_name = self.env['res.groups'].search([('name', '=', 'HRD CA')])
+            group_name = self.env['res.groups'].search(
+                [('name', '=', 'HRD CA')])
             cekgroup = self.env.user.id in group_name.users.ids
             if cekgroup:
                 for node in arch.xpath("//field"):
@@ -839,7 +893,8 @@ class ResPartner(models.Model):
         if name:
             # mybranch = self.env['res.branch'].sudo().search([('branch_code','=','BU3')])
             mybranch = self.env.user.branch_id
-            search_domain = [('name', operator, name), ('branch_id', '=', mybranch.id)]
+            search_domain = [('name', operator, name),
+                             ('branch_id', '=', mybranch.id)]
             user_ids = self._search(search_domain, limit=1, order=order)
             return user_ids
         else:
@@ -848,7 +903,8 @@ class ResPartner(models.Model):
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)
         if view_type in ('tree', 'form'):
-            group_name = self.env['res.groups'].search([('name', '=', 'HRD CA')])
+            group_name = self.env['res.groups'].search(
+                [('name', '=', 'HRD CA')])
             cekgroup = self.env.user.id in group_name.users.ids
             if cekgroup:
                 for node in arch.xpath("//field"):
@@ -865,18 +921,23 @@ class ParentEmployee(models.Model):
     _rec_name = 'display_name'
     _auto = False
 
-
-    display_name = fields.Char(string='Cari', compute="_compute_display_name", store=True)
+    display_name = fields.Char(
+        string='Cari', compute="_compute_display_name", store=True)
     id = fields.Many2one('hr.employee', required=True, store=True)
-    employee_id = fields.Many2one('hr.employee', string='Employee', required=True, store=True)
-    parent_id = fields.Many2one('parent.hr.employee', string='Atasan', required=True, store=True)
+    employee_id = fields.Many2one(
+        'hr.employee', string='Employee', required=True, store=True)
+    parent_id = fields.Many2one(
+        'parent.hr.employee', string='Atasan', required=True, store=True)
     name = fields.Char('Nama Karyawan', required=True, store=True)
     nik = fields.Char('NIK Karyawan', required=True)
     company_id = fields.Many2one('res.company', string='Company')
     branch_id = fields.Many2one('res.branch', string='Unit Bisnis')
-    directorate_id = fields.Many2one('sanhrms.directorate', tracking=True, string='Direktorat')
-    division_id = fields.Many2one('sanhrms.division', tracking=True, string='Divisi')
-    hrms_department_id = fields.Many2one('sanhrms.department', tracking=True, string='Departemen')
+    directorate_id = fields.Many2one(
+        'sanhrms.directorate', tracking=True, string='Direktorat')
+    division_id = fields.Many2one(
+        'sanhrms.division', tracking=True, string='Divisi')
+    hrms_department_id = fields.Many2one(
+        'sanhrms.department', tracking=True, string='Departemen')
     job_id = fields.Many2one('hr.job', string='Jabatan', tracking=True)
     active = fields.Boolean()
     user_id = fields.Many2one('res.users')
@@ -890,8 +951,8 @@ class ParentEmployee(models.Model):
     ],
         string="Status",
         readonly=True, copy=False, index=True,
-        tracking=3,store=True)
-    
+        tracking=3, store=True)
+
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
         self.env.cr.execute("""
@@ -916,11 +977,11 @@ class ParentEmployee(models.Model):
             )
         """ % self._table)
 
-        
-    @api.depends('nik','name')
+    @api.depends('nik', 'name')
     def _compute_display_name(self):
         for account in self:
-            account.display_name = '%s - %s' % (account.nik   or '', account.name)
+            account.display_name = '%s - %s' % (
+                account.nik or '', account.name)
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
