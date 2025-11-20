@@ -1,31 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="sanbe_hr_tms.ListView.Buttons" t-inherit="web.ListView.Buttons" t-inherit-mode="extension">
+    
+    <t t-name="sanbe_hr_tms.ListView.Buttons.Export" t-inherit="web.ListView.Buttons" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('o_list_buttons')]" position="inside">
-            <button t-if="props.resModel == 'hr.tmsentry.summary'" class="o_btn_hello btn btn-primary" data-hotkey="r" t-on-click="showCustomers">
+            <button t-if="props.resModel == 'hr.tmsentry.summary'" 
+                    class="o_btn_hello btn btn-primary" 
+                    data-hotkey="r" 
+                    t-on-click="props.showCustomers">
                 Export To Excel
             </button>
         </xpath>
     </t>
-    <t t-name="sanbe_hr_tms.ListView.Buttons" t-inherit="web.ListView.Buttons" t-inherit-mode="extension">
+
+    <t t-name="sanbe_hr_tms.ListView.Buttons.HRD" t-inherit="web.ListView.Buttons" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('o_list_buttons')]" position="inside">
+            <!-- cuma testing pengecekan untuk lemparan ke view apakah group sudah sesuai dengan return pada console -->
+            <!-- <span t-if="props.resModel == 'sb.employee.shift'" style="margin-left:10px; font-weight:bold; color:blue;">
+                    Debug isHrd: 
+                    <t t-esc="props.isHrd ? 'TRUE' : 'FALSE'"/> 
+            </span> -->
             <button t-if="props.resModel == 'sb.employee.shift'" class="o_btn_hello btn btn-primary" data-hotkey="c" t-on-click="showImportEmployee">
                     Create
             </button>
+            <button t-if="props.resModel == 'sb.employee.shift'" class="o_btn_hello btn btn-primary" data-hotkey="p" t-on-click="showShifttoEMPgroup">
+                Process to Empgroup
+            </button>
+            <!-- <button t-if="props.resModel == 'sb.employee.shift'" 
+                    class="o_btn_hello btn btn-primary" 
+                    data-hotkey="i" 
+                    t-on-click="props.showImportxls">
+                Import
+            </button> -->
         </xpath>
     </t>
-    <t t-name="sanbe_hr_tms.ListView.Buttons" t-inherit="web.ListView.Buttons" t-inherit-mode="extension">
-        <xpath expr="//div[hasclass('o_list_buttons')]" position="inside">
-            <button t-if="props.resModel == 'sb.employee.shift'" class="o_btn_hello btn btn-primary" data-hotkey="c" t-on-click="showShifttoEMPgroup">
-                        Process to Empgroup
-            </button>
-        </xpath>
-    </t>
-    <!-- <t t-name="sanbe_hr_tms.ListView.Buttons" t-inherit="web.ListView.Buttons" t-inherit-mode="extension">
-        <xpath expr="//div[hasclass('o_list_buttons')]" position="inside">
-            <button t-if="props.resModel == 'sb.employee.shift'" class="o_btn_hello btn btn-primary" data-hotkey="c" t-on-click="showImportxls">
-                    Import
-            </button>
-        </xpath>
-    </t>  -->
+
 </templates>

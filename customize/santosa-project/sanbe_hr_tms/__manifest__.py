@@ -96,10 +96,10 @@
         'web.assets_backend': [
             'hr_holidays/static/src/**/*',
             'sanbe_hr_tms/static/src/css/shift_employee.css',
+            'sanbe_hr_tms/static/src/js/export_button.js',
             'sanbe_hr_tms/static/src/xml/export_button.xml',
             'sanbe_hr_tms/static/src/xml/export_button_ot_attendance.xml',
             'sanbe_hr_tms/static/src/xml/export_button_ot_bundling.xml',
-            'sanbe_hr_tms/static/src/js/export_button.js',
             'sanbe_hr_tms/static/src/js/export_button_ot_attendance.js',
             'sanbe_hr_tms/static/src/js/export_button_ot_bundling.js',
             'sanbe_hr_tms/static/src/js/report_esm.js',
