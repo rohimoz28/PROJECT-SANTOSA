@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="module_hr_employee_mutation" model="ir.module.category">
+        <field name="name">Employee Mutation</field>
+        <field name="description">Santosa Employee Mutation User Access</field>
+        <field name="sequence">46</field>
+    </record>
+
+    <!-- Group Staff -->
+    <record id="group_employee_mutation_staff" model="res.groups">
+        <field name="name">Staff</field>
+        <field name="category_id" ref="module_hr_employee_mutation"/>
+    </record>
+
+    <!-- Group HRD -->
+    <record id="group_employee_mutation_hrd" model="res.groups">
+        <field name="name">HRD</field>
+        <field name="category_id" ref="module_hr_employee_mutation"/>
+    </record>
+</odoo>

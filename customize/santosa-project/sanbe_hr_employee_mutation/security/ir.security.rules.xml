@@ -6,9 +6,12 @@
         <field name="name">HR Employee Mutation</field>
         <field name="model_id" ref="sanbe_hr_employee_mutation.model_hr_employee_mutations"/>
         <field name="domain_force">
-            ['|',('employee_id.branch_id.id', '=',user.branch_id.id),('service_bisnisunit', '=',user.branch_id.id)]
+            []
         </field>
-        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+        <field name="groups" eval="[
+        (4, ref('base.group_system')),
+        (4, ref('sanbe_hr_employee_mutation.group_employee_mutation_hrd'))
+        ]"/>
         <field name="perm_unlink" eval="True"/>
         <field name="perm_write" eval="True"/>
         <field name="perm_read" eval="True"/>
