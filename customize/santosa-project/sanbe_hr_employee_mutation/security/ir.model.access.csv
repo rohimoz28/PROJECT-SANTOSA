@@ -1,2 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_hr_employee_certificate,access_hr_employee_certificated,model_hr_employee_mutations,base.group_user,1,1,1,1
+access_mutation_staff,Staff Mutation Access,model_hr_employee_mutations,group_employee_mutation_staff,1,0,1,0
+access_mutation_hrd,HRD Mutation Access,model_hr_employee_mutations,group_employee_mutation_hrd,1,1,1,1

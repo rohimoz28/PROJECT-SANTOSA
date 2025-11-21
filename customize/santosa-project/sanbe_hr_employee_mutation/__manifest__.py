@@ -12,6 +12,7 @@
 	'price': 25.00,
 	'currency': 'EUR',
 	'data': [
+        'security/mutation_groups.xml',
 		'security/ir.model.access.csv',
 		'security/ir.security.rules.xml',
 		'views/hr_employee_mutation.xml',
