@@ -66,6 +66,9 @@ access_sb_leave_tracking,access.sb.leave.tracking,model_sb_leave_tracking,base.g
 access_sb_leave_benefit,access.sb.leave.benefit,model_sb_leave_benefit,base.group_user,1,1,1,1
 access_hr_open_closing_periode,access.hr.open.closing.periode,model_hr_opening_closing,base.group_user,1,1,1,1
 
+access_sb_employee_shift,access.sb.employee.shift,model_sb_employee_shift,sanbe_hr_tms.group_shift_staff,1,1,0,0
+access_sb_employee_shift,access.sb.employee.shift,model_sb_employee_shift,sanbe_hr_tms.group_shift_hrd,1,1,1,1
+
 access_hr_holidays_status_employee,hr_holidays.hr.leave.type,model_hr_leave_type,base.group_user,1,1,1,1
 hr_holidays.access_hr_holidays_status_manager,hr.holidays.status manager,model_hr_leave_type,base.group_user,1,1,1,1
 hr_holidays.access_mail_activity_type_holidays_manager,mail.activity.type.holidays.manager,mail.model_mail_activity_type,base.group_user,1,1,1,1

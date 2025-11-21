@@ -7,55 +7,58 @@
         <!-- TMS Penarikan Data Absensi -->
         <record id="hr_tms_sync_machine_branch_manager_rule" model="ir.rule">
             <field name="name">TMS Sync Machine Branch Manager</field>
-            <field name="model_id" ref="model_hr_tms_syncmachine" />
-            <field name="global" eval="True" />
+            <field name="model_id" ref="model_hr_tms_syncmachine"/>
+            <field name="global" eval="True"/>
             <field name="domain_force">[(1,'=',1)]</field>
-            <field name="groups" eval="[(4, ref('base_territory.group_branch_user_manager'))]" />
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user_manager'))]"/>
         </record>
 
         <record id="hr_tms_sync_machine_branch_rule" model="ir.rule">
             <field name="name">TMS Sync Machine Branch</field>
-            <field name="model_id" ref="model_hr_tms_syncmachine" />
-            <field name="global" eval="True" />
+            <field name="model_id" ref="model_hr_tms_syncmachine"/>
+            <field name="global" eval="True"/>
             <field name="domain_force">
-                ['|',('branch_id','=',False),('branch_id','=',user.branch_id.id)]</field>
-            <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]" />
+                ['|',('branch_id','=',False),('branch_id','=',user.branch_id.id)]
+            </field>
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]"/>
         </record>
 
         <!-- TMS Permission Entry -->
         <record id="hr_tms_permission_entry_branch_manager_rule" model="ir.rule">
             <field name="name">TMS Permission Entry Branch Manager</field>
-            <field name="model_id" ref="model_hr_permission_entry" />
-            <field name="global" eval="True" />
+            <field name="model_id" ref="model_hr_permission_entry"/>
+            <field name="global" eval="True"/>
             <field name="domain_force">[(1,'=',1)]</field>
-            <field name="groups" eval="[(4, ref('base_territory.group_branch_user_manager'))]" />
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user_manager'))]"/>
         </record>
 
         <record id="hr_tms_permission_entry_branch_rule" model="ir.rule">
             <field name="name">TMS Permission Entry Branch</field>
-            <field name="model_id" ref="model_hr_permission_entry" />
-            <field name="global" eval="True" />
+            <field name="model_id" ref="model_hr_permission_entry"/>
+            <field name="global" eval="True"/>
             <field name="domain_force">
-                ['|',('branch_id','=',False),('branch_id','=',user.branch_id.id)]</field>
-            <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]" />
+                ['|',('branch_id','=',False),('branch_id','=',user.branch_id.id)]
+            </field>
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]"/>
         </record>
 
         <!-- TMS Entry -->
         <record id="hr_tms_entry_branch_manager_rule" model="ir.rule">
             <field name="name">TMS Entry Branch Manager</field>
-            <field name="model_id" ref="model_hr_attendance" />
-            <field name="global" eval="True" />
+            <field name="model_id" ref="model_hr_attendance"/>
+            <field name="global" eval="True"/>
             <field name="domain_force">[(1,'=',1)]</field>
-            <field name="groups" eval="[(4, ref('base_territory.group_branch_user_manager'))]" />
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user_manager'))]"/>
         </record>
 
         <record id="hr_tms_entry_branch_rule" model="ir.rule">
             <field name="name">TMS Entry Branch</field>
-            <field name="model_id" ref="model_hr_attendance" />
-            <field name="global" eval="True" />
+            <field name="model_id" ref="model_hr_attendance"/>
+            <field name="global" eval="True"/>
             <field name="domain_force">
-                ['|',('branch_id','=',False),('branch_id','=',user.branch_id.id)]</field>
-            <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]" />
+                ['|',('branch_id','=',False),('branch_id','=',user.branch_id.id)]
+            </field>
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]"/>
         </record>
 
         <!-- TMS Entry Summary -->
@@ -90,128 +93,135 @@
 
         <record id="hr_tms_entry_summary_branch_manager_rule" model="ir.rule">
             <field name="name">TMS Summary Branch Manager</field>
-            <field name="model_id" ref="model_hr_tmsentry_summary" />
-            <field name="global" eval="True" />
+            <field name="model_id" ref="model_hr_tmsentry_summary"/>
+            <field name="global" eval="True"/>
             <field name="domain_force">[(1,'=',1)]</field>
-            <field name="groups" eval="[(4, ref('base_territory.group_branch_user_manager'))]" />
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user_manager'))]"/>
         </record>
 
         <record id="hr_tms_summary_branch_rule" model="ir.rule">
             <field name="name">TMS Summary Branch</field>
-            <field name="model_id" ref="model_hr_tmsentry_summary" />
-            <field name="global" eval="True" />
+            <field name="model_id" ref="model_hr_tmsentry_summary"/>
+            <field name="global" eval="True"/>
             <field name="domain_force">
-                ['|',('branch_id','=',False),('branch_id','=',user.branch_id.id)]</field>
-            <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]" />
+                ['|',('branch_id','=',False),('branch_id','=',user.branch_id.id)]
+            </field>
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]"/>
         </record>
 
         <!-- TMS Processing -->
         <record id="hr_tms_processing_branch_manager_rule" model="ir.rule">
             <field name="name">TMS Processing Branch Manager</field>
-            <field name="model_id" ref="model_hr_tms_processing" />
-            <field name="global" eval="True" />
+            <field name="model_id" ref="model_hr_tms_processing"/>
+            <field name="global" eval="True"/>
             <field name="domain_force">[(1,'=',1)]</field>
-            <field name="groups" eval="[(4, ref('base_territory.group_branch_user_manager'))]" />
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user_manager'))]"/>
         </record>
 
         <record id="hr_tms_processing_branch_rule" model="ir.rule">
             <field name="name">TMS Processing Branch</field>
-            <field name="model_id" ref="model_hr_tms_processing" />
-            <field name="global" eval="True" />
+            <field name="model_id" ref="model_hr_tms_processing"/>
+            <field name="global" eval="True"/>
             <field name="domain_force">
-                ['|',('branch_id','=',False),('branch_id','=',user.branch_id.id)]</field>
-            <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]" />
+                ['|',('branch_id','=',False),('branch_id','=',user.branch_id.id)]
+            </field>
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]"/>
         </record>
 
         <!-- TMS Recapitulation -->
         <record id="hr_tms_recap_branch_manager_rule" model="ir.rule">
             <field name="name">TMS Recapitulation Branch Manager</field>
-            <field name="model_id" ref="model_hr_tms_recap" />
-            <field name="global" eval="True" />
+            <field name="model_id" ref="model_hr_tms_recap"/>
+            <field name="global" eval="True"/>
             <field name="domain_force">[(1,'=',1)]</field>
-            <field name="groups" eval="[(4, ref('base_territory.group_branch_user_manager'))]" />
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user_manager'))]"/>
         </record>
 
         <record id="hr_tms_recap_branch_rule" model="ir.rule">
             <field name="name">TMS Recapitulation Branch</field>
-            <field name="model_id" ref="model_hr_tms_recap" />
-            <field name="global" eval="True" />
+            <field name="model_id" ref="model_hr_tms_recap"/>
+            <field name="global" eval="True"/>
             <field name="domain_force">
-                ['|',('branch_id','=',False),('branch_id','=',user.branch_id.id)]</field>
-            <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]" />
+                ['|',('branch_id','=',False),('branch_id','=',user.branch_id.id)]
+            </field>
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]"/>
         </record>
 
         <!-- Setting Parameter -->
         <!-- TMS Public Holidays -->
         <record id="hr_tms_public_holidays_branch_manager_rule" model="ir.rule">
             <field name="name">TMS Public Holidays Branch Manager</field>
-            <field name="model_id" ref="model_resource_calendar_leaves" />
-            <field name="global" eval="True" />
+            <field name="model_id" ref="model_resource_calendar_leaves"/>
+            <field name="global" eval="True"/>
             <field name="domain_force">[(1,'=',1)]</field>
-            <field name="groups" eval="[(4, ref('base_territory.group_branch_user_manager'))]" />
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user_manager'))]"/>
         </record>
 
         <record id="hr_tms_public_holidays_branch_rule" model="ir.rule">
             <field name="name">TMS Public Holidays Branch</field>
-            <field name="model_id" ref="model_resource_calendar_leaves" />
-            <field name="global" eval="True" />
+            <field name="model_id" ref="model_resource_calendar_leaves"/>
+            <field name="global" eval="True"/>
             <field name="domain_force">
-                ['|',('branch_id','=',False),('branch_id','=',user.branch_id.id)]</field>
-            <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]" />
+                ['|',('branch_id','=',False),('branch_id','=',user.branch_id.id)]
+            </field>
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]"/>
         </record>
 
         <!-- TMS Working Days -->
         <record id="hr_tms_working_days_branch_manager_rule" model="ir.rule">
             <field name="name">TMS Working Days Branch Manager</field>
-            <field name="model_id" ref="model_hr_working_days" />
-            <field name="global" eval="True" />
+            <field name="model_id" ref="model_hr_working_days"/>
+            <field name="global" eval="True"/>
             <field name="domain_force">[(1,'=',1)]</field>
-            <field name="groups" eval="[(4, ref('base_territory.group_branch_user_manager'))]" />
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user_manager'))]"/>
         </record>
 
         <record id="hr_tms_working_days_branch_rule" model="ir.rule">
             <field name="name">TMS Working Days Branch</field>
-            <field name="model_id" ref="model_hr_working_days" />
-            <field name="global" eval="True" />
+            <field name="model_id" ref="model_hr_working_days"/>
+            <field name="global" eval="True"/>
             <field name="domain_force">
-               ['|',('branch_id','=',False),('branch_id','in',user.branch_ids.ids)]</field>
-            <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]" />
+                ['|',('branch_id','=',False),('branch_id','in',user.branch_ids.ids)]
+            </field>
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]"/>
         </record>
 
         <!-- TMS Employee Group Settings -->
         <record id="hr_empgroup_branch_manager_rule" model="ir.rule">
             <field name="name">TMS Employee Group Settings Branch Manager</field>
-            <field name="model_id" ref="model_hr_empgroup" />
-            <field name="global" eval="True" />
+            <field name="model_id" ref="model_hr_empgroup"/>
+            <field name="global" eval="True"/>
             <field name="domain_force">[(1,'=',1)]</field>
-            <field name="groups" eval="[(4, ref('base_territory.group_branch_user_manager'))]" />
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user_manager'))]"/>
         </record>
 
         <record id="hr_empgroup_branch_rule" model="ir.rule">
             <field name="name">TMS Employee Group Settings Branch</field>
-            <field name="model_id" ref="model_hr_empgroup" />
-            <field name="global" eval="True" />
+            <field name="model_id" ref="model_hr_empgroup"/>
+            <field name="global" eval="True"/>
             <field name="domain_force">
-                ['|',('branch_id','=',False),('branch_id','in',user.branch_ids.ids)]</field>
-            <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]" />
+                ['|',('branch_id','=',False),('branch_id','in',user.branch_ids.ids)]
+            </field>
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]"/>
         </record>
 
         <!-- TMS Fingerprint Settings -->
         <record id="hr_machine_setting_branch_manager_rule" model="ir.rule">
             <field name="name">TMS Fingerprint Settings Branch Manager</field>
-            <field name="model_id" ref="model_hr_machine_setting" />
-            <field name="global" eval="True" />
+            <field name="model_id" ref="model_hr_machine_setting"/>
+            <field name="global" eval="True"/>
             <field name="domain_force">[(1,'=',1)]</field>
-            <field name="groups" eval="[(4, ref('base_territory.group_branch_user_manager'))]" />
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user_manager'))]"/>
         </record>
 
         <record id="hr_machine_setting_branch_rule" model="ir.rule">
             <field name="name">TMS Fingerprint Settings Branch</field>
-            <field name="model_id" ref="model_hr_machine_setting" />
-            <field name="global" eval="True" />
+            <field name="model_id" ref="model_hr_machine_setting"/>
+            <field name="global" eval="True"/>
             <field name="domain_force">
-                ['|',('branch_id','=',False),('branch_id','in',user.branch_ids.ids)]</field>
-            <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]" />
+                ['|',('branch_id','=',False),('branch_id','in',user.branch_ids.ids)]
+            </field>
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]"/>
         </record>
 
         <!-- PERSONAL ADM -->
@@ -223,7 +233,7 @@
         <record id="group_tms_hr_employee" model="res.groups">
             <field name="name">User TMS</field>
         </record>
-        
+
         <record id="group_tms_reopen_close" model="res.groups">
             <field name="name">User Reopen TMS</field>
         </record>
@@ -231,47 +241,49 @@
         <!-- HR Mutation -->
         <record id="hr_employee_mutation_branch_manager_rule" model="ir.rule">
             <field name="name">HR Employee Mutation Branch Manager</field>
-            <field name="model_id" ref="model_hr_employee_mutations" />
-            <field name="global" eval="True" />
+            <field name="model_id" ref="model_hr_employee_mutations"/>
+            <field name="global" eval="True"/>
             <field name="domain_force">[(1,'=',1)]</field>
-            <field name="groups" eval="[(4, ref('base_territory.group_branch_user_manager'))]" />
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user_manager'))]"/>
         </record>
 
         <record id="hr_employee_mutation_branch_rule" model="ir.rule">
             <field name="name">HR Employee Mutation Branch</field>
-            <field name="model_id" ref="model_hr_employee_mutations" />
-            <field name="global" eval="True" />
+            <field name="model_id" ref="model_hr_employee_mutations"/>
+            <field name="global" eval="True"/>
             <field name="domain_force">
-                ['|',('branch_id','=',False),('branch_id','=',user.branch_id.name)]</field>
-            <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]" />
+                ['|',('branch_id','=',False),('branch_id','=',user.branch_id.name)]
+            </field>
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]"/>
         </record>
-                
+
         <!-- Staff Rule -->
         <record id="hr_employee_shift_staff" model="ir.rule">
             <field name="name">HR Employee shift Staff</field>
             <field name="model_id" ref="sanbe_hr_tms.model_sb_employee_shift"/>
-            <field name="global" eval="True" />
-            <field name="domain_force">[('branch_id','=',user.branch_id.id),('hrms_department_id', '=', user.employee_id.hrms_department_id.id)]</field>
-            <field name="groups" eval="[(4, ref('sanbe_hr_tms.group_shift_staff'))]" />
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('branch_id','=',user.branch_id.id),('hrms_department_id', '=',
+                user.employee_id.hrms_department_id.id)]
+            </field>
+            <field name="groups" eval="[(4, ref('sanbe_hr_tms.group_shift_staff'))]"/>
         </record>
 
         <!-- Manager Rule -->
         <record id="hr_employee_shift_manager" model="ir.rule">
             <field name="name">HR Employee Manager</field>
             <field name="model_id" ref="sanbe_hr_tms.model_sb_employee_shift"/>
-            <field name="global" eval="True" />
+            <field name="global" eval="True"/>
             <field name="domain_force">[(1,'=',1)]</field>
-            <field name="groups" eval="[(4, ref('sanbe_hr_tms.group_shift_manager')),
-                                (4, ref('base.group_system'))]" />
+            <field name="groups" eval="[(4, ref('base.group_system'))]"/>
         </record>
 
         <!-- HRD Rule -->
         <record id="hr_employee_shift_hrd" model="ir.rule">
             <field name="name">HR Employee HRD</field>
             <field name="model_id" ref="sanbe_hr_tms.model_sb_employee_shift"/>
-            <field name="global" eval="True" />
+            <field name="global" eval="True"/>
             <field name="domain_force">[('branch_id','=',user.branch_id.id)]</field>
-            <field name="groups" eval="[(4, ref('sanbe_hr_tms.group_shift_hrd'))]" />
+            <field name="groups" eval="[(4, ref('sanbe_hr_tms.group_shift_hrd'))]"/>
         </record>
 
         <!-- RECORD RULE FOR OVERTIME (SPL) -->
@@ -284,7 +296,8 @@
                 ('create_uid', '=', user.id),
                 ('division_id', '!=', False),
                 ('division_id', '=', user.employee_id.division_id.id)
-                ]</field>
+                ]
+            </field>
             <field name="groups" eval="[(4, ref('sanbe_hr_tms.module_surat_perintah_lembur_staff_operator'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -299,7 +312,8 @@
                 ('approval_l1_id.user_id', '=', user.id),
                 ('approval_l2_id.user_id', '=', user.id),
                 ('approverhrd_id.user_id', '=', user.id)
-                ]</field>
+                ]
+            </field>
             <field name="groups" eval="[(4, ref('sanbe_hr_tms.module_surat_perintah_lembur_approver'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -313,7 +327,8 @@
             <field name="domain_force">[
                 ('branch_id', '!=', False),
                 ('branch_id', '=', user.employee_id.branch_id.id)
-                ]</field>
+                ]
+            </field>
             <field name="groups" eval="[(4, ref('sanbe_hr_tms.module_surat_perintah_lembur_manager'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -328,7 +343,8 @@
                 ('create_uid', '=', user.id),
                 ('branch_id', '!=', False),
                 ('branch_id', '=', user.branch_id.id)
-                ]</field>
+                ]
+            </field>
             <field name="groups" eval="[(4, ref('module_staff_scheduling_docter'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -342,7 +358,8 @@
             <field name="domain_force">[
                 ('branch_id', '!=', False),
                 ('branch_id', '=', user.branch_id.id)
-                ]</field>
+                ]
+            </field>
             <field name="groups" eval="[(4, ref('module_spv_scheduling_docter'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -356,7 +373,8 @@
             <field name="domain_force">[
                 ('branch_id', '!=', False),
                 ('branch_id', '=', user.branch_id.id)
-                ]</field>
+                ]
+            </field>
             <field name="groups" eval="[(4, ref('module_mgr_scheduling_docter'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -367,19 +385,20 @@
         <!-- HR Warning Letter -->
         <record id="hr_warning_letter_branch_manager_rule" model="ir.rule">
             <field name="name">HR Warning Letter Branch Manager</field>
-            <field name="model_id" ref="model_hr_warning_letter" />
-            <field name="global" eval="True" />
+            <field name="model_id" ref="model_hr_warning_letter"/>
+            <field name="global" eval="True"/>
             <field name="domain_force">[(1,'=',1)]</field>
-            <field name="groups" eval="[(4, ref('base_territory.group_branch_user_manager'))]" />
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user_manager'))]"/>
         </record>
 
         <record id="hr_warning_letter_branch_rule" model="ir.rule">
             <field name="name">HR Warning Letter Branch</field>
-            <field name="model_id" ref="model_hr_warning_letter" />
-            <field name="global" eval="True" />
+            <field name="model_id" ref="model_hr_warning_letter"/>
+            <field name="global" eval="True"/>
             <field name="domain_force">
-                ['|',('bisnis_unit','=',False),('bisnis_unit','=',user.branch_id.name)]</field>
-            <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]" />
+                ['|',('bisnis_unit','=',False),('bisnis_unit','=',user.branch_id.name)]
+            </field>
+            <field name="groups" eval="[(4, ref('base_territory.group_branch_user'))]"/>
         </record>
 
         <!-- HR Employee Documents -->
@@ -495,7 +514,6 @@
         </record> -->
 
         <!-- Configuration -->
-
 
 
         <!-- HR Employment Types -->
