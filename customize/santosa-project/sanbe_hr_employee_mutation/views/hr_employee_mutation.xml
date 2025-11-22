@@ -64,6 +64,7 @@
                     </group>
                     <group name="emp_det" string="Detail Karyawan">
                         <group>
+                            <field name="employee_ids" invisible="1"/>
                             <field name="employee_id" 
                                    readonly="state not in ['draft']" 
                                    options="{'no_create': True,'no_create_edit': True}"
@@ -128,7 +129,7 @@
                             <field name="service_directorate_id" options="{'no_create': True,'no_create_edit': True}" readonly="state in ['approved']" string = "Direktorat" force_save="1" invisible="service_type not in ['prom','demo','rota','actv','corr','muta']" required="service_type in ['prom','demo','rota','actv','corr','muta']" placeholder="Wajib diisi"/>
                             <field name="service_departmentid" readonly="state in ['approved']" force_save="1" invisible="service_type not in ['prom','demo','rota','actv','corr','muta']" domain="[('directorate_id', '=',service_directorate_id)]" required="service_type in ['prom','demo','rota','actv','corr','muta']" placeholder="Wajib diisi"/>
                             <field name="service_division_id" options="{'no_create': True,'no_create_edit': True}" readonly="state in ['approved']" string = "Divisi" force_save="1" domain="[('department_id', '=',service_departmentid)]" invisible="service_type not in ['prom','demo','rota','actv','corr','muta']" required="service_type in ['prom','demo','rota','actv','corr','muta']" placeholder="Wajib diisi"/>
-                            <field name="service_jobtitle" readonly="state in ['approved']" options="{'no_create': True,'no_create_edit': True}" domain="[('division_id', '=',service_division_id)]" invisible="service_type not in ['actv','corr','prom','rota','demo','muta']" required="service_type in ['prom', 'demo', 'rota', 'muta', 'actv', 'corr']" placeholder="Wajib diisi"/>
+                            <field name="service_jobtitle" readonly="state in ['approved']" options="{'no_create': True,'no_create_edit': True}" invisible="service_type not in ['actv','corr','prom','rota','demo','muta']" required="service_type in ['prom', 'demo', 'rota', 'muta', 'actv', 'corr']" placeholder="Wajib diisi"/>
                             <field name="service_parent_id" readonly="state in ['approved']" options="{'no_create': True, 'no_create_edit': True}" domain="[('id', '!=', id),'|',('branch_id','=',branch_id),('branch_id','=',False)]" invisible="service_type not in ['corr']" required="service_type in ['corr']" placeholder="Wajib diisi"/>
                             <field name="service_job_status_id" readonly="state in ['approved']" force_save="1" invisible="1" />
                             <field name="service_jobstatus" options="{'no_create': True,'no_create_edit': True}" readonly="state in ['approved']" invisible="service_type not in ['actv','corr','prom','rota','demo','muta']" required="service_type in ['prom', 'demo', 'rota', 'muta', 'actv', 'corr']" placeholder="Wajib diisi"/>

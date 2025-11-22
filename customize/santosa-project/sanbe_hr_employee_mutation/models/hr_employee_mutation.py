@@ -18,11 +18,13 @@ class HrEmployeeMutation(models.Model):
         required=True, copy=False, readonly=False,
         index='trigram',
         default=lambda self: _('New'))
-    
     letter_no = fields.Char('Reference Number')
     branch_ids = fields.Many2many('res.branch', 'res_branch_rel', string='AllBranch', compute='_isi_semua_branch', store=False)
     idpeg = fields.Char('Employee ID')
-    employee_id = fields.Many2one('hr.employee', string='Nama Karyawan', index=True)
+    employee_ids = fields.Many2many('hr.employee.view', 'res_employee_id_rel', string='Semua nama karyawan',
+                                   compute='_isi_emps', store=False, tracking=True)
+    employee_id = fields.Many2one('hr.employee.view', string='Nama Karyawan',
+                                  index=True, domain="[('id', 'in', employee_ids)]")
     emp_id = fields.Char(string='ID Karyawan', tracking=True)
     nik = fields.Char(string='NIK', tracking=True)
     nik_lama = fields.Char('NIK Lama', store=True)
@@ -31,6 +33,7 @@ class HrEmployeeMutation(models.Model):
     branch_id = fields.Many2one('res.branch', string='unit Bisnis', domain="[('id','in',branch_ids)]", tracking=True)     
     directorate_id = fields.Many2one('sanhrms.directorate', string='Direktorat', tracking=True)
     division_id = fields.Many2one('sanhrms.division', string='Divisi', tracking=True)
+    job_id = fields.Many2one('hr.job', string='Jabatan', tracking=True)
     employee_group1s = fields.Many2one('emp.group', string='Employee P Group', tracking=True)
     work_unit_id = fields.Many2one('hr.work.unit', string='Work Unit', tracking=True)
     work_unit = fields.Char(string='Unit Kerja')
@@ -38,7 +41,6 @@ class HrEmployeeMutation(models.Model):
     parent_nik = fields.Char(related='parent_id.nik', string='NIK Atasan', tracking=True)
     medic = fields.Many2one('hr.profesion.medic', string='Profesi Medis', tracking=True)
     nurse = fields.Many2one('hr.profesion.nurse', string='Profesi Perawat', tracking=True)
-    job_id = fields.Many2one('hr.job', string='Jabatan', tracking=True)
     speciality = fields.Many2one('hr.profesion.special', string='Kategori Khusus',tracking=True)
     hrms_department_id = fields.Many2one('sanhrms.department', string='Departemen', tracking=True)
     employee_levels = fields.Many2one('employee.level', string='Employee Level', tracking=True)
@@ -91,11 +93,13 @@ class HrEmployeeMutation(models.Model):
     service_no_npwp = fields.Char('Nomor NPWP', default=lambda self:self.employee_id.no_npwp)
     service_no_ktp = fields.Char('Nomor KTP', default=lambda self:self.employee_id.no_ktp)
     service_area = fields.Many2one('res.territory', string='Area', tracking=True)
-    service_bisnisunit = fields.Many2one('res.branch', domain="[('id','in',branch_ids)]", string='Unit Bisnis', default=lambda self:self.branch_id.id)              
-    service_directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat', default=lambda self:self.employee_id.directorate_id.id)
-    service_departmentid = fields.Many2one('sanhrms.department', domain="[('branch_id','=',service_bisnisunit)]", string='Departemen', default=lambda self:self.employee_id.hrms_department_id.id)
-    service_division_id = fields.Many2one('sanhrms.division',string='Divisi', default=lambda self:self.employee_id.division_id.id)
-    service_jobtitle = fields.Many2one('hr.job', domain="[('hrms_department_id','=',service_departmentid)]", string='Jabatan', index=True, default=lambda self:self.employee_id.job_id.id)
+    service_bisnisunit = fields.Many2one('res.branch', domain="[('id','in',branch_ids)]", string='Unit Bisnis')
+    service_directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat')
+    service_departmentid = fields.Many2one('sanhrms.department', string='Departemen')
+    service_division_id = fields.Many2one('sanhrms.division',string='Divisi')
+    service_jobtitle = fields.Many2one('hr.job.view', string='Jabatan', index=True, domain="[('directorate_id', '=', service_directorate_id),"
+                                                                                           "('hrms_department_id', '=', service_departmentid),"
+                                                                                           "('division_id', '=', service_division_id)]")
     service_parent_id = fields.Many2one('parent.hr.employee', string='Atasan Langsung', tracking=True)
     service_employee_group1s = fields.Many2one('emp.group', string='Employee P Group', default=lambda self:self.employee_id.employee_group1s.id)
     service_medic = fields.Many2one('hr.profesion.medic','Profesi Medis', default=lambda self:self.employee_id.medic.id)
@@ -152,7 +156,17 @@ class HrEmployeeMutation(models.Model):
         ],
         string='Kategori',
     )
-    service_substitute = fields.Many2one(comodel_name='hr.employee', string='Posisi Pengganti', tracking=True)
+    service_substitute = fields.Many2one('hr.employee.view', string='Posisi Pengganti', tracking=True)
+
+    @api.depends('name')
+    def _isi_emps(self):
+        context = self._context
+        current_uid = context.get('uid')
+        user = self.env['res.users'].browse(current_uid)
+        for allrecs in self:
+            allemps = self.env['hr.employee.view'].sudo().search(
+                [('state', '=', 'approved'), ('active', '=', True), ('branch_id', '=', user.branch_id.id)])
+            allrecs.employee_ids = [Command.set(allemps.ids)]
 
 
     @api.depends('hrms_department_id')
@@ -206,35 +220,35 @@ class HrEmployeeMutation(models.Model):
                                                      'doc_number': self.letter_no,
                                                      })
 
-        
-        if self.service_area.id != self.employee_id.area.id:
-            self.employee_id.write({'area': self.service_area.id})
+        employee = self.env['hr.employee'].sudo().browse(self.employee_id.id)
+        if self.service_area.id != self.employee_id.area_id.id:
+            employee.write({'area': self.service_area.id})
         
         if self.service_bisnisunit and self.service_bisnisunit.id != self.employee_id.branch_id.id:
-            self.employee_id.write({'branch_id': self.service_bisnisunit.id})
+            employee.write({'branch_id': self.service_bisnisunit.id})
         elif not self.service_bisnisunit:
             raise UserError("Unit Bisnis (branch_id) wajib diisi sebelum approval.")
 
         if self.service_directorate_id != self.employee_id.directorate_id.id:
-            self.employee_id.write({'directorate_id': self.service_directorate_id.id})
+            employee.write({'directorate_id': self.service_directorate_id.id})
 
         if self.service_departmentid.id != self.employee_id.hrms_department_id.id:
-            self.employee_id.write({'hrms_department_id': self.service_departmentid.id})
+            employee.write({'hrms_department_id': self.service_departmentid.id})
 
         if self.service_division_id.id != self.employee_id.division_id.id:
-            self.employee_id.write({'division_id': self.service_division_id.id})
+            employee.write({'division_id': self.service_division_id.id})
 
         if self.service_jobstatus != self.employee_id.job_status:
-            self.employee_id.write({'job_status': self.service_jobstatus})
+            employee.write({'job_status': self.service_jobstatus})
 
         if self.service_work_unit != self.employee_id.work_unit:
-            self.employee_id.write({'work_unit': self.service_work_unit})
+            employee.write({'work_unit': self.service_work_unit})
 
         if self.service_work_unit_id != self.employee_id.work_unit_id.id:
-            self.employee_id.write({'work_unit_id': self.service_work_unit_id})
+            employee.write({'work_unit_id': self.service_work_unit_id})
 
         if self.service_coach_id != self.employee_id.coach_id.id:
-            self.employee_id.write({'coach_id': self.service_coach_id})
+            employee.write({'coach_id': self.service_coach_id})
 
         # if self.service_type == 'conf':
         #     self.employee_id.write({'emp_status': self.emp_status_other})
@@ -248,55 +262,55 @@ class HrEmployeeMutation(models.Model):
             employee.write({'emp_status': self.service_employementstatus})
 
         if self.service_jobtitle.id != self.employee_id.job_id.id:
-            self.employee_id.write({'job_id': self.service_jobtitle.id})
+            employee.write({'job_id': self.service_jobtitle.id})
 
         if self.service_parent_id.id != self.employee_id.parent_id.id:
-            self.employee_id.write({'parent_id': self.service_parent_id.id})
+            employee.write({'parent_id': self.service_parent_id.id})
 
         if self.service_employee_group1s != self.employee_id.employee_group1s.id:
-            self.employee_id.write({'employee_group1s': self.service_employee_group1s})
+            employee.write({'employee_group1s': self.service_employee_group1s})
 
         if self.service_name != self.employee_id.name:
-            self.employee_id.write({'name': self.service_name})
+            employee.write({'name': self.service_name})
 
         if self.service_no_npwp != self.employee_id.no_npwp:
-            self.employee_id.write({'no_npwp': self.service_no_npwp})
+            employee.write({'no_npwp': self.service_no_npwp})
 
         if self.service_no_ktp != self.employee_id.no_ktp:
-            self.employee_id.write({'no_ktp': self.service_no_ktp})
+            employee.write({'no_ktp': self.service_no_ktp})
 
         if self.service_identification != self.employee_id.identification_id:
-            self.employee_id.write({'identification_id': self.service_identification})
+            employee.write({'identification_id': self.service_identification})
 
         if self.service_nik != self.employee_id.nik:
-            self.employee_id.write({'nik_lama': self.employee_id.nik})
-            self.employee_id.write({'nik': self.service_nik})
+            employee.write({'nik_lama': self.employee_id.nik})
+            employee.write({'nik': self.service_nik})
             self.nik_lama = self.employee_id.nik_lama
             self.service_nik_lama = self.employee_id.nik_lama
             self.nik = self.employee_id.nik
 
         if self.join_date != self.employee_id.join_date:
-            self.employee_id.write({'join_date': self.join_date})
+            employee.write({'join_date': self.join_date})
 
         if self.marital != self.employee_id.marital:
-            self.employee_id.write({'marital': self.marital})
+            employee.write({'marital': self.marital})
 
         if self.service_employee_levels != self.employee_id.employee_levels:
-            self.employee_id.write({'employee_levels': self.service_employee_levels}) 
+            employee.write({'employee_levels': self.service_employee_levels})
 
         if self.service_medic != self.employee_id.medic:
-            self.employee_id.write({'medic': self.service_medic})
+            employee.write({'medic': self.service_medic})
 
         if self.service_nurse != self.employee_id.nurse:
-            self.employee_id.write({'nurse': self.service_nurse})
+            employee.write({'nurse': self.service_nurse})
 
         if self.service_speciality != self.employee_id.seciality:
-            self.employee_id.write({'seciality': self.service_speciality})
+            employee.write({'seciality': self.service_speciality})
 
         if self.service_birthday !=  self.employee_id.birthday:
-            self.employee_id.write({'birthday': self.service_birthday})
+            employee.write({'birthday': self.service_birthday})
             
-        self.employee_id.write({'state': 'approved'})
+        employee.write({'state': 'approved'})
 
         return self.write({'state': 'approved',
                            'service_status': 'Approved'})
@@ -313,7 +327,7 @@ class HrEmployeeMutation(models.Model):
             #         f"Silahkan buat kontrak baru terlebih dahulu untuk karyawan tersebut."
             #     )
             # header
-            employee = record.employee_id
+            employee = self.env['hr.employee'].sudo().search([('id', '=', record.employee_id.id)], limit=1)
 
             if not employee:
                 continue
@@ -509,12 +523,14 @@ class HrEmployeeMutation(models.Model):
 
     def _update_employee_status(self):
         for record in self:
+
             if record.emp_status_to_corr and record.employee_id:
                 record.service_employementstatus = self.emp_status_to_corr
                 new_emp_status_id = self.env['hr.emp.status'].sudo().search(
                     [('emp_status', '=', self.emp_status_to_corr), ('status', '=', False)])
+                employee = self.env['hr.employee'].sudo().search([('id', '=', self.employee_id.id)], limit=1)
                 if new_emp_status_id:
-                    record.employee_id.sudo().write({'emp_status_id': new_emp_status_id.id})
+                    employee.sudo().write({'emp_status_id': new_emp_status_id.id})
 
     @api.depends('emp_status_actv', 'emp_status_other', 'service_type')
     def _compute_emp_status(self):
@@ -532,7 +548,7 @@ class HrEmployeeMutation(models.Model):
         res = super(HrEmployeeMutation, self).create(vals)
         for allres in res:
             employee = self.env['hr.employee'].sudo().browse(allres.employee_id.id)
-            employee.write({'state': 'hold'})
+            # employee.write({'state': 'hold'})
         return res
 
     def _get_view(self, view_id=None, view_type='form', **options):

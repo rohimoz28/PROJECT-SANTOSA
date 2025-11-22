@@ -43,3 +43,6 @@ access_employee_report_wizard,access.employee.report.wizard,model_employee_repor
 
 access_hrd_read_attachment_admin,HRD Read Attachment,model_ir_attachment,hr.group_hr_manager,0,1,1,1
 access_hrd_read_attachment_manager,HRD Read Attachment,model_ir_attachment,hr.group_hr_user,1,1,1,1
+
+access_hr_employee_view,access.hr.employee.view,model_hr_employee_view,base.group_user,1,1,0,0
+access_hr_job_view,access.hr.job.view,model_hr_job_view,base.group_user,1,1,0,0
