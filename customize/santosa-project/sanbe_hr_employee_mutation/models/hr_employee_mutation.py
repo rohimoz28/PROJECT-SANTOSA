@@ -35,8 +35,8 @@ class HrEmployeeMutation(models.Model):
     division_id = fields.Many2one('sanhrms.division', string='Divisi', tracking=True)
     job_id = fields.Many2one('hr.job', string='Jabatan', tracking=True)
     employee_group1s = fields.Many2one('emp.group', string='Employee P Group', tracking=True)
-    work_unit_id = fields.Many2one('hr.work.unit', string='Work Unit', tracking=True)
     work_unit = fields.Char(string='Unit Kerja')
+    work_unit_id = fields.Many2one('hr.work.unit', string='Work Unit', tracking=True)
     parent_id = fields.Many2one('parent.hr.employee', string='Atasan Langsung', tracking=True)
     parent_nik = fields.Char(related='parent_id.nik', string='NIK Atasan', tracking=True)
     medic = fields.Many2one('hr.profesion.medic', string='Profesi Medis', tracking=True)
@@ -144,8 +144,13 @@ class HrEmployeeMutation(models.Model):
     contract_from = fields.Date('Contract Date From', related='employee_id.contract_datefrom', readonly=False)
     contract_to = fields.Date('Contract Date To', related='employee_id.contract_dateto', readonly=False)
     company_id = fields.Many2one('res.company', required=True, readonly=True, default=lambda self: self.env.company)
-    service_work_unit = fields.Char('Unit Kerja')
+    service_work_unit = fields.Char(string='Unit Kerja', compute='_compute_work_unit', store=True)
     service_work_unit_id = fields.Many2one('hr.work.unit', string='Posisi Unit Kerja', tracking=True)
+    service_work_unit_ids = fields.Many2many(comodel_name='mst.group.unit.pelayanan',
+                                             relation='service_mutation_work_unit_rel',
+                                             column1='mutation_id',
+                                             column2='work_unit_id',
+                                             string='Unit Kerja')
     service_coach_id = fields.Many2one('parent.hr.employee', string='Atasan Unit Kerja', tracking=True)
     service_employee_category = fields.Selection(
         selection=[
@@ -157,6 +162,12 @@ class HrEmployeeMutation(models.Model):
         string='Kategori',
     )
     service_substitute = fields.Many2one('hr.employee.view', string='Posisi Pengganti', tracking=True)
+
+    @api.depends('service_work_unit_ids', 'service_work_unit_ids.name')
+    def _compute_work_unit(self):
+        for rec in self:
+            names = rec.service_work_unit_ids.mapped('name')
+            rec.work_unit = ', '.join(names) if names else ''
 
     @api.depends('name')
     def _isi_emps(self):
@@ -243,6 +254,10 @@ class HrEmployeeMutation(models.Model):
 
         if self.service_work_unit != self.employee_id.work_unit:
             employee.write({'work_unit': self.service_work_unit})
+
+        if self.service_work_unit_ids.ids != employee.work_unit_ids.ids:
+            employee.write({'work_unit_ids': self.service_work_unit_ids.ids})
+            # employee.work_unit_ids = [(6, 0, self.service_work_unit_ids.ids)]
 
         if self.service_work_unit_id != self.employee_id.work_unit_id.id:
             employee.write({'work_unit_id': self.service_work_unit_id})
@@ -349,6 +364,7 @@ class HrEmployeeMutation(models.Model):
             record.nurse = employee.nurse
             record.speciality = employee.seciality
             record.employee_levels = employee.employee_levels.id
+            record.service_work_unit_ids = [(6, 0, employee.work_unit_ids.ids)]  # sama dengan [Command.set(employee.work_unit_ids.ids)]
 
             # detail
             record.join_date = employee.join_date
@@ -381,6 +397,7 @@ class HrEmployeeMutation(models.Model):
                 record.service_work_unit = employee.work_unit
                 record.service_work_unit_id = employee.work_unit_id.id
                 record.service_coach_id = employee.coach_id.id
+                record.emp_status_other = employee.emp_status
                 record.service_employementstatus = record.emp_status_other
                 record.service_status = 'Draft'
 
@@ -411,7 +428,8 @@ class HrEmployeeMutation(models.Model):
                 record.service_work_unit = employee.work_unit
                 record.service_work_unit_id = employee.work_unit_id.id
                 record.service_coach_id = employee.coach_id.id
-                record.service_employementstatus = 'confirmed'
+                record.emp_status_other = employee.emp_status
+                record.service_employementstatus = record.emp_status_other
                 record.service_status = 'Draft'
             
             elif record.service_type in ['muta']:
@@ -441,7 +459,8 @@ class HrEmployeeMutation(models.Model):
                 record.service_work_unit = employee.work_unit
                 record.service_work_unit_id = employee.work_unit_id.id
                 record.service_coach_id = employee.coach_id.id
-                record.service_employementstatus = 'confirmed'
+                record.emp_status_other = employee.emp_status
+                record.service_employementstatus = record.emp_status_other
                 record.service_status = 'Draft'
 
             elif record.service_type in ['actv']:
@@ -471,6 +490,7 @@ class HrEmployeeMutation(models.Model):
                 record.service_work_unit = employee.work_unit
                 record.service_work_unit_id = employee.work_unit_id.id
                 record.service_coach_id = employee.coach_id.id
+                record.emp_status_actv = employee.emp_status
                 record.service_employementstatus = record.emp_status_actv
                 record.service_status = 'Draft'
         
@@ -501,6 +521,7 @@ class HrEmployeeMutation(models.Model):
                 record.service_work_unit = employee.work_unit
                 record.service_work_unit_id = employee.work_unit_id.id
                 record.service_coach_id = employee.coach_id.id
+                record.emp_status_to_corr = employee.emp_status
                 record.service_employementstatus = record.emp_status_to_corr
                 record.service_status = 'Draft'        
 
