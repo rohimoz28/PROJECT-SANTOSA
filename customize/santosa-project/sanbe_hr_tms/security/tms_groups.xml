@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <data noupdate="0">
+    <data>
         <record model="ir.module.category" id="module_tms_category">
             <field name="name">Time Management System</field>
             <field name="sequence">1</field>
@@ -138,7 +138,7 @@
         <record model="ir.module.category" id="module_sub_category_upload_data_absen">
             <field name="name">Upload Data Absen</field>
             <field name="parent_id" ref="sanbe_hr_tms.module_category_time_management_system"/>
-            <field name="description">Access Right for menu Upload Data Absen under Upload</field> 
+            <field name="description">Access Right for menu Upload Data Absen under Upload</field>
         </record>
 
         <!-- TMS Upload Data Absen -->
@@ -163,7 +163,7 @@
 
         <!-- TMS Result Upload Data Absen -->
         <record model="ir.module.category" id="module_category_scheduling_docter">
-            <field name="name">Master Jadwal Praktek Dokter </field>
+            <field name="name">Master Jadwal Praktek Dokter</field>
             <field name="parent_id" ref="sanbe_hr_tms.module_category_time_management_system"/>
             <field name="description">Access Right for menu Result of Uploaded Attendance under Upload</field>
         </record>
@@ -182,7 +182,8 @@
 
         <record model="res.groups" id="module_mgr_scheduling_docter">
             <field name="name">Manager</field>
-            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.module_spv_scheduling_docter')),(4,ref('base.group_system'))]"/>
+            <field name="implied_ids"
+                   eval="[(4, ref('sanbe_hr_tms.module_spv_scheduling_docter')),(4,ref('base.group_system'))]"/>
             <field name="category_id" ref="sanbe_hr_tms.module_category_scheduling_docter"/>
         </record>
 
@@ -536,53 +537,12 @@
             <field name="category_id" ref="sanbe_hr_tms.module_tms_employee_shift"/>
         </record>
 
-        <record model="res.groups" id="group_shift_manager">
-            <field name="name">Manager</field>
-            <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.group_shift_hrd'))]"/>
-            <field name="category_id" ref="sanbe_hr_tms.module_tms_employee_shift"/>
-        </record>
+        <!-- <record model="res.groups" id="group_shift_manager"> -->
+        <!--     <field name="name">Manager</field> -->
+        <!--     <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.group_shift_hrd'))]"/> -->
+        <!--     <field name="category_id" ref="sanbe_hr_tms.module_tms_employee_shift"/> -->
+        <!-- </record> -->
 
         <!-- END Time Management System -->
-
-
-        <!-- <record model="ir.module.category" id="base.module_category_services_timesheets"> -->
-        <!--     <field name="description">Helps you manage the timesheets.</field> -->
-        <!--     <field name="sequence">13</field> -->
-        <!-- </record> -->
-
-        <!-- <record id="group_hr_timesheet_user" model="res.groups"> -->
-        <!--     <field name="name">User: own timesheets only</field> -->
-        <!--     <field name="category_id" ref="base.module_category_services_timesheets"/> -->
-        <!--     <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/> -->
-        <!--     <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/> -->
-        <!-- </record> -->
-
-        <!-- <record id="group_hr_timesheet_approver" model="res.groups"> -->
-        <!--     <field name="name">User: all timesheets</field> -->
-        <!--     <field name="category_id" ref="base.module_category_services_timesheets"/> -->
-        <!--     <field name="implied_ids" eval="[(4, ref('hr_timesheet.group_hr_timesheet_user'))]"/> -->
-        <!-- </record> -->
-
-        <!-- <record id="group_timesheet_manager" model="res.groups"> -->
-        <!--     <field name="name">Administrator</field> -->
-        <!--     <field name="category_id" ref="base.module_category_services_timesheets"/> -->
-        <!--     <field name="implied_ids" eval="[(4, ref('hr_timesheet.group_hr_timesheet_approver')), (4, ref('hr.group_hr_user'))]"/> -->
-        <!--     <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/> -->
-        <!-- </record> -->
-
-        <!-- <record id="group_hr_user" model="res.groups"> -->
-        <!--     <field name="name">Officer: Manage all employees</field> -->
-        <!--     <field name="category_id" ref="base.module_category_human_resources_employees"/> -->
-        <!--     <field name="implied_ids" eval="[(6, 0, [ref('base.group_user')])]"/> -->
-        <!--     <field name="comment">The user will be able to approve document created by employees.</field> -->
-        <!-- </record> -->
-
-        <!-- <record id="group_hr_manager" model="res.groups"> -->
-        <!--     <field name="name">Administrator</field> -->
-        <!--     <field name="comment">The user will have access to the human resources configuration as well as statistic reports.</field> -->
-        <!--     <field name="category_id" ref="base.module_category_human_resources_employees"/> -->
-        <!--     <field name="implied_ids" eval="[(4, ref('group_hr_user'))]"/> -->
-        <!--     <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/> -->
-        <!-- </record> -->
     </data>
 </odoo>
