@@ -32,7 +32,6 @@ class HrEmployeeView(models.Model):
     directorate_id = fields.Many2one('sanhrms.directorate', string='Direktorat')
     hrms_department_id = fields.Many2one('sanhrms.department', string='Departemen')
     division_id = fields.Many2one('sanhrms.division', string='Divisi')
-    work_unit = fields.Char(string='Unit Kerja')
     job_status = fields.Selection([('permanent', 'Karyawan Tetap (PKWTT)'),
                                    ('contract', 'Karyawan Kontrak (PKWT)'),
                                    ('partner_doctor', 'Dokter Mitra'),
