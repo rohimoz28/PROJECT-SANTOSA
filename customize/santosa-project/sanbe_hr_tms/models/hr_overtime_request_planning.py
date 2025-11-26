@@ -92,7 +92,6 @@ class HREmpOvertimeRequest(models.Model):
 
     name = fields.Char('Nomor Surat Perintah Lembur', default=lambda self: _('New'),
                        copy=False, readonly=True, tracking=True, requirement=True)
-
     request_date = fields.Date(
         'Tanggal Surat Perintah Lembur', default=fields.Date.today(), readonly=True)
 
@@ -309,10 +308,10 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                    rec.state == 'draft'
-                    and not rec.approve1
-                    and rec.approval_l1_id
-                    and rec.approval_l1_id.user_id.id == current_user.id
+                rec.state == 'draft'
+                and not rec.approve1
+                and rec.approval_l1_id
+                and rec.approval_l1_id.user_id.id == current_user.id
             )
             rec.can_approve_l1 = can_approve
 
@@ -328,11 +327,11 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                    rec.state == 'approved_l1'
-                    and rec.approve1
-                    and not rec.approve2
-                    and rec.approval_l2_id
-                    and rec.approval_l2_id.user_id.id == current_user.id
+                rec.state == 'approved_l1'
+                and rec.approve1
+                and not rec.approve2
+                and rec.approval_l2_id
+                and rec.approval_l2_id.user_id.id == current_user.id
             )
             rec.can_approve_l2 = can_approve
 
@@ -359,12 +358,12 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                    rec.state == 'approved_l2'
-                    and rec.approval_l1_id
-                    and rec.approve1
-                    and rec.approval_l2_id
-                    and rec.approve2
-                    and rec.approval_l1_id.user_id.id == current_user.id
+                rec.state == 'approved_l2'
+                and rec.approval_l1_id
+                and rec.approve1
+                and rec.approval_l2_id
+                and rec.approve2
+                and rec.approval_l1_id.user_id.id == current_user.id
             )
             rec.can_verified = can_approve
 
@@ -381,12 +380,12 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                    rec.state == 'verified'
-                    and rec.approval_l1_id
-                    and rec.approve1
-                    and rec.approval_l2_id
-                    and rec.approve2
-                    and rec.approverhrd_id.user_id.id == current_user.id
+                rec.state == 'verified'
+                and rec.approval_l1_id
+                and rec.approve1
+                and rec.approval_l2_id
+                and rec.approve2
+                and rec.approverhrd_id.user_id.id == current_user.id
             )
             rec.can_approve_hrd = can_approve
 
