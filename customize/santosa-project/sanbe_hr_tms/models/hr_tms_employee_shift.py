@@ -11,6 +11,7 @@ TMS_ENTRY_STATE = [
     ('reject', 'Reject'),
 ]
 
+
 class HrTMSEmployeeShift(models.Model):
     _name = "sb.employee.shift"
     _description = 'Employee Shift Management'
@@ -167,6 +168,9 @@ class HrTMSEmployeeShift(models.Model):
     review_date = fields.Date(string="Reviewd Date")
     name = fields.Char(string='Reference', index=True,
                        compute='_compute_display_name', store=True)
+
+    work_unit_ids = fields.Many2many(
+        'mst.group.unit.pelayanan', related="employee_id.work_unit_ids", string='Work Unit')
     display_name = fields.Char(
         string='Display Name', index=True, compute='_compute_display_name', store=True)
 
