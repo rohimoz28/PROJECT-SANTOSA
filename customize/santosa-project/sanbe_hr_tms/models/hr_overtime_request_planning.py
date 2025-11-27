@@ -711,13 +711,6 @@ class HREmpOvertimeRequestEmployee(models.Model):
                 )
                 raise UserError(msg)
 
-    @api.constrains('plann_date_from')
-    def _check_validation_date(self):
-        for line in self:
-            if line.plann_date_from > line.planning_id.periode_to and line.plann_date_from < line.planning_id.periode_from:
-                raise UserError(
-                    ('Date Must in between %s and %s') % (line.planning_id.periode_from, line.planning_id.periode_to))
-
     @api.model_create_multi
     def create(self, vals_list):
         records_vals = vals_list if isinstance(
