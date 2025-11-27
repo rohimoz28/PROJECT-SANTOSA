@@ -14,7 +14,7 @@
                 <field name="period_text" options="{'no_open': True}" string="Periode" readonly="1" optional='show'/>
                 <field name="employee_id" options="{'no_open': True}" readonly="1" optional='show'/>
                 <field name="nik" readonly="1" optional='show'/>
-                <field name="work_unit_ids" string="Work Unit" optional='hide'/>
+                <field name="work_unit_ids" string="Work Unit" optional='hide' widget="many2many_tags"/>
                 <field name="branch_id" options="{'no_open': True}" readonly="1" column_invisible="1"/>
                 <field name="area_id" options="{'no_open': True}" readonly="1" column_invisible="1"/>
                 <field name="directorate_id" options="{'no_open': True}" readonly="1" optional='hide'/>
@@ -138,6 +138,7 @@
                 <filter string="Dibuat oleh Saya" name="filter_by_creator" domain="[('create_uid', '=', uid)]"/>
                 <group expand="0" string="Kelompokkan Berdasarkan">
                     <filter string="Periode" name="group_periode" context="{'group_by':'period_text'}"/>
+                    <filter string="Work Unit" name="group_work_unit_ids" context="{'group_by':'work_unit_ids'}"/>
                     <filter string="Unit Bisnis" name="group_branch" context="{'group_by':'branch_id'}"/>
                     <filter string="Direktorat" name="group_directorat" context="{'group_by':'directorate_id'}"/>
                     <filter string="Departemen" name="group_department" context="{'group_by':'hrms_department_id'}"/>
