@@ -14,6 +14,7 @@
                 <field name="period_text" options="{'no_open': True}" string="Periode" readonly="1" optional='show'/>
                 <field name="employee_id" options="{'no_open': True}" readonly="1" optional='show'/>
                 <field name="nik" readonly="1" optional='show'/>
+                <field name="work_unit_ids" string="Work Unit" optional='hide'/>
                 <field name="branch_id" options="{'no_open': True}" readonly="1" column_invisible="1"/>
                 <field name="area_id" options="{'no_open': True}" readonly="1" column_invisible="1"/>
                 <field name="directorate_id" options="{'no_open': True}" readonly="1" optional='hide'/>

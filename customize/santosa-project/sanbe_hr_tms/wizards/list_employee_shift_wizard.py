@@ -158,7 +158,7 @@ class HrCariEmployeeShift(models.TransientModel):
         """
         Build domain to filter employees based on selected fields.
         """
-        domain = [('state', '=', 'approved'), ('emp_status_id', '!=', False)]
+        domain = [('state', '=', 'approved'), ('emp_status_id', '!=', False), ('wd_type', '=', 'shift')]
         if self.branch_id:
             domain.append(('branch_id', '=', self.branch_id.id))
         if self.hrms_department_id:
