@@ -177,13 +177,13 @@ class HrTMSEmployeeShift(models.Model):
     name = fields.Char(string='Reference', index=True,
                        compute='_compute_display_name', store=True)
 
-    # work_unit_ids = fields.Many2many(
-    #     'mst.group.unit.pelayanan',  string='Work Unit',  compute='_compute_work_unit_ids', store=True)
+    work_unit_ids = fields.Many2many(
+        'mst.group.unit.pelayanan',  string='Work Unit',  compute='_compute_work_unit_ids', store=True)
 
-    # @api.depends('employee_id.work_unit_ids')
-    # def _compute_work_unit_ids(self):
-    #     for rec in self:
-    #         rec.work_unit_ids = rec.employee_id.work_unit_ids
+    @api.depends('employee_id.work_unit_ids')
+    def _compute_work_unit_ids(self):
+        for rec in self:
+            rec.work_unit_ids = rec.employee_id.work_unit_ids
 
     display_name = fields.Char(
         string='Display Name', index=True, compute='_compute_display_name', store=True)
