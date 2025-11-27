@@ -56,13 +56,20 @@
                             <field name="division_id"
                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
                                    domain="[('department_id','=',hrms_department_id)]" readonly="state != 'draft'"/>
-                            <field name="employee_id"
+                            <field name="employee_id" invisible="is_approver != 'staff'" domain="[('state','=','approved'),('division_id','=',division_id)]"
                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
-                                   domain="[('state','=','approved'),('division_id','=',division_id)]"
+                                   readonly="state != 'draft'" required="1"/>
+                            <field name="employee_id" invisible="is_approver != 'manager'" domain="[('state','=','approved'),('branch_id','=',branch_id)]"
+                                   options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
+                                   readonly="state != 'draft'" required="1"/>
+                            <field name="employee_id" invisible="is_approver != 'approver'" domain="[('state','=','approved'),('emp_parent_id','=',current_user_employee_id_ref)]"
+                                   options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
                                    readonly="state != 'draft'" required="1"/>
                             <field name="approval_l1_id"/>
                             <field name="approval_l2_id"/>
                             <field name="approverhrd_id"/>
+                            <field name="is_approver" invisible="1"/>
+                            <field name="current_user_employee_id_ref" invisible="1"/>
                         </group>
                         <group>
                             <field name="name"/>
@@ -100,6 +107,8 @@
                                     <field name="nik" readonly="1" force_save="1" optional="show"/>
                                     <field name="max_ot" readonly="1" force_save="1" optional="show"
                                            widget="float_time"/>
+                                    <field name="max_ot_month" readonly="1" force_save="1" optional="show"
+                                           widget="float_time"/>
                                     <field name="plann_date_from" readonly="state != 'draft'" widget="date"
                                            optional="show"/>
                                     <field name="ot_plann_from" readonly="state != 'draft'" string="Jam SPL Dari"
@@ -120,6 +129,17 @@
                                            required="state == 'approved_l2'" readonly="state != 'approved_l2'"/>
                                     <field name="verify_time_to" optional="show" widget="float_time"
                                            required="state == 'approved_l2'" readonly="state != 'approved_l2'"/>
+
+                                    <field name="count_approval_ot" optional="hide" 
+                                            widget="float_time" readonly="1"/>
+                                    <field name="claim_approval_ot" optional="hide" 
+                                            widget="float_time" readonly="1"/>
+                                    <field name="adv_total_ot" optional="hide" 
+                                            widget="float_time" readonly="1" 
+                                            decoration-danger="adv_total_ot > 0"/>
+                                    <field name="sum_total_ot" optional="hide" 
+                                            widget="float_time" readonly="1"/>
+
                                     <field name="approvernd_id" string="Approver lt2" readonly="1"
                                            options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
                                            column_invisible="1"/>
@@ -162,7 +182,7 @@
             </field>
         </record>
 
-        <record id="hr_overtime_planning_supervisor_tree" model="ir.ui.view">
+        <!-- <record id="hr_overtime_planning_supervisor_tree" model="ir.ui.view">
             <field name="name">hr.overtime.planning.tree</field>
             <field name="model">hr.overtime.planning</field>
             <field name="arch" type="xml">
@@ -181,7 +201,7 @@
                     <field name="state" string="Status" optional="show"/>
                 </tree>
             </field>
-        </record>
+        </record> -->
 
         <!-- View hr.overtime.planning search -->
         <record id="view_hr_overtime_planning_search" model="ir.ui.view">
@@ -215,7 +235,7 @@
             </field>
         </record>
 
-        <record id="hr_overtime_planning_manager_tree" model="ir.ui.view">
+        <!-- <record id="hr_overtime_planning_manager_tree" model="ir.ui.view">
             <field name="name">hr.overtime.planning.tree</field>
             <field name="model">hr.overtime.planning</field>
             <field name="arch" type="xml">
@@ -234,7 +254,7 @@
                     <field name="state" string="Status" optional="show"/>
                 </tree>
             </field>
-        </record>
+        </record> -->
 
         <record id="hr_overtime_employees_form" model="ir.ui.view">
             <field name="name">hr.overtime.employees.form</field>
@@ -323,7 +343,7 @@
             </field>
         </record>
 
-        <record id="action_hr_overtime_approver" model="ir.actions.act_window">
+        <!-- <record id="action_hr_overtime_approver" model="ir.actions.act_window">
             <field name="name">Surat Perintah Lembur</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.overtime.planning</field>
@@ -349,9 +369,9 @@
                     Buat Surat Perintah Lembur
                 </p>
             </field>
-        </record>
+        </record> -->
 
-        <record id="action_hr_overtime_manager" model="ir.actions.act_window">
+        <!-- <record id="action_hr_overtime_manager" model="ir.actions.act_window">
             <field name="name">Surat Perintah Lembur</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.overtime.planning</field>
@@ -376,6 +396,6 @@
                     Buat Surat Perintah Lembur
                 </p>
             </field>
-        </record>
+        </record> -->
     </data>
 </odoo>

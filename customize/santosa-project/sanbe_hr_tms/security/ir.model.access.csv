@@ -4,7 +4,7 @@ access_hr_tmsentry_users,access.hr.tmsentry.users,model_hr_tmsentry_summary,base
 access_hr_employeegroup_users,access.hr.employeegroup.users,model_hr_empgroup,base.group_user,1,1,1,1
 access_hr_employeegroup_details_users,access.hr.employeegroup.details.users,model_hr_empgroup_details,base.group_user,1,1,1,1
 
-access_overtime_planning_approver,access.overtime.planning.approver,model_hr_overtime_planning,sanbe_hr_tms.module_surat_perintah_lembur_approver,1,1,0,0
+access_overtime_planning_approver,access.overtime.planning.approver,model_hr_overtime_planning,sanbe_hr_tms.module_surat_perintah_lembur_approver,1,1,1,0
 access_overtime_planning_staff_operator,access.overtime.planning.staff.operator,model_hr_overtime_planning,sanbe_hr_tms.module_surat_perintah_lembur_staff_operator,1,1,1,0
 access_overtime_planning_manager,access.overtime.planning.manager,model_hr_overtime_planning,sanbe_hr_tms.module_surat_perintah_lembur_manager,1,1,1,1
 
