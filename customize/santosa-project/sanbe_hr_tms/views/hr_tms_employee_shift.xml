@@ -147,7 +147,6 @@
                 <filter string="Work Unit" name="filter_by_work_unit_ids" domain="[('work_unit_ids', '!=', False)]"/>
                 <group expand="0" string="Kelompokkan Berdasarkan">
                     <filter string="Periode" name="group_periode" context="{'group_by':'period_text'}"/>
-                    <filter string="Work Unit" name="group_work_unit_ids" context="{'group_by':'work_unit_ids'}"/>
                     <filter string="Unit Bisnis" name="group_branch" context="{'group_by':'branch_id'}"/>
                     <filter string="Direktorat" name="group_directorat" context="{'group_by':'directorate_id'}"/>
                     <filter string="Departemen" name="group_department" context="{'group_by':'hrms_department_id'}"/>
