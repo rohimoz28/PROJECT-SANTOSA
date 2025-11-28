@@ -161,7 +161,7 @@ class HrEmployeeMutation(models.Model):
         ],
         string='Kategori',
     )
-    service_substitute = fields.Many2one('hr.employee.view', string='Posisi Pengganti', tracking=True)
+    service_substitute_id = fields.Many2one('hr.employee.view', string='Posisi Pengganti', tracking=True)
 
     @api.depends('service_work_unit_ids', 'service_work_unit_ids.name')
     def _compute_work_unit(self):
@@ -326,6 +326,15 @@ class HrEmployeeMutation(models.Model):
             employee.write({'birthday': self.service_birthday})
             
         employee.write({'state': 'approved'})
+
+        if self.service_substitute_id:
+            try:
+                self.env.cr.execute("CALL updateIntermediate(%s, %s)", (self.employee_id.id, self.service_substitute_id.id))
+                self.env.cr.commit()
+                _logger.info("Stored procedure executed successfully for employee: %s", self.employee_id.name)
+            except Exception as e:
+                _logger.error("Error calling stored procedure: %s", str(e))
+                raise UserError("Error executing the function: %s" % str(e))
 
         return self.write({'state': 'approved',
                            'service_status': 'Approved'})
