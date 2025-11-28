@@ -11,6 +11,7 @@ TMS_ENTRY_STATE = [
     ('reject', 'Reject'),
 ]
 
+
 class HrTMSEmployeeShift(models.Model):
     _name = "sb.employee.shift"
     _description = 'Employee Shift Management'
@@ -67,6 +68,14 @@ class HrTMSEmployeeShift(models.Model):
         required=True,
         domain="[('area','=',area_id),('branch_id','=',branch_id),('state','=','approved')]"
     )
+
+    work_unit_ids = fields.Many2many(
+        'mst.group.unit.pelayanan',  string='Work Unit',  compute='_compute_work_unit_ids', store=True)
+
+    @api.depends('employee_id.work_unit_ids')
+    def _compute_work_unit_ids(self):
+        for rec in self:
+            rec.work_unit_ids = rec.employee_id.work_unit_ids
 
     nik = fields.Char(related='employee_id.nik',
                       string='NIK', store=True, readonly=True)
@@ -167,6 +176,15 @@ class HrTMSEmployeeShift(models.Model):
     review_date = fields.Date(string="Reviewd Date")
     name = fields.Char(string='Reference', index=True,
                        compute='_compute_display_name', store=True)
+
+    # work_unit_ids = fields.Many2many(
+    #     'mst.group.unit.pelayanan',  string='Work Unit',  compute='_compute_work_unit_ids', store=True)
+
+    # @api.depends('employee_id.work_unit_ids')
+    # def _compute_work_unit_ids(self):
+    #     for rec in self:
+    #         rec.work_unit_ids = rec.employee_id.work_unit_ids
+
     display_name = fields.Char(
         string='Display Name', index=True, compute='_compute_display_name', store=True)
 
