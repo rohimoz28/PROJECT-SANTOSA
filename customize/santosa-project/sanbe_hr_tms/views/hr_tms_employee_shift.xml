@@ -122,7 +122,14 @@
         <field name="arch" type="xml">
             <search string="Cari Shift Karyawan">
                 <field name="employee_id"
-                       filter_domain="['|', '|','|', ('employee_id.name', 'ilike', self), ('nik', 'ilike', self), ('period_text', 'ilike', self),('jabatan', 'ilike', self)]"
+                       filter_domain="['|', '|', '|', '|', '|', '|',
+                       ('employee_id.name', 'ilike', self), 
+                       ('employee_id.work_unit', 'ilike', self),
+                       ('employee_id.employee_id', 'ilike', self), 
+                       ('division_id.name', 'ilike', self), 
+                       ('nik', 'ilike', self), 
+                       ('period_text', 'ilike', self),
+                       ('jabatan', 'ilike', self)]"
                        string="Karyawan/NIK/Periode"/>
                 <field name="nik" operator="ilike"/>
                 <field name="periode_id"/>
@@ -130,19 +137,21 @@
                 <field name="directorate_id" string="Direktorat"/>
                 <field name="hrms_department_id" string="Departemen"/>
                 <field name="division_id" string="Divisi"/>
+                <field name="work_unit_ids" string="Work Unit"/>
                 <field name="state" string="Status"/>
                 <!-- Filters -->
                 <filter string="Perlu Review" name="filter_review" domain="[('state', '=', 'draft')]"/>
                 <filter string="Tobe Approved" name="filter_tobe_approved" domain="[('state', '=', 'review')]"/>
                 <filter string="Disetujui" name="filter_approved" domain="[('state', '=', 'approved')]"/>
                 <filter string="Dibuat oleh Saya" name="filter_by_creator" domain="[('create_uid', '=', uid)]"/>
+                <filter string="Work Unit" name="filter_by_work_unit_ids" domain="[('work_unit_ids', '!=', False)]"/>
                 <group expand="0" string="Kelompokkan Berdasarkan">
                     <filter string="Periode" name="group_periode" context="{'group_by':'period_text'}"/>
-                    <filter string="Work Unit" name="group_work_unit_ids" context="{'group_by':'work_unit_ids'}"/>
                     <filter string="Unit Bisnis" name="group_branch" context="{'group_by':'branch_id'}"/>
                     <filter string="Direktorat" name="group_directorat" context="{'group_by':'directorate_id'}"/>
                     <filter string="Departemen" name="group_department" context="{'group_by':'hrms_department_id'}"/>
                     <filter string="Divisi" name="group_division" context="{'group_by':'division_id'}"/>
+                    <filter string="Work Unit" name="group_work_unit_ids" context="{'group_by':'work_unit_ids'}"/>
                     <filter string="Status" name="group_status" context="{'group_by':'state'}"/>
                 </group>
             </search>
@@ -158,6 +167,7 @@
             'search_default_group_periode': 1,
             'search_default_group_department': 1,
             'search_default_group_division': 1,
+            'search_default_group_work_unit_ids': 1,
             'search_default_group_status': 1,
             'group_by': 'period_text',
             'order': 'periode_id, directorate_id, hrms_department_id, division_id, jabatan, employee_id, state'}
