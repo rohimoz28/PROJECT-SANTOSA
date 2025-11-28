@@ -42,40 +42,59 @@ class HREmpOvertimeRequest(models.Model):
     _name = "hr.overtime.planning"
     _description = 'HR Employee Overtime Planning Request'
     _rec_name = 'name'
-    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin', 'utm.mixin']
+    _inherit = ['portal.mixin', 'mail.thread',
+                'mail.activity.mixin', 'utm.mixin']
 
     @api.depends('area_id')
     def _isi_semua_branch(self):
         for allrecs in self:
             databranch = []
             for allrec in allrecs.area_id.branch_id:
-                mybranch = self.env['res.branch'].search([('name', '=', allrec.name)], limit=1)
+                mybranch = self.env['res.branch'].search(
+                    [('name', '=', allrec.name)], limit=1)
                 databranch.append(mybranch.id)
-            allbranch = self.env['res.branch'].sudo().search([('id', 'in', databranch)])
+            allbranch = self.env['res.branch'].sudo().search(
+                [('id', 'in', databranch)])
             allrecs.branch_ids = [Command.set(allbranch.ids)]
 
     @api.depends('area_id', 'branch_id')
     def _isi_department_branch(self):
         for allrecs in self:
-            allbranch = self.env['hr.department'].sudo().search([('branch_id', '=', allrecs.branch_id.id)])
+            allbranch = self.env['hr.department'].sudo().search(
+                [('branch_id', '=', allrecs.branch_id.id)])
             allrecs.alldepartment = [Command.set(allbranch.ids)]
 
     def _get_running_periode(self):
-        """Mendapatkan periode 'running' yang aktif untuk Branch pengguna saat ini."""
+        """Mendapatkan periode 'running'/'draft' yang aktif untuk Branch pengguna saat ini."""
         user_branch_id = self.env.user.branch_id.id
         if not user_branch_id:
             return False
-
-        return self.env['hr.opening.closing'].search([
-            ('state_process', 'in', ('draft', 'running')),
+        base_domain = [
             ('branch_id', '=', user_branch_id),
+            ('state_process', 'in', ['draft', 'running'])
+        ]
+        active_domain = base_domain + [
             ('open_periode_from', '<=', fields.Datetime.now()),
             ('open_periode_to', '>=', fields.Datetime.now())
-        ], order='id desc', limit=1)
+        ]
+        periode = self.env['hr.opening.closing'].search(
+            active_domain,
+            order='open_periode_from desc',
+            limit=1
+        )
+        if not periode:
+            periode = self.env['hr.opening.closing'].search(
+                base_domain,
+                order='open_periode_from desc',
+                limit=1
+            )
+        return periode.id if periode else False
 
     name = fields.Char('Nomor Surat Perintah Lembur', default=lambda self: _('New'),
                        copy=False, readonly=True, tracking=True, requirement=True)
-    request_date = fields.Date('Tanggal Surat Perintah Lembur', default=fields.Date.today(), readonly=True)
+    request_date = fields.Date(
+        'Tanggal Surat Perintah Lembur', default=fields.Date.today(), readonly=True)
+
     area_id = fields.Many2one(
         "res.territory",
         string='Area ID',
@@ -87,6 +106,37 @@ class HREmpOvertimeRequest(models.Model):
     branch_ids = fields.Many2many('res.branch', 'res_branch_rel', string='AllBranch', compute='_isi_semua_branch',
                                   store=False)
 
+    current_user_employee_id_ref = fields.Integer(
+        string='Current User Employee ID',
+        default=lambda self: self.env.user.employee_id.id if self.env.user.employee_id else 0,
+        store=False,  # Tidak perlu disimpan di database
+    )
+
+    # is_approver = fields.Selection([('manager', 'Manager'), ('approver', 'Approver'), ('staff', 'Staff')],
+    #                                default=lambda self: self._compute_approver(), store=False)
+
+    is_approver = fields.Selection(
+        [
+            ('manager', 'Manager'),
+            ('approver', 'Approver'),
+            ('staff', 'Staff'),
+        ],
+        default=lambda self: self._compute_is_approver(),
+        store=False,
+    )
+
+    def _compute_is_approver(self):
+        """ Always compute based on current logged user """
+        user = self.env.user
+        is_approver = 'staff'  # Default role
+        if user.has_group('sanbe_hr_tms.module_surat_perintah_lembur_approver'):
+            is_approver = 'approver'
+        elif user.has_group('sanbe_hr_tms.module_surat_perintah_lembur_manager'):
+            is_approver = 'manager'
+        else:
+            is_approver = 'staff'
+        return is_approver
+
     branch_id = fields.Many2one(
         'res.branch',
         string='Bisnis Unit',
@@ -97,7 +147,8 @@ class HREmpOvertimeRequest(models.Model):
     )
     alldepartment = fields.Many2many('hr.department', 'hr_department_plan_ot_rel', string='All Department',
                                      compute='_isi_department_branch', store=False)
-    department_id = fields.Many2one('hr.department', domain="[('id','in',alldepartment)]", string='Sub Department')
+    department_id = fields.Many2one(
+        'hr.department', domain="[('id','in',alldepartment)]", string='Sub Department')
     division_id = fields.Many2one('sanhrms.division', string='Divisi',
                                   default=lambda self: self.env.user.employee_id.division_id.id,
                                   domain="[('hrms_department_id','=',hrms_department_id)]", store=True)
@@ -107,7 +158,8 @@ class HREmpOvertimeRequest(models.Model):
     directorate_id = fields.Many2one('sanhrms.directorate', string='Direktorat',
                                      default=lambda self: self.env.user.employee_id.directorate_id.id,
                                      domain="['|',('branch_id','=',branch_id),('branch_id','=',False)]", store=True)
-    periode_from = fields.Date('Perintah Lembur Dari', default=fields.Date.today)
+    periode_from = fields.Date(
+        'Perintah Lembur Dari', default=fields.Date.today)
     periode_to = fields.Date('Hingga', default=fields.Date.today)
     approve1 = fields.Boolean('Approval L1', default=False)
     approve2 = fields.Boolean('Approval L2', default=False)
@@ -127,8 +179,10 @@ class HREmpOvertimeRequest(models.Model):
                                   domain="[('state','=','approved'),('division_id','=',division_id),'|',"
                                          "('branch_id','=',branch_id),('branch_id','=',False)]",
                                   store=True, track_visibility='onchange')
-    company_id = fields.Many2one('res.company', string="Company Name", index=True)
-    request_day_name = fields.Char('Request Day Name', compute='_compute_req_day_name', store=True)
+    company_id = fields.Many2one(
+        'res.company', string="Company Name", index=True)
+    request_day_name = fields.Char(
+        'Request Day Name', compute='_compute_req_day_name', store=True)
     count_record_employees = fields.Integer(string="Total Employees on The List", compute="_compute_record_employees",
                                             store=True)
     approverhrd_id = fields.Many2one('hr.employee', string='Approval by HRD',
@@ -226,10 +280,10 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                    rec.state == 'draft'
-                    and not rec.approve1
-                    and rec.approval_l1_id
-                    and rec.approval_l1_id.user_id.id == current_user.id
+                rec.state == 'draft'
+                and not rec.approve1
+                and rec.approval_l1_id
+                and rec.approval_l1_id.user_id.id == current_user.id
             )
             rec.can_approve_l1 = can_approve
 
@@ -245,11 +299,11 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                    rec.state == 'approved_l1'
-                    and rec.approve1
-                    and not rec.approve2
-                    and rec.approval_l2_id
-                    and rec.approval_l2_id.user_id.id == current_user.id
+                rec.state == 'approved_l1'
+                and rec.approve1
+                and not rec.approve2
+                and rec.approval_l2_id
+                and rec.approval_l2_id.user_id.id == current_user.id
             )
             rec.can_approve_l2 = can_approve
 
@@ -266,12 +320,12 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                    rec.state == 'approved_l2'
-                    and rec.approval_l1_id
-                    and rec.approve1
-                    and rec.approval_l2_id
-                    and rec.approve2
-                    and rec.approval_l1_id.user_id.id == current_user.id
+                rec.state == 'approved_l2'
+                and rec.approval_l1_id
+                and rec.approve1
+                and rec.approval_l2_id
+                and rec.approve2
+                and rec.approval_l1_id.user_id.id == current_user.id
             )
             rec.can_verified = can_approve
 
@@ -288,12 +342,12 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                    rec.state == 'verified'
-                    and rec.approval_l1_id
-                    and rec.approve1
-                    and rec.approval_l2_id
-                    and rec.approve2
-                    and rec.approverhrd_id.user_id.id == current_user.id
+                rec.state == 'verified'
+                and rec.approval_l1_id
+                and rec.approve1
+                and rec.approval_l2_id
+                and rec.approve2
+                and rec.approverhrd_id.user_id.id == current_user.id
             )
             rec.can_approve_hrd = can_approve
 
@@ -405,7 +459,8 @@ class HREmpOvertimeRequest(models.Model):
 
     def _reset_sequence_overtime_employees(self):
         """ restart running number """
-        sequences = self.env['ir.sequence'].search([('code', '=like', '%hr.overtime.planning%')])
+        sequences = self.env['ir.sequence'].search(
+            [('code', '=like', '%hr.overtime.planning%')])
         sequences.write({'number_next_actual': 1})
 
     """
@@ -493,7 +548,8 @@ class HREmpOvertimeRequest(models.Model):
                 if not area_id or not branch_id:
                     periode_id = vals.get('periode_id')
                     if periode_id:
-                        periode = self.env['hr.opening.closing'].sudo().search([('id', '=', int(periode_id))], limit=1)
+                        periode = self.env['hr.opening.closing'].sudo().search(
+                            [('id', '=', int(periode_id))], limit=1)
                         if periode:
                             branch_id = periode.branch_id.id
                             vals['area_id'] = periode.area_id.id
@@ -501,14 +557,16 @@ class HREmpOvertimeRequest(models.Model):
                 hrms_department_id = vals.get('hrms_department_id')
                 department = self.env['sanhrms.department'].sudo().search([('id', '=', int(hrms_department_id))],
                                                                           limit=1)
-                branch = self.env['res.branch'].sudo().search([('id', '=', int(branch_id))], limit=1)
+                branch = self.env['res.branch'].sudo().search(
+                    [('id', '=', int(branch_id))], limit=1)
                 if department and branch:
                     department_code = department.department_code
                     branch_unit_id = branch.unit_id
                     tgl = fields.Date.today()
                     tahun = str(tgl.year)[2:]
                     bulan = str(tgl.month)
-                    sequence_code = self.env['ir.sequence'].next_by_code('hr.overtime.planning')
+                    sequence_code = self.env['ir.sequence'].next_by_code(
+                        'hr.overtime.planning')
                     vals['name'] = f"{tahun}/{bulan}/{branch_unit_id}/RA/{department_code}/{sequence_code}"
         return super(HREmpOvertimeRequest, self).create(vals_list)
 
@@ -542,28 +600,45 @@ class HREmpOvertimeRequestEmployee(models.Model):
     def _get_approver(self):
         for rec in self:
             if rec.employee_id:
-                emp = self.env['hr.employee'].sudo().search([('id', '=', rec.employee_id.id)], limit=1)
+                emp = self.env['hr.employee'].sudo().search(
+                    [('id', '=', rec.employee_id.id)], limit=1)
                 if emp:
                     if emp.coach_id:
                         rec.approvernd_id = emp.coach_id.id
                     else:
-                        rec.approvernd_id = self.env['hr.employee'].browse(emp.parent_id.id).parent_id.id
+                        rec.approvernd_id = self.env['hr.employee'].browse(
+                            emp.parent_id.id).parent_id.id
 
     area_id = fields.Many2one('res.territory', string='Area', index=True)
     branchh_id = fields.Many2one('res.branch', related='planning_id.branch_id', string='Bisnis Unit Header', index=True,
                                  readonly=True)
     departmenth_id = fields.Many2one('hr.department', related='planning_id.department_id',
                                      string='Department ID Header', index=True, readonly=True)
-    division_id = fields.Many2one('sanhrms.division', string='Divisi', related='planning_id.division_id', store=True)
+    division_id = fields.Many2one(
+        'sanhrms.division', string='Divisi', related='planning_id.division_id', store=True)
     hrms_department_id = fields.Many2one('sanhrms.department', string='Departemen',
                                          related='planning_id.hrms_department_id', store=True)
     directorate_id = fields.Many2one('sanhrms.directorate', string='Direktorat', related='planning_id.directorate_id',
                                      store=True)
-    nik = fields.Char('NIK Karyawan', related='employee_id.nik', index=True, store=True)
+    nik = fields.Char('NIK Karyawan', related='employee_id.nik',
+                      index=True, store=True)
     employee_id = fields.Many2one('hr.employee', domain="[('state','=','approved')]", related='planning_id.employee_id',
                                   string='Nama Karyawan', index=True)
-    max_ot = fields.Float('Jam Lembur Maksimal', related='employee_id.max_ot', digits=(16, 1), default=0, store=True)
-    max_ot_month = fields.Float('Jam Lembur Maksimal', related='employee_id.max_ot_month', store=True)
+
+    max_hours_week = fields.Float(
+        'Total Jam Week', related='employee_id.max_hours_week', digits=(200, 1), default=40)
+    max_days_month = fields.Integer(
+        'Total Hari Kerja Month', digits=(31, 1), related='employee_id.max_days_month', default=22)
+    max_ot = fields.Float(
+        'Max OT/Hari', related='employee_id.max_ot', digits=(16, 1), store=True)
+    max_ot_month = fields.Float(
+        'Jam Max OT/Bulan', related='employee_id.max_ot_month', store=True)
+
+    count_approval_ot = fields.Float('Total Jam Approval OT')
+    claim_approval_ot = fields.Float('Total Jam yang di klaim OT')
+    sum_total_ot = fields.Float('Jumlah Total OT')
+    adv_total_ot = fields.Float('Kelebihan Jam Verifikasi OT')
+
     periode_from = fields.Date('Tanggal OT Dari', related='planning_id.periode_from', store=True,
                                default=fields.Date.today)
     periode_to = fields.Date('Tanggal OT Hingga', related='planning_id.periode_to', store=True,
@@ -586,17 +661,25 @@ class HREmpOvertimeRequestEmployee(models.Model):
     explanation_deviation = fields.Char('Explanation Deviation')
     branch_id = fields.Many2one('res.branch', related='planning_id.branch_id', domain="[('id','in',branch_ids)]",
                                 string='Business Unit', index=True)
-    department_id = fields.Many2one('hr.department', domain="[('id','in',alldepartment)]", string='Sub Department')
+    department_id = fields.Many2one(
+        'hr.department', domain="[('id','in',alldepartment)]", string='Sub Department')
     bundling_ot = fields.Boolean(string="Bundling OT")
     transport = fields.Boolean('Transport')
     meals = fields.Boolean(string='Meal Dine In')
     meals_cash = fields.Boolean(string='Meal Cash')
-    route_id = fields.Many2one('sb.route.master', domain="[('branch_id','=',branch_id)]", string='Rute')
-    ot_type = fields.Selection([('regular', 'Regular'), ('holiday', 'Holiday')], string='Tipe SPL')
+    route_id = fields.Many2one(
+        'sb.route.master', domain="[('branch_id','=',branch_id)]", string='Rute')
+    ot_type = fields.Selection(
+        [('regular', 'Regular'),  # Perhitungan Lembur hari kerja
+         ('holiday', 'Holiday'),  # Perhitungan Lembur hari libur
+         # Perhitungan lembur yang seluruh jam terverifikasinya dijadikan Day Payment
+         ('dp', 'DP')
+         ], string='Tipe SPL')
     is_approval = fields.Selection([('approved', 'Approved'), ('reject', 'Tolak')], default='approved',
                                    string="Approval")
     is_approved_l2 = fields.Boolean('Approved by MGR', default=True)
-    planning_req_name = fields.Char(string='Planning Request Name', required=False)
+    planning_req_name = fields.Char(
+        string='Planning Request Name', required=False)
 
     @api.constrains('ot_plann_from', 'ot_plann_to', 'max_ot')
     def _check_time_range(self):
@@ -611,10 +694,12 @@ class HREmpOvertimeRequestEmployee(models.Model):
             if not (0.0 <= record.ot_plann_from <= 24.0 and
                     0.0 <= record.ot_plann_to <= 24.0):
                 raise UserError("Waktu harus dalam rentang 0.0 hingga 25.0.")
-            if record.ot_plann_from >= record.ot_plann_to:
-                raise UserError("Jam SPL 'dari' harus lebih awal dari jam SPL 'Hingga'.")
-            if record.max_ot and (record.ot_plann_to - record.ot_plann_from) > record.max_ot:
-                raise UserError("Jam SPL melebihi batas maksimal jam lembur karyawan.")
+            # if record.ot_plann_from >= record.ot_plann_to:
+            #     raise UserError(
+            #         "Jam SPL 'dari' harus lebih awal dari jam SPL 'Hingga'.")
+            # if record.max_ot and (record.ot_plann_to - record.ot_plann_from) > record.max_ot:
+            #     raise UserError(
+            #         "Jam SPL melebihi batas maksimal jam lembur karyawan.")
 
     @api.constrains('plann_date_from', 'periode_to', 'periode_from')
     def _check_validation_date(self):
@@ -626,16 +711,10 @@ class HREmpOvertimeRequestEmployee(models.Model):
                 )
                 raise UserError(msg)
 
-    @api.constrains('plann_date_from')
-    def _check_validation_date(self):
-        for line in self:
-            if line.plann_date_from > line.planning_id.periode_to and line.plann_date_from < line.planning_id.periode_from:
-                raise UserError(
-                    ('Date Must in between %s and %s') % (line.planning_id.periode_from, line.planning_id.periode_to))
-
     @api.model_create_multi
     def create(self, vals_list):
-        records_vals = vals_list if isinstance(vals_list, list) else [vals_list]
+        records_vals = vals_list if isinstance(
+            vals_list, list) else [vals_list]
 
         for vals in records_vals:
             ot_from = vals.get('ot_plann_from', 0.0)
@@ -643,20 +722,14 @@ class HREmpOvertimeRequestEmployee(models.Model):
             plann_date = vals.get('plann_date_from')
             periode_from = vals.get('periode_from')
             periode_to = vals.get('periode_to')
-
-            # === Validation 1: Time Range ===
             if not (0.0 <= ot_from <= 24.0 and 0.0 <= ot_to <= 24.0):
                 raise UserError("Waktu harus dalam rentang 0.0 hingga 24.0.")
-
-            # === Validation 2: Date Range ===
             if plann_date and periode_from and periode_to:
                 if plann_date < periode_from or plann_date > periode_to:
                     msg = "Tanggal SPL (%s) harus berada di antara Tanggal OT Dari (%s) dan Tanggal OT Hingga (%s)." % (
                         plann_date, periode_from, periode_to
                     )
                     raise UserError(msg)
-
-        # ✅ Correct super() call
         return super(HREmpOvertimeRequestEmployee, self).create(records_vals)
 
     @api.onchange('is_approval')
