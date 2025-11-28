@@ -1,4 +1,7 @@
 stages:
+  - versioning
+  - build
+  - deploy
   - verify
   - notify
 
@@ -11,15 +14,15 @@ image: rohimuhamadd/alpine-ci-cd:latest
   before_script:
     - ln -sf /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
     - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" > /tmp/deploy_key
+    - echo "$SSH_PRIVATE_KEY_131" > /tmp/deploy_key
     - chmod 600 /tmp/deploy_key
     - ssh-add /tmp/deploy_key
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - ssh-keyscan -H ${DEPLOY_SERVER_STAGING} >> ~/.ssh/known_hosts
+    - ssh-keyscan -H ${DEPLOY_SERVER_STAGING_SANTOSA} >> ~/.ssh/known_hosts
     - mkdir -p /tmp/scripts
     - |
-      scp -o StrictHostKeyChecking=no "${SSH_USER_STAGING:-SSH_USER_PROD}"@"${DEPLOY_SERVER_STAGING:-DEPLOY_SERVER_PROD}":/home/albert/script/send_notification.sh /tmp/scripts/
+      scp -o StrictHostKeyChecking=no "$SSH_USER_STAGING_SANTOSA"@"$DEPLOY_SERVER_STAGING_SANTOSA":/home/sanbe-odoo/script/send_notification.sh /tmp/scripts/
       if [ -f "/tmp/scripts/send_notification.sh" ]; then
         echo "✅ File successfully copied."
         dos2unix /tmp/scripts/send_notification.sh
@@ -31,49 +34,105 @@ image: rohimuhamadd/alpine-ci-cd:latest
         exit 1
       fi
 
-.default_prod_rule: &default_prod_rule
-  - if: '$CI_COMMIT_BRANCH == "production" && $CI_PIPELINE_SOURCE == "push"'
-    when: always
 
 .default_staging_rule: &default_staging_rule
-  - if: '$CI_COMMIT_BRANCH == $BRANCH_STAGING'
+  - if: '$CI_COMMIT_BRANCH == $BRANCH_STAGING_SANTOSA'
 
 # PRE-MERGE
-check_base_branch:
-  stage: verify
+#check_base_branch:
+#  stage: verify
+#  tags: [ test4 ]
+#  <<: *default_before_script
+#  allow_failure: false
+#  script:
+#    - git fetch origin main
+#    - |
+#      if git merge-base --is-ancestor origin/main HEAD; then
+#        echo "✅ Branch berasal dari main atau lebih baru."
+#      else
+#        echo "❌ Branch tidak diturunkan dari main terbaru!"
+#        exit 1
+#      fi
+#  rules:
+#    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "production")'
+#      when: always
+#    - when: never
+#
+#notify_check_base_branch_failed:
+#  stage: notify
+#  tags: [ test4 ]
+#  <<: *default_before_script
+#  script:
+#    - MR_TITLE="$CI_MERGE_REQUEST_TITLE"
+#    - MR_URL="$CI_PROJECT_URL/-/merge_requests/$CI_MERGE_REQUEST_IID"
+#    - MR_LINK="[$MR_TITLE]($MR_URL)"
+#    - AUTHOR_NAME=$(echo "$CI_COMMIT_AUTHOR" | sed -E 's/^(.*) <.*>$/\1/')
+#    - MR_AUTHOR="**$AUTHOR_NAME**"
+#    - /tmp/scripts/send_notification.sh "❌ $MR_LINK Created by $MR_AUTHOR" "Error" 15158332 "Validation Base Branch Failed!" "$WEBHOOK_URL"
+#  needs:
+#    - job: check_base_branch
+#      artifacts: false
+#      optional: true
+#  rules:
+#    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "production")'
+#      when: on_failure
+#    - when: never
+
+# STAGING
+update_project_staging:
+  stage: build
   tags: [ test4 ]
   <<: *default_before_script
-  allow_failure: false
   script:
-    - git fetch origin main
+    - echo "Deploying latest updates via SSH..."
     - |
-      if git merge-base --is-ancestor origin/main HEAD; then
-        echo "✅ Branch berasal dari main atau lebih baru."
+      ssh -i /tmp/deploy_key $SSH_USER_STAGING_SANTOSA@$DEPLOY_SERVER_STAGING_SANTOSA <<EOF
+      if [ -d "$PROJECT_DIR_STAGING_SANTOSA" ]; then
+        echo "Project directory exists. Pulling latest changes...";
+        cd "$PROJECT_DIR_STAGING_SANTOSA" && git pull origin $BRANCH_STAGING_SANTOSA
+        if [ $? -ne 0 ]; then
+          git merge --abort
+          echo "Error: Failed to pull from origin/$BRANCH_STAGING_SANTOSA"
+          exit 1
+        fi
+        echo "Success: Pulled latest project version";
+        echo "$(date +%s)" > "$RESTART_FLAG"
       else
-        echo "❌ Branch tidak diturunkan dari main terbaru!"
+        echo "Error: Project directory does not exist!"
         exit 1
       fi
+      EOF
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "production")'
+    - if: '$CI_COMMIT_BRANCH == $BRANCH_STAGING_SANTOSA'
       when: always
-    - when: never
 
-notify_check_base_branch_failed:
-  stage: notify
-  tags: [test4]
+restart_staging:
+  stage: deploy
+  tags: [ test4 ]
   <<: *default_before_script
   script:
-    - MR_TITLE="$CI_MERGE_REQUEST_TITLE"
-    - MR_URL="$CI_PROJECT_URL/-/merge_requests/$CI_MERGE_REQUEST_IID"
-    - MR_LINK="[$MR_TITLE]($MR_URL)"
-    - AUTHOR_NAME=$(echo "$CI_COMMIT_AUTHOR" | sed -E 's/^(.*) <.*>$/\1/')
-    - MR_AUTHOR="**$AUTHOR_NAME**"
-    - /tmp/scripts/send_notification.sh "❌ $MR_LINK Created by $MR_AUTHOR" "Error" 15158332 "Validation Base Branch Failed!" "$WEBHOOK_URL_TEST"
-  needs:
-    - job: check_base_branch
-      artifacts: false
-      optional: true
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "production")'
-      when: on_failure
-    - when: never
+    - ssh -i /tmp/deploy_key $SSH_USER_STAGING_SANTOSA@$DEPLOY_SERVER_STAGING_SANTOSA "
+      docker container restart $DOCKER_SERVICE_STAGING_SANTOSA
+      "
+  rules: *default_staging_rule
+
+notify_staging_success:
+  stage: notify
+  tags: [ test4 ]
+  <<: *default_before_script
+  script:
+    - /tmp/scripts/send_notification.sh "✅ Staging Deployment Successful!" "Success" 3066993 "$APP_STAGING_SANTOSA" "$WEBHOOK_URL"
+  rules: *default_staging_rule
+  when: on_success
+  needs: [ update_project_staging, restart_staging ]
+
+notify_staging_failed:
+  stage: notify
+  tags: [ test4 ]
+  <<: *default_before_script
+  script:
+    - /tmp/scripts/send_notification.sh "❌ Staging Deployment Failed!" "Error" 15158332 "$APP_STAGING_SANTOSA" "$WEBHOOK_URL"
+  rules: *default_staging_rule
+  when: on_failure
+  needs: [ update_project_staging, restart_staging ]
+# END STAGING
