@@ -22,7 +22,7 @@ image: rohimuhamadd/alpine-ci-cd:latest
     - ssh-keyscan -H ${DEPLOY_SERVER_STAGING_SANTOSA} >> ~/.ssh/known_hosts
     - mkdir -p /tmp/scripts
     - |
-      scp -o StrictHostKeyChecking=no "${SSH_USER_STAGING_SANTOSA:-SSH_USER_PROD}"@"$DEPLOY_SERVER_STAGING_SANTOSA":/home/albert/script/send_notification.sh /tmp/scripts/
+      scp -o StrictHostKeyChecking=no "$SSH_USER_STAGING_SANTOSA"@"$DEPLOY_SERVER_STAGING_SANTOSA":/home/albert/script/send_notification.sh /tmp/scripts/
       if [ -f "/tmp/scripts/send_notification.sh" ]; then
         echo "✅ File successfully copied."
         dos2unix /tmp/scripts/send_notification.sh
