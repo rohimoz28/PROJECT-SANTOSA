@@ -14,7 +14,7 @@ image: rohimuhamadd/alpine-ci-cd:latest
   before_script:
     - ln -sf /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
     - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" > /tmp/deploy_key
+    - echo "$SSH_PRIVATE_KEY_131" > /tmp/deploy_key
     - chmod 600 /tmp/deploy_key
     - ssh-add /tmp/deploy_key
     - mkdir -p ~/.ssh
