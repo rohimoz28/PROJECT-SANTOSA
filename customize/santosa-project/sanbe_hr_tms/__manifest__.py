@@ -21,8 +21,8 @@
     'currency': 'USD',
     # any module necessary for this one to work correctly
     'depends': [
-        'base', 'hr_holidays', 'sanbe_hr_employee_mutation', 'hr_attendance', 'hr_holidays_attendance',
-        'base_territory', 'project', 'sale', 'purchase', 'stock', 'account', 'event', 'field_timepicker',
+        'base', 'hr_holidays', 'sanbe_hr_employee_mutation', 'hr_attendance', 'hr_holidays_attendance', 'hr_contract',
+        'base_territory', 'project', 'sale', 'purchase', 'stock', 'account', 'event', 'field_timepicker', 'mail',
         'report_xlsx', 'sanbe_hr_dashboard'
     ],
     'data': [
