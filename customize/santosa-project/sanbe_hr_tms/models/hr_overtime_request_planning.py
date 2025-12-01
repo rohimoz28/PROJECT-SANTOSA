@@ -475,16 +475,39 @@ class HREmpOvertimeRequest(models.Model):
 
     def btn_approved_l1(self):
         for rec in self:
+            if not rec.hr_ot_planning_ids:
+                raise UserError(
+                    "Tidak dapat menyetujui permintaan lembur tanpa data karyawan.")
+            if rec.hr_ot_planning_ids:
+                for line in rec.hr_ot_planning_ids:
+                    if not line.ot_type or not line.work_plann or not line.output_plann or not line.plann_date_from:
+                        raise UserError(
+                            "Tidak dapat menyetujui permintaan lembur dengan data karyawan yang kosong.")
             rec.approve1 = True
             rec.state = 'approved_l1'
 
     def btn_approved_l2(self):
         for rec in self:
+            if not rec.hr_ot_planning_ids:
+                raise UserError(
+                    "Tidak dapat menyetujui permintaan lembur tanpa data karyawan.")
+            if rec.hr_ot_planning_ids:
+                for line in rec.hr_ot_planning_ids:
+                    if not line.ot_type or not line.work_plann or not line.output_plann or not line.plann_date_from:
+                        raise UserError(
+                            "Tidak dapat menyetujui permintaan lembur dengan data karyawan yang kosong.")
             rec.approve2 = True
             rec.state = 'approved_l2'
 
     def btn_verified(self):
         for rec in self:
+            for line in rec.hr_ot_planning_ids:
+                if not line.verify_time_from or not line.verify_time_to:
+                    raise UserError(
+                        "Jam Verifikasi dari dan hingga harus diisi sebelum memverifikasi.")
+                if not line.realization_date or not line.realization_time_from or not line.realization_time_to:
+                    raise UserError(
+                        "Jam dan tanggal Realisasi dari dan hingga harus diisi.")
             rec.state = 'verified'
 
     def btn_approved(self):

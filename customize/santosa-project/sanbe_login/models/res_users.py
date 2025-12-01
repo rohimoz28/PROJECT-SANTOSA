@@ -7,20 +7,22 @@ import logging
 from random import choice
 from string import digits
 try:
-  import qrcode
+    import qrcode
 except ImportError:
-  qrcode = None
+    qrcode = None
 try:
-  import base64
+    import base64
 except ImportError:
-  base64 = None
+    base64 = None
 from io import BytesIO
 _logger = logging.getLogger(__name__)
+
 
 class ResUsers(models.Model):
     _inherit = 'res.users'
 
-    res_users_image_ids = fields.One2many('res.users.image', 'res_user_id', string='Face recognition user images', copy=True,auto_join=True)
+    res_users_image_ids = fields.One2many(
+        'res.users.image', 'res_user_id', string='Face recognition user images', copy=True, auto_join=True)
     face_emotion = fields.Selection([
         ('neutral', 'neutral'),
         ('happy', 'happy'),
@@ -45,7 +47,8 @@ class ResUsers(models.Model):
         ('70', '60-any'),
         ('any', 'any')
     ], string='Age', required=True, default='any', help='Age for accessd')
-    barcode = fields.Char(string="Badge ID", help="ID used for employee identification.", groups="hr.group_hr_user", copy=False)
+    barcode = fields.Char(string="Badge ID", help="ID used for employee identification.",
+                          groups="hr.group_hr_user", copy=False)
     qr_code = fields.Binary("QR Code", compute='generate_qr_code')
 
     @api.depends('barcode')
@@ -65,9 +68,11 @@ class ResUsers(models.Model):
                 img.save(temp, format="PNG")
                 qr_image = base64.b64encode(temp.getvalue())
                 allrec.update({'qr_code': qr_image})
+
     def generate_random_barcode(self):
         for employee in self:
             employee.barcode = '041'+"".join(choice(digits) for i in range(9))
+
     def _check_credentials(self, password, env):
         """ Override this method to plug additional authentication methods"""
         assert password
@@ -92,23 +97,29 @@ class ResUsers(models.Model):
             with cls.pool.cursor() as cr:
                 self = api.Environment(cr, SUPERUSER_ID, {})[cls._name]
                 with self._assert_can_auth(user=login):
-                    user = self.search(self._get_login_domain(login), order=self._get_login_order(), limit=1)
+                    user = self.search(self._get_login_domain(
+                        login), order=self._get_login_order(), limit=1)
                     if not user:
                         raise AccessDenied()
                     user = user.with_user(user)
                     user._check_credentials(password, user_agent_env)
-                    tz = request.httprequest.cookies.get('tz') if request else None
+                    tz = request.httprequest.cookies.get(
+                        'tz') if request else None
                     # if tz in pytz.all_timezones and (not user.tz or not user.login_date):
                     #     # first login or missing tz -> set tz to browser tz
                     #     user.tz = tz
                     user._update_last_login()
         except AccessDenied:
-            _logger.info("Login failed for db:%s login:%s from %s", db, login, ip)
+            _logger.info(
+                "Login failed for db:%s login:%s from %s", db, login, ip)
             raise
 
-        _logger.info("Login successful for db:%s login:%s from %s", db, login, ip)
+        _logger.info(
+            "Login successful for db:%s login:%s from %s", db, login, ip)
 
         return user.id
+
+
 class UserImage(models.Model):
     _name = 'res.users.image'
     _description = 'User Image'
@@ -119,5 +130,5 @@ class UserImage(models.Model):
     sequence = fields.Integer(string='Sequence data', default=10, index=True)
     image = fields.Image(string='Image Recognizer', required=True)
     image_detection = fields.Image(string='Image Detection')
-    res_user_id = fields.Many2one('res.users', string='User ID', index=True, ondelete='cascade')
-
+    res_user_id = fields.Many2one(
+        'res.users', string='User ID', index=True, ondelete='cascade')
