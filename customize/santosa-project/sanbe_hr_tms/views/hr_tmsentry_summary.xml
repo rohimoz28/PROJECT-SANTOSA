@@ -1037,7 +1037,7 @@
             <field name="name">hr.tmsentry.sumarry.tree</field>
             <field name="model">hr.tmsentry.summary</field>
             <field name="arch" type="xml">
-                <tree string="HR TMS Entry Summary Tree" create="0" delete="0" default_order="periode_id desc">
+                <tree string="HR TMS Entry Summary Tree" create="0" delete="0" default_order="periode_id asc">
                     <field name="employee_name" column_invisible="1"/>
                     <field name="employee_id"/>
                     <field name="nik"/>
