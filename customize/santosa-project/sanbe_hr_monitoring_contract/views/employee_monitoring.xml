@@ -6,6 +6,7 @@
         <record id="hr_skills_survey.hr_employee_certication_report_menu" model="ir.ui.menu">
             <field name="sequence">10</field> <!-- Change sequence value here -->
             <field name="name">Employee Certifications</field>
+            <field name="active">False</field>
         </record>
         <record id="hr_skills.hr_employee_skill_report_menu" model="ir.ui.menu">
             <field name="sequence">40</field> <!-- Change sequence value here -->
