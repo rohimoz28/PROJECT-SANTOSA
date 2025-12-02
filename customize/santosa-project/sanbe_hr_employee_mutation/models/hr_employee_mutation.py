@@ -1,5 +1,5 @@
 from odoo import models, fields, api, _, Command
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 import requests
 from datetime import date
 import logging
@@ -51,6 +51,13 @@ class HrEmployeeMutation(models.Model):
                              string="Status", readonly=True,
                              copy=False, index=True,
                              tracking=3, default='draft')
+    hr_employee_state = fields.Selection([('draft', "Draft"),
+                                          ('req_approval', 'Request For Approval'),
+                                          ('rejected', 'Rejected'),
+                                          ('inactive', 'Inactive'),
+                                          ('approved', 'Approved'),
+                                          ('hold', 'Hold')],
+                                          string='HR Employee State', related="employee_id.state")
     job_status = fields.Selection([('permanent', 'Karyawan Tetap (PKWTT)'),
                                    ('contract', 'Karyawan Kontrak (PKWT)'),
                                    ('partner_doctor', 'Dokter Mitra'),
@@ -232,6 +239,12 @@ class HrEmployeeMutation(models.Model):
                                                      })
 
         employee = self.env['hr.employee'].sudo().browse(self.employee_id.id)
+        today = fields.Date.today()
+
+        if self.job_status == 'contract' and self.hr_employee_state == 'approved':
+            if self.contract_to and self.contract_to < today:
+                raise ValidationError('Mutasi tidak dapat diproses karena kontrak karyawan telah berakhir.')
+
         if self.service_area.id != self.employee_id.area_id.id:
             employee.write({'area': self.service_area.id})
         

@@ -310,19 +310,6 @@ class HrEmployee(models.Model):
         help='Jumlah Hari Kerja Dalam Satu Bulan',
         required=False)
     kontrak_medis = fields.Boolean(string="Kontrak Medis", tracking=True)
-
-    @api.constrains('no_ktp', 'no_sim', 'no_npwp', 'identification_id')
-    def _check_numeric_reference(self):
-        for record in self:
-            if record.no_ktp and not record.no_ktp.isdigit():
-                raise UserError("No. KTP harus Numerik.")
-            if record.no_npwp and not record.no_npwp.isdigit():
-                raise UserError("No. NPWP harus Numerik")
-            if record.no_sim and not record.no_sim.isdigit():
-                raise UserError("No. SIM harus Numerik")
-            if record.identification_id and not record.identification_id.isdigit():
-                raise UserError("No. Kartu Keluarga harus Numerik")
-
     kontrak_medis_id = fields.Many2one('hr.service.contract')
     medical_contract_ids = fields.One2many(
         comodel_name='hr.service.contract',
