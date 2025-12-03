@@ -12,16 +12,16 @@
 
                         <button string="Approved L1" name="btn_approved_l1" type="object" class="oe_highlight"
                                 invisible="not can_approve_l1"
-                                groups="sanbe_hr_tms.module_surat_perintah_lembur_approver"/>
+                                groups="sanbe_hr_tms.module_surat_perintah_lembur_approver,sanbe_hr_tms.module_surat_perintah_lembur_manager"/>
                         <button string="Approved L2" name="btn_approved_l2" type="object" class="oe_highlight"
                                 invisible="not can_approve_l2"
-                                groups="sanbe_hr_tms.module_surat_perintah_lembur_approver"/>
+                                groups="sanbe_hr_tms.module_surat_perintah_lembur_approver,sanbe_hr_tms.module_surat_perintah_lembur_manager"/>
                         <button string="Verified" name="btn_verified" type="object" class="oe_highlight"
                                 invisible="not can_verified"
-                                groups="sanbe_hr_tms.module_surat_perintah_lembur_approver"/>
+                                groups="sanbe_hr_tms.module_surat_perintah_lembur_approver,sanbe_hr_tms.module_surat_perintah_lembur_manager"/>
                         <button string="Approved HRD" name="btn_approved" type="object" class="oe_highlight"
                                 invisible="not can_approve_hrd"
-                                groups="sanbe_hr_tms.module_surat_perintah_lembur_approver"/>
+                                groups="sanbe_hr_tms.module_surat_perintah_lembur_approver,sanbe_hr_tms.module_surat_perintah_lembur_manager"/>
                         <button string="Complete" name="btn_complete" type="object" class="oe_highlight"
                                 invisible="state != 'approved'"/>
                         <button string="Reject" name="btn_reject" type="object" class="btn-danger"
@@ -95,10 +95,65 @@
                     </group>
                     <notebook>
                         <page string="Permintaan" name="overtime_request">
-                            <field name="hr_ot_planning_ids" readonly="state == 'approved' or state == 'done'"
-                                   context="{'editable_in_readonly': True,'default_area_id': area_id, 'default_branch_id': branch_id,
-                                   'default_directorate_id': directorate_id, 'default_hrms_department_id': hrms_department_id, 'default_division_id': division_id}">
+                            <field name="hr_ot_planning_ids" context="{'editable_in_readonly': True,'default_area_id': area_id, 'default_branch_id': branch_id,
+                                   'default_directorate_id': directorate_id, 'default_hrms_department_id': hrms_department_id, 'default_division_id': division_id}" invisible="state != 'draft'">
                                 <tree editable="bottom" class="o_horizontal_shift">
+                                    <field name="ot_type" readonly="state != 'draft'" optional="show" required="1"/>
+                                    <field name="planning_id" column_invisible="1"/>
+                                    <field name="employee_id" readonly="1"
+                                           options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
+                                           optional="show"/>
+                                    <field name="nik" readonly="1" force_save="1" optional="show"/>
+                                    <field name="max_ot" readonly="1" force_save="1" optional="show"
+                                           widget="float_time"/>
+                                    <field name="max_ot_month" readonly="1" force_save="1" optional="show"
+                                           widget="float_time"/>
+                                    <field name="plann_date_from" readonly="state != 'draft'" widget="date"
+                                           optional="show"/>
+                                    <field name="ot_plann_from" readonly="state != 'draft'" string="Jam SPL Dari"
+                                           widget="float_time" optional="show"/>
+                                    <field name="ot_plann_to" readonly="state != 'draft'" string="Jam SPL Hingga"
+                                           widget="float_time" optional="show"/>
+                                    <field name="work_plann" force_save="1"
+                                           readonly="state not in ('draft','approved_l1')" optional="show"/>
+                                    <field name="output_plann" force_save="1"
+                                           readonly="state not in ('draft','approved_l1')" optional="show"/>
+                                    <field name="realization_date" readonly="1" string="Tanggal Hadir" widget="date"
+                                           optional="show"/>
+                                    <field name="realization_time_from" widget="date" optional="show" readonly="1"/>
+                                    <field name="realization_time_to" widget="date" optional="show" readonly="1"/>
+                                    <field name="output_realization" optional="show" required="state == 'approved_l2'"
+                                           readonly="state != 'approved_l2'"/>
+                                    <field name="verify_time_from" optional="show" widget="float_time"
+                                           required="state == 'approved_l2'" readonly="state != 'approved_l2'"/>
+                                    <field name="verify_time_to" optional="show" widget="float_time"
+                                           required="state == 'approved_l2'" readonly="state != 'approved_l2'"/>
+
+                                    <field name="count_approval_ot" optional="hide" 
+                                            widget="float_time" readonly="1"/>
+                                    <field name="claim_approval_ot" optional="hide" 
+                                            widget="float_time" readonly="1"/>
+                                    <field name="adv_total_ot" optional="hide" 
+                                            widget="float_time" readonly="1" 
+                                            decoration-danger="adv_total_ot > 0"/>
+                                    <field name="sum_total_ot" optional="hide" 
+                                            widget="float_time" readonly="1"/>
+
+                                    <field name="approvernd_id" string="Approver lt2" readonly="1"
+                                           options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
+                                           column_invisible="1"/>
+                                    <field name="is_approval" optional="show" widget="badge"
+                                           decoration-success="is_approval == 'approved'"
+                                           decoration-danger="is_approval != 'approved'" on_change="1"/>
+                                    <field name="state" optional="hide" widget="badge"/>
+                                    <button string="Detail" name="act_detail" type="object"/>
+                                </tree>
+                            </field>
+
+                            <field name="hr_ot_planning_ids" context="{'editable_in_readonly': True,'default_area_id': area_id, 'default_branch_id': branch_id,
+                                   'default_directorate_id': directorate_id, 'default_hrms_department_id': hrms_department_id, 'default_division_id': division_id}" 
+                                   invisible="state == 'draft'" readonly="state in ('verified','approved','complete','done')">
+                                <tree editable="bottom" class="o_horizontal_shift" create="0" edit="1" delete="0">
                                     <field name="ot_type" readonly="state != 'draft'" optional="show" required="1"/>
                                     <field name="planning_id" column_invisible="1"/>
                                     <field name="employee_id" readonly="1"
