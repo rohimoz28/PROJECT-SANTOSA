@@ -502,12 +502,12 @@ class HREmpOvertimeRequest(models.Model):
     def btn_verified(self):
         for rec in self:
             for line in rec.hr_ot_planning_ids:
-                if not line.verify_time_from or not line.verify_time_to:
+                if not line.verify_time_from or not line.verify_time_to or not line.output_realization:
                     raise UserError(
-                        "Jam Verifikasi dari dan hingga harus diisi sebelum memverifikasi.")
-                if not line.realization_date or not line.realization_time_from or not line.realization_time_to:
-                    raise UserError(
-                        "Jam dan tanggal Realisasi dari dan hingga harus diisi.")
+                        "Hasil Realisasi, Jam Verifikasi dari dan hingga harus diisi sebelum memverifikasi.")
+                # if not line.realization_date or not line.realization_time_from or not line.realization_time_to:
+                #     raise UserError(
+                #         "Jam dan tanggal Realisasi dari dan hingga harus diisi.")
             rec.state = 'verified'
 
     def btn_approved(self):
