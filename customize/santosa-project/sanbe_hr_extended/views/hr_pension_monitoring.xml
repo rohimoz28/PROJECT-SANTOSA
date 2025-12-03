@@ -36,7 +36,7 @@
         <!-- menuitem -->
         <menuitem
             id="hr_pension_menuitem"
-            name="Monitoring Kontrak Pensiun - Sertipikasi"
+            name="Monitoring Kontrak Pensiun"
             parent="hr.hr_menu_hr_reports"
             sequence="30"
             action="hr_pension_action_window"/>
