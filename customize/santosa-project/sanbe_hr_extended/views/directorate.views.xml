@@ -17,8 +17,13 @@
                             </h3>
                         </div>
                         <group>
-                            <field name="branch_id" string="Bisnis Unit" />
-                            <field name="department_ids" string="Department" widget='many2many_tags'/>
+                            <group>
+                                <field name="branch_id" string="Bisnis Unit" />
+                                <field name="department_ids" string="Department" widget='many2many_tags'/>
+                            </group>
+                            <group>
+                                <field name="active" string="Active"/>
+                            </group>
                         </group>
                     </sheet>
                 </form>
@@ -30,12 +35,12 @@
             <field name="name">Directorate</field>
             <field name="model">sanhrms.directorate</field>
             <field name="arch" type="xml">
-
-                <tree limit="20">
-                    <field name="branch_id" string="Unit Bisnis"/>
-                    <field name="directorate_code" required='1'/>
-                    <field name="name" string="Nama"/>
-                    <field name="department_ids" string="Department" widget='many2many_tags'/>
+                <tree>
+                    <field name="branch_id" string="Unit Bisnis"  readonly="True"/>
+                    <field name="directorate_code" required='1'  readonly="True"/>
+                    <field name="name" string="Nama"  readonly="True"/>
+                    <field name="department_ids" string="Department" widget='many2many_tags'  readonly="True"/>
+                    <field name="active" string="Active"/>                           
                 </tree>
             </field>
         </record>
@@ -44,8 +49,9 @@
         <record id="san_hrms_directorate_action" model="ir.actions.act_window">
             <field name="name">Direktorat</field>
             <field name="res_model">sanhrms.directorate</field>
-            <field name="view_mode">tree,form,graph,pivot</field>
-            <field name="domain"></field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{'active_test': False}</field>
         </record>
        
         <menuitem id="directorate_date" name="Direktorat" sequence='3' parent="hierarchy_id" action="san_hrms_directorate_action"/>
