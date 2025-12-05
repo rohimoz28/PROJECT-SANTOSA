@@ -17,14 +17,20 @@
                             </h3>
                         </div>
                         <group>
-                           
-                            <field name="department_code" string="Kode" required='1'/>
-                            <field name="name" string="Nama"/>
-                            <field name="branch_id" string="Unit Bisnis"/>
-                            <field name="directorate_id" string="Direktorat" domain="['|',('branch_id','=',branch_id),('branch_id','=',False)]" required='1'/>
-                            <field name="directorate_code" string="Direktorat Kode" invisible="1"/>
-                            <field name="division_ids" string="Divisi" widget='many2many_tags'/>
-                            
+                            <group>
+                                <field name="department_code" string="Kode" required='1'/>
+                                <field name="name" string="Nama"/>
+                                <field name="branch_id" string="Unit Bisnis"/>
+                                <field name="directorate_id" string="Direktorat" domain="['|',('branch_id','=',branch_id),('branch_id','=',False)]" required='1'/>
+                                <field name="directorate_code" string="Direktorat Kode" invisible="1"/>
+                                <field name="division_ids" string="Divisi" widget='many2many_tags'/>
+                                <field name="active" string="Active" invisible="1"/>
+                                <field name="color" widget="color_picker" string="Color" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="active" string="Active"/>
+                                <field name="color" widget="color_picker" string="Color" invisible="1"/>
+                            </group>
                         </group>
                        
                     </sheet>
@@ -37,15 +43,15 @@
             <field name="name">Department</field>
             <field name="model">sanhrms.department</field>
             <field name="arch" type="xml">
-
-                <tree limit="20">
-                    <field name="branch_id" string="Unit Bisnis"/>
-                    <field name="department_code" required='1'/>
-                    <field name="name" string="Nama" />
-                    <field name="directorate_id" string="Direktorat"/>   
-                    <field name="directorate_code" string="Direktorat Kode" column_invisible="1"/>
-                    <field name="division_ids" string="Divisi" widget='many2many_tags'/>
-                    <!-- <field name="division_ids" string="Divisi"/> -->
+                <tree>
+                    <field name="branch_id" string="Unit Bisnis"  readonly="True"/>
+                    <field name="department_code" required='1'  readonly="True"/>
+                    <field name="name" string="Nama"  readonly="True"/>
+                    <field name="directorate_id" string="Direktorat" readonly="True"/>   
+                    <field name="directorate_code" string="Direktorat Kode" column_invisible="1"  readonly="True"/>
+                    <field name="division_ids" string="Divisi" widget='many2many_tags' readonly="True"/>
+                    <field name="active" string="Active"/>  
+                    <field name="color" widget="color_picker" string="Color" column_invisible="1"/>
                 </tree>
                 
             </field>
@@ -55,9 +61,9 @@
         <record id="san_hrms_department_action" model="ir.actions.act_window">
             <field name="name">Department</field>
             <field name="res_model">sanhrms.department</field>
-            <field name="view_mode">tree,form,graph,pivot</field>
-            <field name="domain"></field>
-
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{'active_test': False}</field>
         </record>
        
         <menuitem id="department_date" name="Departmen" sequence='14' parent="hierarchy_id" action="san_hrms_department_action"/>
