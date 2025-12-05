@@ -22,6 +22,15 @@
             <field name="company_id" eval="False"/>
         </record>
 
+        <record id="seq_hr_day_payment_ot" model="ir.sequence">
+            <field name="name">Day Payment</field>
+            <field name="code">hr.overtime.daypayment</field>
+            <field name="prefix"></field>
+            <field name="padding">6</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
         <record id="seq_hr_sch_doc" model="ir.sequence">
             <field name="name">SCH Doct</field>
             <field name="code">sb.docter.scheduling</field>
