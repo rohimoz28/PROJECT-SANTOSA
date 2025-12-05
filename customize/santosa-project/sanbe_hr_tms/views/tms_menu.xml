@@ -58,6 +58,14 @@
         />
 
         <menuitem
+                id="menu_hr_daypayment_overtime"
+                name="Day Payment"
+                sequence="21"
+                parent="sanbe_hr_tms.hr_menu_tms_administration"
+                action="action_hr_overtime_day_payment"
+                groups="module_surat_perintah_lembur_approver,module_surat_perintah_lembur_manager"
+        />
+        <menuitem
                 id="menu_hr_permission_entry"
                 name="Permission Entry"
                 sequence="30"
