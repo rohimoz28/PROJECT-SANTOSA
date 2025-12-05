@@ -61,7 +61,7 @@ class HRTMSEntrySummary(models.Model):
         return mycari.open_periode_to or False
 
     periode_id = fields.Many2one('hr.opening.closing', string='Periode', index=True)
-    employee_id = fields.Many2one('hr.employee', string="Employee", default=_default_employee, required=True,
+    employee_id = fields.Many2one('hr.employee', string="Nama", default=_default_employee, required=True,
                                   ondelete='cascade', index=True, readonly="state =='done'")
     employee_name = fields.Char('Employee Name', related='employee_id.name', store=True)
     area_id = fields.Many2one('res.territory', string='Area', index=True, readonly="state =='done'")
@@ -76,8 +76,9 @@ class HRTMSEntrySummary(models.Model):
                                          string='Departemen', 
                                          related='employee_id.hrms_department_id', store=True)
     max_ot = fields.Float('Jam Lembur Maksimal', related='employee_id.max_ot', digits=(16, 1), store=True)
-    nik = fields.Char('Employee NIK')
-    job_id = fields.Many2one('hr.job', string='Job Title', readonly="state =='done'")
+    max_ot_month = fields.Float(string='Max OT / bulan', related='employee_id.max_ot_month', digits=(16, 1), store=True)
+    nik = fields.Char('NIK')
+    job_id = fields.Many2one('hr.job', string='Jabatan', readonly="state =='done'")
     date_from = fields.Date('Periode From', readonly="state =='done'", related='periode_id.open_periode_from')
     date_to = fields.Date('Periode To', readonly="state =='done'", related='periode_id.open_periode_to')
     tmsentry_ids = fields.One2many('hr.attendance', 'tmsentry_id', auto_join=True, readonly="state =='done'")
@@ -169,6 +170,7 @@ class HRTMSEntrySummary(models.Model):
     is_deduction_desc = fields.Text(
         string="Keterangan PG",
         required=False)
+    total_late_deduction = fields.Float(string='Total Potongan Akumulasi Terlambat')
     # hrd_approved = fields.Boolean(
     #     string='HRD Approved',
     #     compute='_is_all_approved_by_ca',
