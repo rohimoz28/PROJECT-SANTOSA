@@ -6,13 +6,13 @@
         <field name="name">view.hr.employee.contract.monitoring.tree</field>
         <field name="model">hr.employee.contract.monitoring</field>
         <field name="arch" type="xml">
-            <tree default_order="territory_id,branch_id,time_limit,hrms_department_id,employee_id" 
+            <tree default_order="date_end asc"
                   create="false" edit="false" class="o_tree_table">
-                <field name="contract_name" string="Contract Reference" optional="show"/>
                 <field name="emp_id" optional="show"/>
                 <field name="nik_employee" string="NIK" optional="show"/>
                 <field name="employee_id" string="Nama Karyawan" optional="show"/>
                 <field name="job_id" optional="show"/>
+                <field name="contract_name" string="Nomor Kontrak" optional="hide"/>
                 <field name="contract_type_id" optional="show"/>
                 <field name="date_start" string="Tanggal Mulai Kontrak" optional="show"/>
                 <field name="date_end" string="Tanggal Berakhir Kontrak" optional="show"/>
@@ -189,7 +189,7 @@
     </record>
 
 
-    <!-- Action hr.employee.contract.monitoring -->
+    <!-- Action hr.contract.monitoring -->
     <record id="action_hr_contract_monitoring" model="ir.actions.act_window">
         <field name="name">Monitoring Kontrak</field>
         <field name="type">ir.actions.act_window</field>

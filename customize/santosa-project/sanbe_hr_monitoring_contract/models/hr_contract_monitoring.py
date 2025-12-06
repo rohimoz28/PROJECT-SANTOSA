@@ -241,7 +241,7 @@ class HrEmployeeContractMonitoring(models.Model):
                             FROM
                             hr_contract
                             where
-                            state not in ('cancel', 'close', 'draft')
+                            state not in ('cancel', 'close')
                             GROUP BY
                             employee_id
                         ) hc ON hc.employee_id = he.id
