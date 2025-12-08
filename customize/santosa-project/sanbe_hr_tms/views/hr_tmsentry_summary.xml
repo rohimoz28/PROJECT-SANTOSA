@@ -28,13 +28,18 @@
                             <field name="hrms_department_id" string="Department" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" required="1" readonly="True"/>
                             <field name="division_id" string="Divisi" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}" required="1" readonly="True"/>
                             <field name="branch_ids" invisible="1"/>
-                            <field name="ot" readonly="True" string="OT"/>
-                            <field name="ot_flat" readonly="True" string="OT Flat"/>
-                            <field name="night_shift" readonly="True" string="Night Shift"/>
-                            <label for="max_ot" string="Total Jam Lembur Maksimal"/>
+                            <field name="ot" readonly="True" string="Lembur" />
+                            <field name="ot_flat" readonly="True" string="OT Flat" invisible="1"/>
+                            <field name="night_shift" readonly="True" string="Night Shift" invisible="1"/>
+                            <label for="max_ot" string="Max OT / Hari"/>
                             <div class="o_row">
                                 <field name="max_ot"/>
                                 <label for="max_ot" string="Jam"/>
+                            </div>
+                            <label for="max_ot_month" string="Max OT / bulan"/>
+                            <div class="o_row">
+                                <field name="max_ot_month"/>
+                                <label for="max_ot_month" string="Jam"/>
                             </div>
                         </group>
                     </group>
@@ -69,35 +74,35 @@
                                         <label for="attendee_total" string="Total Hari Kerja"/>
                                         <div class="o_row">
                                             <field name="attendee_total" colspan="1" readonly="1"/>
-                                            <label for="attendee_total" string="days"/>
+                                            <label for="attendee_total" string="Hari"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="attendee_count" string="Total Kary Masuk"/>
                                         <div class="o_row">
                                             <field name="attendee_count" colspan="1" readonly="1"/>
-                                            <label for="attendee_count" string="days"/>
+                                            <label for="attendee_count" string="Hari"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="absent_count" string="Total Kary Absent"/>
                                         <div class="o_row">
                                             <field name="absent_count" colspan="1" readonly="1"/>
-                                            <label for="absent_count" string="days"/>
+                                            <label for="absent_count" string="Hari"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="leave_count" string="Total Cuti"/>
                                         <div class="o_row">
                                             <field name="leave_count" colspan="1" readonly="1"/>
-                                            <label for="leave_count" string="days"/>
+                                            <label for="leave_count" string="Hari"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="sick_count" string="Total Sakit"/>
                                         <div class="o_row">
                                             <field name="sick_count" colspan="1" readonly="1"/>
-                                            <label for="sick_count" string="days"/>
+                                            <label for="sick_count" string="Hari"/>
                                         </div>
                                     </group>
                                 </group>
@@ -106,77 +111,77 @@
                                         <label for="ot1_totalx" string="AOT1"/>
                                         <div class="o_row">
                                             <field name="ot1_totalx" colspan="1" readonly="1"/>
-                                            <label for="ot1_totalx" string="Hours"/>
+                                            <label for="ot1_totalx" string="Jam"/>
                                         </div>
                                     </group>
                                     <group style="width:70%">
                                         <label for="ot2_totalx" string="AOT2"/>
                                         <div class="o_row">
                                             <field name="ot2_totalx" colspan="1" readonly="1"/>
-                                            <label for="ot2_totalx" string="Hours"/>
+                                            <label for="ot2_totalx" string="Jam"/>
                                         </div>
                                     </group>
                                     <group style="width:70%">
                                         <label for="ot3_totalx" string="AOT3"/>
                                         <div class="o_row">
                                             <field name="ot3_totalx" colspan="1" readonly="1"/>
-                                            <label for="ot3_totalx" string="Hours"/>
+                                            <label for="ot3_totalx" string="Jam"/>
                                         </div>
                                     </group>
                                     <group style="width:70%">
                                         <label for="ot4_totalx" string="AOT4"/>
                                         <div class="o_row">
                                             <field name="ot4_totalx" colspan="1" readonly="1"/>
-                                            <label for="ot4_totalx" string="Hours"/>
+                                            <label for="ot4_totalx" string="Jam"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="delay_total" string="Total Delay"/>
                                         <div class="o_row">
                                             <field name="delay_total" colspan="1" readonly="1"/>
-                                            <label for="delay_total" string="Minutes"/>
+                                            <label for="delay_total" string="Menit"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="delay_count" string="Total Times Delayed"/>
                                         <div class="o_row">
                                             <field name="delay_count" colspan="1" readonly="1"/>
-                                            <label for="delay_count" string="Times"/>
+                                            <label for="delay_count" string="Kali"/>
                                         </div>
                                     </group>
                                 </group>
                                 <group colspan="4">
                                     <group style="width:90%">
-                                        <label for="pattendace_count" string="ASHF"/>
-                                        <div class="o_row">
-                                            <field name="pattendace_count" colspan="1" readonly="1"/>
-                                            <label for="pattendace_count" string="Minutes"/>
-                                        </div>
+<!--                                        <label for="pattendace_count" string="ASHF"/>-->
+<!--                                        <div class="o_row">-->
+<!--                                            <field name="pattendace_count" colspan="1" readonly="1"/>-->
+<!--                                            <label for="pattendace_count" string="Menit"/>-->
+<!--                                        </div>-->
                                     </group>
                                     <group style="width:90%">
-                                        <label for="nightshift_count" string="ANS1"/>
+                                        <label for="nightshift_count" string="Dinas Malam"/>
                                         <div class="o_row">
                                             <field name="nightshift_count" colspan="1" readonly="1"/>
-                                            <label for="nightshift_count" string="Minutes"/>
+<!--                                            <label for="nightshift_count" string="Menit"/>-->
                                         </div>
                                     </group>
                                     <group style="width:90%">
-                                        <label for="nightshift2_count" string="ANS2"/>
-                                        <div class="o_row">
-                                            <field name="nightshift2_count" colspan="1" readonly="1"/>
-                                            <label for="nightshift2_count" string="Minutes"/>
-                                        </div>
+<!--                                        <label for="nightshift2_count" string="ANS2"/>-->
+<!--                                        <div class="o_row">-->
+<!--                                            <field name="nightshift2_count" colspan="1" readonly="1"/>-->
+<!--                                            <label for="nightshift2_count" string="Menit"/>-->
+<!--                                        </div>-->
                                     </group>
                                     <group style="width:90%">
-                                        <label for="meal_count" string="Meal"/>
-                                        <div class="o_row">
-                                            <field name="meal_count" colspan="1" readonly="1"/>
-                                            <label for="meal_count" string="Minutes"/>
-                                        </div>
+<!--                                        <label for="meal_count" string="Meal"/>-->
+<!--                                        <div class="o_row">-->
+<!--                                            <field name="meal_count" colspan="1" readonly="1"/>-->
+<!--                                            <label for="meal_count" string="Menit"/>-->
+<!--                                        </div>-->
                                     </group>
                                 </group>
                                 <group colspan="8">
-                                    <group style="width:65%">
+                                    <group style="width:50%">
                                         <div class="o_row">
                                             <label for="is_deduction" string="Potongan?"/>
                                             <div class="o_row">
@@ -184,14 +189,23 @@
                                             </div>
                                         </div>
                                     </group>
-                                    <group style="width:80%" invisible="is_deduction != True">
-                                        <label for="total_deduction" string="Jumlah PG"/>
-                                        <div class="o_row">
-                                            <field name="total_deduction" colspan="2"/>
-                                            <label for="total_deduction" string="days"/>
-                                        </div>
+                                    <group style="width:100%" invisible="is_deduction != True">
+                                        <group>
+                                            <label for="total_deduction" string="Jumlah PG"/>
+                                            <div class="o_row">
+                                                <field name="total_deduction" colspan="2"/>
+                                                <label for="total_deduction" string="Hari"/>
+                                            </div>
+                                        </group>
+                                        <group>
+                                            <div class="o_row" colspan="2">
+                                                <label for="total_late_deduction"
+                                                   string="Total Potongan Akumulasi Terlambat"/>
+                                                <field name="total_late_deduction"/>
+                                            </div>
+                                        </group>
                                     </group>
-                                    <group style="width:80%" invisible="is_deduction != True">
+                                    <group style="width:50%" invisible="is_deduction != True">
                                         <label for="is_deduction_desc" string="Keterangan PG"/>
                                         <div class="o_row">
                                             <field name="is_deduction_desc" colspan="2"/>
@@ -230,35 +244,35 @@
                                         <label for="attendee_total" string="Total Hari Kerja"/>
                                         <div class="o_row">
                                             <field name="attendee_total" colspan="1" readonly="1"/>
-                                            <label for="attendee_total" string="days"/>
+                                            <label for="attendee_total" string="Hari"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="attendee_count" string="Total Kary Masuk"/>
                                         <div class="o_row">
                                             <field name="attendee_count" colspan="1" readonly="1"/>
-                                            <label for="attendee_count" string="days"/>
+                                            <label for="attendee_count" string="Hari"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="absent_count" string="Total Kary Absent"/>
                                         <div class="o_row">
                                             <field name="absent_count" colspan="1" readonly="1"/>
-                                            <label for="absent_count" string="days"/>
+                                            <label for="absent_count" string="Hari"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="leave_count" string="Total Cuti"/>
                                         <div class="o_row">
                                             <field name="leave_count" colspan="1" readonly="1"/>
-                                            <label for="leave_count" string="days"/>
+                                            <label for="leave_count" string="Hari"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="sick_count" string="Total Sakit"/>
                                         <div class="o_row">
                                             <field name="sick_count" colspan="1" readonly="1"/>
-                                            <label for="sick_count" string="days"/>
+                                            <label for="sick_count" string="Hari"/>
                                         </div>
                                     </group>
                                 </group>
@@ -267,77 +281,77 @@
                                         <label for="ot1_totalx" string="AOT1"/>
                                         <div class="o_row">
                                             <field name="ot1_totalx" colspan="1" readonly="1"/>
-                                            <label for="ot1_totalx" string="Hours"/>
+                                            <label for="ot1_totalx" string="Jam"/>
                                         </div>
                                     </group>
                                     <group style="width:70%">
                                         <label for="ot2_totalx" string="AOT2"/>
                                         <div class="o_row">
                                             <field name="ot2_totalx" colspan="1" readonly="1"/>
-                                            <label for="ot2_totalx" string="Hours"/>
+                                            <label for="ot2_totalx" string="Jam"/>
                                         </div>
                                     </group>
                                     <group style="width:70%">
                                         <label for="ot3_totalx" string="AOT3"/>
                                         <div class="o_row">
                                             <field name="ot3_totalx" colspan="1" readonly="1"/>
-                                            <label for="ot3_totalx" string="Hours"/>
+                                            <label for="ot3_totalx" string="Jam"/>
                                         </div>
                                     </group>
                                     <group style="width:70%">
                                         <label for="ot4_totalx" string="AOT4"/>
                                         <div class="o_row">
                                             <field name="ot4_totalx" colspan="1" readonly="1"/>
-                                            <label for="ot4_totalx" string="Hours"/>
+                                            <label for="ot4_totalx" string="Jam"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="delay_total" string="Total Delay"/>
                                         <div class="o_row">
                                             <field name="delay_total" colspan="1" readonly="1"/>
-                                            <label for="delay_total" string="Minutes"/>
+                                            <label for="delay_total" string="Menit"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="delay_count" string="Total Times Delayed"/>
                                         <div class="o_row">
                                             <field name="delay_count" colspan="1" readonly="1"/>
-                                            <label for="delay_count" string="Times"/>
+                                            <label for="delay_count" string="Kali"/>
                                         </div>
                                     </group>
                                 </group>
                                 <group colspan="4">
                                     <group style="width:90%">
-                                        <label for="pattendace_count" string="ASHF"/>
-                                        <div class="o_row">
-                                            <field name="pattendace_count" colspan="1" readonly="1"/>
-                                            <label for="pattendace_count" string="Minutes"/>
-                                        </div>
+<!--                                        <label for="pattendace_count" string="ASHF"/>-->
+<!--                                        <div class="o_row">-->
+<!--                                            <field name="pattendace_count" colspan="1" readonly="1"/>-->
+<!--                                            <label for="pattendace_count" string="Menit"/>-->
+<!--                                        </div>-->
                                     </group>
                                     <group style="width:90%">
-                                        <label for="nightshift_count" string="ANS1"/>
+                                        <label for="nightshift_count" string="Dinas Malam"/>
                                         <div class="o_row">
                                             <field name="nightshift_count" colspan="1" readonly="1"/>
-                                            <label for="nightshift_count" string="Minutes"/>
+<!--                                            <label for="nightshift_count" string="Menit"/>-->
                                         </div>
                                     </group>
                                     <group style="width:90%">
-                                        <label for="nightshift2_count" string="ANS2"/>
-                                        <div class="o_row">
-                                            <field name="nightshift2_count" colspan="1" readonly="1"/>
-                                            <label for="nightshift2_count" string="Minutes"/>
-                                        </div>
+<!--                                        <label for="nightshift2_count" string="ANS2"/>-->
+<!--                                        <div class="o_row">-->
+<!--                                            <field name="nightshift2_count" colspan="1" readonly="1"/>-->
+<!--                                            <label for="nightshift2_count" string="Menit"/>-->
+<!--                                        </div>-->
                                     </group>
                                     <group style="width:90%">
-                                        <label for="meal_count" string="Meal"/>
-                                        <div class="o_row">
-                                            <field name="meal_count" colspan="1" readonly="1"/>
-                                            <label for="meal_count" string="Minutes"/>
-                                        </div>
+<!--                                        <label for="meal_count" string="Meal"/>-->
+<!--                                        <div class="o_row">-->
+<!--                                            <field name="meal_count" colspan="1" readonly="1"/>-->
+<!--                                            <label for="meal_count" string="Menit"/>-->
+<!--                                        </div>-->
                                     </group>
                                 </group>
                                 <group colspan="8">
-                                    <group style="width:65%">
+                                    <group style="width:50%">
                                         <div class="o_row">
                                             <label for="is_deduction" string="Potongan?"/>
                                             <div class="o_row">
@@ -345,14 +359,23 @@
                                             </div>
                                         </div>
                                     </group>
-                                    <group style="width:80%" invisible="is_deduction != True">
-                                        <label for="total_deduction" string="Jumlah PG"/>
-                                        <div class="o_row">
-                                            <field name="total_deduction" colspan="2"/>
-                                            <label for="total_deduction" string="days"/>
-                                        </div>
+                                    <group style="width:100%" invisible="is_deduction != True">
+                                        <group>
+                                            <label for="total_deduction" string="Jumlah PG"/>
+                                            <div class="o_row">
+                                                <field name="total_deduction" colspan="2"/>
+                                                <label for="total_deduction" string="Hari"/>
+                                            </div>
+                                        </group>
+                                        <group>
+                                            <div class="o_row" colspan="2">
+                                                <label for="total_late_deduction"
+                                                   string="Total Potongan Akumulasi Terlambat"/>
+                                                <field name="total_late_deduction"/>
+                                            </div>
+                                        </group>
                                     </group>
-                                    <group style="width:80%" invisible="is_deduction != True">
+                                    <group style="width:50%" invisible="is_deduction != True">
                                         <label for="is_deduction_desc" string="Keterangan PG"/>
                                         <div class="o_row">
                                             <field name="is_deduction_desc" colspan="2"/>
@@ -387,35 +410,35 @@
                                         <label for="attendee_total" string="Total Hari Kerja"/>
                                         <div class="o_row">
                                             <field name="attendee_total" colspan="1" readonly="1"/>
-                                            <label for="attendee_total" string="days"/>
+                                            <label for="attendee_total" string="Hari"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="attendee_count" string="Total Kary Masuk"/>
                                         <div class="o_row">
                                             <field name="attendee_count" colspan="1" readonly="1"/>
-                                            <label for="attendee_count" string="days"/>
+                                            <label for="attendee_count" string="Hari"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="absent_count" string="Total Kary Absent"/>
                                         <div class="o_row">
                                             <field name="absent_count" colspan="1" readonly="1"/>
-                                            <label for="absent_count" string="days"/>
+                                            <label for="absent_count" string="Hari"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="leave_count" string="Total Cuti"/>
                                         <div class="o_row">
                                             <field name="leave_count" colspan="1" readonly="1"/>
-                                            <label for="leave_count" string="days"/>
+                                            <label for="leave_count" string="Hari"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="sick_count" string="Total Sakit"/>
                                         <div class="o_row">
                                             <field name="sick_count" colspan="1" readonly="1"/>
-                                            <label for="sick_count" string="days"/>
+                                            <label for="sick_count" string="Hari"/>
                                         </div>
                                     </group>
                                 </group>
@@ -424,77 +447,77 @@
                                         <label for="ot1_totalx" string="AOT1"/>
                                         <div class="o_row">
                                             <field name="ot1_totalx" colspan="1" readonly="1"/>
-                                            <label for="ot1_totalx" string="Hours"/>
+                                            <label for="ot1_totalx" string="Jam"/>
                                         </div>
                                     </group>
                                     <group style="width:70%">
                                         <label for="ot2_totalx" string="AOT2"/>
                                         <div class="o_row">
                                             <field name="ot2_totalx" colspan="1" readonly="1"/>
-                                            <label for="ot2_totalx" string="Hours"/>
+                                            <label for="ot2_totalx" string="Jam"/>
                                         </div>
                                     </group>
                                     <group style="width:70%">
                                         <label for="ot3_totalx" string="AOT3"/>
                                         <div class="o_row">
                                             <field name="ot3_totalx" colspan="1" readonly="1"/>
-                                            <label for="ot3_totalx" string="Hours"/>
+                                            <label for="ot3_totalx" string="Jam"/>
                                         </div>
                                     </group>
                                     <group style="width:70%">
                                         <label for="ot4_totalx" string="AOT4"/>
                                         <div class="o_row">
                                             <field name="ot4_totalx" colspan="1" readonly="1"/>
-                                            <label for="ot4_totalx" string="Hours"/>
+                                            <label for="ot4_totalx" string="Jam"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="delay_total" string="Total Delay"/>
                                         <div class="o_row">
                                             <field name="delay_total" colspan="1" readonly="1"/>
-                                            <label for="delay_total" string="Minutes"/>
+                                            <label for="delay_total" string="Menit"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="delay_count" string="Total Times Delayed"/>
                                         <div class="o_row">
                                             <field name="delay_count" colspan="1" readonly="1"/>
-                                            <label for="delay_count" string="Times"/>
+                                            <label for="delay_count" string="Kali"/>
                                         </div>
                                     </group>
                                 </group>
                                 <group colspan="4">
                                     <group style="width:90%">
-                                        <label for="pattendace_count" string="ASHF"/>
-                                        <div class="o_row">
-                                            <field name="pattendace_count" colspan="1" readonly="1"/>
-                                            <label for="pattendace_count" string="Minutes"/>
-                                        </div>
+<!--                                        <label for="pattendace_count" string="ASHF"/>-->
+<!--                                        <div class="o_row">-->
+<!--                                            <field name="pattendace_count" colspan="1" readonly="1"/>-->
+<!--                                            <label for="pattendace_count" string="Menit"/>-->
+<!--                                        </div>-->
                                     </group>
                                     <group style="width:90%">
-                                        <label for="nightshift_count" string="ANS1"/>
+                                        <label for="nightshift_count" string="Dinas Malam"/>
                                         <div class="o_row">
                                             <field name="nightshift_count" colspan="1" readonly="1"/>
-                                            <label for="nightshift_count" string="Minutes"/>
+<!--                                            <label for="nightshift_count" string="Menit"/>-->
                                         </div>
                                     </group>
                                     <group style="width:90%">
-                                        <label for="nightshift2_count" string="ANS2"/>
-                                        <div class="o_row">
-                                            <field name="nightshift2_count" colspan="1" readonly="1"/>
-                                            <label for="nightshift2_count" string="Minutes"/>
-                                        </div>
+<!--                                        <label for="nightshift2_count" string="ANS2"/>-->
+<!--                                        <div class="o_row">-->
+<!--                                            <field name="nightshift2_count" colspan="1" readonly="1"/>-->
+<!--                                            <label for="nightshift2_count" string="Menit"/>-->
+<!--                                        </div>-->
                                     </group>
                                     <group style="width:90%">
-                                        <label for="meal_count" string="Meal"/>
-                                        <div class="o_row">
-                                            <field name="meal_count" colspan="1" readonly="1"/>
-                                            <label for="meal_count" string="Minutes"/>
-                                        </div>
+<!--                                        <label for="meal_count" string="Meal"/>-->
+<!--                                        <div class="o_row">-->
+<!--                                            <field name="meal_count" colspan="1" readonly="1"/>-->
+<!--                                            <label for="meal_count" string="Menit"/>-->
+<!--                                        </div>-->
                                     </group>
                                 </group>
                                 <group colspan="8">
-                                    <group style="width:65%">
+                                    <group style="width:50%">
                                         <div class="o_row">
                                             <label for="is_deduction" string="Potongan?"/>
                                             <div class="o_row">
@@ -502,14 +525,23 @@
                                             </div>
                                         </div>
                                     </group>
-                                    <group style="width:80%" invisible="is_deduction != True">
-                                        <label for="total_deduction" string="Jumlah PG"/>
-                                        <div class="o_row">
-                                            <field name="total_deduction" colspan="2"/>
-                                            <label for="total_deduction" string="days"/>
-                                        </div>
+                                    <group style="width:100%" invisible="is_deduction != True">
+                                        <group>
+                                            <label for="total_deduction" string="Jumlah PG"/>
+                                            <div class="o_row">
+                                                <field name="total_deduction" colspan="2"/>
+                                                <label for="total_deduction" string="Hari"/>
+                                            </div>
+                                        </group>
+                                        <group>
+                                            <div class="o_row" colspan="2">
+                                                <label for="total_late_deduction"
+                                                   string="Total Potongan Akumulasi Terlambat"/>
+                                                <field name="total_late_deduction"/>
+                                            </div>
+                                        </group>
                                     </group>
-                                    <group style="width:80%" invisible="is_deduction != True">
+                                    <group style="width:50%" invisible="is_deduction != True">
                                         <label for="is_deduction_desc" string="Keterangan PG"/>
                                         <div class="o_row">
                                             <field name="is_deduction_desc" colspan="2"/>
@@ -552,35 +584,35 @@
                                         <label for="attendee_total" string="Total Hari Kerja"/>
                                         <div class="o_row">
                                             <field name="attendee_total" colspan="1" readonly="1"/>
-                                            <label for="attendee_total" string="days"/>
+                                            <label for="attendee_total" string="Hari"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="attendee_count" string="Total Kary Masuk"/>
                                         <div class="o_row">
                                             <field name="attendee_count" colspan="1" readonly="1"/>
-                                            <label for="attendee_count" string="days"/>
+                                            <label for="attendee_count" string="Hari"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="absent_count" string="Total Kary Absent"/>
                                         <div class="o_row">
                                             <field name="absent_count" colspan="1" readonly="1"/>
-                                            <label for="absent_count" string="days"/>
+                                            <label for="absent_count" string="Hari"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="leave_count" string="Total Cuti"/>
                                         <div class="o_row">
                                             <field name="leave_count" colspan="1" readonly="1"/>
-                                            <label for="leave_count" string="days"/>
+                                            <label for="leave_count" string="Hari"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="sick_count" string="Total Sakit"/>
                                         <div class="o_row">
                                             <field name="sick_count" colspan="1" readonly="1"/>
-                                            <label for="sick_count" string="days"/>
+                                            <label for="sick_count" string="Hari"/>
                                         </div>
                                     </group>
                                 </group>
@@ -589,77 +621,77 @@
                                         <label for="ot1_totalx" string="AOT1"/>
                                         <div class="o_row">
                                             <field name="ot1_totalx" colspan="1" readonly="1"/>
-                                            <label for="ot1_totalx" string="Hours"/>
+                                            <label for="ot1_totalx" string="Jam"/>
                                         </div>
                                     </group>
                                     <group style="width:70%">
                                         <label for="ot2_totalx" string="AOT2"/>
                                         <div class="o_row">
                                             <field name="ot2_totalx" colspan="1" readonly="1"/>
-                                            <label for="ot2_totalx" string="Hours"/>
+                                            <label for="ot2_totalx" string="Jam"/>
                                         </div>
                                     </group>
                                     <group style="width:70%">
                                         <label for="ot3_totalx" string="AOT3"/>
                                         <div class="o_row">
                                             <field name="ot3_totalx" colspan="1" readonly="1"/>
-                                            <label for="ot3_totalx" string="Hours"/>
+                                            <label for="ot3_totalx" string="Jam"/>
                                         </div>
                                     </group>
                                     <group style="width:70%">
                                         <label for="ot4_totalx" string="AOT4"/>
                                         <div class="o_row">
                                             <field name="ot4_totalx" colspan="1" readonly="1"/>
-                                            <label for="ot4_totalx" string="Hours"/>
+                                            <label for="ot4_totalx" string="Jam"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="delay_total" string="Total Delay"/>
                                         <div class="o_row">
                                             <field name="delay_total" colspan="1" readonly="1"/>
-                                            <label for="delay_total" string="Minutes"/>
+                                            <label for="delay_total" string="Menit"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="delay_count" string="Total Times Delayed"/>
                                         <div class="o_row">
                                             <field name="delay_count" colspan="1" readonly="1"/>
-                                            <label for="delay_count" string="Times"/>
+                                            <label for="delay_count" string="Kali"/>
                                         </div>
                                     </group>
                                 </group>
                                 <group colspan="4">
                                     <group style="width:90%">
-                                        <label for="pattendace_count" string="ASHF"/>
-                                        <div class="o_row">
-                                            <field name="pattendace_count" colspan="1" readonly="1"/>
-                                            <label for="pattendace_count" string="Minutes"/>
-                                        </div>
+<!--                                        <label for="pattendace_count" string="ASHF"/>-->
+<!--                                        <div class="o_row">-->
+<!--                                            <field name="pattendace_count" colspan="1" readonly="1"/>-->
+<!--                                            <label for="pattendace_count" string="Menit"/>-->
+<!--                                        </div>-->
                                     </group>
                                     <group style="width:90%">
-                                        <label for="nightshift_count" string="ANS1"/>
+                                        <label for="nightshift_count" string="Dinas Malam"/>
                                         <div class="o_row">
                                             <field name="nightshift_count" colspan="1" readonly="1"/>
-                                            <label for="nightshift_count" string="Minutes"/>
+<!--                                            <label for="nightshift_count" string="Menit"/>-->
                                         </div>
                                     </group>
                                     <group style="width:90%">
-                                        <label for="nightshift2_count" string="ANS2"/>
-                                        <div class="o_row">
-                                            <field name="nightshift2_count" colspan="1" readonly="1"/>
-                                            <label for="nightshift2_count" string="Minutes"/>
-                                        </div>
+<!--                                        <label for="nightshift2_count" string="ANS2"/>-->
+<!--                                        <div class="o_row">-->
+<!--                                            <field name="nightshift2_count" colspan="1" readonly="1"/>-->
+<!--                                            <label for="nightshift2_count" string="Menit"/>-->
+<!--                                        </div>-->
                                     </group>
                                     <group style="width:90%">
-                                        <label for="meal_count" string="Meal"/>
-                                        <div class="o_row">
-                                            <field name="meal_count" colspan="1" readonly="1"/>
-                                            <label for="meal_count" string="Minutes"/>
-                                        </div>
+<!--                                        <label for="meal_count" string="Meal"/>-->
+<!--                                        <div class="o_row">-->
+<!--                                            <field name="meal_count" colspan="1" readonly="1"/>-->
+<!--                                            <label for="meal_count" string="Menit"/>-->
+<!--                                        </div>-->
                                     </group>
                                 </group>
                                 <group colspan="8">
-                                    <group style="width:65%">
+                                    <group style="width:50%">
                                         <div class="o_row">
                                             <label for="is_deduction" string="Potongan?"/>
                                             <div class="o_row">
@@ -667,14 +699,23 @@
                                             </div>
                                         </div>
                                     </group>
-                                    <group style="width:80%" invisible="is_deduction != True">
-                                        <label for="total_deduction" string="Jumlah PG"/>
-                                        <div class="o_row">
-                                            <field name="total_deduction" colspan="2"/>
-                                            <label for="total_deduction" string="days"/>
-                                        </div>
+                                    <group style="width:100%" invisible="is_deduction != True">
+                                        <group>
+                                            <label for="total_deduction" string="Jumlah PG"/>
+                                            <div class="o_row">
+                                                <field name="total_deduction" colspan="2"/>
+                                                <label for="total_deduction" string="Hari"/>
+                                            </div>
+                                        </group>
+                                        <group>
+                                            <div class="o_row" colspan="2">
+                                                <label for="total_late_deduction"
+                                                   string="Total Potongan Akumulasi Terlambat"/>
+                                                <field name="total_late_deduction"/>
+                                            </div>
+                                        </group>
                                     </group>
-                                    <group style="width:80%" invisible="is_deduction != True">
+                                    <group style="width:50%" invisible="is_deduction != True">
                                         <label for="is_deduction_desc" string="Keterangan PG"/>
                                         <div class="o_row">
                                             <field name="is_deduction_desc" colspan="2"/>
@@ -711,35 +752,35 @@
                                         <label for="attendee_total" string="Total Hari Kerja"/>
                                         <div class="o_row">
                                             <field name="attendee_total" colspan="1" readonly="1"/>
-                                            <label for="attendee_total" string="days"/>
+                                            <label for="attendee_total" string="Hari"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="attendee_count" string="Total Kary Masuk"/>
                                         <div class="o_row">
                                             <field name="attendee_count" colspan="1" readonly="1"/>
-                                            <label for="attendee_count" string="days"/>
+                                            <label for="attendee_count" string="Hari"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="absent_count" string="Total Kary Absent"/>
                                         <div class="o_row">
                                             <field name="absent_count" colspan="1" readonly="1"/>
-                                            <label for="absent_count" string="days"/>
+                                            <label for="absent_count" string="Hari"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="leave_count" string="Total Cuti"/>
                                         <div class="o_row">
                                             <field name="leave_count" colspan="1" readonly="1"/>
-                                            <label for="leave_count" string="days"/>
+                                            <label for="leave_count" string="Hari"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="sick_count" string="Total Sakit"/>
                                         <div class="o_row">
                                             <field name="sick_count" colspan="1" readonly="1"/>
-                                            <label for="sick_count" string="days"/>
+                                            <label for="sick_count" string="Hari"/>
                                         </div>
                                     </group>
                                 </group>
@@ -748,77 +789,77 @@
                                         <label for="ot1_totalx" string="AOT1"/>
                                         <div class="o_row">
                                             <field name="ot1_totalx" colspan="1" readonly="1"/>
-                                            <label for="ot1_totalx" string="Hours"/>
+                                            <label for="ot1_totalx" string="Jam"/>
                                         </div>
                                     </group>
                                     <group style="width:70%">
                                         <label for="ot2_totalx" string="AOT2"/>
                                         <div class="o_row">
                                             <field name="ot2_totalx" colspan="1" readonly="1"/>
-                                            <label for="ot2_totalx" string="Hours"/>
+                                            <label for="ot2_totalx" string="Jam"/>
                                         </div>
                                     </group>
                                     <group style="width:70%">
                                         <label for="ot3_totalx" string="AOT3"/>
                                         <div class="o_row">
                                             <field name="ot3_totalx" colspan="1" readonly="1"/>
-                                            <label for="ot3_totalx" string="Hours"/>
+                                            <label for="ot3_totalx" string="Jam"/>
                                         </div>
                                     </group>
                                     <group style="width:70%">
                                         <label for="ot4_totalx" string="AOT4"/>
                                         <div class="o_row">
                                             <field name="ot4_totalx" colspan="1" readonly="1"/>
-                                            <label for="ot4_totalx" string="Hours"/>
+                                            <label for="ot4_totalx" string="Jam"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="delay_total" string="Total Delay"/>
                                         <div class="o_row">
                                             <field name="delay_total" colspan="1" readonly="1"/>
-                                            <label for="delay_total" string="Minutes"/>
+                                            <label for="delay_total" string="Menit"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="delay_count" string="Total Times Delayed"/>
                                         <div class="o_row">
                                             <field name="delay_count" colspan="1" readonly="1"/>
-                                            <label for="delay_count" string="Times"/>
+                                            <label for="delay_count" string="Kali"/>
                                         </div>
                                     </group>
                                 </group>
                                 <group colspan="4">
                                     <group style="width:90%">
-                                        <label for="pattendace_count" string="ASHF"/>
-                                        <div class="o_row">
-                                            <field name="pattendace_count" colspan="1" readonly="1"/>
-                                            <label for="pattendace_count" string="Minutes"/>
-                                        </div>
+<!--                                        <label for="pattendace_count" string="ASHF"/>-->
+<!--                                        <div class="o_row">-->
+<!--                                            <field name="pattendace_count" colspan="1" readonly="1"/>-->
+<!--                                            <label for="pattendace_count" string="Menit"/>-->
+<!--                                        </div>-->
                                     </group>
                                     <group style="width:90%">
-                                        <label for="nightshift_count" string="ANS1"/>
+                                        <label for="nightshift_count" string="Dinas Malam"/>
                                         <div class="o_row">
                                             <field name="nightshift_count" colspan="1" readonly="1"/>
-                                            <label for="nightshift_count" string="Minutes"/>
+<!--                                            <label for="nightshift_count" string="Menit"/>-->
                                         </div>
                                     </group>
                                     <group style="width:90%">
-                                        <label for="nightshift2_count" string="ANS2"/>
-                                        <div class="o_row">
-                                            <field name="nightshift2_count" colspan="1" readonly="1"/>
-                                            <label for="nightshift2_count" string="Minutes"/>
-                                        </div>
+<!--                                        <label for="nightshift2_count" string="ANS2"/>-->
+<!--                                        <div class="o_row">-->
+<!--                                            <field name="nightshift2_count" colspan="1" readonly="1"/>-->
+<!--                                            <label for="nightshift2_count" string="Menit"/>-->
+<!--                                        </div>-->
                                     </group>
                                     <group style="width:90%">
-                                        <label for="meal_count" string="Meal"/>
-                                        <div class="o_row">
-                                            <field name="meal_count" colspan="1" readonly="1"/>
-                                            <label for="meal_count" string="Minutes"/>
-                                        </div>
+<!--                                        <label for="meal_count" string="Meal"/>-->
+<!--                                        <div class="o_row">-->
+<!--                                            <field name="meal_count" colspan="1" readonly="1"/>-->
+<!--                                            <label for="meal_count" string="Menit"/>-->
+<!--                                        </div>-->
                                     </group>
                                 </group>
                                 <group colspan="8">
-                                    <group style="width:65%">
+                                    <group style="width:50%">
                                         <div class="o_row">
                                             <label for="is_deduction" string="Potongan?"/>
                                             <div class="o_row">
@@ -826,14 +867,23 @@
                                             </div>
                                         </div>
                                     </group>
-                                    <group style="width:80%" invisible="is_deduction != True">
-                                        <label for="total_deduction" string="Jumlah PG"/>
-                                        <div class="o_row">
-                                            <field name="total_deduction" colspan="2"/>
-                                            <label for="total_deduction" string="days"/>
-                                        </div>
+                                    <group style="width:100%" invisible="is_deduction != True">
+                                        <group>
+                                            <label for="total_deduction" string="Jumlah PG"/>
+                                            <div class="o_row">
+                                                <field name="total_deduction" colspan="2"/>
+                                                <label for="total_deduction" string="Hari"/>
+                                            </div>
+                                        </group>
+                                        <group>
+                                            <div class="o_row" colspan="2">
+                                                <label for="total_late_deduction"
+                                                   string="Total Potongan Akumulasi Terlambat"/>
+                                                <field name="total_late_deduction"/>
+                                            </div>
+                                        </group>
                                     </group>
-                                    <group style="width:80%" invisible="is_deduction != True">
+                                    <group style="width:50%" invisible="is_deduction != True">
                                         <label for="is_deduction_desc" string="Keterangan PG"/>
                                         <div class="o_row">
                                             <field name="is_deduction_desc" colspan="2"/>
@@ -891,35 +941,35 @@
                                         <label for="attendee_total" string="Total Hari Kerja"/>
                                         <div class="o_row">
                                             <field name="attendee_total" colspan="1" readonly="1"/>
-                                            <label for="attendee_total" string="days"/>
+                                            <label for="attendee_total" string="Hari"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="attendee_count" string="Total Kary Masuk"/>
                                         <div class="o_row">
                                             <field name="attendee_count" colspan="1" readonly="1"/>
-                                            <label for="attendee_count" string="days"/>
+                                            <label for="attendee_count" string="Hari"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="absent_count" string="Total Kary Absent"/>
                                         <div class="o_row">
                                             <field name="absent_count" colspan="1" readonly="1"/>
-                                            <label for="absent_count" string="days"/>
+                                            <label for="absent_count" string="Hari"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="leave_count" string="Total Cuti"/>
                                         <div class="o_row">
                                             <field name="leave_count" colspan="1" readonly="1"/>
-                                            <label for="leave_count" string="days"/>
+                                            <label for="leave_count" string="Hari"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="sick_count" string="Total Sakit"/>
                                         <div class="o_row">
                                             <field name="sick_count" colspan="1" readonly="1"/>
-                                            <label for="sick_count" string="days"/>
+                                            <label for="sick_count" string="Hari"/>
                                         </div>
                                     </group>
                                 </group>
@@ -928,77 +978,77 @@
                                         <label for="ot1_totalx" string="AOT1"/>
                                         <div class="o_row">
                                             <field name="ot1_totalx" colspan="1" readonly="1"/>
-                                            <label for="ot1_totalx" string="Hours"/>
+                                            <label for="ot1_totalx" string="Jam"/>
                                         </div>
                                     </group>
                                     <group style="width:70%">
                                         <label for="ot2_totalx" string="AOT2"/>
                                         <div class="o_row">
                                             <field name="ot2_totalx" colspan="1" readonly="1"/>
-                                            <label for="ot2_totalx" string="Hours"/>
+                                            <label for="ot2_totalx" string="Jam"/>
                                         </div>
                                     </group>
                                     <group style="width:70%">
                                         <label for="ot3_totalx" string="AOT3"/>
                                         <div class="o_row">
                                             <field name="ot3_totalx" colspan="1" readonly="1"/>
-                                            <label for="ot3_totalx" string="Hours"/>
+                                            <label for="ot3_totalx" string="Jam"/>
                                         </div>
                                     </group>
                                     <group style="width:70%">
                                         <label for="ot4_totalx" string="AOT4"/>
                                         <div class="o_row">
                                             <field name="ot4_totalx" colspan="1" readonly="1"/>
-                                            <label for="ot4_totalx" string="Hours"/>
+                                            <label for="ot4_totalx" string="Jam"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="delay_total" string="Total Delay"/>
                                         <div class="o_row">
                                             <field name="delay_total" colspan="1" readonly="1"/>
-                                            <label for="delay_total" string="Minutes"/>
+                                            <label for="delay_total" string="Menit"/>
                                         </div>
                                     </group>
                                     <group style="width:80%">
                                         <label for="delay_count" string="Total Times Delayed"/>
                                         <div class="o_row">
                                             <field name="delay_count" colspan="1" readonly="1"/>
-                                            <label for="delay_count" string="Times"/>
+                                            <label for="delay_count" string="Kali"/>
                                         </div>
                                     </group>
                                 </group>
                                 <group colspan="4">
                                     <group style="width:90%">
-                                        <label for="pattendace_count" string="ASHF"/>
-                                        <div class="o_row">
-                                            <field name="pattendace_count" colspan="1" readonly="1"/>
-                                            <label for="pattendace_count" string="Minutes"/>
-                                        </div>
+<!--                                        <label for="pattendace_count" string="ASHF"/>-->
+<!--                                        <div class="o_row">-->
+<!--                                            <field name="pattendace_count" colspan="1" readonly="1"/>-->
+<!--                                            <label for="pattendace_count" string="Menit"/>-->
+<!--                                        </div>-->
                                     </group>
                                     <group style="width:90%">
-                                        <label for="nightshift_count" string="ANS1"/>
+                                        <label for="nightshift_count" string="Dinas Malam"/>
                                         <div class="o_row">
                                             <field name="nightshift_count" colspan="1" readonly="1"/>
-                                            <label for="nightshift_count" string="Minutes"/>
+<!--                                            <label for="nightshift_count" string="Menit"/>-->
                                         </div>
                                     </group>
                                     <group style="width:90%">
-                                        <label for="nightshift2_count" string="ANS2"/>
-                                        <div class="o_row">
-                                            <field name="nightshift2_count" colspan="1" readonly="1"/>
-                                            <label for="nightshift2_count" string="Minutes"/>
-                                        </div>
+<!--                                        <label for="nightshift2_count" string="ANS2"/>-->
+<!--                                        <div class="o_row">-->
+<!--                                            <field name="nightshift2_count" colspan="1" readonly="1"/>-->
+<!--                                            <label for="nightshift2_count" string="Menit"/>-->
+<!--                                        </div>-->
                                     </group>
                                     <group style="width:90%">
-                                        <label for="meal_count" string="Meal"/>
-                                        <div class="o_row">
-                                            <field name="meal_count" colspan="1" readonly="1"/>
-                                            <label for="meal_count" string="Minutes"/>
-                                        </div>
+<!--                                        <label for="meal_count" string="Meal"/>-->
+<!--                                        <div class="o_row">-->
+<!--                                            <field name="meal_count" colspan="1" readonly="1"/>-->
+<!--                                            <label for="meal_count" string="Menit"/>-->
+<!--                                        </div>-->
                                     </group>
                                 </group>
                                 <group colspan="8">
-                                    <group style="width:65%">
+                                    <group style="width:50%">
                                         <div class="o_row">
                                             <label for="is_deduction" string="Potongan?"/>
                                             <div class="o_row">
@@ -1006,14 +1056,23 @@
                                             </div>
                                         </div>
                                     </group>
-                                    <group style="width:80%" invisible="is_deduction != True">
-                                        <label for="total_deduction" string="Jumlah PG"/>
-                                        <div class="o_row">
-                                            <field name="total_deduction" colspan="2"/>
-                                            <label for="total_deduction" string="days"/>
-                                        </div>
+                                    <group style="width:100%" invisible="is_deduction != True">
+                                        <group>
+                                            <label for="total_deduction" string="Jumlah PG"/>
+                                            <div class="o_row">
+                                                <field name="total_deduction" colspan="2"/>
+                                                <label for="total_deduction" string="Hari"/>
+                                            </div>
+                                        </group>
+                                        <group>
+                                            <div class="o_row" colspan="2">
+                                                <label for="total_late_deduction"
+                                                   string="Total Potongan Akumulasi Terlambat"/>
+                                                <field name="total_late_deduction"/>
+                                            </div>
+                                        </group>
                                     </group>
-                                    <group style="width:80%" invisible="is_deduction != True">
+                                    <group style="width:50%" invisible="is_deduction != True">
                                         <label for="is_deduction_desc" string="Keterangan PG"/>
                                         <div class="o_row">
                                             <field name="is_deduction_desc" colspan="2"/>
