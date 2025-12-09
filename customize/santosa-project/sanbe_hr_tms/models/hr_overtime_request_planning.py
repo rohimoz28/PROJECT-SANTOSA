@@ -716,7 +716,7 @@ class HREmpOvertimeRequestEmployee(models.Model):
                 line.name = line.planning_id.employee_id.name + \
                     ' - DP - ' + str(line.plann_date_from)
             else:
-                line.name = line.planning_id.name + ' ' + \
+                line.name = 'SPL' + \
                     line.planning_id.employee_id.name + \
                     ' - ' + str(line.plann_date_from)
 
