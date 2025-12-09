@@ -368,7 +368,7 @@
                                 <field name="ot_remarks"   readonly="(state !='draft')" />
                                 <field name="transport_remarks"  readonly="(state !='draft')" />
                                 <field name="meal_remarks"  readonly="(state !='draft')" />
-                                <field name="allowance_nightshift_remarks"  readonly="(state !='draft')" />
+                                <field name="allowance_nightshift_remarks"  readonly="(state !='draft')"  />
                             </group>
                         </group>
                     </page>
