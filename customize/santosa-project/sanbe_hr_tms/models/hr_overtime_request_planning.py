@@ -712,13 +712,14 @@ class HREmpOvertimeRequestEmployee(models.Model):
 
     def get_name(self):
         for line in self:
-            if line.planning_id.day_payment:
-                line.name = line.planning_id.employee_id.name + \
-                    ' - DP - ' + str(line.plann_date_from)
-            else:
-                line.name = 'SPL' + \
-                    line.planning_id.employee_id.name + \
-                    ' - ' + str(line.plann_date_from)
+            if line.plann_date_from:
+                if line.planning_id.day_payment:
+                    line.name = line.planning_id.employee_id.name + \
+                        ' - DP - ' + str(line.plann_date_from)
+                else:
+                    line.name = 'SPL' + \
+                        line.planning_id.employee_id.name + \
+                        ' - ' + str(line.plann_date_from)
 
     spl_employee_id = fields.Many2one(
         'hr.overtime.employees', string='SPL Employee Reference', index=True)
