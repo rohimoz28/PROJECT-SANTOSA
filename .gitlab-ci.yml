@@ -39,26 +39,54 @@ image: rohimuhamadd/alpine-ci-cd:latest
   - if: '$CI_COMMIT_BRANCH == $BRANCH_STAGING_SANTOSA'
 
 # PRE-MERGE
-#check_base_branch:
-#  stage: verify
-#  tags: [ test4 ]
-#  <<: *default_before_script
-#  allow_failure: false
-#  script:
-#    - git fetch origin main
-#    - |
-#      if git merge-base --is-ancestor origin/main HEAD; then
-#        echo "✅ Branch berasal dari main atau lebih baru."
-#      else
-#        echo "❌ Branch tidak diturunkan dari main terbaru!"
-#        exit 1
-#      fi
-#  rules:
-#    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "production")'
-#      when: always
-#    - when: never
-#
-#notify_check_base_branch_failed:
+check_base_branch:
+ stage: verify
+ tags: [ test4 ]
+ <<: *default_before_script
+ allow_failure: false
+ script:
+   - git fetch origin main
+   - |
+     if git merge-base --is-ancestor origin/main HEAD; then
+       echo "✅ Branch berasal dari main atau lebih baru."
+     else
+       echo "❌ Branch tidak diturunkan dari main terbaru!"
+       exit 1
+     fi
+ rules:
+   - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging")'
+     when: always
+   - when: never
+
+check_merge_conflicts:
+  stage: verify
+  tags: [ test4 ]
+  <<: *default_before_script
+  allow_failure: false
+  script:
+    - git fetch origin staging
+    - git fetch origin $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
+    - echo "Checking merge conflicts..."
+    - |
+      if git merge --no-commit --no-ff origin/staging 2>&1 | grep -q "CONFLICT"; then
+        echo "❌ MERGE CONFLICT DETECTED!"
+        echo ""
+        echo "Conflicted files:"
+        git diff --name-only --diff-filter=U
+        echo ""
+        git merge --abort
+        exit 1
+      else
+        echo "✅ No merge conflicts detected"
+        git merge --abort
+        exit 0
+      fi
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging")'
+      when: always
+    - when: never
+
+# notify_check_base_branch_failed:
 #  stage: notify
 #  tags: [ test4 ]
 #  <<: *default_before_script

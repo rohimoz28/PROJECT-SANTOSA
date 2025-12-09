@@ -38,6 +38,7 @@
         "views/hr_service_contract.xml",
         "views/hr_service_contract_monitoring.xml",
         "views/hr_sip.xml",
+        "views/hr_sip_monitoring.xml",
         "views/hr_contract_type.xml",
         "views/hr_pension_monitoring.xml",
 
