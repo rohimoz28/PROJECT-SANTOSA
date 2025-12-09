@@ -340,7 +340,6 @@ class HrEmployee(models.Model):
     wd_type = fields.Selection(selection=[('shift', "Shift"),
                                           ('wd', "Normal WD"),],
                                string="Tipe WD", default='shift', required=True)
-
     # wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.", group_operator="avg")
     # contract_wage = fields.Monetary('Contract Wage', compute='_compute_contract_wage')
     # hra = fields.Monetary(string='HRA', tracking=True,
