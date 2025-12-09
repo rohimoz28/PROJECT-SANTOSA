@@ -189,10 +189,10 @@ class HREmpOvertimeRequest(models.Model):
     company_id = fields.Many2one(
         'res.company', string="Company Name", index=True)
     total_days = fields.Float(
-        string="Total hari", compute='_compute_get_total_days_hours', store=True,)
+        string="Total hari", compute='_compute_get_total_days_hours', store=True, )
     total_hours = fields.Float(
-        string="Total Jam", compute='_compute_get_total_days_hours', store=True,)
-    day_payment = fields.Boolean('Day Payment', default=False, store=True,)
+        string="Total Jam", compute='_compute_get_total_days_hours', store=True, )
+    day_payment = fields.Boolean('Day Payment', default=False, store=True, )
     request_day_name = fields.Char(
         'Request Day Name', compute='_compute_req_day_name', store=True)
     count_record_employees = fields.Integer(string="Total Employees on The List", compute="_compute_record_employees",
@@ -309,10 +309,10 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                rec.state == 'draft'
-                and not rec.approve1
-                and rec.approval_l1_id
-                and rec.approval_l1_id.user_id.id == current_user.id
+                    rec.state == 'draft'
+                    and not rec.approve1
+                    and rec.approval_l1_id
+                    and rec.approval_l1_id.user_id.id == current_user.id
             )
             rec.can_approve_l1 = can_approve
 
@@ -328,19 +328,22 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                rec.state == 'approved_l1'
-                and rec.approve1
-                and not rec.approve2
-                and rec.approval_l2_id
-                and rec.approval_l2_id.user_id.id == current_user.id
+                    rec.state == 'approved_l1'
+                    and rec.approve1
+                    and not rec.approve2
+                    and rec.approval_l2_id
+                    and rec.approval_l2_id.user_id.id == current_user.id
             )
             rec.can_approve_l2 = can_approve
 
-    @api.depends('state', 'employee_id',)
+    @api.depends('state', 'employee_id', )
     def generate_list_ot_employee(self):
         for rec in self:
             if rec.employee_id:
-                for line_ot in self.env['hr.overtime.employees'].search([('employee_id', '=', rec.employee_id.id), ('state', 'in', ('verified', 'approved', 'complete', 'done'))]):
+                for line_ot in self.env['hr.overtime.employees'].search([('employee_id', '=', rec.employee_id.id),
+                                                                         ('state', 'in',
+                                                                          ('verified', 'approved', 'complete',
+                                                                           'done'))]):
                     line_ot.unlink()
 
     @api.depends('state', 'approval_l1_id', 'approval_l2_id')
@@ -356,12 +359,12 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                rec.state == 'approved_l2'
-                and rec.approval_l1_id
-                and rec.approve1
-                and rec.approval_l2_id
-                and rec.approve2
-                and rec.approval_l1_id.user_id.id == current_user.id
+                    rec.state == 'approved_l2'
+                    and rec.approval_l1_id
+                    and rec.approve1
+                    and rec.approval_l2_id
+                    and rec.approve2
+                    and rec.approval_l1_id.user_id.id == current_user.id
             )
             rec.can_verified = can_approve
 
@@ -378,12 +381,12 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                rec.state == 'verified'
-                and rec.approval_l1_id
-                and rec.approve1
-                and rec.approval_l2_id
-                and rec.approve2
-                and rec.approverhrd_id.user_id.id == current_user.id
+                    rec.state == 'verified'
+                    and rec.approval_l1_id
+                    and rec.approve1
+                    and rec.approval_l2_id
+                    and rec.approve2
+                    and rec.approverhrd_id.user_id.id == current_user.id
             )
             rec.can_approve_hrd = can_approve
 
@@ -712,14 +715,13 @@ class HREmpOvertimeRequestEmployee(models.Model):
 
     def get_name(self):
         for line in self:
-            if line.plann_date_from:
-                if line.planning_id.day_payment:
-                    line.name = line.planning_id.employee_id.name + \
-                        ' - DP - ' + str(line.plann_date_from)
-                else:
-                    line.name = 'SPL' + \
-                        line.planning_id.employee_id.name + \
-                        ' - ' + str(line.plann_date_from)
+            employee_name = str(line.planning_id.employee_id.name or '')
+            date_from = str(line.plann_date_from or '')
+
+            if line.planning_id.day_payment:
+                line.name = f"{employee_name} - DP - {date_from}"
+            else:
+                line.name = f"SPL {employee_name} - {date_from}"
 
     spl_employee_id = fields.Many2one(
         'hr.overtime.employees', string='SPL Employee Reference', index=True)
@@ -750,7 +752,8 @@ class HREmpOvertimeRequestEmployee(models.Model):
     branch_id = fields.Many2one('res.branch', related='planning_id.branch_id',
                                 string='Bisnis Unit Header', index=True, readonly=True)
     department_id = fields.Many2one(
-        'hr.department', related='planning_id.department_id', domain="[('id','in',alldepartment)]", string='Sub Department')
+        'hr.department', related='planning_id.department_id', domain="[('id','in',alldepartment)]",
+        string='Sub Department')
 
     division_id = fields.Many2one(
         'sanhrms.division', string='Divisi', related='planning_id.division_id', store=True)
@@ -794,11 +797,11 @@ class HREmpOvertimeRequestEmployee(models.Model):
     #         end += 24.0  # Adjust for overnight shifts
     #     return end - start
 
-    count_approval_ot = fields.Float('Total Jam Approval OT',  store=True)
-    claim_approval_ot = fields.Float('Total Jam yang di klaim OT',  store=True)
+    count_approval_ot = fields.Float('Total Jam Approval OT', store=True)
+    claim_approval_ot = fields.Float('Total Jam yang di klaim OT', store=True)
     sum_total_ot = fields.Float('Jumlah Total OT', store=True)
     adv_total_ot = fields.Float('Kelebihan Jam Verifikasi OT', store=True)
-    resudual_ot = fields.Float('Sisa Jam OT', store=True,)
+    resudual_ot = fields.Float('Sisa Jam OT', store=True, )
     machine = fields.Char('Machine')
     work_plann = fields.Char('Rencana SPL')
     output_plann = fields.Char('Output SPL')
