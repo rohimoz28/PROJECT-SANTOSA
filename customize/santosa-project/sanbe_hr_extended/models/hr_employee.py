@@ -214,7 +214,7 @@ class HrEmployee(models.Model):
     max_hours_week = fields.Float(
         'Total Jam Week', digits=(200, 1), default=40)
     max_days_month = fields.Integer(
-        'Total Hari Kerja Month', digits=(31, 1), default=22)
+        'Total Hari Kerja Month', digits=(31, 1), default=25)
     dates_holidays = fields.Selection(
         selection=RANGE_DATES_HOLIDAYS, string='Tanggal Penambahan Cuti', default='1')
     date_count_holiday = fields.Integer(
@@ -340,7 +340,6 @@ class HrEmployee(models.Model):
     wd_type = fields.Selection(selection=[('shift', "Shift"),
                                           ('wd', "Normal WD"),],
                                string="Tipe WD", default='shift', required=True)
-
     # wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.", group_operator="avg")
     # contract_wage = fields.Monetary('Contract Wage', compute='_compute_contract_wage')
     # hra = fields.Monetary(string='HRA', tracking=True,
