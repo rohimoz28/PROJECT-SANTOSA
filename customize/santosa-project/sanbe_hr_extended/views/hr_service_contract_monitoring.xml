@@ -6,23 +6,25 @@
             <field name="name">hr.service.contract.monitoring.tree</field>
             <field name="model">hr.service.contract</field>
             <field name="arch" type="xml">
-                <tree string="Monitoring Kontrak Medis" create="false" edit="false">
+                <tree string="Monitoring Kontrak Medis" create="false" edit="false" default_order="end_date asc">
+                    <field name="emp_selected_id" optional="show"/>
+                    <field name="nik" optional="show"/>
                     <field name="employee_id" optional="show"/>
-                    <field name="medical_contract_number" optional="show"/>
-                    <field name="branch_id" optional="show"/>
-                    <field name="directorate_id" optional="show"/>
-                    <field name="hrms_department_id" optional="show"/>
-                    <field name="division_id" optional="show"/>
                     <field name="job_id" optional="show"/>
+                    <field name="medical_contract_number" optional="show"/>
                     <field name="start_date" optional="show"/>
                     <field name="end_date" optional="show"/>
-                    <field name="contract_type_id" optional="show"/>
+                    <field name="contract_type_id" optional="hide"/>
                     <field name="state" widget="badge"
                         decoration-info="state == 'draft'" 
                         decoration-warning="state == 'close'" 
                         decoration-success="state == 'open'"
                         decoration-danger="state == 'cancel'"
                         optional="show"/>
+                    <field name="branch_id" optional="hide"/>
+                    <field name="directorate_id" optional="hide"/>
+                    <field name="hrms_department_id" optional="hide"/>
+                    <field name="division_id" optional="hide"/>
                 </tree>
             </field>
         </record>
@@ -34,7 +36,7 @@
             <field name="views" eval="[
                 [ref('hr_service_contract_monitoring_tree'), 'tree'],
             ]"/>
-            <field name="domain">[]</field>
+            <field name="domain">[('state', 'in', ['draft', 'open'])]</field>
         </record>   
         <!-- Menuitem -->
         <menuitem 
