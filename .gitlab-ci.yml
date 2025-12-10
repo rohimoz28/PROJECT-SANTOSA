@@ -68,30 +68,23 @@ check_merge_conflicts:
     - git fetch origin staging
     - git fetch origin $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
 
-    - echo "🔍 Checking merge conflicts with staging..."
+    - echo "Checking merge conflicts..."
 
+    # Hitung merge tree & deteksi conflict tanpa mengubah worktree
     - |
-      # 1. Attempt dry-run merge
-      git merge --no-commit --no-ff origin/staging > merge.log 2>&1 || true
+      BASE=$(git merge-base origin/staging $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME)
 
-      # 2. Check for conflict markers
-      if grep -qi "CONFLICT" merge.log; then
-        echo "❌ MERGE CONFLICT DETECTED!"
-        echo ""
-        echo "Conflicted files:"
-        git diff --name-only --diff-filter=U
-        git merge --abort || true
+      git merge-tree $BASE \
+        origin/staging \
+        $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME > merge_result.txt
+
+      # Jika ada conflict marker (<<<<<<<), berarti conflict
+      if grep -q "<<<<<<<" merge_result.txt; then
+        echo "❌ Merge conflict detected!"
         exit 1
       else
         echo "✅ No merge conflicts detected."
       fi
-
-      # 3. Abort merge ONLY if merge state exists
-      if [ -f .git/MERGE_HEAD ]; then
-        git merge --abort
-      fi
-
-    - echo "🎉 Merge simulation completed successfully."
 
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging"'
