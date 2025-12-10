@@ -78,8 +78,9 @@ class TmsentryDetails(models.Model):
     aot2 = fields.Float(string='AOT2')
     aot3 = fields.Float(string='AOT3')
     aot4 = fields.Float(string='AOT4')
-    overtime_employees_id = fields.Many2one('hr.overtime.employees', string='Overtime Employee')
-    ot_type = fields.Selection(related='overtime_employees_id.ot_type', string='Tipe SPL', store=True)
+    ot_type = fields.Selection([('regular', 'Regular'),
+                                ('holiday', 'Holiday'),
+                                ('dp', 'DP')], string='Tipe SPL')
     oto = fields.Integer(string='OTO')
     premi_attendee = fields.Float('Premi Attendee')
     transport = fields.Float('Transport')
