@@ -63,32 +63,36 @@ check_merge_conflicts:
   tags: [ test4 ]
   <<: *default_before_script
   allow_failure: false
+
   script:
-    # 1. Fetch semua branches yang dibutuhkan
     - git fetch origin staging
     - git fetch origin $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
-    
-    # 2. Log info untuk debugging
-    - echo "🔍 Checking merge conflicts between origin/staging and $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME..."
-    
-    # 3. Attempt merge DRY RUN (no-commit, no-ff)
+
+    - echo "🔍 Checking merge conflicts with staging..."
+
     - |
-      if git merge --no-commit --no-ff origin/staging 2>&1 | tee /tmp/merge_output.txt | grep -qi "CONFLICT"; then
-        echo ""
+      # 1. Attempt dry-run merge
+      git merge --no-commit --no-ff origin/staging > merge.log 2>&1 || true
+
+      # 2. Check for conflict markers
+      if grep -qi "CONFLICT" merge.log; then
         echo "❌ MERGE CONFLICT DETECTED!"
         echo ""
         echo "Conflicted files:"
         git diff --name-only --diff-filter=U
-        echo ""
-        echo "Please resolve conflicts before merging."
-        git merge --abort
+        git merge --abort || true
         exit 1
+      else
+        echo "✅ No merge conflicts detected."
       fi
-    
-    # 4. If no conflicts detected, abort the dry-run merge and succeed
-    - git merge --abort
-    - echo "✅ No merge conflicts detected. Pipeline passes!"
-    
+
+      # 3. Abort merge ONLY if merge state exists
+      if [ -f .git/MERGE_HEAD ]; then
+        git merge --abort
+      fi
+
+    - echo "🎉 Merge simulation completed successfully."
+
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging"'
       when: always
