@@ -78,6 +78,9 @@ class TmsentryDetails(models.Model):
     aot2 = fields.Float(string='AOT2')
     aot3 = fields.Float(string='AOT3')
     aot4 = fields.Float(string='AOT4')
+    ot_type = fields.Selection([('regular', 'Regular'),
+                                ('holiday', 'Holiday'),
+                                ('dp', 'DP')], string='Tipe SPL')
     oto = fields.Integer(string='OTO')
     premi_attendee = fields.Float('Premi Attendee')
     transport = fields.Float('Transport')
