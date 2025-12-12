@@ -98,27 +98,27 @@ class HrEmployee(models.Model):
     state_id = fields.Char(related='branch_id.state_id')
     zip = fields.Char(related='branch_id.zip')
     country_id = fields.Many2one(related='branch_id.country_id')
-    department_id = fields.Many2one('hr.department', compute='_find_department_id',
+    department_id = fields.Many2one('hr.department',
                                     string='Old Departemen', store=True, required=False, Tracking=False)
     hrms_department_id = fields.Many2one(
         'sanhrms.department', tracking=True, string='Departemen')
     medic_finish_date = fields.Date('SPK Date', store=True)
 
-    @api.depends('hrms_department_id')
-    def _find_department_id(self):
-        for line in self:
-            if line.hrms_department_id:
-                Department = self.env['hr.department'].search(
-                    [('name', 'ilike', line.division_id.name)], limit=1)
-                if Department:
-                    line.department_id = Department.id
-                else:
-                    Department = self.env['hr.department'].sudo().create({
-                        'name': line.hrms_department_id.name,
-                        'active': True,
-                        'company_id': self.env.user.company_id.id,
-                    })
-                    line.department_id = Department.id
+    # @api.depends('department_id')
+    # def _find_department_id(self):
+    #     for line in self:
+    #         if line.department_id:
+    #             Department = self.env['hr.department'].search(
+    #                 [('name', 'ilike', line.division_id.name)], limit=1)
+    #             if Department:
+    #                 line.department_id = Department.id
+    #             else:
+    #                 Department = self.env['hr.department'].sudo().create({
+    #                     'name': line.department_id.name,
+    #                     'active': True,
+    #                     'company_id': self.env.user.company_id.id,
+    #                 })
+    #                 line.department_id = Department.id
 
     division_id = fields.Many2one(
         'sanhrms.division', tracking=True, string='Divisi')
