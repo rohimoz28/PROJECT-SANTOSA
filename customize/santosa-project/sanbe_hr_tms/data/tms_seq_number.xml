@@ -24,7 +24,7 @@
 
         <record id="seq_hr_day_payment_ot" model="ir.sequence">
             <field name="name">Day Payment</field>
-            <field name="code">hr.overtime.daypayment</field>
+            <field name="code">hr.overtime.planning.dp</field>
             <field name="prefix"></field>
             <field name="padding">6</field>
             <field name="number_next">1</field>

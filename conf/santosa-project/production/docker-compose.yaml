@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   prod-odoo-santosa:
-    image: custom-odoo:17.0
+    image: rohimuhamadd/sb-custom-odoo:1.0.0
     container_name: ${ODOO_CONTAINER_NAME:-prod-odoo-santosa-container}
     restart: unless-stopped
     ports:
@@ -26,7 +26,7 @@ services:
     env_file: .env
     shm_size: '6gb'
     volumes:
-      - sanfi_db:/var/lib/postgresql/data/pgdata
+      - sanfi_db:/var/lib/postgresql/data
     networks:
       - prod_santosa_network
     command: >
