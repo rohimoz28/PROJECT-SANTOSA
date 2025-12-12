@@ -61,26 +61,25 @@ check_base_branch:
 check_merge_conflicts:
   stage: verify
   tags: [ test4 ]
+  variables:
+    GIT_DEPTH: "0"
   <<: *default_before_script
-  allow_failure: false
   script:
-    # 1. Fetch target & source
     - git fetch origin $CI_MERGE_REQUEST_TARGET_BRANCH_NAME
     - git fetch origin $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
 
     - echo "🔍 Checking merge conflicts..."
 
-    # 2. Simulate merge using merge-tree (safe, no working changes)
     - |
       BASE=$(git merge-base origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME origin/$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME)
+      echo "BASE: $BASE"
+
       MERGE_OUTPUT=$(git merge-tree $BASE origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME origin/$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME)
 
       echo "$MERGE_OUTPUT" | grep -q "<<<<<<<" && HAS_CONFLICT=1 || HAS_CONFLICT=0
 
       if [ "$HAS_CONFLICT" -eq 1 ]; then
-        echo ""
         echo "❌ MERGE CONFLICT DETECTED!"
-        echo ""
         echo "$MERGE_OUTPUT" | grep "<<<<<<<" -n
         exit 1
       else
