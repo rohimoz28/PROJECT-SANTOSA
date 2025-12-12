@@ -81,7 +81,7 @@
                             <field name="name" string='Day Payment' invisible="not day_payment"/>
                             <field name="request_date" readonly="state != 'draft'" invisible="day_payment"/>
                             <field name="periode_id" domain="[('state_process', 'in', ('draft','running'))]"
-                                   readonly="state == 'approved' or state == 'done'" readonly="state != 'draft'" 
+                                   readonly="state != 'draft'" 
                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
                                    invisible="not day_payment" />
                             <field name="periode_from" readonly="state == 'approved' or state == 'done'" 
