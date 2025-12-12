@@ -62,29 +62,39 @@ check_merge_conflicts:
   stage: verify
   tags: [ test4 ]
   variables:
-    GIT_DEPTH: "0"
-  <<: *default_before_script
+    GIT_DEPTH: "0"   # WAJIB agar merge-base tidak gagal
   script:
+    - echo "🔍 Checking merge conflicts..."
+
+    # Fetch both branches
     - git fetch origin $CI_MERGE_REQUEST_TARGET_BRANCH_NAME
     - git fetch origin $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
 
-    - echo "🔍 Checking merge conflicts..."
+    # Calculate base
+    - BASE=$(git merge-base origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME origin/$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME)
+    # - echo "MERGE BASE: $BASE"
 
+    # If BASE empty → force fail karena Git tak bisa menentukan common ancestor
+    - if [ -z "$BASE" ]; then echo "⚠️ merge-base gagal, kemungkinan shallow clone"; exit 1; fi
+
+    # Simulate merge safely
+    - MERGE_OUTPUT=$(git merge-tree $BASE origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME origin/$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME)
+
+    # Detect conflict markers
+    - echo "$MERGE_OUTPUT" | grep -q "<<<<<<<" && HAS_CONFLICT=1 || HAS_CONFLICT=0
+
+    # Final conflict decision
     - |
-      BASE=$(git merge-base origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME origin/$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME)
-      echo "BASE: $BASE"
-
-      MERGE_OUTPUT=$(git merge-tree $BASE origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME origin/$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME)
-
-      echo "$MERGE_OUTPUT" | grep -q "<<<<<<<" && HAS_CONFLICT=1 || HAS_CONFLICT=0
-
       if [ "$HAS_CONFLICT" -eq 1 ]; then
+        echo ""
         echo "❌ MERGE CONFLICT DETECTED!"
+        echo ""
         echo "$MERGE_OUTPUT" | grep "<<<<<<<" -n
         exit 1
       else
         echo "✅ No merge conflicts detected"
       fi
+
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging"'
       when: always
