@@ -100,13 +100,11 @@ class HrEmployeeMutation(models.Model):
     service_no_npwp = fields.Char('Nomor NPWP', default=lambda self:self.employee_id.no_npwp)
     service_no_ktp = fields.Char('Nomor KTP', default=lambda self:self.employee_id.no_ktp)
     service_area = fields.Many2one('res.territory', string='Area', tracking=True)
-    service_bisnisunit = fields.Many2one('res.branch', domain="[('id','in',branch_ids)]", string='Unit Bisnis')
+    service_bisnisunit = fields.Many2one('res.branch', string='Unit Bisnis')
     service_directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat')
     service_departmentid = fields.Many2one('sanhrms.department', string='Departemen')
     service_division_id = fields.Many2one('sanhrms.division',string='Divisi')
-    service_jobtitle = fields.Many2one('hr.job.view', string='Jabatan', index=True, domain="[('directorate_id', '=', service_directorate_id),"
-                                                                                           "('hrms_department_id', '=', service_departmentid),"
-                                                                                           "('division_id', '=', service_division_id)]")
+    service_jobtitle = fields.Many2one('hr.job.view', string='Jabatan', index=True)
     service_parent_id = fields.Many2one('parent.hr.employee', string='Atasan Langsung', tracking=True)
     service_employee_group1s = fields.Many2one('emp.group', string='Employee P Group', default=lambda self:self.employee_id.employee_group1s.id)
     service_medic = fields.Many2one('hr.profesion.medic','Profesi Medis', default=lambda self:self.employee_id.medic.id)
@@ -165,6 +163,7 @@ class HrEmployeeMutation(models.Model):
             ('perawat', 'Perawat'),
             ('dokter', 'Dokter'),
             ('back_office', 'Back Office'),
+            ('front_office', 'Front Office'),
         ],
         string='Kategori',
     )
