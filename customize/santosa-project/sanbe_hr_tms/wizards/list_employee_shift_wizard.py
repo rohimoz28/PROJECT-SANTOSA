@@ -230,11 +230,15 @@ class HrCariEmployeeShift(models.TransientModel):
                 #     # Anda bisa buat action untuk menampilkan warning
                 # ).action_warning()
                 # if result == 'YES':
-                self.env['sb.employee.shift'].search(
-                    [('periode_id', '=', line.periode_id.id)]).sudo().unlink()
+                # self.env['sb.employee.shift'].search(
+                #     [('periode_id', '=', line.periode_id.id)]).sudo().unlink()
+
+                exists_shift_employee = self.env['sb.employee.shift'].search([
+                    ('periode_id', '=', line.periode_id.id)
+                ])
                 # delete_line.sudo().unlink()
                 selected_lines = line.employee_ids.filtered(
-                    lambda line: line.is_selected)
+                    lambda line: line.is_selected and id not in exists_shift_employee.ids)
                 if not selected_lines:
                     raise UserError(
                         _("Please select at least one line to apply settlement."))
