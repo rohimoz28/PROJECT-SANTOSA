@@ -8,8 +8,7 @@
                 <form string="Surat Perintah Lembur" create="0">
                     <!-- <sheet> -->
                     <header>
-                        <button string="Draft" name="btn_backdraft" type="object" invisible="state in ('reject')"/>
-
+                        <button string="Draft" name="btn_backdraft" type="object" invisible="state in ('reject','verified','complete','done', 'approved')"/>
                         <button string="Approved L1" name="btn_approved_l1" type="object" class="oe_highlight"
                                 invisible="not can_approve_l1"
                                 groups="sanbe_hr_tms.module_surat_perintah_lembur_approver,sanbe_hr_tms.module_surat_perintah_lembur_manager"/>
@@ -25,17 +24,20 @@
                         <button string="Complete" name="btn_complete" type="object" class="oe_highlight"
                                 invisible="state != 'approved'"/>
                         <button string="Reject" name="btn_reject" type="object" class="btn-danger"
-                                invisible="state in ('reject', 'approved')"/>
-                        <button name="btn_print_pdf" type="object" class="btn-bf" invisible="state != 'approved'">
+                                invisible="state in ('reject','verified','complete','done', 'approved')"/>
+                        <button name="btn_print_pdf" type="object" class="btn-bf" invisible="state != 'approved' or day_payment">
                             <i class="fa fa-print"/>
                             Print PDF
                         </button>
                         <field name="state" widget="statusbar"
                                statusbar_visible="draft,approved_l1,approved_l2,verified,approved,complete,done"/>
+                        <!-- <field name="state_dp"  widget="statusbar"
+                                statusbar_visible="draft,approved_l1,approved_l2,verified,approved,complete,done" invisible="not day_payment"/> -->
                     </header>
                     <!--<sheet>-->
                     <group string="Surat Perintah Lembur" name="entry_planning">
                         <group>
+                            <field name="day_payment" invisible="1"/>
                             <field name="can_approve_l1" invisible="1"/>
                             <field name="can_approve_l2" invisible="1"/>
                             <field name="can_approve_hrd" invisible="1"/>
@@ -65,22 +67,33 @@
                             <field name="employee_id" invisible="is_approver != 'approver'" domain="[('state','=','approved'),('emp_parent_id','=',current_user_employee_id_ref)]"
                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
                                    readonly="state != 'draft'" required="1"/>
+                            
+                            <field name="job_id" invisible=" not day_payment"/>
+                            <field name="emp_level" invisible=" not day_payment"/>
                             <field name="approval_l1_id"/>
                             <field name="approval_l2_id"/>
-                            <field name="approverhrd_id"/>
+                            <field name="approverhrd_id" readonly="state == 'approved' or state == 'done'" />
                             <field name="is_approver" invisible="1"/>
                             <field name="current_user_employee_id_ref" invisible="1"/>
                         </group>
                         <group>
-                            <field name="name"/>
-                            <field name="request_date" readonly="state != 'draft'"/>
+                            <field name="name" string='Surat Perintah lembur' invisible="day_payment"/>
+                            <field name="name" string='Day Payment' invisible="not day_payment"/>
+                            <field name="request_date" readonly="state != 'draft'" invisible="day_payment"/>
                             <field name="periode_id" domain="[('state_process', 'in', ('draft','running'))]"
-                                   readonly="state == 'approved' or state == 'done'"
+                                   readonly="state != 'draft'" 
                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
-                                   invisible="1"/>
-                            <field name="periode_from" readonly="state == 'approved' or state == 'done'"/>
+                                   invisible="not day_payment" />
+                            <field name="periode_from" readonly="state == 'approved' or state == 'done'" 
+                                   invisible="day_payment" />
                             <field name="periode_to" string="Perintah Lembur Hingga"
-                                   readonly="state == 'approved' or state == 'done'"/>
+                                   readonly="state !='draft'" invisible="day_payment"/>
+                            <field name="total_days" string="Total Hari"
+                                   readonly="1" invisible="not day_payment"/>
+                            <field name="total_hours" string="Total Jam"
+                                   readonly="1" invisible="not day_payment"/>
+                            <field name="used_at" string="Digunakan Pada" required="day_payment and state in ['verified','approved','complete','done']"
+                                   readonly="state != 'draft'" invisible="not day_payment"/>
                         </group>
                         <!-- format FEOR Berubah dari banyak employee ke generate berdasarkan filter menjadi per satu employee -->
 
@@ -95,8 +108,8 @@
                     </group>
                     <notebook>
                         <page string="Permintaan" name="overtime_request">
-                            <field name="hr_ot_planning_ids" context="{'editable_in_readonly': True,'default_area_id': area_id, 'default_branch_id': branch_id,
-                                   'default_directorate_id': directorate_id, 'default_hrms_department_id': hrms_department_id, 'default_division_id': division_id}" invisible="state != 'draft'">
+                            <field name="hr_ot_planning_ids" context="{'default_area_id': area_id, 'default_branch_id': branch_id,
+                                   'default_directorate_id': directorate_id, 'default_hrms_department_id': hrms_department_id, 'default_division_id': division_id}" invisible="state != 'draft' or day_payment">
                                 <tree editable="bottom" class="o_horizontal_shift">
                                     <field name="ot_type" readonly="state != 'draft'" optional="show" required="1"/>
                                     <field name="planning_id" column_invisible="1"/>
@@ -109,36 +122,33 @@
                                     <field name="max_ot_month" readonly="1" force_save="1" optional="show"
                                            widget="float_time"/>
                                     <field name="plann_date_from" readonly="state != 'draft'" widget="date"
-                                           optional="show"/>
+                                           optional="show"  required="1"/>
                                     <field name="ot_plann_from" readonly="state != 'draft'" string="Jam SPL Dari"
-                                           widget="float_time" optional="show"/>
+                                           widget="float_time" optional="show"  required="1"/>
                                     <field name="ot_plann_to" readonly="state != 'draft'" string="Jam SPL Hingga"
-                                           widget="float_time" optional="show"/>
+                                           widget="float_time" optional="show" required="1"/>
                                     <field name="work_plann" force_save="1"
-                                           readonly="state not in ('draft','approved_l1')" optional="show"/>
+                                           readonly="state not in ('draft','approved_l1')" optional="show" required="1"/>
                                     <field name="output_plann" force_save="1"
-                                           readonly="state not in ('draft','approved_l1')" optional="show"/>
-                                    <field name="realization_date" readonly="1" string="Tanggal Hadir" widget="date"
+                                           readonly="state not in ('draft','approved_l1')" optional="show" required="1"/>
+                                    <field name="realization_date" string="Tanggal Hadir" widget="date" readonly="1"
                                            optional="show"/>
-                                    <field name="realization_time_from" widget="date" optional="show" readonly="1"/>
-                                    <field name="realization_time_to" widget="date" optional="show" readonly="1"/>
+                                    <field name="realization_time_from" widget="float_time" readonly="1" optional="show"/>
+                                    <field name="realization_time_to" widget="float_time" readonly="1" optional="show"/>
                                     <field name="output_realization" optional="show" required="state == 'approved_l2'"
                                            readonly="state != 'approved_l2'"/>
                                     <field name="verify_time_from" optional="show" widget="float_time"
                                            required="state == 'approved_l2'" readonly="state != 'approved_l2'"/>
                                     <field name="verify_time_to" optional="show" widget="float_time"
                                            required="state == 'approved_l2'" readonly="state != 'approved_l2'"/>
-
-                                    <field name="count_approval_ot" optional="hide" 
-                                            widget="float_time" readonly="1"/>
-                                    <field name="claim_approval_ot" optional="hide" 
-                                            widget="float_time" readonly="1"/>
-                                    <field name="adv_total_ot" optional="hide" 
-                                            widget="float_time" readonly="1" 
-                                            decoration-danger="adv_total_ot > 0"/>
-                                    <field name="sum_total_ot" optional="hide" 
-                                            widget="float_time" readonly="1"/>
-
+                                    <field name="claim_approval_ot" optional="hide" readonly="1" 
+                                            widget="float_time" sum="Total Klaim OT"/>
+                                    <field name="count_approval_ot" optional="hide" readonly="1" 
+                                            widget="float_time" sum="Total Approval OT"/>
+                                    <field name="adv_total_ot" optional="hide" readonly="1" 
+                                            widget="float_time"  sum="Total kelebihan OT"/>
+                                    <field name="sum_total_ot" optional="hide" readonly="1" 
+                                            widget="float_time" sum="Total OT"/>
                                     <field name="approvernd_id" string="Approver lt2" readonly="1"
                                            options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
                                            column_invisible="1"/>
@@ -150,9 +160,9 @@
                                 </tree>
                             </field>
 
-                            <field name="hr_ot_planning_ids" context="{'editable_in_readonly': True,'default_area_id': area_id, 'default_branch_id': branch_id,
+                            <field name="hr_ot_planning_ids" context="{'default_area_id': area_id, 'default_branch_id': branch_id,
                                    'default_directorate_id': directorate_id, 'default_hrms_department_id': hrms_department_id, 'default_division_id': division_id}" 
-                                   invisible="state == 'draft'" readonly="state in ('verified','approved','complete','done')">
+                                   invisible="state == 'draft' or day_payment" readonly="state in ('verified','approved','complete','done')">
                                 <tree editable="bottom" class="o_horizontal_shift" create="0" edit="1" delete="0">
                                     <field name="ot_type" readonly="state != 'draft'" optional="show" required="1"/>
                                     <field name="planning_id" column_invisible="1"/>
@@ -165,36 +175,33 @@
                                     <field name="max_ot_month" readonly="1" force_save="1" optional="show"
                                            widget="float_time"/>
                                     <field name="plann_date_from" readonly="state != 'draft'" widget="date"
-                                           optional="show"/>
+                                           optional="show"  required="1"/>
                                     <field name="ot_plann_from" readonly="state != 'draft'" string="Jam SPL Dari"
-                                           widget="float_time" optional="show"/>
+                                           widget="float_time" optional="show"  required="1"/>
                                     <field name="ot_plann_to" readonly="state != 'draft'" string="Jam SPL Hingga"
-                                           widget="float_time" optional="show"/>
+                                           widget="float_time" optional="show" required="1"/>
                                     <field name="work_plann" force_save="1"
-                                           readonly="state not in ('draft','approved_l1')" optional="show"/>
+                                           readonly="state not in ('draft','approved_l1')" optional="show" required="1"/>
                                     <field name="output_plann" force_save="1"
-                                           readonly="state not in ('draft','approved_l1')" optional="show"/>
-                                    <field name="realization_date" readonly="1" string="Tanggal Hadir" widget="date"
+                                           readonly="state not in ('draft','approved_l1')" optional="show" required="1"/>
+                                    <field name="realization_date" string="Tanggal Hadir" widget="date" readonly="1"
                                            optional="show"/>
-                                    <field name="realization_time_from" widget="date" optional="show" readonly="1"/>
-                                    <field name="realization_time_to" widget="date" optional="show" readonly="1"/>
+                                    <field name="realization_time_from" widget="float_time" readonly="1" optional="show"/>
+                                    <field name="realization_time_to" widget="float_time" readonly="1" optional="show"/>
                                     <field name="output_realization" optional="show" required="state == 'approved_l2'"
                                            readonly="state != 'approved_l2'"/>
                                     <field name="verify_time_from" optional="show" widget="float_time"
                                            required="state == 'approved_l2'" readonly="state != 'approved_l2'"/>
                                     <field name="verify_time_to" optional="show" widget="float_time"
                                            required="state == 'approved_l2'" readonly="state != 'approved_l2'"/>
-
-                                    <field name="count_approval_ot" optional="hide" 
-                                            widget="float_time" readonly="1"/>
-                                    <field name="claim_approval_ot" optional="hide" 
-                                            widget="float_time" readonly="1"/>
-                                    <field name="adv_total_ot" optional="hide" 
-                                            widget="float_time" readonly="1" 
-                                            decoration-danger="adv_total_ot > 0"/>
-                                    <field name="sum_total_ot" optional="hide" 
-                                            widget="float_time" readonly="1"/>
-
+                                    <field name="claim_approval_ot" optional="hide" readonly="1" 
+                                            widget="float_time" sum="Total Klaim OT"/>
+                                    <field name="count_approval_ot" optional="hide" readonly="1" 
+                                            widget="float_time" sum="Total Approval OT"/>
+                                    <field name="adv_total_ot" optional="hide" readonly="1" 
+                                            widget="float_time"  sum="Total kelebihan OT"/>
+                                    <field name="sum_total_ot" optional="hide" readonly="1" 
+                                            widget="float_time" sum="Total OT"/>
                                     <field name="approvernd_id" string="Approver lt2" readonly="1"
                                            options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
                                            column_invisible="1"/>
@@ -203,6 +210,33 @@
                                            decoration-danger="is_approval != 'approved'" on_change="1"/>
                                     <field name="state" optional="hide" widget="badge"/>
                                     <button string="Detail" name="act_detail" type="object"/>
+                                </tree>
+                            </field>
+                            <field name="hr_ot_planning_ids" context="{'default_area_id': area_id, 'default_branch_id': branch_id,
+                                   'default_directorate_id': directorate_id, 'default_hrms_department_id': hrms_department_id, 'default_division_id': division_id}" 
+                                   invisible="not day_payment" readonly="state in ('verified','approved','complete','done')">
+                                <tree editable="bottom" class="o_horizontal_shift" create="0" delete="0" default_order="realization_date asc">
+                                    <field name="realization_date" readonly="1" string="Tanggal Hadir" force_save="1"  widget="date"
+                                           optional="show"/>
+                                    <field name="spl_employee_id" readonly="1" force_save="1" column_invisible="1"/>
+                                    <field name="realization_time_from" widget="date" optional="hide" force_save="1" readonly="1" column_invisible="1"/>
+                                    <field name="realization_time_to" widget="date" optional="hide" force_save="1" readonly="1" column_invisible="1"/>
+                                    <field name="verify_time_from" optional="show" string="Jam hadir Dari" force_save="1" widget="float_time" readonly="1"/>
+                                    <field name="verify_time_to" optional="show" string="Jam hadir Hingga" force_save="1" widget="float_time" readonly="1"/>
+                                    <field name="claim_approval_ot" optional="show" widget="float_time" force_save="1" string="Total Yg di Klaim" readonly="1"/>
+                                    <field name="count_approval_ot" optional="show" widget="float_time" force_save="1" string="Total Yg di Approve" readonly="1"/>
+                                    <field name="sum_total_ot" optional="show" widget="float_time" force_save="1" readonly="1"/>
+                                    <field name="adv_total_ot" optional="show" widget="float_time" force_save="1" readonly="1"
+                                        string="Kelebihan Jam Verifikasi" 
+                                        sum="Total kelebihan OT" 
+                                        groups="sanbe_hr_tms.module_surat_perintah_lembur_approver,sanbe_hr_tms.module_surat_perintah_lembur_manager"/>
+                                    <field name="residual_ot" optional="show" widget="float_time" force_save="1" readonly="1"
+                                        string="Sisa Kelebihan Jam" 
+                                        sum="Total kelebihan OT" 
+                                        groups="sanbe_hr_tms.module_surat_perintah_lembur_approver,sanbe_hr_tms.module_surat_perintah_lembur_manager"/>
+                                    <field name="is_select" optional="show" force_save="1" readonly="state!='draft'" 
+                                        groups="sanbe_hr_tms.module_surat_perintah_lembur_approver,sanbe_hr_tms.module_surat_perintah_lembur_manager"/>
+                                    <field name="state" column_invisible="1"/>
                                 </tree>
                             </field>
                         </page>
@@ -222,16 +256,44 @@
             <field name="arch" type="xml">
                 <tree string="Overtime Request" default_order="periode_id desc" duplicate="false">
                     <field name="branch_id" optional="hide"/>
-                    <field name="name" optional="show"/>
+                    <field name="name" string="Surat Perintah Lembur" optional="show"/>
                     <field name="request_date" optional="show"/>
                     <field name="department_id" column_invisible="1"/>
+                    <field name="periode_id" column_invisible="1"/>
                     <field name="directorate_id" optional="hide"/>
+                    <field name="day_payment" column_invisible="1"/>
                     <field name="hrms_department_id" optional="hide"/>
                     <field name="division_id" optional="show"/>
                     <field name="employee_id" optional="show"/>
                     <field name="approverhrd_id" string="Approval HRD" optional="hide"/>
                     <field name="periode_from" string="Lembur Dari" optional="show"/>
                     <field name="periode_to" string="Hingga" optional="show"/>
+                    <field name="state" string="Status" optional="show"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="hr_overtime_day_payment_tree" model="ir.ui.view">
+            <field name="name">hr.overtime.planning.tree</field>
+            <field name="model">hr.overtime.planning</field>
+            <field name="arch" type="xml">
+                <tree string="Overtime Request" default_order="periode_id desc" duplicate="false">
+                    <field name="branch_id" optional="hide"/>
+                    <field name="name" string="Day Payment" optional="show"/>
+                    <field name="request_date" optional="show"/>
+                    <field name="department_id" column_invisible="1"/>
+                    <field name="periode_id" column_invisible="1"/>
+                    <field name="directorate_id" optional="hide"/>
+                    <field name="hrms_department_id" optional="hide"/>
+                    <field name="day_payment" column_invisible="1"/>
+                    <field name="division_id" optional="show"/>
+                    <field name="job_id" string="Jabatan" optional="show"/>
+                    <field name="emp_level" string="Emp Level" optional="show"/>
+                    <field name="employee_id" optional="show"/>
+                    <field name="approverhrd_id" string="Approval HRD" optional="hide"/>
+                    <field name="total_days" string="Total Hari" optional="show"/>
+                    <field name="total_hours" string="Total Jam" optional="show"/>
                     <field name="state" string="Status" optional="show"/>
                 </tree>
             </field>
@@ -319,16 +381,16 @@
                     <group string="Informasi Lembur Karyawan" name="group_ot_employee">
                         <group>
                             <field name="state" invisible="1"/>
-                            <field name="ot_type"/>
+                            <field name="ot_type" readonly="state != 'draft'"/>
                             <field name="employee_id" readonly="1"/>
-                            <field name="nik"/>
+                            <field name="nik" readonly="state != 'draft'"/>
                             <field name="max_ot"/>
-                            <field name="plann_date_from"/>
+                            <field name="plann_date_from" readonly="state != 'draft'"/>
                             <label string="Jam SPL Dari" for="plann_date_from"/>
                             <div class="o_row">
-                                <field name="ot_plann_from" widget="float_time"/>
+                                <field name="ot_plann_from" widget="float_time" readonly="state != 'draft'"/>
                                 Hingga
-                                <field name="ot_plann_to" widget="float_time"/>
+                                <field name="ot_plann_to" widget="float_time" readonly="state != 'draft'"/>
                             </div>
                             <label string="Disetujui Lembur dari" for="ot_plann_from" invisible="1"/>
                             <div class="o_row" invisible="1">
@@ -336,12 +398,12 @@
                                 Hingga
                                 <field name="ot_plann_to" widget="float_time"/>
                             </div>
-                            <field name="realization_date" string="Tanggal Hadir" readonly="1"/>
+                            <field name="realization_date"  readonly="1" string="Tanggal Hadir"/>
                             <label string="Jam Hadir dari" for="realization_time_from"/>
                             <div class="o_row">
                                 <field name="realization_time_from" readonly="1" widget="float_time"/>
                                 Hingga
-                                <field name="realization_time_to" readonly="1" widget="float_time"/>
+                                <field name="realization_time_to"  readonly="1" widget="float_time"/>
                             </div>
                             <label string="Verifikasi Jam dari" for="verify_time_from"/>
                             <div class="o_row">
@@ -349,10 +411,15 @@
                                 Hingga
                                 <field name="verify_time_to" widget="float_time" readonly="state != 'approved_l2'"/>
                             </div>
+                            <field name="count_approval_ot" widget="float_time"  readonly="1" invisible="1"/>
+                            <field name="claim_approval_ot" widget="float_time"  readonly="1" invisible="1"/>
+                            <field name="adv_total_ot" widget="float_time"  readonly="1" invisible="1"/>
+                            <field name="sum_total_ot" widget="float_time"  readonly="1" invisible="1"/>
+
                         </group>
                         <group>
-                            <field name="work_plann"/>
-                            <field name="output_plann"/>
+                            <field name="work_plann" readonly="state != 'draft'"/>
+                            <field name="output_plann" readonly="state != 'draft'"/>
                             <field name="output_realization" readonly="state != 'approved_l2'"/>
                             <field name="explanation_deviation" invisible="1"/>
                             <field name="branch_id"/>
@@ -376,7 +443,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.overtime.planning</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[]</field>
+            <field name="domain">[('day_payment', '=', False)]</field>
             <field name="view_ids" eval="[(5, 0, 0),
                     (0, 0, {'view_mode': 'tree', 'view_id': ref('hr_overtime_planning_tree')}),
                     (0, 0, {'view_mode': 'form', 'view_id': ref('hr_tms_overtime_planning_form')})
@@ -386,7 +453,9 @@
                 'search_default_group_department': 1,
                 'search_default_group_division': 1,
                 'search_default_group_status': 1,
-                'group_by': 'division_id',}
+                'group_by': 'division_id',
+                'default_day_payment': False,
+                'day_payment': False}
             </field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -394,6 +463,35 @@
                 </p>
                 <p>
                     Buat Surat Perintah Lembur
+                </p>
+            </field>
+        </record>
+
+        <record id="action_hr_overtime_day_payment" model="ir.actions.act_window">
+            <field name="name">Day Payment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.overtime.planning</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('day_payment', '=', True)]</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                    (0, 0, {'view_mode': 'tree', 'view_id': ref('hr_overtime_day_payment_tree')}),
+                    (0, 0, {'view_mode': 'form', 'view_id': ref('hr_tms_overtime_planning_form')})
+                ]"/>
+            <field name="context">{
+                'search_default_group_branch': 1,
+                'search_default_group_department': 1,
+                'search_default_group_division': 1,
+                'search_default_group_status': 1,
+                'group_by': 'division_id',
+                'default_day_payment': True,
+                'day_payment': True}
+            </field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Day Payment Overtime
+                </p>
+                <p>
+                    Mekanisme penghitungan pembayaran lembur per hari
                 </p>
             </field>
         </record>

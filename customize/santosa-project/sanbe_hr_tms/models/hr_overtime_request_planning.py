@@ -12,6 +12,7 @@ from odoo.exceptions import ValidationError, UserError
 from odoo.osv import expression
 import pytz
 from datetime import datetime, time, timedelta
+from math import ceil, floor
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -160,6 +161,12 @@ class HREmpOvertimeRequest(models.Model):
                                      domain="['|',('branch_id','=',branch_id),('branch_id','=',False)]", store=True)
     periode_from = fields.Date(
         'Perintah Lembur Dari', default=fields.Date.today)
+    used_at = fields.Date(
+        'Digunakan Pada', default=fields.Date.today)
+    job_id = fields.Many2one('hr.job', string='Jabatan',
+                             related='employee_id.job_id', store=True)
+    emp_level = fields.Many2one(
+        'employee.level', string='Level Karyawan', related='employee_id.employee_levels', store=True)
     periode_to = fields.Date('Hingga', default=fields.Date.today)
     approve1 = fields.Boolean('Approval L1', default=False)
     approve2 = fields.Boolean('Approval L2', default=False)
@@ -181,6 +188,11 @@ class HREmpOvertimeRequest(models.Model):
                                   store=True, track_visibility='onchange')
     company_id = fields.Many2one(
         'res.company', string="Company Name", index=True)
+    total_days = fields.Float(
+        string="Total hari", compute='_compute_get_total_days_hours', store=True, )
+    total_hours = fields.Float(
+        string="Total Jam", compute='_compute_get_total_days_hours', store=True, )
+    day_payment = fields.Boolean('Day Payment', default=False, store=True,)
     request_day_name = fields.Char(
         'Request Day Name', compute='_compute_req_day_name', store=True)
     count_record_employees = fields.Integer(string="Total Employees on The List", compute="_compute_record_employees",
@@ -238,6 +250,23 @@ class HREmpOvertimeRequest(models.Model):
                     f'belum memiliki user login. '
                     f'Silakan hubungi Administrator untuk mengatur user login.'
                 )
+
+    @api.depends('hr_ot_planning_ids.is_select', 'hr_ot_planning_ids.adv_total_ot')
+    def _compute_get_total_days_hours(self):
+        """Menghitung total hari dan jam berdasarkan detail lembur yang dipilih."""
+        for rec in self:
+            total_days = 0.0
+            total_hours = 0.0
+            for line in rec.hr_ot_planning_ids:
+                if line.is_select:
+                    total_hours += line.residual_ot
+                    total_days += 1
+            if total_hours >= 7:
+                rec.total_hours = 7
+                rec.total_days = total_days
+            else:
+                rec.total_hours = total_hours
+                rec.total_days = total_days
 
     @api.constrains('approverhrd_id')
     def _check_approverhrd_has_user(self):
@@ -306,6 +335,16 @@ class HREmpOvertimeRequest(models.Model):
                 and rec.approval_l2_id.user_id.id == current_user.id
             )
             rec.can_approve_l2 = can_approve
+
+    @api.depends('state', 'employee_id', )
+    def generate_list_ot_employee(self):
+        for rec in self:
+            if rec.employee_id:
+                for line_ot in self.env['hr.overtime.employees'].search([('employee_id', '=', rec.employee_id.id),
+                                                                         ('state', 'in',
+                                                                          ('verified', 'approved', 'complete',
+                                                                           'done'))]):
+                    line_ot.unlink()
 
     @api.depends('state', 'approval_l1_id', 'approval_l2_id')
     def _compute_can_verified(self):
@@ -398,6 +437,28 @@ class HREmpOvertimeRequest(models.Model):
 
                          WHERE eb.id = %s; \
                          """
+    # ========================================
+    # Helper Method: Checking constrain request day payment at same day
+    # ========================================
+
+    @api.constrains('used_at', 'employee_id', 'day_payment')
+    def _check_request_day_payment_same_day(self):
+        """Mencegah pengajuan Day Payment lebih dari 1 kali pada hari yang sama untuk karyawan yang sama."""
+        for record in self:
+            if record.day_payment and record.used_at and record.employee_id:
+                existing_requests = self.env['hr.overtime.planning'].search([
+                    ('id', '!=', record.id),
+                    ('employee_id', '=', record.employee_id.id),
+                    ('day_payment', '=', True),
+                    ('used_at', '=', record.used_at),
+                    ('state', '!=', 'reject'),  # Abaikan yang sudah ditolak
+                ])
+                if existing_requests:
+                    raise ValidationError(
+                        _("Karyawan %s sudah memiliki pengajuan Day Payment pada tanggal %s. "
+                          "Tidak diperbolehkan mengajukan lebih dari satu kali pada hari yang sama.")
+                        % (record.employee_id.name, record.used_at)
+                    )
 
     # ========================================
     # Helper Method: Execute Query Above
@@ -474,37 +535,126 @@ class HREmpOvertimeRequest(models.Model):
     """
 
     def btn_approved_l1(self):
-        for rec in self:
-            if not rec.hr_ot_planning_ids:
+        """
+        Aksi untuk menyetujui permintaan lembur pada Level 1 (approve1).
+        Melakukan validasi dan pembaruan data terkait lembur (OT).
+        DITAMBAHAKAN PRINT UNTUK DEBUGGING LOGIKA PENGURANGAN (Day Payment).
+        """
+        for record in self:
+            if not record.hr_ot_planning_ids:
                 raise UserError(
                     "Tidak dapat menyetujui permintaan lembur tanpa data karyawan.")
-            if rec.hr_ot_planning_ids:
-                for line in rec.hr_ot_planning_ids:
-                    if not line.ot_type or not line.work_plann or not line.output_plann or not line.plann_date_from:
-                        raise UserError(
-                            "Tidak dapat menyetujui permintaan lembur dengan data karyawan yang kosong.")
-            rec.approve1 = True
-            rec.state = 'approved_l1'
+            if record.day_payment and record.total_hours < 7:
+                raise UserError(
+                    "Day Payment hanya bisa di-approve apabila total jam = 7 jam")
+            if record.hr_ot_planning_ids:
+                remaining_hours_for_deduction = 7
+
+                for line in record.hr_ot_planning_ids:
+                    if not record.day_payment:
+                        if not line.ot_type:
+                            raise UserError(
+                                "Tidak dapat menyetujui permintaan lembur jika Jenis OT (Type OT) kosong.")
+                        if not line.work_plann or not line.output_plann:
+                            raise UserError(
+                                "Tidak dapat menyetujui permintaan lembur jika Rencana Kerja atau Perkiraan Hasil kosong.")
+                        if not line.plann_date_from:
+                            raise UserError(
+                                "Tidak dapat menyetujui permintaan lembur jika Rencana Tgl OT kosong.")
+                    else:
+                        if remaining_hours_for_deduction > 0 and line.is_select:
+                            residual_ot_value = line.residual_ot
+                            ot_to_deduct_on_line = 0
+                            if residual_ot_value >= remaining_hours_for_deduction:
+                                ot_to_deduct_on_line = remaining_hours_for_deduction
+                                line.residual_ot -= ot_to_deduct_on_line
+                                line.spl_employee_id.residual_ot -= ot_to_deduct_on_line
+                                remaining_hours_for_deduction = 0
+                            elif remaining_hours_for_deduction > residual_ot_value:
+                                ot_to_deduct_on_line = residual_ot_value
+                                line.residual_ot = 0
+                                line.spl_employee_id.residual_ot = 0
+                                remaining_hours_for_deduction -= ot_to_deduct_on_line
+                        if not line.is_select:
+                            line.unlink()
+            record.write({
+                'approve1': True,
+                'state': 'approved_l1'
+            })
+
+    # def btn_approved_l1(self):
+    #     for rec in self:
+    #         if not rec.hr_ot_planning_ids:
+    #             raise UserError(
+    #                 "Tidak dapat menyetujui permintaan lembur tanpa data karyawan.")
+    #         if rec.total_days < 1 and rec.day_payment:
+    #             raise UserError(
+    #                 "Pengajuan Day payment tidak bisa dilakukan.")
+    #         if rec.hr_ot_planning_ids:
+    #             temp_hours = 7
+    #             for line in rec.hr_ot_planning_ids:
+    #                 if not rec.day_payment:
+    #                     if not line.ot_type:
+    #                         raise UserError(
+    #                             "Tidak dapat menyetujui permintaan lembur jika Type OT kosong.")
+    #                     if not line.work_plann or not line.output_plann:
+    #                         raise UserError(
+    #                             "Tidak dapat menyetujui permintaan lembur jika rencana kerja kosong atau perkiraan hasil.")
+    #                     if not line.plann_date_from:
+    #                         raise UserError(
+    #                             "Tidak dapat menyetujui permintaan lembur jika rencana tgl OT kosong.")
+    #                 else:
+    #                     if temp_hours > 0 and line.is_select:
+    #                         # deduction = min(temp_hours, line.residual_ot)
+    #                         if line.residual_ot >= temp_hours:
+    #                             line.residual_ot = line.residual_ot - temp_hours
+    #                             line.spl_employee_id.residual_ot = line.spl_employee_id.residual_ot - temp_hours
+    #                             temp_hours = 0
+    #                             print(line.id, 'LEBIH', temp_hours,
+    #                                   line.residual_ot, line.spl_employee_id.residual_ot)
+    #                         else:
+
+    #                             line.residual_ot = 0
+    #                             line.spl_employee_id.residual_ot = 0
+    #                             temp_hours = temp_hours - line.residual_ot
+    #                             print(line.id, 'kURANG', temp_hours,
+    #                                   line.residual_ot, line.spl_employee_id.residual_ot)
+    #         rec.approve1 = True
+    #         rec.state = 'approved_l1'
 
     def btn_approved_l2(self):
         for rec in self:
-            if not rec.hr_ot_planning_ids:
-                raise UserError(
-                    "Tidak dapat menyetujui permintaan lembur tanpa data karyawan.")
-            if rec.hr_ot_planning_ids:
-                for line in rec.hr_ot_planning_ids:
-                    if not line.ot_type or not line.work_plann or not line.output_plann or not line.plann_date_from:
-                        raise UserError(
-                            "Tidak dapat menyetujui permintaan lembur dengan data karyawan yang kosong.")
+            if not rec.day_payment:
+                if not rec.hr_ot_planning_ids:
+                    raise UserError(
+                        "Tidak dapat menyetujui permintaan lembur tanpa data karyawan.")
+                if rec.hr_ot_planning_ids:
+                    for line in rec.hr_ot_planning_ids:
+                        if not rec.day_payment:
+                            if not line.ot_type:
+                                raise UserError(
+                                    "Tidak dapat menyetujui permintaan lembur jika Type OT kosong.")
+                            if not line.work_plann or not line.output_plann:
+                                raise UserError(
+                                    "Tidak dapat menyetujui permintaan lembur jika rencana kerja kosong atau perkiraan hasil.")
+                            if not line.plann_date_from:
+                                raise UserError(
+                                    "Tidak dapat menyetujui permintaan lembur jika rencana tgl OT kosong.")
             rec.approve2 = True
             rec.state = 'approved_l2'
 
     def btn_verified(self):
         for rec in self:
             for line in rec.hr_ot_planning_ids:
-                if not line.verify_time_from or not line.verify_time_to or not line.output_realization:
-                    raise UserError(
-                        "Hasil Realisasi, Jam Verifikasi dari dan hingga harus diisi sebelum memverifikasi.")
+
+                if not line.day_payment:
+                    line.residual_ot = line.adv_total_ot
+                    if not line.verify_time_from or not line.verify_time_to:
+                        raise UserError(
+                            "Jam Verifikasi dari dan hingga harus diisi sebelum memverifikasi.")
+                    if not line.output_realization:
+                        raise UserError(
+                            "Hasil Realisasi, kosong. Mohon diisi sebelum memverifikasi.")
                 # if not line.realization_date or not line.realization_time_from or not line.realization_time_to:
                 #     raise UserError(
                 #         "Jam dan tanggal Realisasi dari dan hingga harus diisi.")
@@ -526,6 +676,10 @@ class HREmpOvertimeRequest(models.Model):
     def btn_reject(self):
         for rec in self:
             rec.state = 'reject'
+            if rec.day_payment:
+                for line in rec.hr_ot_planning_ids:
+                    line.residual_ot = line.adv_total_ot
+                    line.spl_employee_id.residual_ot = line.adv_total_ot
 
     def btn_backdraft(self):
         for rec in self:
@@ -533,6 +687,10 @@ class HREmpOvertimeRequest(models.Model):
             rec.approve1 = False
             rec.approve2 = False
             rec.approve3 = False
+            if rec.day_payment:
+                for line in rec.hr_ot_planning_ids:
+                    line.residual_ot = line.adv_total_ot
+                    line.spl_employee_id.residual_ot = line.adv_total_ot
 
     def btn_print_pdf(self):
         return self.env.ref('sanbe_hr_tms.overtime_request_report').report_action(self)
@@ -588,9 +746,14 @@ class HREmpOvertimeRequest(models.Model):
                     tgl = fields.Date.today()
                     tahun = str(tgl.year)[2:]
                     bulan = str(tgl.month)
-                    sequence_code = self.env['ir.sequence'].next_by_code(
-                        'hr.overtime.planning')
-                    vals['name'] = f"{tahun}/{bulan}/{branch_unit_id}/RA/{department_code}/{sequence_code}"
+                    if vals['day_payment'] != True:
+                        sequence_code = self.env['ir.sequence'].next_by_code(
+                            'hr.overtime.planning')
+                        vals['name'] = f"{tahun}/{bulan}/{branch_unit_id}/RA/{department_code}/{sequence_code}"
+                    else:
+                        sequence_code = self.env['ir.sequence'].next_by_code(
+                            'hr.overtime.planning.dp')
+                        vals['name'] = f"{tahun}/{bulan}/{branch_unit_id}/DP/{department_code}/{sequence_code}"
         return super(HREmpOvertimeRequest, self).create(vals_list)
 
     def unlink(self):
@@ -602,6 +765,66 @@ class HREmpOvertimeRequest(models.Model):
                 )
         return super().unlink()
 
+    # ================================================================================
+    # Helper Method: Get data from OT detail to day payment detail
+    # ================================================================================
+
+    def _compute_ot_detail_lines(self):
+        for dp in self:
+            if not dp.day_payment:
+                continue
+            ot_details = self.env['hr.overtime.employees'].search([
+                ('planning_id.employee_id', '=', dp.employee_id.id),
+                ('planning_id.day_payment', '=', False),
+                ('realization_date', '!=', False),
+                ('residual_ot', '>', 0),
+                ('state', 'in', ('verified', 'approved', 'complete', 'done')),
+            ])
+
+            line_commands = [(5, 0, 0)]
+
+            for ot in ot_details:
+                spl_employee_id = ot.id
+                line_commands.append((0, 0, {
+                    'planning_id': dp.id,
+                    'branch_id': ot.branch_id.id,
+                    'area_id': ot.area_id.id,
+                    'department_id': ot.department_id.id,
+                    'employee_id': ot.employee_id.id,
+                    'directorate_id': ot.directorate_id.id,
+                    'hrms_department_id': ot.hrms_department_id.id,
+                    'division_id': ot.division_id.id,
+                    'spl_employee_id': spl_employee_id,
+                    'realization_date': ot.realization_date,
+                    'realization_time_from': ot.realization_time_from,
+                    'realization_time_to': ot.realization_time_to,
+                    'plann_date_from': ot.plann_date_from,
+                    'plann_date_to': ot.plann_date_to,
+                    'ot_plann_from': ot.ot_plann_from,
+                    'ot_plann_to': ot.ot_plann_to,
+                    'verify_time_from': ot.verify_time_from,
+                    'verify_time_to': ot.verify_time_to,
+                    'work_plann': ot.work_plann,
+                    'count_approval_ot': ot.count_approval_ot,
+                    'claim_approval_ot': ot.claim_approval_ot,
+                    'adv_total_ot': ot.adv_total_ot,
+                    'sum_total_ot': ot.sum_total_ot,
+                    'residual_ot': ot.residual_ot,
+                    'output_plann': ot.output_plann,
+                    'ot_type': 'dp',
+                    'is_select': False,
+                }))
+
+            dp.hr_ot_planning_ids = line_commands
+
+    @api.onchange('employee_id')
+    def get_ot_detail_to_dp_detail(self):
+        self._compute_ot_detail_lines()
+
+    # @api.depends('employee_id')
+    # def _get_ot_detail_to_dp_detail(self):
+    #     self._compute_ot_detail_lines()
+
 
 class HREmpOvertimeRequestEmployee(models.Model):
     _name = "hr.overtime.employees"
@@ -611,13 +834,32 @@ class HREmpOvertimeRequestEmployee(models.Model):
                                   store=False)
     planning_id = fields.Many2one('hr.overtime.planning', string='HR Overtime Request Planning', cascade=True,
                                   index=True)
+    periode_id = fields.Many2one('hr.opening.closing', string='Period', related='planning_id.periode_id', store=True,
+                                 index=True)
+    name = fields.Char(store=True, index=True,
+                       compute="get_name", string="Name")
+
+    @api.depends('planning_id', 'planning_id.employee_id', 'plann_date_from')
+    def get_name(self):
+        for line in self:
+            employee_name = str(line.planning_id.employee_id.name or '')
+            date_from = str(line.plann_date_from or '')
+
+            if line.planning_id.day_payment:
+                line.name = f"{employee_name} - DP - {date_from}"
+            else:
+                line.name = f"SPL {employee_name} - {date_from}"
+
+    spl_employee_id = fields.Many2one(
+        'hr.overtime.employees', string='SPL Employee Reference', index=True)
     areah_id = fields.Many2one('res.territory', string='Area ID Header', related='planning_id.area_id', index=True,
                                readonly=True)
     approverst_id = fields.Many2one('parent.hr.employee', related='employee_id.parent_id', string='Atasan Langsung',
                                     store=True, index=True)
     approvernd_id = fields.Many2one('parent.hr.employee', string='Atasan', compute='_get_approver', store=True,
                                     index=True)
-    state = fields.Selection(related="planning_id.state")
+    state = fields.Selection(
+        related="planning_id.state", store=True, index=True)
 
     @api.depends('employee_id')
     def _get_approver(self):
@@ -632,11 +874,14 @@ class HREmpOvertimeRequestEmployee(models.Model):
                         rec.approvernd_id = self.env['hr.employee'].browse(
                             emp.parent_id.id).parent_id.id
 
-    area_id = fields.Many2one('res.territory', string='Area', index=True)
-    branchh_id = fields.Many2one('res.branch', related='planning_id.branch_id', string='Bisnis Unit Header', index=True,
-                                 readonly=True)
-    departmenth_id = fields.Many2one('hr.department', related='planning_id.department_id',
-                                     string='Department ID Header', index=True, readonly=True)
+    area_id = fields.Many2one(
+        'res.territory', string='Area', related='planning_id.area_id', index=True)
+    branch_id = fields.Many2one('res.branch', related='planning_id.branch_id',
+                                string='Bisnis Unit Header', index=True, readonly=True)
+    department_id = fields.Many2one(
+        'hr.department', related='planning_id.department_id', domain="[('id','in',alldepartment)]",
+        string='Sub Department')
+
     division_id = fields.Many2one(
         'sanhrms.division', string='Divisi', related='planning_id.division_id', store=True)
     hrms_department_id = fields.Many2one('sanhrms.department', string='Departemen',
@@ -646,26 +891,21 @@ class HREmpOvertimeRequestEmployee(models.Model):
     nik = fields.Char('NIK Karyawan', related='employee_id.nik',
                       index=True, store=True)
     employee_id = fields.Many2one('hr.employee', domain="[('state','=','approved')]", related='planning_id.employee_id',
-                                  string='Nama Karyawan', index=True)
-
+                                  string='Nama Karyawan', index=True, store=True)
     max_hours_week = fields.Float(
-        'Total Jam Week', related='employee_id.max_hours_week', digits=(200, 1), default=40)
+        'Total Jam Week', related='employee_id.max_hours_week', digits=(200, 1), default=40, store=True)
     max_days_month = fields.Integer(
-        'Total Hari Kerja Month', digits=(31, 1), related='employee_id.max_days_month', default=22)
+        'Total Hari Kerja Month', digits=(31, 1), related='employee_id.max_days_month', default=22, store=True)
     max_ot = fields.Float(
         'Max OT/Hari', related='employee_id.max_ot', digits=(16, 1), store=True)
     max_ot_month = fields.Float(
         'Jam Max OT/Bulan', related='employee_id.max_ot_month', store=True)
-
-    count_approval_ot = fields.Float('Total Jam Approval OT')
-    claim_approval_ot = fields.Float('Total Jam yang di klaim OT')
-    sum_total_ot = fields.Float('Jumlah Total OT')
-    adv_total_ot = fields.Float('Kelebihan Jam Verifikasi OT')
-
     periode_from = fields.Date('Tanggal OT Dari', related='planning_id.periode_from', store=True,
                                default=fields.Date.today)
     periode_to = fields.Date('Tanggal OT Hingga', related='planning_id.periode_to', store=True,
                              default=fields.Date.today)
+    day_payment = fields.Boolean(
+        'Day Payment', related='planning_id.day_payment', store=True)
     plann_date_from = fields.Date('Tanggal SPL')
     plann_date_to = fields.Date('Jam SPL Dari')
     ot_plann_from = fields.Float('Jam SPL dari', digits=(4, 1))
@@ -677,6 +917,19 @@ class HREmpOvertimeRequestEmployee(models.Model):
     realization_time_to = fields.Float('Jam Hadir Hingga')
     verify_time_from = fields.Float('Verifkasi Jam Dari')
     verify_time_to = fields.Float('Verifkasi Jam Hingga')
+
+    # def counting_hours(self, start, end):
+    #     """Calculate the number of hours between two times, considering overnight shifts."""
+    #     if end < start:
+    #         end += 24.0  # Adjust for overnight shifts
+    #     return end - start
+
+    count_approval_ot = fields.Float('Total Jam Approval OT', store=True)
+    claim_approval_ot = fields.Float('Total Jam yang di klaim OT', store=True)
+    sum_total_ot = fields.Float('Jumlah Total OT', store=True)
+    adv_total_ot = fields.Float('Kelebihan Jam Verifikasi OT', store=True)
+    residual_ot = fields.Float(
+        'Sisa Jam OT', store=True, help='Sisa jam lembur yang dapat dipilih untuk Day Payment')
     machine = fields.Char('Machine')
     work_plann = fields.Char('Rencana SPL')
     output_plann = fields.Char('Output SPL')
@@ -696,13 +949,22 @@ class HREmpOvertimeRequestEmployee(models.Model):
         [('regular', 'Regular'),  # Perhitungan Lembur hari kerja
          ('holiday', 'Holiday'),  # Perhitungan Lembur hari libur
          # Perhitungan lembur yang seluruh jam terverifikasinya dijadikan Day Payment
-         ('dp', 'DP')
+         ('dp', 'Day Payment')
          ], string='Tipe SPL')
     is_approval = fields.Selection([('approved', 'Approved'), ('reject', 'Tolak')], default='approved',
                                    string="Approval")
     is_approved_l2 = fields.Boolean('Approved by MGR', default=True)
+    is_select = fields.Boolean('Select', default=False)
+
     planning_req_name = fields.Char(
         string='Planning Request Name', required=False)
+
+    @api.depends('state', 'adv_total_ot')
+    def assign_val_tor_resudual_ot(self):
+        for rec in self:
+            if rec.state == 'verified' and not rec.planning_id.day_payment:
+                if not rec.residual_ot:
+                    rec.residual_ot = rec.adv_total_ot
 
     @api.constrains('ot_plann_from', 'ot_plann_to', 'max_ot')
     def _check_time_range(self):
@@ -745,9 +1007,10 @@ class HREmpOvertimeRequestEmployee(models.Model):
             plann_date = vals.get('plann_date_from')
             periode_from = vals.get('periode_from')
             periode_to = vals.get('periode_to')
+            day_payment = vals.get('day_payment')
             if not (0.0 <= ot_from <= 24.0 and 0.0 <= ot_to <= 24.0):
                 raise UserError("Waktu harus dalam rentang 0.0 hingga 24.0.")
-            if plann_date and periode_from and periode_to:
+            if plann_date and periode_from and periode_to and not day_payment:
                 if plann_date < periode_from or plann_date > periode_to:
                     msg = "Tanggal SPL (%s) harus berada di antara Tanggal OT Dari (%s) dan Tanggal OT Hingga (%s)." % (
                         plann_date, periode_from, periode_to
