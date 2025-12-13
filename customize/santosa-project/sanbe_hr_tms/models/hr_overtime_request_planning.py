@@ -990,7 +990,7 @@ class HREmpOvertimeRequestEmployee(models.Model):
     def _check_validation_date(self):
         for line in self:
             if line.plann_date_from and line.periode_from and line.periode_to and \
-                    (line.plann_date_from < line.periode_from or line.plann_date_from > line.periode_to):
+                    (line.plann_date_from < line.periode_from or line.plann_date_from > line.periode_to) and not line.day_payment:
                 msg = "Tanggal SPL (%s) harus berada di antara Tanggal OT Dari (%s) dan Tanggal OT Hingga (%s)." % (
                     line.plann_date_from, line.periode_from, line.periode_to
                 )
