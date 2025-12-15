@@ -27,6 +27,7 @@
     ],
     'data': [
         'data/tms_seq_number.xml',
+        'data/data_splhrd.xml',
         'security/tms_groups.xml',
         'security/tms_branch_security.xml',
         'security/ir.model.access.csv',
