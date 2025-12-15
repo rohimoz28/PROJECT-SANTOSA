@@ -1,4 +1,3 @@
-
 from xlrd import open_workbook
 import logging
 import os
