@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="list_hr_spl" model="ir.config_parameter">
+            <!-- <field name="key">hr.overtime.planning</field> -->
+            <field name="key">SPLHRD</field>
+            <field name="value">100,200,400,500,97, 174, 235</field>
+        </record>
+
+    </data>
+</odoo>
