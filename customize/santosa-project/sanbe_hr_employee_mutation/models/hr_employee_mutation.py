@@ -511,7 +511,7 @@ class HrEmployeeMutation(models.Model):
                 record.service_work_unit = employee.work_unit
                 record.service_work_unit_id = employee.work_unit_id.id
                 record.service_coach_id = employee.coach_id.id
-                record.emp_status_actv = employee.emp_status
+                record.emp_status_actv = 'confirmed'
                 record.service_employementstatus = record.emp_status_actv
                 record.service_status = 'Draft'
         
@@ -542,7 +542,7 @@ class HrEmployeeMutation(models.Model):
                 record.service_work_unit = employee.work_unit
                 record.service_work_unit_id = employee.work_unit_id.id
                 record.service_coach_id = employee.coach_id.id
-                record.emp_status_to_corr = employee.emp_status
+                record.emp_status_to_corr = 'confirmed'
                 record.service_employementstatus = record.emp_status_to_corr
                 record.service_status = 'Draft'        
 
