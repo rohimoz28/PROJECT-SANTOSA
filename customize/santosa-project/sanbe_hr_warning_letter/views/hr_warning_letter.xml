@@ -6,52 +6,54 @@
             <field name="model">hr.warning.letter</field>
             <field name="arch" type="xml">
                 <form string="HR Warning Letter">
-                   <header>
-                        <button string="Approve" name="button_approve" type="object" class="oe_highlight" invisible="state in ['approved']"/>
+                    <header>
+                        <button string="Approve" name="button_approve" type="object" class="oe_highlight"
+                                invisible="state in ['approved']"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,approved"/>
-                   </header>
+                    </header>
                     <sheet>
-                    <div class="oe_title">
-                        <label for="name"/>
-                        <h2>
-                            <field name="name" readonly="1" placeholder="Transaction Number"/>
-                        </h2>
-                        <label for="reff_no"/>
-                        <h2>
-                            <field name="reff_no"  placeholder="Transaction Number"/>
-                        </h2>
-                    </div>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h2>
+                                <field name="name" readonly="1" placeholder="Transaction Number"/>
+                            </h2>
+                            <label for="reff_no"/>
+                            <h2>
+                                <field name="reff_no" placeholder="Transaction Number"/>
+                            </h2>
+                        </div>
                         <group name="employee_details" string="Employee Details">
-                                <group>
-                                    <field name="emp_no" options="{'no_create': True,'no_create_edit': True}" context="{'search_by': 'No'}"/>
-                                </group>
-<!--                                <group>-->
-<!--                                    <button name="pencarian_data" type="object"-->
-<!--                                        id="pencarian_data"-->
-<!--                                        string="Search"-->
-<!--                                        class="btn-primary" data-hotkey="q"/>-->
-<!--                                </group>-->
-                                <group>
-                                    <field name="employee_id" string="Karyawan" invisible="1"/>
-                                    <field name="employee_name" string="Nama Karyawan" readonly="1" force_save="1"/>
-                                    <field name="nik" readonly="1" force_save="1"/>
-                                     <field name="departmentid" readonly="1" force_save="1"/>
-                                </group>
+                            <group>
+                                <field name="emp_no" options="{'no_create': True,'no_create_edit': True}"
+                                       context="{'search_by': 'No'}"/>
+                            </group>
+                            <!--                                <group>-->
+                            <!--                                    <button name="pencarian_data" type="object"-->
+                            <!--                                        id="pencarian_data"-->
+                            <!--                                        string="Search"-->
+                            <!--                                        class="btn-primary" data-hotkey="q"/>-->
+                            <!--                                </group>-->
+                            <group>
+                                <field name="employee_id" string="Karyawan" invisible="1"/>
+                                <field name="employee_name" string="Nama Karyawan" readonly="1" force_save="1"/>
+                                <field name="nik" readonly="1" force_save="1"/>
+                                <field name="departmentid" readonly="1" force_save="1"/>
+                            </group>
 
                             <group>
-                                    <field name="area" string="Area" readonly="1" force_save="1"/>
-                                    <field name="bisnis_unit" string="Unit Bisnis" readonly="1" force_save="1"/>
-                                </group>
+                                <field name="area" string="Area" readonly="1" force_save="1"/>
+                                <field name="bisnis_unit" string="Unit Bisnis" readonly="1" force_save="1"/>
                             </group>
+                        </group>
                         <group name="'warning_details" string="Penjelasan Pelanggaran">
                             <group>
-                                    <field name="warning_type" widget="selection" string="Tipe Peringatan"/>
-                                    <field name="warning_date" string="Tgl Peringatan"/>
-                                    <field name="pasal_pelanggaran" widget="selection"/>
+                                <field name="warning_type" widget="selection" string="Tipe Peringatan"/>
+                                <field name="warning_date" string="Tgl Peringatan"/>
+                                <field name="pasal_pelanggaran" widget="selection"/>
                             </group>
                             <group>
-                                    <field name="transaction_date"/>
-                                    <field name="transaction_status"/>
+                                <field name="transaction_date"/>
+                                <field name="transaction_status"/>
                             </group>
                             <group>
                                 <field name="effective_datefrom"/>
@@ -60,7 +62,7 @@
                                 <field name="effective_dateto"/>
                             </group>
                             <group>
-                                 <field name="remarks"/>
+                                <field name="remarks"/>
                                 <field name="image" widget="many2many_binary"/>
                             </group>
                         </group>
@@ -73,17 +75,17 @@
             <field name="name">hr.warning.letter.tree</field>
             <field name="model">hr.warning.letter</field>
             <field name="arch" type="xml">
-                <tree string="HR Warning Letter Type" >
-                        <field name="emp_no"/>
-                        <field name="employee_id"/>
-                        <field name="employee_name"/>
-                        <field name="nik"/>
-                        <field name="departmentid" />
-                        <field name="area"/>
-                        <field name="bisnis_unit"/>
-                        <field name="warning_type"/>
-                        <field name="warning_date"/>
-                        <field name="pasal_pelanggaran"/>
+                <tree string="HR Warning Letter Type">
+                    <field name="emp_no"/>
+                    <field name="employee_id"/>
+                    <field name="employee_name"/>
+                    <field name="nik"/>
+                    <field name="departmentid"/>
+                    <field name="area"/>
+                    <field name="bisnis_unit"/>
+                    <field name="warning_type"/>
+                    <field name="warning_date"/>
+                    <field name="pasal_pelanggaran"/>
                 </tree>
             </field>
         </record>
@@ -107,6 +109,8 @@
                   name="Surat Peringatan"
                   parent="hr.menu_hr_employee_payroll"
                   sequence="90"
-                  action="action_hr_warning_letter"/>
+                  action="action_hr_warning_letter"
+                  groups="sanbe_hr_extended.module_surat_peringatan"
+        />
     </data>
 </odoo>
