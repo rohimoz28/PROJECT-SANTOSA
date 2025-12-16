@@ -2,7 +2,8 @@
 <odoo>
     <data>
         <!-- Change the name of the 'Reporting' submenu to 'Monitoring' -->
-        <menuitem id="hr.hr_menu_hr_reports" parent="hr.menu_hr_root" name="Monitoring" sequence="50"/>
+        <menuitem id="hr.hr_menu_hr_reports" parent="hr.menu_hr_root" name="Monitoring" sequence="50"
+                  groups="sanbe_hr_extended.module_pam_monitoring"/>
         <record id="hr_skills_survey.hr_employee_certication_report_menu" model="ir.ui.menu">
             <field name="sequence">10</field> <!-- Change sequence value here -->
             <field name="name">Employee Certifications</field>
