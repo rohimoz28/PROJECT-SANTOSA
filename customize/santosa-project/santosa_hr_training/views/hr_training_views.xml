@@ -6,12 +6,15 @@
             <field name="arch" type="xml">
                 <form string="HR Training">
                     <header>
-                        <button name="act_approve" string="Approve" type="object" invisible="state != 'draft'" data-hotkey="a"/>
+                        <button name="act_approve" string="Approve" type="object" invisible="state != 'draft'"
+                                data-hotkey="a"/>
                         <!-- <button name="act_hold" string="Hold" type="object" invisible="state != 'draft'" data-hotkey="h"/>
                         <button name="act_wip" string="Berlangsung" type="object" invisible="state != 'approve'" data-hotkey="b"/> -->
-                        <button name="act_done" string="Selesai" type="object" invisible="state not in ['approve','wip','fin']" data-hotkey="s"/>
+                        <button name="act_done" string="Selesai" type="object"
+                                invisible="state not in ['approve','wip','fin']" data-hotkey="s"/>
                         <!-- <button name="act_cancel" string="Batal" data-hotkey="x" invisible="state != 'draft'"/> -->
-                        <button name="act_cancel" string="Batal" type="object" data-hotkey="x" invisible="state in ('cancel','done')"/>
+                        <button name="act_cancel" string="Batal" type="object" data-hotkey="x"
+                                invisible="state in ('cancel','done')"/>
 
                         <field name="state" widget="statusbar" statusbar_visible="draft,approve,done"/>
                     </header>
@@ -19,60 +22,76 @@
                         <label for="name" string="Nama"/>
                         <div class="oe_title">
                             <h1>
-                                <field name="name" placeholder="Nama Pelatihan" required="1" readonly="state not in ('draft','hold')"/>
+                                <field name="name" placeholder="Nama Pelatihan" required="1"
+                                       readonly="state not in ('draft','hold')"/>
                             </h1>
                         </div>
                         <br/>
                         <group>
                             <group>
-                            <!-- <group>
-                                <label for="skill_id" string="Kompetensi"/>
-                                <div class="o_row" readonly="state not in ('draft','hold')">
-                                    <field name="skill_id" string="Kompetensi" readonly="state not in ('draft','hold')"/>
-                                    Tingkat
-                                    <field name="level_skill" readonly="state not in ('draft','hold')"/>
-                                </div> -->
+                                <!-- <group>
+                                    <label for="skill_id" string="Kompetensi"/>
+                                    <div class="o_row" readonly="state not in ('draft','hold')">
+                                        <field name="skill_id" string="Kompetensi" readonly="state not in ('draft','hold')"/>
+                                        Tingkat
+                                        <field name="level_skill" readonly="state not in ('draft','hold')"/>
+                                    </div> -->
                                 <field name="type" string="Tipe Pelatihan" readonly="state not in ('draft','hold')"/>
-                                <field name="name_trainer" string="Nama Pelatih" placeholder="Nama Pelatih" readonly="state not in ('draft','hold')"/>
+                                <field name="name_trainer" string="Nama Pelatih" placeholder="Nama Pelatih"
+                                       readonly="state not in ('draft','hold')"/>
                                 <label for="name" string="Tanggal Pelatihan"/>
                                 <div class="o_row" readonly="state not in ('draft','hold')">
-                                    <field name="date_start" readonly="state not in ('draft','hold')"/> s/d
+                                    <field name="date_start" readonly="state not in ('draft','hold')"/>
+                                    s/d
                                     <field name="date_end" readonly="state not in ('draft','hold')"/>
                                 </div>
                                 <!-- <field name="type" string="Tipe" readonly="state not in ('draft','hold')"/> -->
-                                <field name="location_training" string="Alamat" placeholder="Alamat" readonly="state not in ('draft','hold')"/>
+                                <field name="location_training" string="Alamat" placeholder="Alamat"
+                                       readonly="state not in ('draft','hold')"/>
                                 <label for="name_institusi" string="Institusi/Lemaga Pelatihan"/>
                                 <div class="o_row flex-grow-1">
-                                    <field name="type_institution" options="{'no_create': True,'no_create_edit': True}" readonly="state not in ('draft','hold')" required="1" />
+                                    <field name="type_institution" options="{'no_create': True,'no_create_edit': True}"
+                                           readonly="state not in ('draft','hold')" required="1"/>
                                     <label for="name_institusi" string="Nama Institusi"/>
-                                    <field name="name_institusi" placeholder="Institusi" required="1" readonly="state not in ('draft','hold')"/>
+                                    <field name="name_institusi" placeholder="Institusi" required="1"
+                                           readonly="state not in ('draft','hold')"/>
                                 </div>
                                 <field name="level_skill" readonly="state not in ('draft','hold')" string="Tingkatan"/>
                                 <field name="descr" string="Deskripsi" readonly="state not in ('draft','hold')"/>
                             </group>
                             <group>
                                 <!-- <field name="date" readonly="1" string="Tanggal"/> -->
-                                <field name="certificate_name" string="Nama Sertipikat" placeholder="Nama Sertipikat" required="1" readonly="state not in ('draft','hold')"/>
+                                <field name="certificate_name" string="Nama Sertipikat" placeholder="Nama Sertipikat"
+                                       required="1" readonly="state not in ('draft','hold')"/>
                                 <field name="invoiceable" readonly="state not in ('draft','hold')" string="Berbayar?"/>
-                                <field name="type_payment" invisible="not invoiceable" string="Metode Pembayaran" />
-                                <field name="amount" invisible="not invoiceable" readonly="state not in ('draft','hold')"/>
-                                <field name="total_amount" string="Jumlah Bayar" invisible="not invoiceable" readonly="state not in ('draft','hold')"/>
-                                <field name="is_bonding" string="Ikatan Dinas" readonly="state not in ('draft','hold')"/>
-                                <label for="is_bonding" string="Masa Ikatan Dinas" invisible="not is_bonding" />
-                                <div class="o_row" invisible="not is_bonding" readonly="state not in ('draft','hold')" >
-                                    <field name="date_start_bond" required="is_bonding" readonly="state not in ('draft','hold')"/> s/d
-                                    <field name="date_end_bond" required="is_bonding" readonly="state not in ('draft','hold')"/>
+                                <field name="type_payment" invisible="not invoiceable" string="Metode Pembayaran"/>
+                                <field name="amount" invisible="not invoiceable"
+                                       readonly="state not in ('draft','hold')"/>
+                                <field name="total_amount" string="Jumlah Bayar" invisible="not invoiceable"
+                                       readonly="state not in ('draft','hold')"/>
+                                <field name="is_bonding" string="Ikatan Dinas"
+                                       readonly="state not in ('draft','hold')"/>
+                                <label for="is_bonding" string="Masa Ikatan Dinas" invisible="not is_bonding"/>
+                                <div class="o_row" invisible="not is_bonding" readonly="state not in ('draft','hold')">
+                                    <field name="date_start_bond" required="is_bonding"
+                                           readonly="state not in ('draft','hold')"/>
+                                    s/d
+                                    <field name="date_end_bond" required="is_bonding"
+                                           readonly="state not in ('draft','hold')"/>
                                 </div>
-                                <field name="certification_types" 
-                                invisible="1"
-                                 readonly="state not in ('draft','hold')"/>
-                                <field name="certification_types_id" required="1" options="{'no_create': True,'no_create_edit': True}" readonly="state not in ('draft','hold')"/>
-                                <field name="certification_code" invisible="1" readonly="state not in ('draft','hold')"/>
-                                <field name="approved_by" invisible="1" />
-                                <field name="approved_by" invisible="1" />
+                                <field name="certification_types"
+                                       invisible="1"
+                                       readonly="state not in ('draft','hold')"/>
+                                <field name="certification_types_id" required="1"
+                                       options="{'no_create': True,'no_create_edit': True}"
+                                       readonly="state not in ('draft','hold')"/>
+                                <field name="certification_code" invisible="1"
+                                       readonly="state not in ('draft','hold')"/>
+                                <field name="approved_by" invisible="1"/>
+                                <field name="approved_by" invisible="1"/>
                                 <!-- <field name="invoiceable" readonly="state not in ('draft','hold')" string="Berbayar?"/> -->
-                                <field name="branch_id" invisible="1" />
-                                <field name="readonly" invisible="1" />
+                                <field name="branch_id" invisible="1"/>
+                                <field name="readonly" invisible="1"/>
                             </group>
                         </group>
 
@@ -84,12 +103,18 @@
                                         <field name="type_payment" column_invisible="True"/>
                                         <field name="state" column_invisible="True"/>
                                         <field name="nik" string="NIK"/>
-                                        <field name="employee_id" options="{'no_create': True,'no_quick_create': True}" readonly="state not in ('draft','hold')" />
-                                        <field name="results" string="Hasil Training" readonly="state in ('draft','cancel','done','hold')" />
-                                        <field name="result_score" string="Nilai" readonly="state in ('draft','cancel','done','hold') or results == 'failed' " />
-                                        <field name="no_certivicate" string="No. Sertipikat"  readonly="state in ('draft','cancel','done','hold') or results == 'failed'" />
-                                        <field name="date_start" string="Berlaku Dari"  readonly="state in ('draft','cancel','done','hold') or results == 'failed'" />
-                                        <field name="date_end" string="Hingga" readonly="state in ('draft','cancel','done','hold') or results == 'failed'" />
+                                        <field name="employee_id" options="{'no_create': True,'no_quick_create': True}"
+                                               readonly="state not in ('draft','hold')"/>
+                                        <field name="results" string="Hasil Training"
+                                               readonly="state in ('draft','cancel','done','hold')"/>
+                                        <field name="result_score" string="Nilai"
+                                               readonly="state in ('draft','cancel','done','hold') or results == 'failed' "/>
+                                        <field name="no_certivicate" string="No. Sertipikat"
+                                               readonly="state in ('draft','cancel','done','hold') or results == 'failed'"/>
+                                        <field name="date_start" string="Berlaku Dari"
+                                               readonly="state in ('draft','cancel','done','hold') or results == 'failed'"/>
+                                        <field name="date_end" string="Hingga"
+                                               readonly="state in ('draft','cancel','done','hold') or results == 'failed'"/>
                                         <field name="is_bonding" string="Ikatan Dinas"/>
                                         <field name="date_start_bond" string="Ikatan Dinas Dari"/>
                                         <field name="date_end_bond" string="Hingga"/>
@@ -134,7 +159,8 @@
         </record>
 
         <menuitem id="hr_training_menu_root" name="Pelatihan &amp; Sertipikasi" parent="hr.menu_hr_root" sequence="10"/>
-        <menuitem id="hr_training_menu" name="Pelatihan &amp; Sertipikasi" parent="hr_training_menu_root" action="action_hr_training"/>
+        <menuitem id="hr_training_menu" name="Pelatihan &amp; Sertipikasi" parent="hr_training_menu_root"
+                  action="action_hr_training" groups="sanbe_hr_extended.module_pelatihan_dan_sertipikasi"/>
         <record id="sanbe_hr_certification.hr_sanbe_certification" model="ir.ui.menu">
             <field name="name">Sertifikasi Karyawan</field>
             <field name="parent_id" ref="hr_training_menu_root"/> <!-- ✅ Corrected -->

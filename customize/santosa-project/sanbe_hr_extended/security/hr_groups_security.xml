@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.module.category" id="module_menu_kepegawaian">
+            <field name="name">Menu Kepegawaian</field>
+            <field name="description">Access Right for menu Kepegawaian on Module Personal Administration</field>
+        </record>
+
+        <record model="res.groups" id="module_kepegawaian2">
+            <field name="name">Kepegawaian</field>
+            <field name="category_id" ref="module_menu_kepegawaian"/>
+            <field name="comment">Access Right for menu Kepegawaian</field>
+        </record>
+
+        <record model="res.groups" id="module_diagram_organisasi">
+            <field name="name">Diagram Organisasi</field>
+            <field name="category_id" ref="module_menu_kepegawaian"/>
+            <field name="comment">Access Right for menu Diagram Organisasi</field>
+        </record>
+
+        <record model="res.groups" id="module_id_aktivasi">
+            <field name="name">ID Aktivasi</field>
+            <field name="category_id" ref="module_menu_kepegawaian"/>
+            <field name="comment">Access Right for menu ID Aktivasi</field>
+        </record>
+
+        <record model="res.groups" id="module_karyawan_keluar">
+            <field name="name">Karyawan Keluar</field>
+            <field name="category_id" ref="module_menu_kepegawaian"/>
+            <field name="comment">Access Right for menu Karyawan Keluar</field>
+        </record>
+
+        <record model="res.groups" id="module_kontrak_karyawan">
+            <field name="name">Kontrak Karyawan</field>
+            <field name="category_id" ref="module_menu_kepegawaian"/>
+            <field name="comment">Access Right for menu Kontrak Karyawan</field>
+        </record>
+
+        <record model="res.groups" id="module_mutasi_karyawan">
+            <field name="name">Mutasi Karyawan</field>
+            <field name="category_id" ref="module_menu_kepegawaian"/>
+            <field name="comment">Access Right for menu Mutasi Karyawan</field>
+        </record>
+
+        <record model="res.groups" id="module_pelacakan_karyawan">
+            <field name="name">Pelacakan Karyawan</field>
+            <field name="category_id" ref="module_menu_kepegawaian"/>
+            <field name="comment">Access Right for menu Pelacakan Karyawan</field>
+        </record>
+
+        <record model="res.groups" id="module_surat_peringatan">
+            <field name="name">Surat Peringatan</field>
+            <field name="category_id" ref="module_menu_kepegawaian"/>
+            <field name="comment">Access Right for menu Surat Peringatan</field>
+        </record>
+
+        <record model="ir.module.category" id="module_personal_administration">
+            <field name="name">Personal Administration</field>
+            <field name="description">Access Right for parent menu on module Personal Administration</field>
+        </record>
+
+        <record model="res.groups" id="module_pelatihan_dan_sertipikasi">
+            <field name="name">Pelatihan dan Sertipikasi</field>
+            <field name="category_id" ref="module_personal_administration"/>
+            <field name="comment">Access Right for menu Pelatihan dan Sertipikasi on module PAM</field>
+        </record>
+
+        <record model="res.groups" id="module_pam_monitoring">
+            <field name="name">Monitoring</field>
+            <field name="category_id" ref="module_personal_administration"/>
+            <field name="comment">Access Right for menu Monitoring on module PAM</field>
+        </record>
+
+        <record model="res.groups" id="module_pam_reporting">
+            <field name="name">Reporting</field>
+            <field name="category_id" ref="module_personal_administration"/>
+            <field name="comment">Access Right for menu Reporting on module PAM</field>
+        </record>
+
+        <record model="res.groups" id="module_pam_konfigurasi">
+            <field name="name">Konfigurasi</field>
+            <field name="category_id" ref="module_personal_administration"/>
+            <field name="comment">Access Right for menu Konfigurasi on module PAM</field>
+        </record>
+    </data>
+</odoo>
