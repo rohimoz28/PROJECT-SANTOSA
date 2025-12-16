@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <odoo>
-    <data>
+    <data noupdate="0">
         <record id="group_ca_hr_employee" model="res.groups">
             <field name="name">HRD CA</field>
         </record>
@@ -82,8 +82,10 @@
         </record>
 
         <record id="menu_human_resources_configuration" model="ir.ui.menu">
+            <field name="name">Konfigurasi</field>
             <field name="groups_id"
                    eval="[(6, 0, [ref('sanbe_hr_extended.module_pam_konfigurasi')])]"/>
+            <field name="comment">Users can access PAM Konfigurasi</field>
         </record>
 
     </data>
