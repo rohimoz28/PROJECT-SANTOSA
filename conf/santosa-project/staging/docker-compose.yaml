@@ -1,14 +1,11 @@
 version: "3.8"
 services:
   stg-odoo-santosa:
-    image: custom-odoo:17.0
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: rohimuhamadd/sb-custom-odoo:1.0.0
     container_name: stg-odoo-santosa
     restart: unless-stopped
     ports:
-      - "8234:8069"
+      - "8176:8069"
     depends_on:
       - stg-postgres-santosa
     env_file: .env
