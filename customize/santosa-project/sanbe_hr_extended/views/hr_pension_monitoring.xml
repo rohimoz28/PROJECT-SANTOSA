@@ -16,7 +16,7 @@
                     <field name="join_date" optional="show"/>
                     <field name="pension_date" optional="show"/>
                     <field name="pension_state"
-                           optional="show" 
+                           optional="show"
                            widget="badge"
                            decoration-danger="pension_state == 'expired'" decoration-info="pension_state == 'running'"/>
                 </tree>

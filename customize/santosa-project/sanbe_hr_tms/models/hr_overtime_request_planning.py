@@ -197,9 +197,30 @@ class HREmpOvertimeRequest(models.Model):
         'Request Day Name', compute='_compute_req_day_name', store=True)
     count_record_employees = fields.Integer(string="Total Employees on The List", compute="_compute_record_employees",
                                             store=True)
+    # approverhrd_id = fields.Many2one('hr.employee', string='Approval by HRD',
+    #                                  domain="[('branch_id','=',branch_id), ('hrms_department_id', 'in',  [97, 174, 235]), ('user_id','!=', False)]",
+    #                                  store=True, index=True)
     approverhrd_id = fields.Many2one('hr.employee', string='Approval by HRD',
-                                     domain="[('branch_id','=',branch_id), ('hrms_department_id', 'in',  [97, 174, 235]), ('user_id','!=', False)]",
+                                     domain="[('branch_id','=',branch_id),('hrms_department_id','=',hrms_department_id), ('user_id','!=', False)]",
                                      store=True, index=True)
+
+    approval_dept = fields.Many2one(
+        'sanhrms.department', string='Departemen', compute="_get_splhrd_ids")
+
+    def _get_splhrd_ids(self):
+        param = self.env['ir.config_parameter'].sudo().get_param('SPLHRD')
+        if param:
+            department_ids = [int(x.strip())
+                              for x in param.split(',') if x.strip().isdigit()]
+        else:
+            department_ids = []
+        approval_depts = self.env['sanhrms.department'].search(
+            [('id', 'in', department_ids)], limit=1)
+        if approval_depts:
+            return approval_depts
+        else:
+            raise UserError("Approval HRD doesn't set")
+
     approval_l1_id = fields.Many2one(
         comodel_name='hr.employee',
         string='Approval L1',
