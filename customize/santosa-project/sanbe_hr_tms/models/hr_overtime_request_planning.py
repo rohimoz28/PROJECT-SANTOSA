@@ -207,19 +207,41 @@ class HREmpOvertimeRequest(models.Model):
     approval_dept = fields.Many2one(
         'sanhrms.department', string='Departemen', compute="_get_splhrd_ids")
 
-    def _get_splhrd_ids(self):
+    @api.onchange('branch_id')
+    def _onchange_branch_id(self):
+        if not self.branch_id:
+            self.approval_dept = False
+            return
+
         param = self.env['ir.config_parameter'].sudo().get_param('SPLHRD')
         if param:
+            # Membersihkan spasi dan memastikan hanya angka
             department_ids = [int(x.strip())
                               for x in param.split(',') if x.strip().isdigit()]
         else:
             department_ids = []
-        approval_depts = self.env['sanhrms.department'].search(
-            [('id', 'in', department_ids)], limit=1)
-        if approval_depts:
-            return approval_depts
+
+        if not department_ids:
+            # Sebaiknya jangan raise UserError di onchange karena mengganggu user saat mengetik
+            # Cukup kosongkan saja atau beri peringatan log
+            self.approval_dept = False
+            return
+
+        approval_dept_rec = self.env['sanhrms.department'].search([
+            ('id', 'in', department_ids),
+            ('branch_id', '=', self.branch_id.id)
+        ], limit=1)
+
+        if approval_dept_rec:
+            # CARA PERBAIKAN: Masukkan nilai ke field, bukan di-return
+            self.approval_dept = approval_dept_rec.id
         else:
-            raise UserError("Approval HRD doesn't set")
+            self.approval_dept = False
+            # Opsional: return warning jika ingin memunculkan popup tanpa error keras
+            return {'warning': {
+                'title': "Data Tidak Ditemukan",
+                'message': "Approval HRD untuk cabang ini belum diatur."
+            }}
 
     approval_l1_id = fields.Many2one(
         comodel_name='hr.employee',
