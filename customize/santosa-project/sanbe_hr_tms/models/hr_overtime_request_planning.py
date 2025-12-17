@@ -603,46 +603,6 @@ class HREmpOvertimeRequest(models.Model):
                 'state': 'approved_l1'
             })
 
-    # def btn_approved_l1(self):
-    #     for rec in self:
-    #         if not rec.hr_ot_planning_ids:
-    #             raise UserError(
-    #                 "Tidak dapat menyetujui permintaan lembur tanpa data karyawan.")
-    #         if rec.total_days < 1 and rec.day_payment:
-    #             raise UserError(
-    #                 "Pengajuan Day payment tidak bisa dilakukan.")
-    #         if rec.hr_ot_planning_ids:
-    #             temp_hours = 7
-    #             for line in rec.hr_ot_planning_ids:
-    #                 if not rec.day_payment:
-    #                     if not line.ot_type:
-    #                         raise UserError(
-    #                             "Tidak dapat menyetujui permintaan lembur jika Type OT kosong.")
-    #                     if not line.work_plann or not line.output_plann:
-    #                         raise UserError(
-    #                             "Tidak dapat menyetujui permintaan lembur jika rencana kerja kosong atau perkiraan hasil.")
-    #                     if not line.plann_date_from:
-    #                         raise UserError(
-    #                             "Tidak dapat menyetujui permintaan lembur jika rencana tgl OT kosong.")
-    #                 else:
-    #                     if temp_hours > 0 and line.is_select:
-    #                         # deduction = min(temp_hours, line.residual_ot)
-    #                         if line.residual_ot >= temp_hours:
-    #                             line.residual_ot = line.residual_ot - temp_hours
-    #                             line.spl_employee_id.residual_ot = line.spl_employee_id.residual_ot - temp_hours
-    #                             temp_hours = 0
-    #                             print(line.id, 'LEBIH', temp_hours,
-    #                                   line.residual_ot, line.spl_employee_id.residual_ot)
-    #                         else:
-
-    #                             line.residual_ot = 0
-    #                             line.spl_employee_id.residual_ot = 0
-    #                             temp_hours = temp_hours - line.residual_ot
-    #                             print(line.id, 'kURANG', temp_hours,
-    #                                   line.residual_ot, line.spl_employee_id.residual_ot)
-    #         rec.approve1 = True
-    #         rec.state = 'approved_l1'
-
     def btn_approved_l2(self):
         for rec in self:
             if not rec.day_payment:
@@ -793,48 +753,58 @@ class HREmpOvertimeRequest(models.Model):
     def _compute_ot_detail_lines(self):
         for dp in self:
             if not dp.day_payment:
-                continue
-            ot_details = self.env['hr.overtime.employees'].search([
-                ('planning_id.employee_id', '=', dp.employee_id.id),
-                ('planning_id.day_payment', '=', False),
-                ('realization_date', '!=', False),
-                ('residual_ot', '>', 0),
-                ('state', 'in', ('verified', 'approved', 'complete', 'done')),
-            ])
-
-            line_commands = [(5, 0, 0)]
-
-            for ot in ot_details:
-                spl_employee_id = ot.id
                 line_commands.append((0, 0, {
-                    'planning_id': dp.id,
-                    'branch_id': ot.branch_id.id,
-                    'area_id': ot.area_id.id,
-                    'department_id': ot.department_id.id,
-                    'employee_id': ot.employee_id.id,
-                    'directorate_id': ot.directorate_id.id,
-                    'hrms_department_id': ot.hrms_department_id.id,
-                    'division_id': ot.division_id.id,
-                    'spl_employee_id': spl_employee_id,
-                    'realization_date': ot.realization_date,
-                    'realization_time_from': ot.realization_time_from,
-                    'realization_time_to': ot.realization_time_to,
-                    'plann_date_from': ot.plann_date_from,
-                    'plann_date_to': ot.plann_date_to,
-                    'ot_plann_from': ot.ot_plann_from,
-                    'ot_plann_to': ot.ot_plann_to,
-                    'verify_time_from': ot.verify_time_from,
-                    'verify_time_to': ot.verify_time_to,
-                    'work_plann': ot.work_plann,
-                    'count_approval_ot': ot.count_approval_ot,
-                    'claim_approval_ot': ot.claim_approval_ot,
-                    'adv_total_ot': ot.adv_total_ot,
-                    'sum_total_ot': ot.sum_total_ot,
-                    'residual_ot': ot.residual_ot,
-                    'output_plann': ot.output_plann,
-                    'ot_type': 'dp',
-                    'is_select': False,
-                }))
+                        'planning_id': dp.id,
+                        'branch_id': dp.branch_id.id,
+                        'area_id': dp.area_id.id,
+                        'department_id': dp.department_id.id,
+                        'employee_id': dp.employee_id.id,
+                        'directorate_id': dp.directorate_id.id,
+                        'hrms_department_id': dp.hrms_department_id.id,
+                        'division_id': dp.division_id.id,}))
+            else:
+
+                ot_details = self.env['hr.overtime.employees'].search([
+                    ('planning_id.employee_id', '=', dp.employee_id.id),
+                    ('planning_id.day_payment', '=', False),
+                    ('realization_date', '!=', False),
+                    ('residual_ot', '>', 0),
+                    ('state', 'in', ('verified', 'approved', 'complete', 'done')),
+                ])
+
+                line_commands = [(5, 0, 0)]
+
+                for ot in ot_details:
+                    spl_employee_id = ot.id
+                    line_commands.append((0, 0, {
+                        'planning_id': dp.id,
+                        'branch_id': ot.branch_id.id,
+                        'area_id': ot.area_id.id,
+                        'department_id': ot.department_id.id,
+                        'employee_id': ot.employee_id.id,
+                        'directorate_id': ot.directorate_id.id,
+                        'hrms_department_id': ot.hrms_department_id.id,
+                        'division_id': ot.division_id.id,
+                        'spl_employee_id': spl_employee_id,
+                        'realization_date': ot.realization_date,
+                        'realization_time_from': ot.realization_time_from,
+                        'realization_time_to': ot.realization_time_to,
+                        'plann_date_from': ot.plann_date_from,
+                        'plann_date_to': ot.plann_date_to,
+                        'ot_plann_from': ot.ot_plann_from,
+                        'ot_plann_to': ot.ot_plann_to,
+                        'verify_time_from': ot.verify_time_from,
+                        'verify_time_to': ot.verify_time_to,
+                        'work_plann': ot.work_plann,
+                        'count_approval_ot': ot.count_approval_ot,
+                        'claim_approval_ot': ot.claim_approval_ot,
+                        'adv_total_ot': ot.adv_total_ot,
+                        'sum_total_ot': ot.sum_total_ot,
+                        'residual_ot': ot.residual_ot,
+                        'output_plann': ot.output_plann,
+                        'ot_type': 'dp',
+                        'is_select': False,
+                    }))
 
             dp.hr_ot_planning_ids = line_commands
 
