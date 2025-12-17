@@ -17,11 +17,14 @@
     'currency': 'USD',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'hr','purchase','stock','sale','account','project','event','sanbe_hr','purchase_request','hr_holidays','hr_attendance','calendar','hr_payroll_community','hr_contract','hr_gamification'],
+    'depends': ['base', 'hr', 'purchase', 'stock', 'sale', 'account', 'project', 'event', 'sanbe_hr',
+                'purchase_request', 'hr_holidays', 'hr_attendance', 'calendar', 'hr_payroll_community', 'hr_contract',
+                'hr_gamification'],
     "data": [
         "data/hitung_employee_ws.xml",
         "data/sequence_employee_id.xml",
         "security/hr_branch_security.xml",
+        "security/hr_groups_security.xml",
         "security/ir.model.access.csv",
         "views/department.views.xml",
         "views/directorate.views.xml",

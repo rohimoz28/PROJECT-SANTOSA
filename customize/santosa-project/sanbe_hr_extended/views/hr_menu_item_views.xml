@@ -1,5 +1,5 @@
 <odoo>
-    <data  noupdate="0">
+    <data noupdate="0">
 
         <record id="hr.hr_menu_hr_reports" model="ir.ui.menu">
             <field name="name">Dokumen</field>
@@ -51,37 +51,22 @@
         <record id="hr.menu_hr_employee_payroll" model="ir.ui.menu">
             <field name="name">Kepegawaian</field>
         </record>
-        
+
         <record id="base.menu_administration" model="ir.ui.menu">
             <field name="sequence">-107</field>
-        </record>   
-
+        </record>
 
         <record id="hr.menu_hr_employee_user" model="ir.ui.menu">
             <field name="name">Kepegawaian</field>
             <field name="sequence">1</field>
+            <field name="groups_id" eval="[(6, 0, [ref('sanbe_hr_extended.module_kepegawaian2')])]"/>
         </record>
 
         <record id="hr.menu_view_hr_job" model="ir.ui.menu">
             <field name="name">Jabatan</field>
             <field name="sequence">50</field>
             <field name="parent_id" ref="hierarchy_id"/>
-
         </record>
-        <!-- <record id="hr.menu_config_employee" model="ir.ui.menu">
-            <field name="name">Riwayat Pegawai</field>
-        </record> -->
-
-        <!-- <record id="hr_skills_survey.hr_employee_certification_report_menu" model="ir.ui.menu">
-            <field name="name">Sertifikasi</field>
-            <field name="sequence">9</field>
-        </record> -->
-
-        <!-- <record id="hr.hr_employee_certification_report_menu" model="ir.ui.menu">
-            <field name="name">Sertifikasi</field>
-            <field name="sequence">9</field>
-        </record> -->
-
 
         <record id="hr_skills.hr_employee_skill_report_menu" model="ir.ui.menu">
             <field name="name">Keahlian</field>
@@ -128,6 +113,7 @@
         <record id="hr_org_chart.menu_hr_employee_org_chart" model="ir.ui.menu">
             <field name="name">Diagram Organisasi</field>
             <field name="sequence">10</field>
+            <field name="groups_id" eval="[(6, 0, [ref('sanbe_hr_extended.module_diagram_organisasi')])]"/>
         </record>
 
         <record id="base_territory.menu_res_branch" model="ir.ui.menu">
@@ -139,6 +125,7 @@
         <record id="hr_contract.hr_menu_contract" model="ir.ui.menu">
             <field name="name">Kontrak Karyawan</field>
             <field name="sequence">50</field>
+            <field name="groups_id" eval="[(6, 0, [ref('sanbe_hr_extended.module_kontrak_karyawan')])]"/>
         </record>
 
         <record id="hr_contract.action_hr_contract" model="ir.actions.act_window">
@@ -149,15 +136,15 @@
             <field name="name">Area</field>
             <field name="parent_id" ref="base.menu_users"/> <!-- ✅ Corrected -->
         </record>
-        
+
         <record id="ohrms_loan.hr_loan_menu_requests" model="ir.ui.menu">
             <field name="sequence">10</field>
             <field name="parent_id" eval="False"/>
         </record>
-        
-        <record id="menu_hr_warning_letter" model="ir.ui.menu">
-            <field name="name">Surat Peringatan</field>
-        </record>
+
+        <!-- <record id="menu_hr_warning_letter" model="ir.ui.menu"> -->
+        <!--     <field name="name">Surat Peringatan</field> -->
+        <!-- </record> -->
 
         <record id="hr.open_view_employee_list" model="ir.actions.act_window">
             <field name="name">Karyawan</field>

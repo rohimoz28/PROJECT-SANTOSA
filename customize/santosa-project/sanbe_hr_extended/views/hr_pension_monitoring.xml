@@ -16,8 +16,8 @@
                     <field name="pension_date" optional="show"/>
                     <field name="retire_age" optional="show"/>
                     <field name="birthday" optional="show"/>
-                    <field name="pension_state" 
-                           optional="show" 
+                    <field name="pension_state"
+                           optional="show"
                            widget="badge"
                            decoration-danger="pension_state == 'expired'" decoration-info="pension_state == 'running'"/>
                 </tree>
@@ -35,10 +35,11 @@
 
         <!-- menuitem -->
         <menuitem
-            id="hr_pension_menuitem"
-            name="Monitoring Kontrak Pensiun"
-            parent="hr.hr_menu_hr_reports"
-            sequence="30"
-            action="hr_pension_action_window"/>
+                id="hr_pension_menuitem"
+                name="Monitoring Kontrak Pensiun"
+                parent="hr.hr_menu_hr_reports"
+                sequence="30"
+                action="hr_pension_action_window"
+        />
     </data>
 </odoo>
