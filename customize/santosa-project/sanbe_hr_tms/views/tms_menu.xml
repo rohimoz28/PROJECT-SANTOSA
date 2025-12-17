@@ -256,6 +256,7 @@
                 sequence="60"
                 parent="sanbe_hr_tms.hr_menu_tms_setting"
                 action="st_master_leave_action"
+                groups="module_sub_category_master_cuti_staff,module_sub_category_master_cuti_supervisor,module_sub_category_master_cuti_manager"
         />
         <menuitem
                 id="menu_hr_workinghour_dokter"
