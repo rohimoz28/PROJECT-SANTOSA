@@ -148,10 +148,14 @@
             <field name="model">hr.working.days</field>
             <field name="arch" type="xml">
                 <tree string="Working Day">
-                    <field name="area_id" readonly="1"/>
-                    <field name="available_for" widget="many2many_tags" readonly="1"/>
+                    <field name="area_id" readonly="1" column_invisible="1"/>
                     <field name="code" optional="show" readonly="1"/>
                     <field name="deskripsi" readonly="1"/>
+                    <field name="fullday_from" readonly="1"/>
+                    <field name="fullday_to" readonly="1"/>
+                    <field name="halfday_from" readonly="1"/>
+                    <field name="halfday_to" readonly="1"/>
+                    <field name="available_for" widget="many2many_tags" optional="hide" readonly="1"/>
                 </tree>
             </field>
         </record>
