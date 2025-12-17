@@ -56,8 +56,10 @@ class HrTMSEmployeeShift(models.Model):
                     date_from).strftime('%d/%m') if date_from else ''
                 formatted_to = fields.Datetime.from_string(
                     date_to).strftime('%d/%m') if date_to else ''
+                month_str = fields.Datetime.from_string(
+                    date_to).strftime("%B %Y") if date_to else ''
                 period_name = periode.branch_id.branch_code or ''
-                rec.period_text = f"{formatted_from} - {formatted_to} {period_name}"
+                rec.period_text = f"{formatted_from} - {formatted_to} | {month_str} {period_name}"
             else:
                 rec.period_text = False
 
@@ -176,6 +178,8 @@ class HrTMSEmployeeShift(models.Model):
     review_date = fields.Date(string="Reviewd Date")
     name = fields.Char(string='Reference', index=True,
                        compute='_compute_display_name', store=True)
+    reason = fields.Char(
+        string='Reason', help='Reason for setting the record to draft.')
 
     # work_unit_ids = fields.Many2many(
     #     'mst.group.unit.pelayanan',  string='Work Unit',  compute='_compute_work_unit_ids', store=True)
@@ -229,8 +233,39 @@ class HrTMSEmployeeShift(models.Model):
                     _("Entri shift harus dalam status 'HRD Review' dan 'Active' untuk Disetujui."))
         return self.write({'state': 'approved',
                            'approved_by': self.env.user.id,
+                           'reason': False,
                            'approved_date': datetime.today()})
 
+    def action_detail_summary(self):
+        for rec in self:
+            summary_id = self.env['hr.tmsentry.summary'].search([
+                ('employee_id', '=', rec.employee_id.id),
+                ('periode_id', '=', rec.periode_id.id)
+            ])
+            if not summary_id:
+                raise UserError(
+                    _("Data record tidak ada, silahkan hubungi HRD untuk menjalankan processing and period periode tersebut.")
+                )
+            try:
+                view_id = self.env.ref(
+                    'sanbe_hr_tms.hr_tmsentry_summary_shift').id
+            except ValueError:
+                raise UserError(
+                    _("View hr_tmsentry_summary_shift tidak ditemukan.")
+                )
+
+            return {
+                'type': 'ir.actions.act_window',
+                'name': 'hr.tmsentry.summary',
+                'view_mode': 'form',
+                'res_model': 'hr.tmsentry.summary',
+                'view_id': view_id,  # Menggunakan ID view yang ditemukan
+                'res_id': summary_id.id,
+                'target': 'new',
+                'context': {'create': False, 'delete': False, 'edit': False},
+            }
+
+        return True
     # def action_reject(self):
     #     """Mengubah status menjadi Reject."""
     #     for rec in self:
@@ -242,13 +277,24 @@ class HrTMSEmployeeShift(models.Model):
         """Mengubah status kembali menjadi Draft."""
         for rec in self:
             if rec.state != 'draft':
-                rec.write({'state': 'draft',
-                           'approved_by': False,
-                           'approved_date': False,
-                           'review_by': False,
-                           'review_date': False})
+                return {
+                    'type': 'ir.actions.act_window',
+                    'name': 'Set To Draft',
+                    'res_model': 'wiz.hr.set.draft',
+                    'view_mode': 'form',
+                    'target': 'new',
+                    'context': {
+                        'default_target_models': 'sb.employee.shift',
+                        'default_shift_id': rec.id,
+                    }}
 
-        return True
+                # rec.write({'state': 'draft',
+                #            'approved_by': False,
+                #            'approved_date': False,
+                #            'review_by': False,
+                #            'review_date': False})
+
+        # return True
 
     def action_delete(self):
         for record in self:
