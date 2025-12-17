@@ -42,6 +42,7 @@
                             <field name="can_approve_l2" invisible="1"/>
                             <field name="can_approve_hrd" invisible="1"/>
                             <field name="can_verified" invisible="1"/>
+                            <field name="approval_dept" invisible="1"/>
                             <field name="area_id"
                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
                                    invisible="1"/>
@@ -67,7 +68,7 @@
                             <field name="employee_id" invisible="is_approver != 'approver'" domain="[('state','=','approved'),('emp_parent_id','=',current_user_employee_id_ref)]"
                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
                                    readonly="state != 'draft'" required="1"/>
-                            
+                            <field name="approval_dept" invisible="1"/>
                             <field name="job_id" invisible=" not day_payment"/>
                             <field name="emp_level" invisible=" not day_payment"/>
                             <field name="approval_l1_id"/>
