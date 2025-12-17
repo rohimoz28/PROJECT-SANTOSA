@@ -752,16 +752,19 @@ class HREmpOvertimeRequest(models.Model):
 
     def _compute_ot_detail_lines(self):
         for dp in self:
+            line_commands = [(5, 0, 0)]
             if not dp.day_payment:
                 line_commands.append((0, 0, {
-                        'planning_id': dp.id,
-                        'branch_id': dp.branch_id.id,
-                        'area_id': dp.area_id.id,
-                        'department_id': dp.department_id.id,
-                        'employee_id': dp.employee_id.id,
-                        'directorate_id': dp.directorate_id.id,
-                        'hrms_department_id': dp.hrms_department_id.id,
-                        'division_id': dp.division_id.id,}))
+                    'planning_id': dp.id,
+                    'branch_id': dp.branch_id.id,
+                    'area_id': dp.area_id.id,
+                    'department_id': dp.department_id.id,
+                    'employee_id': dp.employee_id.id,
+                    'directorate_id': dp.directorate_id.id,
+                    'hrms_department_id': dp.hrms_department_id.id,
+                    'division_id': dp.division_id.id, 
+                    'periode_from':dp.periode_from, 
+                    'periode_ro':dp.periode_to}))
             else:
 
                 ot_details = self.env['hr.overtime.employees'].search([
@@ -771,8 +774,6 @@ class HREmpOvertimeRequest(models.Model):
                     ('residual_ot', '>', 0),
                     ('state', 'in', ('verified', 'approved', 'complete', 'done')),
                 ])
-
-                line_commands = [(5, 0, 0)]
 
                 for ot in ot_details:
                     spl_employee_id = ot.id
