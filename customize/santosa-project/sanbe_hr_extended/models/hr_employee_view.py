@@ -45,7 +45,7 @@ class HrEmployeeView(models.Model):
                                 ('single', 'Belum Menikah'),
                                 ('married', 'Menikah'),
                                 ('seperate', 'Berpisah')], string='Status Perkawinan')
-    birthday = fields.Date(string='Status Perkawinan')
+    birthday = fields.Date(string='Tanggal Lahir')
     identification_id = fields.Char(string='Nomor Kartu Keluarga')
     no_npwp = fields.Char(string='Nomor NPWP')
     no_ktp = fields.Char(string='No KTP')

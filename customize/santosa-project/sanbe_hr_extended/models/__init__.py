@@ -24,3 +24,4 @@ from . import hr_pension_monitoring
 from . import hr_contract_type
 from . import hr_employee_view
 from . import hr_job_view
+from . import hr_employee_pension_view
