@@ -753,7 +753,7 @@ class HREmpOvertimeRequest(models.Model):
     def _compute_ot_detail_lines(self):
         for dp in self:
             line_commands = [(5, 0, 0)]
-            if not dp.day_payment:
+            if not dp.day_payment and dp.employee_id:
                 line_commands.append((0, 0, {
                     'planning_id': dp.id,
                     'branch_id': dp.branch_id.id,
@@ -762,10 +762,13 @@ class HREmpOvertimeRequest(models.Model):
                     'employee_id': dp.employee_id.id,
                     'directorate_id': dp.directorate_id.id,
                     'hrms_department_id': dp.hrms_department_id.id,
-                    'division_id': dp.division_id.id, 
-                    'periode_from':dp.periode_from, 
-                    'periode_ro':dp.periode_to}))
-            else:
+                    'division_id': dp.division_id.id,
+                    'plann_date_from': dp.periode_from,
+                    'plann_date_to': dp.periode_from,
+                    'ot_type': 'regular',
+                    'is_select': False,
+                }))
+            elif dp.day_payment and dp.employee_id:
 
                 ot_details = self.env['hr.overtime.employees'].search([
                     ('planning_id.employee_id', '=', dp.employee_id.id),
