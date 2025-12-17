@@ -142,9 +142,9 @@
             <field name="parent_id" eval="False"/>
         </record>
 
-        <record id="menu_hr_warning_letter" model="ir.ui.menu">
-            <field name="name">Surat Peringatan</field>
-        </record>
+        <!-- <record id="menu_hr_warning_letter" model="ir.ui.menu"> -->
+        <!--     <field name="name">Surat Peringatan</field> -->
+        <!-- </record> -->
 
         <record id="hr.open_view_employee_list" model="ir.actions.act_window">
             <field name="name">Karyawan</field>

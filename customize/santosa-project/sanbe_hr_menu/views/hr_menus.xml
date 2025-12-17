@@ -190,5 +190,35 @@
                 sequence="14"
         />
 
+        <!-- OVERRIDE MENU DENGAN GROUPS BARU -->
+        <record id="hr.menu_human_resources_configuration" model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(6, 0, [ref('sanbe_hr_extended.module_pam_konfigurasi')])]"/>
+        </record>
+
+        <record id="hr.menu_hr_employee_payroll" model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(6, 0, [
+                   ref('hr.group_hr_user'),
+                   ref('hr.group_hr_manager'),
+                   ref('sanbe_hr_extended.module_surat_peringatan'),
+                   ref('sanbe_hr_extended.module_karyawan_keluar')
+            ])]"/>
+        </record>
+
+        <record id="hr.menu_hr_root" model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(6, 0, [
+               ref('hr.group_hr_user'),
+               ref('hr.group_hr_manager'),
+               ref('sanbe_hr_extended.module_pam_reporting'),
+           ])]"/>
+        </record>
+
+        <!-- <record id="hr_resignation_menu_id" model="ir.ui.menu"> -->
+        <!--     <field name="groups_id" -->
+        <!--            eval="[]"/> -->
+        <!-- </record> -->
+
     </data>
 </odoo>
