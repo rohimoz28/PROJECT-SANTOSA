@@ -118,6 +118,7 @@
                 sequence="11"
                 parent="sanbe_hr_tms.hr_menu_tms_processing"
                 action="action_stg_transform_absent"
+                groups="module_sub_category_data_absen_staging_staff,module_sub_category_data_absen_staging_supervisor,module_sub_category_data_absen_staging_manager"
         />
 
         <menuitem
