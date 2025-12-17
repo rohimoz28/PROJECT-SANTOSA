@@ -31,7 +31,11 @@ access_sb_doctor_scheduling_spv,access.sb_doctor_scheduling_spv,model_sb_docter_
 
 access_hr_tms_processing_users,access.hr.tms.processing.users,model_hr_tms_processing,base.group_user,1,1,1,1
 access_hr_machine_setting_users,access.hr.machine.setting.users,model_hr_machine_setting,base.group_user,1,1,1,1
-access_hr_machine_details,access.hr.machine.details.users,model_hr_machine_details,base.group_user,1,1,1,1
+
+access_hr_machine_details_staff,access.hr.machine.details.users.staff,model_hr_machine_details,sanbe_hr_tms.module_sub_category_mapping_pincode_staff,1,0,0,0
+access_hr_machine_details_supervisor,access.hr.machine.details.users.supervisor,model_hr_machine_details,sanbe_hr_tms.module_sub_category_mapping_pincode_supervisor,1,0,1,0
+access_hr_machine_details_manager,access.hr.machine.details.users.manager,model_hr_machine_details,sanbe_hr_tms.module_sub_category_mapping_pincode_manager,1,1,1,1
+
 access_data_dbf,access.data.dbf.users,model_data_dbf,base.group_user,1,1,1,1
 access_data_dbf_checkinout,access.data.dbf.checkinout.users,model_data_dbf_checkinout,base.group_user,1,1,1,1
 access_data_dbf_userinfo,access.data.dbf.userinfo.users,model_data_dbf_userinfo,base.group_user,1,1,1,1
@@ -66,7 +70,11 @@ access_sb_allowances,access.sb.allowances,model_sb_allowances,base.group_user,1,
 access_sb_allowance_details,access.sb.allowance.details,model_sb_allowance_details,base.group_user,1,1,1,1
 access_hr_allowance_list_users,access.hr.allowance.list.users,model_hr_allowance_list,base.group_user,1,1,1,1
 access_sb_leave_allocation_manager,access.sb.leave.allocation.manager,model_sb_leave_allocation,sanbe_hr_tms.module_sub_category_leave_allocation_manager,1,1,1,1
-access_sb_leave_allocation_request,access.sb.leave.allocation.request,model_sb_leave_allocation_request,base.group_user,1,1,1,1
+
+access_sb_leave_allocation_request_staff,access.sb.leave.allocation.request.staff,model_sb_leave_allocation_request,sanbe_hr_tms.module_sub_category_leave_allocation_request_staff,1,0,0,0
+access_sb_leave_allocation_request_supervisor,access.sb.leave.allocation.request.supervisor,model_sb_leave_allocation_request,sanbe_hr_tms.module_sub_category_leave_allocation_request_supervisor,1,0,1,0
+access_sb_leave_allocation_request_manager,access.sb.leave.allocation.request.manager,model_sb_leave_allocation_request,sanbe_hr_tms.module_sub_category_leave_allocation_request_manager,1,1,1,1
+
 access_sb_leave_tracking,access.sb.leave.tracking,model_sb_leave_tracking,base.group_user,1,1,1,1
 access_sb_leave_benefit,access.sb.leave.benefit,model_sb_leave_benefit,base.group_user,1,1,1,1
 access_hr_open_closing_periode,access.hr.open.closing.periode,model_hr_opening_closing,base.group_user,1,1,1,1
@@ -99,3 +107,4 @@ access_export_excel_ot_bundling,sanbe_hr_tms.export.excel.ot.bundling,model_expo
 access_value_group,sanbe_hr_tms.value.group,model_value_group,base.group_user,1,1,1,1
 access_stg_transform_absent,access.stg.transform.absent,model_stg_transform_absent,base.group_user,1,1,1,1
 access_st_master_leave,access.st.master.leave,model_st_master_leave,base.group_user,1,1,1,1
+access_wiz_hr_set_draft_manager,wiz_hr_set_draft_manager,model_wiz_hr_set_draft,,1,1,1,1
