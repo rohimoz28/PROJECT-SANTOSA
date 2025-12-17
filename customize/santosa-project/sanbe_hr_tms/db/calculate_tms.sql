@@ -118,25 +118,75 @@ begin
       AND rcl.state = 'post'
       AND rcl.area_id = l_area;
 
-
--- update W , employee_id, empgroup, workingday
-    WITH flag AS (select 'W'                                                       as cf,
-                         he.id                                                        employee_id,
-                         he.workingdays_id                                            wdcode,
-                         generate_series(hoc.open_periode_from ::date, hoc.open_periode_to::date,
-                                         interval '1 day')::date                   AS wd,
-                         to_char(generate_series(hoc.open_periode_from ::date, hoc.open_periode_to::date,
-                                                 interval '1 day')::date, 'FMDay') AS day_name,
+    -------------------------------------------------------------------------------------------------------------------------------
+-- update W , employee_id, empgroup, workingday di update tanggal 16-12-2025
+-------------------------------------------------------------------------------------------------------------------------------
+    -- query asal nya
+    -- WITH flag AS (select 'W' as cf,
+    --                      he.id employee_id ,
+    --                      he.workingdays_id wdcode,
+    --                      generate_series(hoc.open_periode_from ::date, hoc.open_periode_to::date, interval '1 day')::date AS wd,
+    --                      to_char(generate_series(hoc.open_periode_from ::date, hoc.open_periode_to::date, interval '1 day')::date, 'FMDay') AS day_name,
+    --                      he.branch_id,
+    --                      he.area,
+    --                      hwd.fullday_from                                                                  AS schedule_timein,
+    --                      hwd.fullday_to                                                                    AS schedule_timeout,
+    --                      type_hari
+    --               from
+    --                   hr_employee he
+    --                       JOIN hr_working_days hwd ON he.workingdays_id = hwd.id and he.branch_id = branch
+    --                       join hr_opening_closing hoc on 1 = 1 and hoc.id = period
+    --               where
+    --                   he.wd_type = 'wd'
+    --                 and he.state = 'approved' ),
+    --      flags AS (SELECT *
+    --                FROM flag
+    --                WHERE day_name NOT IN ('Sunday')
+    --                  AND type_hari = 'fhday'
+    --                UNION ALL
+    --                SELECT *
+    --                FROM flag
+    --                WHERE day_name NOT IN ('Sunday', 'Saturday')
+    --                  AND type_hari = 'fday'
+    --                UNION ALL
+    --                SELECT *
+    --                FROM flag
+    --                WHERE type_hari NOT IN ('fhday', 'fday'))
+    -- akhir query asal
+    ----------------------------------------------------------------------------------------------------------------------------
+    --- query baru 16-12-2025
+    WITH flag AS (SELECT 'W'                     AS cf,
+                         he.id                   AS employee_id,
+                         he.workingdays_id       AS wdcode,
+                         gs.wd::date,
+                         to_char(gs.wd, 'FMDay') AS day_name,
                          he.branch_id,
                          he.area,
-                         hwd.fullday_from                                          AS schedule_timein,
-                         hwd.fullday_to                                            AS schedule_timeout,
-                         type_hari
-                  from hr_employee he
-                           JOIN hr_working_days hwd ON he.workingdays_id = hwd.id and he.branch_id = branch
-                           join hr_opening_closing hoc on 1 = 1 and hoc.id = period
-                  where he.wd_type = 'wd'
-                    and he.state = 'approved'),
+                         hwd.fullday_from        AS schedule_timein,
+                         CASE
+                             WHEN hwd.type_hari = 'fhday'
+                                 AND EXTRACT(ISODOW FROM gs.wd) = 6 -- Saturday
+                                 THEN hwd.halfday_to
+                             ELSE hwd.fullday_to
+                             END                 AS schedule_timeout,
+                         type_hari,
+                         hwd.code
+
+                  FROM hr_employee he
+                           JOIN hr_working_days hwd
+                                ON he.workingdays_id = hwd.id
+                                    AND he.branch_id = branch
+                           JOIN hr_opening_closing hoc
+                                ON hoc.id = period
+                           CROSS JOIN LATERAL
+                      generate_series(
+                              hoc.open_periode_from::date,
+                              hoc.open_periode_to::date,
+                              interval '1 day'
+                      ) AS gs(wd)
+
+                  WHERE he.wd_type = 'wd'
+                    AND he.state = 'approved'),
          flags AS (SELECT *
                    FROM flag
                    WHERE day_name NOT IN ('Sunday')
@@ -150,6 +200,9 @@ begin
                    SELECT *
                    FROM flag
                    WHERE type_hari NOT IN ('fhday', 'fday'))
+    --- akhir query baru 16-12-2025
+    -----------------------------------------------------------------------------------------------------------------------------
+
     UPDATE sb_tms_tmsentry_details ha
     SET type              = f.cf,
         -- empgroup_id       = f.empgroup_id,
@@ -625,22 +678,21 @@ begin
     --   and hts2.area_id = l_area
     --   and hts2.branch_id = branch;
 
-    -------------------------------------------------------------------------------------
+    ------------------------------------------------------------------------------------------------------------------------------------------------
     -- ini berubahan query nya aslinya ada atas 15-12-2025
-    -------------------------------------------------------------------------------------
+    ------------------------------------------------------------------------------------------------------------------------------------------------
     UPDATE sb_tms_tmsentry_details sttd
     SET status_attendance = CASE
-                                WHEN lower(flag.leave_type) = 'pulang cepat' or
-                                     lower(flag.leave_type) = 'datang terlambat'
+                                WHEN lower(flag.leave_type) IN ('pulang cepat', 'datang terlambat')
                                     THEN 'Attendee'
                                 ELSE
                                     flag.leave_type
         END,
         delay             = 0
-    FROM flag
-             JOIN hr_tmsentry_summary hts2
-                  ON hts2.id = sttd.tmsentry_id
-    WHERE sttd.details_date::date = flag.permission_date::date
+    FROM flag,
+         hr_tmsentry_summary hts2
+    WHERE sttd.tmsentry_id = hts2.id
+      AND sttd.details_date::date = flag.permission_date::date
       AND sttd.employee_id = flag.employee_id
       AND hts2.periode_id = period
       AND hts2.area_id = l_area
