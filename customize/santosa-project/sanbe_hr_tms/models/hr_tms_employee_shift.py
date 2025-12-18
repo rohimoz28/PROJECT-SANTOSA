@@ -6,8 +6,8 @@ from datetime import datetime, time, timedelta, date
 
 TMS_ENTRY_STATE = [
     ('draft', 'Draft'),
-    ('review', 'HRD Review'),
-    ('approved', 'Approved'),
+    ('review', 'Review HRD'),
+    ('approved', 'Disetujui HRD'),
     ('reject', 'Reject'),
 ]
 
@@ -279,7 +279,7 @@ class HrTMSEmployeeShift(models.Model):
             if rec.state != 'draft':
                 return {
                     'type': 'ir.actions.act_window',
-                    'name': 'Set To Draft',
+                    'name': 'Kembalikan ke Draft',
                     'res_model': 'wiz.hr.set.draft',
                     'view_mode': 'form',
                     'target': 'new',
