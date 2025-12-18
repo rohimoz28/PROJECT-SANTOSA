@@ -75,6 +75,14 @@ class HrEmployeeView(models.Model):
     contract_dateto = fields.Date('Contract To')
 
     def init(self):
+        """
+        1: Hitung Tanggal Pension (Pension Date)
+        Tanggal Pension = Tahun Lahir + Usia Pension
+        2: Handle Hari yang Tidak Valid
+        Jika lahir tanggal 31 Mei, tapi bulan Juni hanya punya 30 hari
+        3: Tentukan Status Pension
+        Jika hari ini sudah lewat dari pension date → Status = "expired" ELSE Status = "running"
+        """
         tools.drop_view_if_exists(self.env.cr, self._table)
         self.env.cr.execute("""
             CREATE OR REPLACE VIEW %s AS (
@@ -115,5 +123,4 @@ class HrEmployeeView(models.Model):
                     he.active
                 from hr_employee he
             )
-        """ % (self._table, ))
-
+        """ % (self._table,))
