@@ -42,6 +42,7 @@
                             <field name="can_approve_l2" invisible="1"/>
                             <field name="can_approve_hrd" invisible="1"/>
                             <field name="can_verified" invisible="1"/>
+                            <field name="approval_dept" invisible="1"/>
                             <field name="area_id"
                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
                                    invisible="1"/>
@@ -67,12 +68,12 @@
                             <field name="employee_id" invisible="is_approver != 'approver'" domain="[('state','=','approved'),('emp_parent_id','=',current_user_employee_id_ref)]"
                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
                                    readonly="state != 'draft'" required="1"/>
-                            
+                            <field name="approval_dept" invisible="1"/>
                             <field name="job_id" invisible=" not day_payment"/>
                             <field name="emp_level" invisible=" not day_payment"/>
                             <field name="approval_l1_id"/>
                             <field name="approval_l2_id"/>
-                            <field name="approverhrd_id" readonly="state == 'approved' or state == 'done'" />
+                            <field name="approverhrd_id" readonly="state == 'approved' or state == 'done'" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"/>
                             <field name="is_approver" invisible="1"/>
                             <field name="current_user_employee_id_ref" invisible="1"/>
                         </group>
@@ -108,7 +109,7 @@
                     </group>
                     <notebook>
                         <page string="Permintaan" name="overtime_request">
-                            <field name="hr_ot_planning_ids" context="{'default_area_id': area_id, 'default_branch_id': branch_id,
+                            <!-- <field name="hr_ot_planning_ids" context="{'default_area_id': area_id, 'default_branch_id': branch_id,
                                    'default_directorate_id': directorate_id, 'default_hrms_department_id': hrms_department_id, 'default_division_id': division_id}" invisible="state != 'draft' or day_payment">
                                 <tree editable="bottom" class="o_horizontal_shift">
                                     <field name="ot_type" readonly="state != 'draft'" optional="show" required="1"/>
@@ -158,11 +159,11 @@
                                     <field name="state" optional="hide" widget="badge"/>
                                     <button string="Detail" name="act_detail" type="object"/>
                                 </tree>
-                            </field>
+                            </field> -->
 
                             <field name="hr_ot_planning_ids" context="{'default_area_id': area_id, 'default_branch_id': branch_id,
                                    'default_directorate_id': directorate_id, 'default_hrms_department_id': hrms_department_id, 'default_division_id': division_id}" 
-                                   invisible="state == 'draft' or day_payment" readonly="state in ('verified','approved','complete','done')">
+                                   invisible="day_payment" readonly="state in ('verified','approved','complete','done')">
                                 <tree editable="bottom" class="o_horizontal_shift" create="0" edit="1" delete="0">
                                     <field name="ot_type" readonly="state != 'draft'" optional="show" required="1"/>
                                     <field name="planning_id" column_invisible="1"/>

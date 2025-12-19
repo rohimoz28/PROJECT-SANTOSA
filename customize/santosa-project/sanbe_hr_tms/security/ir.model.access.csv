@@ -105,11 +105,6 @@ access_export_excel_tms,sanbe_hr_tms.export.excel.tms,model_export_excel_tms,bas
 access_export_excel_ot_attendance,sanbe_hr_tms.export.excel.ot.attendance,model_export_excel_ot_attendance,base.group_user,1,1,1,1
 access_export_excel_ot_bundling,sanbe_hr_tms.export.excel.ot.bundling,model_export_excel_ot_bundling,base.group_user,1,1,1,1
 access_value_group,sanbe_hr_tms.value.group,model_value_group,base.group_user,1,1,1,1
-
-access_stg_transform_absent_staff,access.stg.transform.absent.staff,model_stg_transform_absent,sanbe_hr_tms.module_sub_category_data_absen_staging_staff,1,0,0,0
-access_stg_transform_absent_supervisor,access.stg.transform.absent.supervisor,model_stg_transform_absent,sanbe_hr_tms.module_sub_category_data_absen_staging_supervisor,1,0,1,0
-access_stg_transform_absent_manager,access.stg.transform.absent.manager,model_stg_transform_absent,sanbe_hr_tms.module_sub_category_data_absen_staging_manager,1,1,1,1
-
-access_st_master_leave_staff,access.st.master.leave.staff,model_st_master_leave,sanbe_hr_tms.module_sub_category_master_cuti_staff,1,0,0,0
-access_st_master_leave_supervisor,access.st.master.leave.supervisor,model_st_master_leave,sanbe_hr_tms.module_sub_category_master_cuti_supervisor,1,0,1,0
-access_st_master_leave_manager,access.st.master.leave.manager,model_st_master_leave,sanbe_hr_tms.module_sub_category_master_cuti_manager,1,1,1,1
+access_stg_transform_absent,access.stg.transform.absent,model_stg_transform_absent,base.group_user,1,1,1,1
+access_st_master_leave,access.st.master.leave,model_st_master_leave,base.group_user,1,1,1,1
+access_wiz_hr_set_draft_manager,wiz_hr_set_draft_manager,model_wiz_hr_set_draft,,1,1,1,1

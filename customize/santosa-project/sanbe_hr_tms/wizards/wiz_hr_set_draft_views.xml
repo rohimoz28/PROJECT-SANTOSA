@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_wiz_hr_set_draft" model="ir.ui.view">
+            <field name="name">wiz.hr.set.draft.form</field>
+            <field name="model">wiz.hr.set.draft</field>
+            <field name="arch" type="xml">
+                <form string="Kembalikan ke Draft">
+                    <group>
+                        <field name="target_models" invisible="1"/>
+                        <field name="shift_id" invisible="1" options="{'no_create': True}" placeholder="Select Shifts"/>
+                        <field name="reason" string="Keterangan" required="1"  placeholder="Masukkan Keterangan"/>
+                    </group>
+
+                    <footer>
+                        <button string="Kembalikan Ke Draft" type="object" name="action_set_draft" class="btn-primary"/>
+                        <button string="Batal" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_wiz_hr_set_draft" model="ir.actions.act_window">
+            <field name="name">Kembalikan ke Draft</field>
+            <field name="res_model">wiz.hr.set.draft</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_wiz_hr_set_draft"/>
+            <field name="target">new</field> <!-- This opens it in a modal -->
+        </record>
+
+    </data>
+
+</odoo>

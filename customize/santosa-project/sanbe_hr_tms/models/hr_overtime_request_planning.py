@@ -192,14 +192,141 @@ class HREmpOvertimeRequest(models.Model):
         string="Total hari", compute='_compute_get_total_days_hours', store=True, )
     total_hours = fields.Float(
         string="Total Jam", compute='_compute_get_total_days_hours', store=True, )
-    day_payment = fields.Boolean('Day Payment', default=False, store=True,)
+    day_payment = fields.Boolean('Day Payment', default=False, store=True, )
     request_day_name = fields.Char(
         'Request Day Name', compute='_compute_req_day_name', store=True)
     count_record_employees = fields.Integer(string="Total Employees on The List", compute="_compute_record_employees",
                                             store=True)
+    # approverhrd_id = fields.Many2one('hr.employee', string='Approval by HRD',
+    #                                  domain="[('branch_id','=',branch_id), ('hrms_department_id', 'in',  [97, 174, 235]), ('user_id','!=', False)]",
+    #                                  store=True, index=True)
     approverhrd_id = fields.Many2one('hr.employee', string='Approval by HRD',
-                                     domain="[('branch_id','=',branch_id), ('hrms_department_id', 'in',  [97, 174, 235]), ('user_id','!=', False)]",
+                                     domain="[('branch_id','=',branch_id),('hrms_department_id','=',approval_dept), ('user_id','!=', False)]",
                                      store=True, index=True)
+
+    approval_dept = fields.Many2one(
+        'sanhrms.department', string='Departemen',
+        compute='_compute_approval_dept',
+        store=True)
+
+    # @api.onchange('branch_id')
+    # def _onchange_branch_id(self):
+    #     if not self.branch_id:
+    #         self.approval_dept = False
+    #         return
+    #
+    #     param = self.env['ir.config_parameter'].sudo().get_param('SPLHRD')
+    #     if param:
+    #         # Membersihkan spasi dan memastikan hanya angka
+    #         department_ids = [int(x.strip())
+    #                           for x in param.split(',') if x.strip().isdigit()]
+    #     else:
+    #         department_ids = []
+    #
+    #     if not department_ids:
+    #         # Sebaiknya jangan raise UserError di onchange karena mengganggu user saat mengetik
+    #         # Cukup kosongkan saja atau beri peringatan log
+    #         self.approval_dept = False
+    #         return
+    #
+    #     approval_dept_rec = self.env['sanhrms.department'].search([
+    #         ('id', 'in', department_ids),
+    #         ('branch_id', '=', self.branch_id.id)
+    #     ], limit=1)
+    #
+    #     if approval_dept_rec:
+    #         # CARA PERBAIKAN: Masukkan nilai ke field, bukan di-return
+    #         self.approval_dept = approval_dept_rec.id
+    #     else:
+    #         self.approval_dept = False
+    #         # Opsional: return warning jika ingin memunculkan popup tanpa error keras
+    #         return {'warning': {
+    #             'title': "Data Tidak Ditemukan",
+    #             'message': "Approval HRD untuk cabang ini belum diatur."
+    #         }}
+
+    @api.model
+    def _get_splhrd_ids(self):
+        """Fetch the list of HRD department IDs from system parameter"""
+        # param = self.env['ir.config_parameter'].sudo().get_param('hr.overtime.planning')
+        param = self.env['ir.config_parameter'].sudo().get_param('SPLHRD')
+        return [int(x) for x in param.split(',')] if param else []
+
+    @api.onchange('branch_id')
+    def _onchange_branch_id(self):
+        """Set approval_dept dan domain untuk approverhrd_id berdasarkan branch_id"""
+        if not self.branch_id:
+            self.approval_dept = False
+            return
+
+        # Ambil parameter SPLHRD
+        param = self.env['ir.config_parameter'].sudo().get_param('SPLHRD')
+        if param:
+            department_ids = [int(x.strip())
+                              for x in param.split(',') if x.strip().isdigit()]
+        else:
+            department_ids = []
+
+        # Set approval_dept
+        if department_ids:
+            approval_dept_rec = self.env['sanhrms.department'].search([
+                ('id', 'in', department_ids),
+                ('branch_id', '=', self.branch_id.id)
+            ], limit=1)
+
+            if approval_dept_rec:
+                self.approval_dept = approval_dept_rec.id
+            else:
+                self.approval_dept = False
+                return {'warning': {
+                    'title': "Data Tidak Ditemukan",
+                    'message': "Approval HRD untuk cabang ini belum diatur."
+                }}
+        else:
+            self.approval_dept = False
+
+        # Set domain untuk approverhrd_id
+        return {
+            'domain': {
+                'approverhrd_id': [
+                    ('branch_id', '=', self.branch_id.id),
+                    ('hrms_department_id', 'in', department_ids),
+                    ('user_id', '!=', False),
+                ]
+            }
+        }
+
+    @api.depends('branch_id')
+    def _compute_approval_dept(self):
+        """Compute approval_dept dari branch_id"""
+        for rec in self:
+            if not rec.branch_id:
+                rec.approval_dept = False
+                continue
+
+            param = self.env['ir.config_parameter'].sudo().get_param('SPLHRD')
+            if not param:
+                rec.approval_dept = False
+                continue
+
+            try:
+                department_ids = [int(x.strip())
+                                  for x in param.split(',') if x.strip().isdigit()]
+            except (ValueError, AttributeError):
+                rec.approval_dept = False
+                continue
+
+            if not department_ids:
+                rec.approval_dept = False
+                continue
+
+            approval_dept_rec = self.env['sanhrms.department'].search([
+                ('id', 'in', department_ids),
+                ('branch_id', '=', rec.branch_id.id)
+            ], limit=1)
+
+            rec.approval_dept = approval_dept_rec.id if approval_dept_rec else False
+
     approval_l1_id = fields.Many2one(
         comodel_name='hr.employee',
         string='Approval L1',
@@ -309,10 +436,10 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                rec.state == 'draft'
-                and not rec.approve1
-                and rec.approval_l1_id
-                and rec.approval_l1_id.user_id.id == current_user.id
+                    rec.state == 'draft'
+                    and not rec.approve1
+                    and rec.approval_l1_id
+                    and rec.approval_l1_id.user_id.id == current_user.id
             )
             rec.can_approve_l1 = can_approve
 
@@ -328,11 +455,11 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                rec.state == 'approved_l1'
-                and rec.approve1
-                and not rec.approve2
-                and rec.approval_l2_id
-                and rec.approval_l2_id.user_id.id == current_user.id
+                    rec.state == 'approved_l1'
+                    and rec.approve1
+                    and not rec.approve2
+                    and rec.approval_l2_id
+                    and rec.approval_l2_id.user_id.id == current_user.id
             )
             rec.can_approve_l2 = can_approve
 
@@ -359,12 +486,12 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                rec.state == 'approved_l2'
-                and rec.approval_l1_id
-                and rec.approve1
-                and rec.approval_l2_id
-                and rec.approve2
-                and rec.approval_l1_id.user_id.id == current_user.id
+                    rec.state == 'approved_l2'
+                    and rec.approval_l1_id
+                    and rec.approve1
+                    and rec.approval_l2_id
+                    and rec.approve2
+                    and rec.approval_l1_id.user_id.id == current_user.id
             )
             rec.can_verified = can_approve
 
@@ -381,12 +508,12 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                rec.state == 'verified'
-                and rec.approval_l1_id
-                and rec.approve1
-                and rec.approval_l2_id
-                and rec.approve2
-                and rec.approverhrd_id.user_id.id == current_user.id
+                    rec.state == 'verified'
+                    and rec.approval_l1_id
+                    and rec.approve1
+                    and rec.approval_l2_id
+                    and rec.approve2
+                    and rec.approverhrd_id.user_id.id == current_user.id
             )
             rec.can_approve_hrd = can_approve
 
@@ -437,6 +564,7 @@ class HREmpOvertimeRequest(models.Model):
 
                          WHERE eb.id = %s; \
                          """
+
     # ========================================
     # Helper Method: Checking constrain request day payment at same day
     # ========================================
@@ -581,46 +709,6 @@ class HREmpOvertimeRequest(models.Model):
                 'approve1': True,
                 'state': 'approved_l1'
             })
-
-    # def btn_approved_l1(self):
-    #     for rec in self:
-    #         if not rec.hr_ot_planning_ids:
-    #             raise UserError(
-    #                 "Tidak dapat menyetujui permintaan lembur tanpa data karyawan.")
-    #         if rec.total_days < 1 and rec.day_payment:
-    #             raise UserError(
-    #                 "Pengajuan Day payment tidak bisa dilakukan.")
-    #         if rec.hr_ot_planning_ids:
-    #             temp_hours = 7
-    #             for line in rec.hr_ot_planning_ids:
-    #                 if not rec.day_payment:
-    #                     if not line.ot_type:
-    #                         raise UserError(
-    #                             "Tidak dapat menyetujui permintaan lembur jika Type OT kosong.")
-    #                     if not line.work_plann or not line.output_plann:
-    #                         raise UserError(
-    #                             "Tidak dapat menyetujui permintaan lembur jika rencana kerja kosong atau perkiraan hasil.")
-    #                     if not line.plann_date_from:
-    #                         raise UserError(
-    #                             "Tidak dapat menyetujui permintaan lembur jika rencana tgl OT kosong.")
-    #                 else:
-    #                     if temp_hours > 0 and line.is_select:
-    #                         # deduction = min(temp_hours, line.residual_ot)
-    #                         if line.residual_ot >= temp_hours:
-    #                             line.residual_ot = line.residual_ot - temp_hours
-    #                             line.spl_employee_id.residual_ot = line.spl_employee_id.residual_ot - temp_hours
-    #                             temp_hours = 0
-    #                             print(line.id, 'LEBIH', temp_hours,
-    #                                   line.residual_ot, line.spl_employee_id.residual_ot)
-    #                         else:
-
-    #                             line.residual_ot = 0
-    #                             line.spl_employee_id.residual_ot = 0
-    #                             temp_hours = temp_hours - line.residual_ot
-    #                             print(line.id, 'kURANG', temp_hours,
-    #                                   line.residual_ot, line.spl_employee_id.residual_ot)
-    #         rec.approve1 = True
-    #         rec.state = 'approved_l1'
 
     def btn_approved_l2(self):
         for rec in self:
@@ -771,49 +859,63 @@ class HREmpOvertimeRequest(models.Model):
 
     def _compute_ot_detail_lines(self):
         for dp in self:
-            if not dp.day_payment:
-                continue
-            ot_details = self.env['hr.overtime.employees'].search([
-                ('planning_id.employee_id', '=', dp.employee_id.id),
-                ('planning_id.day_payment', '=', False),
-                ('realization_date', '!=', False),
-                ('residual_ot', '>', 0),
-                ('state', 'in', ('verified', 'approved', 'complete', 'done')),
-            ])
-
             line_commands = [(5, 0, 0)]
-
-            for ot in ot_details:
-                spl_employee_id = ot.id
+            if not dp.day_payment and dp.employee_id:
                 line_commands.append((0, 0, {
                     'planning_id': dp.id,
-                    'branch_id': ot.branch_id.id,
-                    'area_id': ot.area_id.id,
-                    'department_id': ot.department_id.id,
-                    'employee_id': ot.employee_id.id,
-                    'directorate_id': ot.directorate_id.id,
-                    'hrms_department_id': ot.hrms_department_id.id,
-                    'division_id': ot.division_id.id,
-                    'spl_employee_id': spl_employee_id,
-                    'realization_date': ot.realization_date,
-                    'realization_time_from': ot.realization_time_from,
-                    'realization_time_to': ot.realization_time_to,
-                    'plann_date_from': ot.plann_date_from,
-                    'plann_date_to': ot.plann_date_to,
-                    'ot_plann_from': ot.ot_plann_from,
-                    'ot_plann_to': ot.ot_plann_to,
-                    'verify_time_from': ot.verify_time_from,
-                    'verify_time_to': ot.verify_time_to,
-                    'work_plann': ot.work_plann,
-                    'count_approval_ot': ot.count_approval_ot,
-                    'claim_approval_ot': ot.claim_approval_ot,
-                    'adv_total_ot': ot.adv_total_ot,
-                    'sum_total_ot': ot.sum_total_ot,
-                    'residual_ot': ot.residual_ot,
-                    'output_plann': ot.output_plann,
-                    'ot_type': 'dp',
+                    'branch_id': dp.branch_id.id,
+                    'area_id': dp.area_id.id,
+                    'department_id': dp.department_id.id,
+                    'employee_id': dp.employee_id.id,
+                    'directorate_id': dp.directorate_id.id,
+                    'hrms_department_id': dp.hrms_department_id.id,
+                    'division_id': dp.division_id.id,
+                    'plann_date_from': dp.periode_from,
+                    'plann_date_to': dp.periode_from,
+                    'ot_type': 'regular',
                     'is_select': False,
                 }))
+            elif dp.day_payment and dp.employee_id:
+
+                ot_details = self.env['hr.overtime.employees'].search([
+                    ('planning_id.employee_id', '=', dp.employee_id.id),
+                    ('planning_id.day_payment', '=', False),
+                    ('realization_date', '!=', False),
+                    ('residual_ot', '>', 0),
+                    ('state', 'in', ('verified', 'approved', 'complete', 'done')),
+                ])
+
+                for ot in ot_details:
+                    spl_employee_id = ot.id
+                    line_commands.append((0, 0, {
+                        'planning_id': dp.id,
+                        'branch_id': ot.branch_id.id,
+                        'area_id': ot.area_id.id,
+                        'department_id': ot.department_id.id,
+                        'employee_id': ot.employee_id.id,
+                        'directorate_id': ot.directorate_id.id,
+                        'hrms_department_id': ot.hrms_department_id.id,
+                        'division_id': ot.division_id.id,
+                        'spl_employee_id': spl_employee_id,
+                        'realization_date': ot.realization_date,
+                        'realization_time_from': ot.realization_time_from,
+                        'realization_time_to': ot.realization_time_to,
+                        'plann_date_from': ot.plann_date_from,
+                        'plann_date_to': ot.plann_date_to,
+                        'ot_plann_from': ot.ot_plann_from,
+                        'ot_plann_to': ot.ot_plann_to,
+                        'verify_time_from': ot.verify_time_from,
+                        'verify_time_to': ot.verify_time_to,
+                        'work_plann': ot.work_plann,
+                        'count_approval_ot': ot.count_approval_ot,
+                        'claim_approval_ot': ot.claim_approval_ot,
+                        'adv_total_ot': ot.adv_total_ot,
+                        'sum_total_ot': ot.sum_total_ot,
+                        'residual_ot': ot.residual_ot,
+                        'output_plann': ot.output_plann,
+                        'ot_type': 'dp',
+                        'is_select': False,
+                    }))
 
             dp.hr_ot_planning_ids = line_commands
 
@@ -990,7 +1092,8 @@ class HREmpOvertimeRequestEmployee(models.Model):
     def _check_validation_date(self):
         for line in self:
             if line.plann_date_from and line.periode_from and line.periode_to and \
-                    (line.plann_date_from < line.periode_from or line.plann_date_from > line.periode_to) and not line.day_payment:
+                    (
+                            line.plann_date_from < line.periode_from or line.plann_date_from > line.periode_to) and not line.day_payment:
                 msg = "Tanggal SPL (%s) harus berada di antara Tanggal OT Dari (%s) dan Tanggal OT Hingga (%s)." % (
                     line.plann_date_from, line.periode_from, line.periode_to
                 )
