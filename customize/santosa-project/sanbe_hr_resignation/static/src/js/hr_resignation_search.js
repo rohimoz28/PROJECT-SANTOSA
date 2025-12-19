@@ -68,6 +68,9 @@ export class HRResignationFormController extends FormController {
                     record.data.area = myemp.service_area
                     record.data.bisnis_unit = myemp.service_bisnisunit
                     record.data.departmentid = myemp.service_departmentid
+                    record.data.directorateid = myemp.service_directorateid
+                    record.data.hrmsdepartmentid = myemp.service_hrmsdepartmentid
+                    record.data.divisionid = myemp.service_divisionid
                     record.data.bondservice_from = myemp.service_from
                     record.data.bondservice_to = myemp.service_to
                     console.log('data res id ',)
