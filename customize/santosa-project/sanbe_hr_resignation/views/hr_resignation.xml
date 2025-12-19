@@ -32,6 +32,19 @@
             <field name="binding_type">report</field>
         </record>
         
+
+        <!-- <record id="hr_resignation_sanbe_form_inherits" model="ir.ui.view">
+            <field name="name">hr.resignation.sanbe.form.inherits</field>
+            <field name="model">hr.resignation</field>
+            <field name="inherit_id" ref="hr_resignation.hr_resignation_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='joined_date']" position="replace">
+                    <field name="first_date_join"/>
+                </xpath>
+
+            </field>
+        </record> -->
+
         <record id="hr_resignation_sanbe_form" model="ir.ui.view">
             <field name="name">hr.resignation.sanbe.form</field>
             <field name="model">hr.resignation</field>
@@ -78,6 +91,14 @@
                     <field name="company_id" invisible="1"/>
                     <field name="currency_id" invisible="1"/>
                 </xpath>
+                <xpath expr="//field[@name='joined_date']" position="replace">
+                    <field name="trans_date" readonly="state in ['approved']" />
+                    <field name="trans_status" readonly="1" force_save="1"/>
+                    <field name="job_status" invisible="1"/>
+                    <field name="join_date" string="Tanggal Bergabung" readonly="1" force_save="1"/>
+                    <field name="joined_date" invisible="1"/>
+                    <field name="first_date_join" string="Tanggal pertama kali Bergabung"/>
+                </xpath>
                 <xpath expr="//field[@name='employee_id']" position="replace">
                     <field name="employee_id" 
                            readonly="state not in ['draft']" 
@@ -110,14 +131,14 @@
                     <field name="job_id" options="{'no_create': True,'no_create_edit': True}" domain="[('division_id','=',division_id)]"/>
                     <field name="parent_id" options="{'no_create': True,'no_create_edit': True}" domain="[('id', '!=', id),'|',('branch_id','=',branch_id),('branch_id','=',False)]"/>
                 </xpath>
-                <xpath expr="//field[@name='joined_date']" position="before">
+                <!-- <xpath expr="//field[@name='joined_date']" position="before">
                     <field name="trans_date" readonly="state in ['approved']" />
                     <field name="trans_status" readonly="1" force_save="1"/>
-                </xpath>
-                <xpath expr="//field[@name='joined_date']" position="attributes">
+                </xpath> -->
+                <!-- <xpath expr="//field[@name='joined_date']" position="attributes">
                         <attribute name="required">job_status =='permanent'</attribute>
                         <attribute name="readonly">state in ['approved']</attribute>
-                </xpath>
+                </xpath> -->
                 <xpath expr="//field[@name='employee_contract']" position="attributes">
                     <attribute name="readonly">state in ['approved']</attribute>
                 </xpath>
@@ -126,7 +147,7 @@
                 </xpath>
                 <xpath expr="//field[@name='approved_revealing_date']" position="attributes">
                     <attribute name="readonly">state in ['approved']</attribute>
-                    <attribute name="string">Approval Last Day</attribute>
+                    <attribute name="string">Persetujuan Hari Terakhir</attribute>
                 </xpath>
                 <xpath expr="//field[@name='employee_contract']" position="after">
                     <field name="job_status" readonly="state in ['approved']" />
@@ -147,8 +168,12 @@
                         </div>
                     </div>
                     <field name="contract_id" invisible="1"/>
-                    <field name="contract_datefrom" invisible="job_status !='contract'" readonly="1" force_save="1"/>
-                    <field name="contract_dateto" invisible="job_status !='contract'"  readonly="1" force_save="1"/>
+                    <label for="contract_datefrom" string="Masa Berlaku Kontrak" invisible="job_status !='contract'"/>
+                    <div class="o_row" invisible="job_status !='contract'">
+                        <field name="contract_datefrom" invisible="job_status !='contract'" readonly="1" force_save="1"/>
+                        Hingga 
+                        <field name="contract_dateto" invisible="job_status !='contract'"  readonly="1" force_save="1"/>
+                    </div>
                         <label for="ws_day" string="Contract Service"
                             invisible="job_status !='contract'" />
                     <div class="o_row" invisible="job_status !='contract'">
@@ -166,8 +191,8 @@
                         </div>
                     </div>
                 </xpath>
-                <xpath expr="//field[@name='notice_period']" position="after">
-                    <field name="end_contract" readonly="state in ['approved']" />
+                <xpath expr="//field[@name='notice_period']" position="attributes">
+                    <attribute name="string">Masa Pemberitahuan(Bulan)</attribute>
                 </xpath>
                 <xpath expr="//group/group[2]" position="after">
                     <group name="detail_resignation">
@@ -179,8 +204,8 @@
                         </group>
                     </group>
                     <group>
-                        <field name="submitted_date" readonly="state in ['approved']" />
-                        <field name="resignation_date" readonly="state in ['approved']" />
+                        <field name="submitted_date" string="Pengajuan Resign" readonly="state in ['approved']" />
+                        <field name="resignation_date" string="Tanggal Resign" readonly="state in ['approved']" />
                     </group>
                     <group>
                         <group>
@@ -196,6 +221,14 @@
                         <field name="remarks" readonly="state in ['approved']" />
                         <field name="images" readonly="state in ['approved']" widget="many2many_binary"/>
                         <field name="is_blacklist" readonly="state in ['approved']" />
+                        <label for="end_contract" string="Dipanggil Kembali"/>
+                        <div class="o_row">
+                            <field name="end_contract" readonly="state in ['approved']" />
+                            <label for="effective_day" string="Hari off" invisible="not end_contract"/>
+                            <field name="effective_day" readonly="state in ['approved']"  invisible="not end_contract"/>
+                            <label for="effective_day" string="Hari" invisible="not end_contract"/>
+                        </div>
+                        <field name="return_date" string = "Tanggal dipanggil Kembali" invisible="not end_contract"/>
                         <field name="keterangan" readonly="state in ['approved']" />
                     </group>
                 </xpath>
@@ -245,7 +278,9 @@
                     <field name="job_id"/>
                     <field name="resignation_type" string="Tipe Pengunduran Diri"/>
                     <field name="expected_revealing_date" string="Hari Terakhir Kerja"/>
-                    <field name="approved_revealing_date" string="Approval Last Day"/>
+                    <field name="approved_revealing_date" string="Persetujuan Hari Terakhir"/>
+                    <field name="end_contract" string="Dipanggil Kembali"/>
+                    <field name="return_date" string="Tanggal dipanggil Kembali"/>
                 </xpath>
 
                 <xpath expr="//field[@name='department_id']" position="replace"/>

@@ -24,19 +24,38 @@ class HrEmployementlog(models.Model):
     _description = 'HR Employement Log'
     _order = 'create_date desc, id desc'
 
-    employee_id = fields.Many2one('hr.employee', string='Employee ID', index=True)
-    contract_id = fields.Many2one(related="employee_id.contract_id", string="Contract", store=True)
+    employee_id = fields.Many2one(
+        'hr.employee', string='Employee ID', index=True)
+    contract_id = fields.Many2one(
+        related="employee_id.contract_id", string="Contract", store=True)
     service_type = fields.Char('Service Type', tracking=True)
     start_date = fields.Date('Start Date', tracking=True)
     end_date = fields.Date('End date', tracking=True)
-    area = fields.Many2one('res.territory', string='Area', tracking=True)
-    bisnis_unit = fields.Many2one('res.branch', string='Business Units', tracking=True)
-    directorate_id = fields.Many2one('sanhrms.directorate', string='Direktorat', tracking=True)
-    department_id = fields.Many2one('hr.department', string='Sub Department')
-    hrms_department_id = fields.Many2one('sanhrms.department', string='Departemen', tracking=True)
-    division_id = fields.Many2one('sanhrms.division', string='Divisi', tracking=True)
+    # area = fields.Many2one(
+    #     'res.territory', string='Area', compute="_get_data_detail", tracking=True)
+    bisnis_unit = fields.Many2one(
+        'res.branch', string='Business Units', tracking=True)
+    # directorate_id = fields.Many2one(
+    #     'sanhrms.directorate',  string='Direktorat', compute="_get_data_detail", tracking=True)
+    # department_id = fields.Many2one(
+    #     'hr.department', compute="_get_data_detail",  string='Sub Department')
+    # hrms_department_id = fields.Many2one(
+    #     'sanhrms.department',  string='Departemen', compute="_get_data_detail", tracking=True)
+    # division_id = fields.Many2one('sanhrms.division', string='Divisi', compute="_get_data_detail",
+    #                               tracking=True)
+    area = fields.Many2one(
+        'res.territory', string='Area', tracking=True)
+    directorate_id = fields.Many2one(
+        'sanhrms.directorate',  string='Direktorat', tracking=True)
+    department_id = fields.Many2one(
+        'hr.department',  string='Sub Department')
+    hrms_department_id = fields.Many2one(
+        'sanhrms.department',  string='Departemen', tracking=True)
+    division_id = fields.Many2one('sanhrms.division', string='Divisi',
+                                  tracking=True)
     job_title = fields.Char(string='Jabatan', tracking=True)
-    parent_id = fields.Many2one('parent.hr.employee', tracking=True, string='Atasan Langsung')
+    parent_id = fields.Many2one(
+        'parent.hr.employee', tracking=True, string='Atasan Langsung')
     job_status = fields.Selection([('permanent', 'Karyawan Tetap (PKWTT)'),
                                    ('contract', 'Karyawan Kontrak (PKWT)'),
                                    ('partner_doctor', 'Dokter Mitra'),
@@ -51,10 +70,13 @@ class HrEmployementlog(models.Model):
                                    ('terminated', 'Terminated'),
                                    ('pass_away', 'Pass Away'),
                                    ('long_illness', 'Long Illness')], default='probation', string='Status Kekaryawanan')
-    emp_status_id = fields.Many2one(comodel_name='hr.emp.status', string='Status Kekaryawanan', tracking=True)
-    masa_jabatan = fields.Char('Masa Jabatan', compute='hitung_masa_jabatan', store=False)
+    emp_status_id = fields.Many2one(
+        comodel_name='hr.emp.status', string='Status Kekaryawanan', tracking=True)
+    masa_jabatan = fields.Char(
+        'Masa Jabatan', compute='hitung_masa_jabatan', store=False)
     nik = fields.Char('NIK', compute='_get_nik', store=True)
-    employee_group1 = fields.Char(string="Group Penggajian", compute='_get_nik')
+    employee_group1 = fields.Char(
+        string="Group Penggajian", compute='_get_nik')
     model_name = fields.Char(string="Model Name")
     model_id = fields.Integer(string="Model Id")
     trx_number = fields.Char(string="Nomor Transaksi")
@@ -62,8 +84,12 @@ class HrEmployementlog(models.Model):
     # end_contract = fields.Boolean(string="Flag End of Contract", default=False)
     end_contract = fields.Boolean(string="Rehire", default=False)
     label = fields.Char(default="Open View")
-    employee_group1s = fields.Char(string='Group penggajian', compute='_get_nik' , tracking=True, store=True)
-    
+    employee_group1s = fields.Char(
+        string='Group penggajian', compute='_get_nik', tracking=True, store=True)
+    resignation_id = fields.Integer(
+        string='resignation id', help="ini ID resignation",)
+    mutation_id = fields.Integer(
+        string='mutation id', help="ini ID dari Mutasi")
 
     def ambil_view(self):
         for rec in self:
@@ -83,7 +109,39 @@ class HrEmployementlog(models.Model):
         for rec in self:
             if rec.employee_id:
                 rec.nik = rec.employee_id.nik
+                rec.employee_group1 = rec.employee_id.employee_group1
                 rec.employee_group1s = rec.employee_id.employee_group1s.name
+
+    # @api.depends('model_name', 'model_id', 'employee_id')
+    # def _get_data_detail(self):
+    #     for rec in self:
+    #         if rec.model_name and rec.model_id:
+    #             data_temp = self.env[rec.model_name].sudo().browse(
+    #                 rec.model_id)
+    #             if data_temp and rec.model_name == 'hr.resignation':
+    #                 rec.parent_id = data_temp.employee_id.parent_id.id
+    #                 rec.area = data_temp.area.id
+    #                 rec.department_id = data_temp.department_id.id
+    #                 rec.directorate_id = data_temp.directorate_id.id
+    #                 rec.hrms_department_id = data_temp.hrms_department_id.id
+    #                 rec.division_id = data_temp.division_id.id
+    #             elif rec.model_name == 'hr.employee.mutations':
+    #                 rec.parent_id = rec.employee_id.parent_id.id or False
+    #                 rec.area = rec.employee_id.area.id or False
+    #                 rec.department_id = rec.employee_id.department_id.id or False
+    #                 rec.directorate_id = rec.employee_id.directorate_id.id or False
+    #                 rec.hrms_department_id = rec.employee_id.hrms_department_id.id or False
+    #                 rec.division_id = rec.employee_id.division_id.id or False
+    #             elif rec.model_name == 'hr.contract':
+    #                 rec.parent_id = rec.employee_id.parent_id.id or False
+    #                 rec.area = data_temp.area.id or False
+    #                 rec.department_id = data_temp.department_id.id or False
+    #                 rec.directorate_id = data_temp.directorate_id.id or False
+    #                 rec.hrms_department_id = data_temp.hrms_department_id.id or False
+    #                 rec.division_id = data_temp.division_id.id or False
+    #             else:
+    #                 rec.area = data_temp.area.id
+    #                 pass
 
     # @api.depends('start_date', 'end_date')
     # def hitung_masa_jabatan(self):
@@ -126,7 +184,8 @@ class HrEmployementlog(models.Model):
             mmonth = 0
             mday = 0
             if record.start_date and record.end_date:
-                service_duration = relativedelta(record.end_date, record.start_date)
+                service_duration = relativedelta(
+                    record.end_date, record.start_date)
                 myear = service_duration.years
                 mmonth = service_duration.months
                 mday = service_duration.days
@@ -136,7 +195,8 @@ class HrEmployementlog(models.Model):
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)
         if view_type in ('tree', 'form'):
-            group_name = self.env['res.groups'].search([('name', '=', 'HRD CA')])
+            group_name = self.env['res.groups'].search(
+                [('name', '=', 'HRD CA')])
             cekgroup = self.env.user.id in group_name.users.ids
             if cekgroup:
                 for node in arch.xpath("//field"):
