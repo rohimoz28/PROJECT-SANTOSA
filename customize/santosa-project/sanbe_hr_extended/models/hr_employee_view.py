@@ -45,7 +45,7 @@ class HrEmployeeView(models.Model):
                                 ('single', 'Belum Menikah'),
                                 ('married', 'Menikah'),
                                 ('seperate', 'Berpisah')], string='Status Perkawinan')
-    birthday = fields.Date(string='Status Perkawinan')
+    birthday = fields.Date(string='Tanggal Lahir')
     identification_id = fields.Char(string='Nomor Kartu Keluarga')
     no_npwp = fields.Char(string='Nomor NPWP')
     no_ktp = fields.Char(string='No KTP')
@@ -75,6 +75,14 @@ class HrEmployeeView(models.Model):
     contract_dateto = fields.Date('Contract To')
 
     def init(self):
+        """
+        1: Hitung Tanggal Pension (Pension Date)
+        Tanggal Pension = Tahun Lahir + Usia Pension
+        2: Handle Hari yang Tidak Valid
+        Jika lahir tanggal 31 Mei, tapi bulan Juni hanya punya 30 hari
+        3: Tentukan Status Pension
+        Jika hari ini sudah lewat dari pension date → Status = "expired" ELSE Status = "running"
+        """
         tools.drop_view_if_exists(self.env.cr, self._table)
         self.env.cr.execute("""
             CREATE OR REPLACE VIEW %s AS (
@@ -115,5 +123,4 @@ class HrEmployeeView(models.Model):
                     he.active
                 from hr_employee he
             )
-        """ % (self._table, ))
-
+        """ % (self._table,))
