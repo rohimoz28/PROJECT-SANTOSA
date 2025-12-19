@@ -192,7 +192,7 @@ class HREmpOvertimeRequest(models.Model):
         string="Total hari", compute='_compute_get_total_days_hours', store=True, )
     total_hours = fields.Float(
         string="Total Jam", compute='_compute_get_total_days_hours', store=True, )
-    day_payment = fields.Boolean('Day Payment', default=False, store=True,)
+    day_payment = fields.Boolean('Day Payment', default=False, store=True, )
     request_day_name = fields.Char(
         'Request Day Name', compute='_compute_req_day_name', store=True)
     count_record_employees = fields.Integer(string="Total Employees on The List", compute="_compute_record_employees",
@@ -242,6 +242,26 @@ class HREmpOvertimeRequest(models.Model):
                 'title': "Data Tidak Ditemukan",
                 'message': "Approval HRD untuk cabang ini belum diatur."
             }}
+
+    @api.model
+    def _get_splhrd_ids(self):
+        """Fetch the list of HRD department IDs from system parameter"""
+        # param = self.env['ir.config_parameter'].sudo().get_param('hr.overtime.planning')
+        param = self.env['ir.config_parameter'].sudo().get_param('SPLHRD')
+        return [int(x) for x in param.split(',')] if param else []
+
+    @api.onchange('branch_id')
+    def _onchange_branch_id(self):
+        splhrd_ids = self._get_splhrd_ids()
+        return {
+            'domain': {
+                'approverhrd_id': [
+                    ('branch_id', '=', self.branch_id.id),
+                    ('hrms_department_id', 'in', splhrd_ids),
+                    ('user_id', '!=', False),
+                ]
+            }
+        }
 
     approval_l1_id = fields.Many2one(
         comodel_name='hr.employee',
@@ -352,10 +372,10 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                rec.state == 'draft'
-                and not rec.approve1
-                and rec.approval_l1_id
-                and rec.approval_l1_id.user_id.id == current_user.id
+                    rec.state == 'draft'
+                    and not rec.approve1
+                    and rec.approval_l1_id
+                    and rec.approval_l1_id.user_id.id == current_user.id
             )
             rec.can_approve_l1 = can_approve
 
@@ -371,11 +391,11 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                rec.state == 'approved_l1'
-                and rec.approve1
-                and not rec.approve2
-                and rec.approval_l2_id
-                and rec.approval_l2_id.user_id.id == current_user.id
+                    rec.state == 'approved_l1'
+                    and rec.approve1
+                    and not rec.approve2
+                    and rec.approval_l2_id
+                    and rec.approval_l2_id.user_id.id == current_user.id
             )
             rec.can_approve_l2 = can_approve
 
@@ -402,12 +422,12 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                rec.state == 'approved_l2'
-                and rec.approval_l1_id
-                and rec.approve1
-                and rec.approval_l2_id
-                and rec.approve2
-                and rec.approval_l1_id.user_id.id == current_user.id
+                    rec.state == 'approved_l2'
+                    and rec.approval_l1_id
+                    and rec.approve1
+                    and rec.approval_l2_id
+                    and rec.approve2
+                    and rec.approval_l1_id.user_id.id == current_user.id
             )
             rec.can_verified = can_approve
 
@@ -424,12 +444,12 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                rec.state == 'verified'
-                and rec.approval_l1_id
-                and rec.approve1
-                and rec.approval_l2_id
-                and rec.approve2
-                and rec.approverhrd_id.user_id.id == current_user.id
+                    rec.state == 'verified'
+                    and rec.approval_l1_id
+                    and rec.approve1
+                    and rec.approval_l2_id
+                    and rec.approve2
+                    and rec.approverhrd_id.user_id.id == current_user.id
             )
             rec.can_approve_hrd = can_approve
 
@@ -480,6 +500,7 @@ class HREmpOvertimeRequest(models.Model):
 
                          WHERE eb.id = %s; \
                          """
+
     # ========================================
     # Helper Method: Checking constrain request day payment at same day
     # ========================================
@@ -1007,7 +1028,8 @@ class HREmpOvertimeRequestEmployee(models.Model):
     def _check_validation_date(self):
         for line in self:
             if line.plann_date_from and line.periode_from and line.periode_to and \
-                    (line.plann_date_from < line.periode_from or line.plann_date_from > line.periode_to) and not line.day_payment:
+                    (
+                            line.plann_date_from < line.periode_from or line.plann_date_from > line.periode_to) and not line.day_payment:
                 msg = "Tanggal SPL (%s) harus berada di antara Tanggal OT Dari (%s) dan Tanggal OT Hingga (%s)." % (
                     line.plann_date_from, line.periode_from, line.periode_to
                 )
