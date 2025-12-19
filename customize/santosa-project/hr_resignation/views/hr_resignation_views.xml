@@ -127,6 +127,10 @@
               action="hr_resignation_action"
               groups="sanbe_hr_extended.module_karyawan_keluar"
               sequence="30"/>
+    <!-- <menuitem id="hr_resignation_menu_id"
+              parent="hr.menu_hr_employee_payroll" name="Karyawan Keluar"
+              action="hr_resignation_action"
+              sequence="30"/> -->
     <!-- Menu item for Approved Resignation -->
     <!--    <menuitem id="hr_resignation_menu_approved_request"-->
     <!--              parent="hr_resignation_menu_root"-->
