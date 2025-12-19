@@ -109,7 +109,7 @@
                     </group>
                     <notebook>
                         <page string="Permintaan" name="overtime_request">
-                            <field name="hr_ot_planning_ids" context="{'default_area_id': area_id, 'default_branch_id': branch_id,
+                            <!-- <field name="hr_ot_planning_ids" context="{'default_area_id': area_id, 'default_branch_id': branch_id,
                                    'default_directorate_id': directorate_id, 'default_hrms_department_id': hrms_department_id, 'default_division_id': division_id}" invisible="state != 'draft' or day_payment">
                                 <tree editable="bottom" class="o_horizontal_shift">
                                     <field name="ot_type" readonly="state != 'draft'" optional="show" required="1"/>
@@ -159,11 +159,11 @@
                                     <field name="state" optional="hide" widget="badge"/>
                                     <button string="Detail" name="act_detail" type="object"/>
                                 </tree>
-                            </field>
+                            </field> -->
 
                             <field name="hr_ot_planning_ids" context="{'default_area_id': area_id, 'default_branch_id': branch_id,
                                    'default_directorate_id': directorate_id, 'default_hrms_department_id': hrms_department_id, 'default_division_id': division_id}" 
-                                   invisible="state == 'draft' or day_payment" readonly="state in ('verified','approved','complete','done')">
+                                   invisible="day_payment" readonly="state in ('verified','approved','complete','done')">
                                 <tree editable="bottom" class="o_horizontal_shift" create="0" edit="1" delete="0">
                                     <field name="ot_type" readonly="state != 'draft'" optional="show" required="1"/>
                                     <field name="planning_id" column_invisible="1"/>
