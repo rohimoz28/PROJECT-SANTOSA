@@ -205,7 +205,7 @@ class HREmpOvertimeRequest(models.Model):
                                      store=True, index=True)
 
     approval_dept = fields.Many2one(
-        'sanhrms.department', string='Departemen', compute="_get_splhrd_ids")
+        'sanhrms.department', string='Departemen')
 
     @api.onchange('branch_id')
     def _onchange_branch_id(self):
