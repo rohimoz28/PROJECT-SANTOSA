@@ -205,43 +205,45 @@ class HREmpOvertimeRequest(models.Model):
                                      store=True, index=True)
 
     approval_dept = fields.Many2one(
-        'sanhrms.department', string='Departemen')
+        'sanhrms.department', string='Departemen',
+        compute='_compute_approval_dept',
+        store=True)
 
-    @api.onchange('branch_id')
-    def _onchange_branch_id(self):
-        if not self.branch_id:
-            self.approval_dept = False
-            return
-
-        param = self.env['ir.config_parameter'].sudo().get_param('SPLHRD')
-        if param:
-            # Membersihkan spasi dan memastikan hanya angka
-            department_ids = [int(x.strip())
-                              for x in param.split(',') if x.strip().isdigit()]
-        else:
-            department_ids = []
-
-        if not department_ids:
-            # Sebaiknya jangan raise UserError di onchange karena mengganggu user saat mengetik
-            # Cukup kosongkan saja atau beri peringatan log
-            self.approval_dept = False
-            return
-
-        approval_dept_rec = self.env['sanhrms.department'].search([
-            ('id', 'in', department_ids),
-            ('branch_id', '=', self.branch_id.id)
-        ], limit=1)
-
-        if approval_dept_rec:
-            # CARA PERBAIKAN: Masukkan nilai ke field, bukan di-return
-            self.approval_dept = approval_dept_rec.id
-        else:
-            self.approval_dept = False
-            # Opsional: return warning jika ingin memunculkan popup tanpa error keras
-            return {'warning': {
-                'title': "Data Tidak Ditemukan",
-                'message': "Approval HRD untuk cabang ini belum diatur."
-            }}
+    # @api.onchange('branch_id')
+    # def _onchange_branch_id(self):
+    #     if not self.branch_id:
+    #         self.approval_dept = False
+    #         return
+    #
+    #     param = self.env['ir.config_parameter'].sudo().get_param('SPLHRD')
+    #     if param:
+    #         # Membersihkan spasi dan memastikan hanya angka
+    #         department_ids = [int(x.strip())
+    #                           for x in param.split(',') if x.strip().isdigit()]
+    #     else:
+    #         department_ids = []
+    #
+    #     if not department_ids:
+    #         # Sebaiknya jangan raise UserError di onchange karena mengganggu user saat mengetik
+    #         # Cukup kosongkan saja atau beri peringatan log
+    #         self.approval_dept = False
+    #         return
+    #
+    #     approval_dept_rec = self.env['sanhrms.department'].search([
+    #         ('id', 'in', department_ids),
+    #         ('branch_id', '=', self.branch_id.id)
+    #     ], limit=1)
+    #
+    #     if approval_dept_rec:
+    #         # CARA PERBAIKAN: Masukkan nilai ke field, bukan di-return
+    #         self.approval_dept = approval_dept_rec.id
+    #     else:
+    #         self.approval_dept = False
+    #         # Opsional: return warning jika ingin memunculkan popup tanpa error keras
+    #         return {'warning': {
+    #             'title': "Data Tidak Ditemukan",
+    #             'message': "Approval HRD untuk cabang ini belum diatur."
+    #         }}
 
     @api.model
     def _get_splhrd_ids(self):
@@ -252,16 +254,78 @@ class HREmpOvertimeRequest(models.Model):
 
     @api.onchange('branch_id')
     def _onchange_branch_id(self):
-        splhrd_ids = self._get_splhrd_ids()
+        """Set approval_dept dan domain untuk approverhrd_id berdasarkan branch_id"""
+        if not self.branch_id:
+            self.approval_dept = False
+            return
+
+        # Ambil parameter SPLHRD
+        param = self.env['ir.config_parameter'].sudo().get_param('SPLHRD')
+        if param:
+            department_ids = [int(x.strip())
+                              for x in param.split(',') if x.strip().isdigit()]
+        else:
+            department_ids = []
+
+        # Set approval_dept
+        if department_ids:
+            approval_dept_rec = self.env['sanhrms.department'].search([
+                ('id', 'in', department_ids),
+                ('branch_id', '=', self.branch_id.id)
+            ], limit=1)
+
+            if approval_dept_rec:
+                self.approval_dept = approval_dept_rec.id
+            else:
+                self.approval_dept = False
+                return {'warning': {
+                    'title': "Data Tidak Ditemukan",
+                    'message': "Approval HRD untuk cabang ini belum diatur."
+                }}
+        else:
+            self.approval_dept = False
+
+        # Set domain untuk approverhrd_id
         return {
             'domain': {
                 'approverhrd_id': [
                     ('branch_id', '=', self.branch_id.id),
-                    ('hrms_department_id', 'in', splhrd_ids),
+                    ('hrms_department_id', 'in', department_ids),
                     ('user_id', '!=', False),
                 ]
             }
         }
+
+    @api.depends('branch_id')
+    def _compute_approval_dept(self):
+        """Compute approval_dept dari branch_id"""
+        for rec in self:
+            if not rec.branch_id:
+                rec.approval_dept = False
+                continue
+
+            param = self.env['ir.config_parameter'].sudo().get_param('SPLHRD')
+            if not param:
+                rec.approval_dept = False
+                continue
+
+            try:
+                department_ids = [int(x.strip())
+                                  for x in param.split(',') if x.strip().isdigit()]
+            except (ValueError, AttributeError):
+                rec.approval_dept = False
+                continue
+
+            if not department_ids:
+                rec.approval_dept = False
+                continue
+
+            approval_dept_rec = self.env['sanhrms.department'].search([
+                ('id', 'in', department_ids),
+                ('branch_id', '=', rec.branch_id.id)
+            ], limit=1)
+
+            rec.approval_dept = approval_dept_rec.id if approval_dept_rec else False
 
     approval_l1_id = fields.Many2one(
         comodel_name='hr.employee',
