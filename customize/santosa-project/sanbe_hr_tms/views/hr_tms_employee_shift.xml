@@ -97,8 +97,7 @@
                 <button name="action_set_to_draft" type="object" string="Kembalikan ke Draft"
                         groups="sanbe_hr_tms.group_shift_hrd"
                         invisible="state == 'draft'"/>
-                <button name="action_detail_summary" type="object" string="Kehadiran" class="oe_highlight"
-                        groups="sanbe_hr_tms.group_shift_hrd" invisible="state != 'draft'"/>
+                <button name="action_detail_summary" type="object" string="Kehadiran" class="oe_highlight"/>
                 <field name="create_uid" string="Created by" optional='hide'/>
                 <field name="write_uid" string="Last Update by" optional='hide'/>
                 <field name="write_date" string="Last Update" optional='hide'/>
