@@ -177,10 +177,10 @@ class HrResignation(models.Model):
                     raise ValidationError(
                         _('Last date of the Employee must '
                           'be anterior to Joining date'))
-            else:
-                if resignation.job_status == 'permanent':
-                    raise ValidationError(
-                        _('Please set a Joining Date for employee'))
+            # else:
+            #     if resignation.job_status == 'permanent':
+            #         raise ValidationError(
+            #             _('Please set a Joining Date for employee'))
             resignation.state = 'confirm'
             resignation.resign_confirm_date = str(fields.Datetime.now())
 
