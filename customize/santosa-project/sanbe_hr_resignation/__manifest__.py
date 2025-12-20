@@ -19,7 +19,7 @@
     'currency': 'USD',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'hr_resignation','base_territory','sanbe_hr_extended','sanbe_hr_employee_approval'],
+    'depends': ['base', 'hr_resignation', 'sanbe_hr_extended', 'base_territory', 'sanbe_hr_extended', 'sanbe_hr_employee_approval'],
     'data': [
         'security/hr_resignation_security.xml',
         'views/hr_resignation.xml',

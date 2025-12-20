@@ -22,7 +22,7 @@
 #############################################################################
 from datetime import timedelta
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 date_format = "%Y-%m-%d"
 RESIGNATION_TYPE = [('resigned', 'Normal Resignation'),
@@ -48,6 +48,7 @@ EMP_STATUS = {
     'LOIL': 'long_illness',
 }
 
+
 class HrResignation(models.Model):
     """
      Model for HR Resignations.
@@ -63,7 +64,7 @@ class HrResignation(models.Model):
                        default=lambda self: _('New'))
     employee_id = fields.Many2one('hr.employee', string="Employee",
                                   default=lambda
-                                      self: self.env.user.employee_id.id,
+                                  self: self.env.user.employee_id.id,
                                   help='Name of the employee for '
                                        'whom the request is creating')
     department_id = fields.Many2one('hr.department', string="Department",
@@ -141,22 +142,21 @@ class HrResignation(models.Model):
             resignation_request = self.env['hr.resignation'].search(
                 [('employee_id', '=', resignation.employee_id.id),
                  ('state', 'in', ['confirm', 'approved'])])
-            if resignation_request:
+            if resignation_request and resignation.employee_id.state != 'approved':
                 raise ValidationError(
                     _('There is a resignation request in confirmed or'
-                      ' approved state for this employee'))
+                        ' approved state for this employee'))
 
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
         """
         Method triggered when the 'employee_id' field is changed.
         """
-        self.joined_date = self.employee_id.joining_date
         if self.employee_id:
             resignation_request = self.env['hr.resignation'].search(
                 [('employee_id', '=', self.employee_id.id),
                  ('state', 'in', ['confirm', 'approved'])])
-            if resignation_request:
+            if resignation_request and self.employee_id.state != 'approved':
                 raise ValidationError(
                     _('There is a resignation request in confirmed or'
                       ' approved state for this employee'))
@@ -166,6 +166,7 @@ class HrResignation(models.Model):
                 if contracts.state == 'open':
                     self.employee_contract = contracts.name
                     self.notice_period = contracts.notice_days
+                    self.joined_date = self.employee_id.join_date
 
     @api.model
     def create(self, vals):
@@ -205,10 +206,10 @@ class HrResignation(models.Model):
                     raise ValidationError(
                         _('Last date of the Employee must '
                           'be anterior to Joining date'))
-            else:
-                if resignation.job_status == 'permanent':
-                    raise ValidationError(
-                        _('Please set a Joining Date for employee'))
+            # else:
+            #     if resignation.job_status == 'permanent':
+            #         raise ValidationError(
+            #             _('Please set a Joining Date for employee'))
             resignation.state = 'confirm'
             resignation.resign_confirm_date = str(fields.Datetime.now())
 
@@ -245,11 +246,18 @@ class HrResignation(models.Model):
                approve the resignation.
         """
         for resignation in self:
-            
+            # import pdb
+            # pdb.set_trace
+            # print(">>>>>>>>>>>>>")
+            # print(">>>>>>>>>>>>>")
+            # print(">>>>>>>>>>>>>")
+            # print(">>>>>>>>>>>>>")
+            # print(">>>>>>>>>>>>>")
             if resignation.resignation_type and resignation.employee_id:
                 new_status = EMP_STATUS.get(resignation.resignation_type)
                 if new_status:
-                    resignation.employee_id.sudo().write({'emp_status': new_status})
+                    resignation.employee_id.sudo().write(
+                        {'emp_status': new_status})
 
             if (resignation.expected_revealing_date and
                     resignation.resign_confirm_date):
@@ -266,8 +274,8 @@ class HrResignation(models.Model):
                             resignation.employee_contract = contract.name
                             resignation.state = 'approved'
                             resignation.approved_revealing_date = (
-                                    resignation.resign_confirm_date + timedelta(
-                                days=contract.notice_days))
+                                resignation.resign_confirm_date + timedelta(
+                                    days=contract.notice_days))
                         else:
                             # print('33333333333333333333')
                             resignation.approved_revealing_date = (
@@ -309,7 +317,8 @@ class HrResignation(models.Model):
                         'LOIL': 'long_illness'
                     }
 
-                    current_emp_status = status_mapping.get(resignation.resignation_type, 'resigned')
+                    current_emp_status = status_mapping.get(
+                        resignation.resignation_type, 'resigned')
 
                     datalog = {
                         'employee_id': resignation.employee_id.id,
@@ -323,9 +332,15 @@ class HrResignation(models.Model):
                         'emp_status': current_emp_status,
                         'model_name': 'hr.resignation',
                         'model_id': resignation.id,
+                        'resignation_id': resignation.id,
                         'trx_number': resignation.name,
                         'doc_number': resignation.letter_no,
                         'end_contract': resignation.end_contract,
+                        'area': resignation.employee_id.area.id,
+                        'directorate_id': resignation.employee_id.directorate_id.id,
+                        'hrms_department_id': resignation.employee_id.hrms_department_id.id,
+                        'division_id': resignation.employee_id.division_id.id,
+                        'parent_id': resignation.employee_id.parent_id.id,
                     }
 
                     resignation.employee_id.emp_status = current_emp_status
@@ -371,7 +386,7 @@ class HrResignation(models.Model):
                     ('company_id', '=', rec.employee_id.company_id.id),
                     ('state', '=', 'open'),
                 ]).filtered(lambda c: c.date_start <= today and (
-                        not c.date_end or c.date_end >= today))
+                    not c.date_end or c.date_end >= today))
                 running_contract_ids.state = 'close'
                 rec.employee_id.departure_reason_id = departure_reason_id
                 rec.employee_id.departure_date = rec.approved_revealing_date
