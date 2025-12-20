@@ -121,7 +121,7 @@ class HrEmployementTracking(models.TransientModel):
                     'department_id': allcari.department_id.id,
                     'job_title': allcari.job_title,
                     'job_status': allcari.job_status,
-                    'emp_status': allcari.emp_status
+                    'emp_status': allcari.emp_status,
                     'employee_group1s': allcari.employee_group1s.name,
                     'doc_number': allcari.name,
                     'end_contract': allcari.end_contract,
