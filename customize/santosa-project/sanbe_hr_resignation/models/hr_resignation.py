@@ -322,7 +322,7 @@ class HrResignation(models.Model):
                                                                        'model_name': 'hr.contract',
                                                                        'model_id': allrec.id,
                                                                        'resignation_id': allrec.id,
-                                                                       'employee_group1s': allrec.employee_id.employee_group1s,
+                                                                       'employee_group1s': allrec.employee_id.employee_group1s.name,
                                                                        'doc_number': allrec.name,
                                                                        'end_contract': allrec.end_contract,
                                                                        'area': allrec.area.id,
