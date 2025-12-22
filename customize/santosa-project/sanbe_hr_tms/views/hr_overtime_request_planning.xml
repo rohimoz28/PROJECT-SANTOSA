@@ -184,10 +184,8 @@
                                            widget="float_time" optional="show"  required="1"/>
                                     <field name="ot_plann_to" readonly="state != 'draft'" string="Jam SPL Hingga"
                                            widget="float_time" optional="show" required="1"/>
-                                    <field name="work_plann" force_save="1"
-                                           readonly="state not in ('draft','approved_l1')" readonly="state != 'draft'" optional="show" required="1"/>
-                                    <field name="output_plann" force_save="1"
-                                           readonly="state not in ('draft','approved_l1')" readonly="state != 'draft'" optional="show" required="1"/>
+                                    <field name="work_plann" force_save="1" readonly="state != 'draft'" optional="show" required="1"/>
+                                    <field name="output_plann" force_save="1" readonly="state != 'draft'" optional="show" required="1"/>
                                     <field name="realization_date" string="Tanggal Hadir" widget="date" readonly="1"
                                            optional="show"/>
                                     <field name="realization_time_from" widget="float_time" readonly="1" optional="show"/>
