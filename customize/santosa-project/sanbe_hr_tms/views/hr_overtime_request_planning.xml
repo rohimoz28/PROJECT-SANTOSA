@@ -18,10 +18,10 @@
                         <button string="Verified" name="btn_verified" type="object" class="oe_highlight"
                                 invisible="not can_verified"
                                 groups="sanbe_hr_tms.module_surat_perintah_lembur_approver,sanbe_hr_tms.module_surat_perintah_lembur_manager"/>
-                        <button string="Approved HRD" name="btn_approved" type="object" class="oe_highlight"
+                        <button string="Verified by HRD" name="btn_approved" type="object" class="oe_highlight"
                                 invisible="not can_approve_hrd"
                                 groups="sanbe_hr_tms.module_surat_perintah_lembur_approver,sanbe_hr_tms.module_surat_perintah_lembur_manager"/>
-                        <button string="Complete" name="btn_complete" type="object" class="oe_highlight"
+                        <button string="Validasi by HRD" name="btn_complete" type="object" class="oe_highlight"
                                 invisible="state != 'approved'"/>
                         <button string="Reject" name="btn_reject" type="object" class="btn-danger"
                                 invisible="state in ('reject','verified','complete','done', 'approved')"/>
@@ -42,6 +42,9 @@
                             <field name="can_approve_l2" invisible="1"/>
                             <field name="can_approve_hrd" invisible="1"/>
                             <field name="can_verified" invisible="1"/>
+                            <field name="can_validation" invisible="1"/>
+                            <field name="approval_dept" invisible="1"/>
+                            <field name="validation_ids" invisible="1"/>
                             <field name="area_id"
                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
                                    invisible="1"/>
@@ -72,7 +75,8 @@
                             <field name="emp_level" invisible=" not day_payment"/>
                             <field name="approval_l1_id"/>
                             <field name="approval_l2_id"/>
-                            <field name="approverhrd_id" readonly="state == 'approved' or state == 'done'" />
+                            <field name="approverhrd_id" string="Verified by HRD" readonly="state != 'draft'" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"/>
+                            <field name="validatorhrd_id" string="Validasi by HRD" readonly="state != 'draft'" options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"/>
                             <field name="is_approver" invisible="1"/>
                             <field name="current_user_employee_id_ref" invisible="1"/>
                         </group>
@@ -84,7 +88,7 @@
                                    readonly="state != 'draft'" 
                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
                                    invisible="not day_payment" />
-                            <field name="periode_from" readonly="state == 'approved' or state == 'done'" 
+                            <field name="periode_from" readonly="state != 'draft'" 
                                    invisible="day_payment" />
                             <field name="periode_to" string="Perintah Lembur Hingga"
                                    readonly="state !='draft'" invisible="day_payment"/>
@@ -181,9 +185,9 @@
                                     <field name="ot_plann_to" readonly="state != 'draft'" string="Jam SPL Hingga"
                                            widget="float_time" optional="show" required="1"/>
                                     <field name="work_plann" force_save="1"
-                                           readonly="state not in ('draft','approved_l1')" optional="show" required="1"/>
+                                           readonly="state not in ('draft','approved_l1')" readonly="state != 'draft'" optional="show" required="1"/>
                                     <field name="output_plann" force_save="1"
-                                           readonly="state not in ('draft','approved_l1')" optional="show" required="1"/>
+                                           readonly="state not in ('draft','approved_l1')" readonly="state != 'draft'" optional="show" required="1"/>
                                     <field name="realization_date" string="Tanggal Hadir" widget="date" readonly="1"
                                            optional="show"/>
                                     <field name="realization_time_from" widget="float_time" readonly="1" optional="show"/>
