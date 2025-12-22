@@ -22,8 +22,8 @@ TMS_OVERTIME_STATE = [
     ('approved_l1', "Approved L1"),
     ('approved_l2', "Approved L2"),
     ('verified', "Verified By L1"),
-    ('approved', 'Approved By HRD'),
-    ('complete', "Complete By HCM"),
+    ('approved', 'Verified by HRD'),
+    ('complete', "Validasi by HRD"),
     ('done', "Close"),
     ('reject', "Reject"),
 ]
@@ -206,51 +206,53 @@ class HREmpOvertimeRequest(models.Model):
 
     approval_dept = fields.Many2one(
         'sanhrms.department', string='Departemen',
-        compute='_compute_approval_dept',
-        store=True)
+        compute='_compute_approval_dept', store=False)
+    validation_ids = fields.Many2many(
+        'hr.employee',
+        string='List Validator',
+        compute='_compute_list_validator', store=False
+    )
 
-    # @api.onchange('branch_id')
-    # def _onchange_branch_id(self):
-    #     if not self.branch_id:
-    #         self.approval_dept = False
-    #         return
-    #
+    # 2. Perbaikan domain: Gunakan 'in' untuk validation_ids
+    validatorhrd_id = fields.Many2one(
+        'hr.employee',
+        string='Approval by HRD',
+        domain="[('branch_id', '=', branch_id), ('id', 'in', validation_ids), ('user_id', '!=', False)]",
+        index=True
+    )
+
+    # @api.model
+    # def _get_splhrd_ids(self):
+    #     """Fetch the list of HRD department IDs from system parameter"""
+    #     # param = self.env['ir.config_parameter'].sudo().get_param('hr.overtime.planning')
     #     param = self.env['ir.config_parameter'].sudo().get_param('SPLHRD')
-    #     if param:
-    #         # Membersihkan spasi dan memastikan hanya angka
-    #         department_ids = [int(x.strip())
-    #                           for x in param.split(',') if x.strip().isdigit()]
-    #     else:
-    #         department_ids = []
-    #
-    #     if not department_ids:
-    #         # Sebaiknya jangan raise UserError di onchange karena mengganggu user saat mengetik
-    #         # Cukup kosongkan saja atau beri peringatan log
-    #         self.approval_dept = False
-    #         return
-    #
-    #     approval_dept_rec = self.env['sanhrms.department'].search([
-    #         ('id', 'in', department_ids),
-    #         ('branch_id', '=', self.branch_id.id)
-    #     ], limit=1)
-    #
-    #     if approval_dept_rec:
-    #         # CARA PERBAIKAN: Masukkan nilai ke field, bukan di-return
-    #         self.approval_dept = approval_dept_rec.id
-    #     else:
-    #         self.approval_dept = False
-    #         # Opsional: return warning jika ingin memunculkan popup tanpa error keras
-    #         return {'warning': {
-    #             'title': "Data Tidak Ditemukan",
-    #             'message': "Approval HRD untuk cabang ini belum diatur."
-    #         }}
+    #     return [int(x) for x in param.split(',')] if param else []
 
-    @api.model
-    def _get_splhrd_ids(self):
-        """Fetch the list of HRD department IDs from system parameter"""
-        # param = self.env['ir.config_parameter'].sudo().get_param('hr.overtime.planning')
-        param = self.env['ir.config_parameter'].sudo().get_param('SPLHRD')
-        return [int(x) for x in param.split(',')] if param else []
+    @api.onchange('branch_id')
+    @api.depends('branch_id')
+    # Ambil parameter sekali saja di luar loop untuk efisiensi
+    def _compute_list_validator(self):
+        param = self.env['ir.config_parameter'].sudo(
+        ).get_param('SPLHRD Validator')
+        validator_ids_from_param = []
+        if param:
+            validator_ids_from_param = [
+                int(x.strip()) for x in param.split(',') if x.strip().isdigit()]
+
+        for record in self:
+            if not record.branch_id or not validator_ids_from_param:
+                record.validation_ids = [(5, 0, 0)]  # Kosongkan Many2many
+                continue
+
+            # Cari employee yang sesuai kriteria
+            validators = self.env['hr.employee'].search([
+                ('id', 'in', validator_ids_from_param),
+                ('branch_id', '=', record.branch_id.id),
+                ('user_id', '!=', False),
+            ])
+
+            # Set field Many2many
+            record.validation_ids = [(6, 0, validators.ids)]
 
     @api.onchange('branch_id')
     def _onchange_branch_id(self):
@@ -355,6 +357,9 @@ class HREmpOvertimeRequest(models.Model):
         string='Can Approve HRD',
         compute='_compute_can_approve_hrd',
         help='Check if current user can approve as HRD')
+    can_validation = fields.Boolean(string='Can Validate HRD',
+                                    compute='_compute_can_validation',
+                                    help='Check if current user can approve as HRD')
 
     @api.constrains('approval_l1_id')
     def _check_approval_l1_has_user(self):
@@ -416,6 +421,7 @@ class HREmpOvertimeRequest(models.Model):
         |  _compute_can_approve_l2 | can_approve_l2  |
         |  _compute_can_verified   | can_verified    |
         |  _compute_can_approve_hrd| can_approve_hrd |
+        |  _compute_can_validation | can_validation  |
         
     Pada method compute tersebut dibuatlah validasi yang jika lolos , maka akan mengembalikan nilai TRUE
     Lalu pada view XML, compute field akan dijadikan kondisi pada attribute invisible. (eg. invisible="not can_approve_l2")
@@ -436,10 +442,10 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                    rec.state == 'draft'
-                    and not rec.approve1
-                    and rec.approval_l1_id
-                    and rec.approval_l1_id.user_id.id == current_user.id
+                rec.state == 'draft'
+                and not rec.approve1
+                and rec.approval_l1_id
+                and rec.approval_l1_id.user_id.id == current_user.id
             )
             rec.can_approve_l1 = can_approve
 
@@ -455,13 +461,33 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                    rec.state == 'approved_l1'
-                    and rec.approve1
-                    and not rec.approve2
-                    and rec.approval_l2_id
-                    and rec.approval_l2_id.user_id.id == current_user.id
+                rec.state == 'approved_l1'
+                and rec.approve1
+                and not rec.approve2
+                and rec.approval_l2_id
+                and rec.approval_l2_id.user_id.id == current_user.id
             )
             rec.can_approve_l2 = can_approve
+
+    @api.depends('state', 'validatorhrd_id')
+    def _compute_can_validation(self):
+        """
+        Button Validate muncul jika:
+        1. State = approved_HRD
+        2. Current user = validatorhrd_id (User Terpilih dari Parameter)
+        3. Field validatorhrd_id ada isinya && Sudah di approve oleh approval_HRD
+        """
+        current_user = self.env.user
+
+        for rec in self:
+            can_validate = (
+                rec.state == 'approved'
+                and rec.approve1
+                and rec.approve2
+                and rec.validatorhrd_id
+                and rec.validatorhrd_id.user_id.id == current_user.id
+            )
+            rec.can_validation = can_validate
 
     @api.depends('state', 'employee_id', )
     def generate_list_ot_employee(self):
@@ -486,12 +512,12 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                    rec.state == 'approved_l2'
-                    and rec.approval_l1_id
-                    and rec.approve1
-                    and rec.approval_l2_id
-                    and rec.approve2
-                    and rec.approval_l1_id.user_id.id == current_user.id
+                rec.state == 'approved_l2'
+                and rec.approval_l1_id
+                and rec.approve1
+                and rec.approval_l2_id
+                and rec.approve2
+                and rec.approval_l1_id.user_id.id == current_user.id
             )
             rec.can_verified = can_approve
 
@@ -508,12 +534,12 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                    rec.state == 'verified'
-                    and rec.approval_l1_id
-                    and rec.approve1
-                    and rec.approval_l2_id
-                    and rec.approve2
-                    and rec.approverhrd_id.user_id.id == current_user.id
+                rec.state == 'verified'
+                and rec.approval_l1_id
+                and rec.approve1
+                and rec.approval_l2_id
+                and rec.approve2
+                and rec.approverhrd_id.user_id.id == current_user.id
             )
             rec.can_approve_hrd = can_approve
 
@@ -1093,7 +1119,7 @@ class HREmpOvertimeRequestEmployee(models.Model):
         for line in self:
             if line.plann_date_from and line.periode_from and line.periode_to and \
                     (
-                            line.plann_date_from < line.periode_from or line.plann_date_from > line.periode_to) and not line.day_payment:
+                        line.plann_date_from < line.periode_from or line.plann_date_from > line.periode_to) and not line.day_payment:
                 msg = "Tanggal SPL (%s) harus berada di antara Tanggal OT Dari (%s) dan Tanggal OT Hingga (%s)." % (
                     line.plann_date_from, line.periode_from, line.periode_to
                 )
