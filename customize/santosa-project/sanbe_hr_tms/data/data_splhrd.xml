@@ -6,6 +6,10 @@
             <field name="key">SPLHRD</field>
             <field name="value">100,200,400,500,97, 174, 235</field>
         </record>
-
+        <record id="list_hr_spl_validator" model="ir.config_parameter">
+            <!-- <field name="key">hr.overtime.planning</field> -->
+            <field name="key">SPLHRD Validator</field>
+            <field name="value"></field>
+        </record>
     </data>
 </odoo>
