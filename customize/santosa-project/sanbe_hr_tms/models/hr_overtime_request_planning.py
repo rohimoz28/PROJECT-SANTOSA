@@ -255,79 +255,34 @@ class HREmpOvertimeRequest(models.Model):
             record.validation_ids = [(6, 0, validators.ids)]
 
     @api.onchange('branch_id')
-    def _onchange_branch_id(self):
-        """Set approval_dept dan domain untuk approverhrd_id berdasarkan branch_id"""
-        if not self.branch_id:
-            self.approval_dept = False
-            return
-
-        # Ambil parameter SPLHRD
-        param = self.env['ir.config_parameter'].sudo().get_param('SPLHRD')
-        if param:
-            department_ids = [int(x.strip())
-                              for x in param.split(',') if x.strip().isdigit()]
-        else:
-            department_ids = []
-
-        # Set approval_dept
-        if department_ids:
-            approval_dept_rec = self.env['sanhrms.department'].search([
-                ('id', 'in', department_ids),
-                ('branch_id', '=', self.branch_id.id)
-            ], limit=1)
-
-            if approval_dept_rec:
-                self.approval_dept = approval_dept_rec.id
-            else:
-                self.approval_dept = False
-                return {'warning': {
-                    'title': "Data Tidak Ditemukan",
-                    'message': "Approval HRD untuk cabang ini belum diatur."
-                }}
-        else:
-            self.approval_dept = False
-
-        # Set domain untuk approverhrd_id
-        return {
-            'domain': {
-                'approverhrd_id': [
-                    ('branch_id', '=', self.branch_id.id),
-                    ('hrms_department_id', 'in', department_ids),
-                    ('user_id', '!=', False),
-                ]
-            }
-        }
-
     @api.depends('branch_id')
     def _compute_approval_dept(self):
-        """Compute approval_dept dari branch_id"""
-        for rec in self:
-            if not rec.branch_id:
-                rec.approval_dept = False
+        # Ambil parameter sekali saja
+        param = self.env['ir.config_parameter'].sudo().get_param('SPLHRD')
+
+        dept_ids_from_param = []
+        if param:
+            dept_ids_from_param = [
+                int(x.strip()) for x in param.split(',')
+                if x.strip().isdigit()
+            ]
+
+        for record in self:
+            # Default kosong
+            record.approval_dept = False
+
+            if not record.branch_id or not dept_ids_from_param:
                 continue
 
-            param = self.env['ir.config_parameter'].sudo().get_param('SPLHRD')
-            if not param:
-                rec.approval_dept = False
-                continue
-
-            try:
-                department_ids = [int(x.strip())
-                                  for x in param.split(',') if x.strip().isdigit()]
-            except (ValueError, AttributeError):
-                rec.approval_dept = False
-                continue
-
-            if not department_ids:
-                rec.approval_dept = False
-                continue
-
-            approval_dept_rec = self.env['sanhrms.department'].search([
-                ('id', 'in', department_ids),
-                ('branch_id', '=', rec.branch_id.id)
+            # Cari department sesuai parameter & branch
+            approval_dept = self.env['sanhrms.department'].search([
+                ('id', 'in', dept_ids_from_param),
+                ('branch_id', '=', record.branch_id.id),
             ], limit=1)
 
-            rec.approval_dept = approval_dept_rec.id if approval_dept_rec else False
+            # Set Many2one
+            record.approval_dept = approval_dept.id if approval_dept else False
+
 
     approval_l1_id = fields.Many2one(
         comodel_name='hr.employee',
