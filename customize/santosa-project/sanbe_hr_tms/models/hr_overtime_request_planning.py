@@ -211,12 +211,6 @@ class HREmpOvertimeRequest(models.Model):
         store=True
     )
 
-    validation_ids = fields.Many2many(
-        'hr.employee',
-        string='List Validator',
-        compute='_compute_list_validator', store=False
-    )
-
     splhrd_validator_ids = fields.Many2many(
         'hr.employee',
         string='SPLHRD Validator',
