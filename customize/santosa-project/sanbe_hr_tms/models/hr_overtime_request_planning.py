@@ -192,7 +192,7 @@ class HREmpOvertimeRequest(models.Model):
         string="Total hari", compute='_compute_get_total_days_hours', store=True, )
     total_hours = fields.Float(
         string="Total Jam", compute='_compute_get_total_days_hours', store=True, )
-    day_payment = fields.Boolean('Day Payment', default=False, store=True,)
+    day_payment = fields.Boolean('Day Payment', default=False, store=True, )
     request_day_name = fields.Char(
         'Request Day Name', compute='_compute_req_day_name', store=True)
     count_record_employees = fields.Integer(string="Total Employees on The List", compute="_compute_record_employees",
@@ -228,31 +228,31 @@ class HREmpOvertimeRequest(models.Model):
     #     param = self.env['ir.config_parameter'].sudo().get_param('SPLHRD')
     #     return [int(x) for x in param.split(',')] if param else []
 
-    @api.onchange('branch_id')
-    @api.depends('branch_id')
-    # Ambil parameter sekali saja di luar loop untuk efisiensi
-    def _compute_list_validator(self):
-        param = self.env['ir.config_parameter'].sudo(
-        ).get_param('SPLHRD Validator')
-        validator_ids_from_param = []
-        if param:
-            validator_ids_from_param = [
-                int(x.strip()) for x in param.split(',') if x.strip().isdigit()]
-
-        for record in self:
-            if not record.branch_id or not validator_ids_from_param:
-                record.validation_ids = [(5, 0, 0)]  # Kosongkan Many2many
-                continue
-
-            # Cari employee yang sesuai kriteria
-            validators = self.env['hr.employee'].search([
-                ('id', 'in', validator_ids_from_param),
-                ('branch_id', '=', record.branch_id.id),
-                ('user_id', '!=', False),
-            ])
-
-            # Set field Many2many
-            record.validation_ids = [(6, 0, validators.ids)]
+    # @api.onchange('branch_id')
+    # @api.depends('branch_id')
+    # # Ambil parameter sekali saja di luar loop untuk efisiensi
+    # def _compute_list_validator(self):
+    #     param = self.env['ir.config_parameter'].sudo(
+    #     ).get_param('SPLHRD Validator')
+    #     validator_ids_from_param = []
+    #     if param:
+    #         validator_ids_from_param = [
+    #             int(x.strip()) for x in param.split(',') if x.strip().isdigit()]
+    # 
+    #     for record in self:
+    #         if not record.branch_id or not validator_ids_from_param:
+    #             record.validation_ids = [(5, 0, 0)]  # Kosongkan Many2many
+    #             continue
+    # 
+    #         # Cari employee yang sesuai kriteria
+    #         validators = self.env['hr.employee'].search([
+    #             ('id', 'in', validator_ids_from_param),
+    #             ('branch_id', '=', record.branch_id.id),
+    #             ('user_id', '!=', False),
+    #         ])
+    # 
+    #         # Set field Many2many
+    #         record.validation_ids = [(6, 0, validators.ids)]
 
     @api.onchange('branch_id')
     def _onchange_branch_id(self):
@@ -261,17 +261,18 @@ class HREmpOvertimeRequest(models.Model):
             self.approval_dept = False
             return
 
-        # Ambil parameter SPLHRD
         param = self.env['ir.config_parameter'].sudo().get_param('SPLHRD')
         if param:
             department_ids = [int(x.strip())
                               for x in param.split(',') if x.strip().isdigit()]
         else:
             department_ids = []
+
         approval_depts = self.env['sanhrms.department'].search(
             [('id', 'in', department_ids)], limit=1)
+
         if approval_depts:
-            return approval_depts
+            self.approval_dept = approval_depts.id
         else:
             raise UserError("Approval HRD doesn't set")
 
@@ -388,10 +389,10 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                rec.state == 'draft'
-                and not rec.approve1
-                and rec.approval_l1_id
-                and rec.approval_l1_id.user_id.id == current_user.id
+                    rec.state == 'draft'
+                    and not rec.approve1
+                    and rec.approval_l1_id
+                    and rec.approval_l1_id.user_id.id == current_user.id
             )
             rec.can_approve_l1 = can_approve
 
@@ -407,11 +408,11 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                rec.state == 'approved_l1'
-                and rec.approve1
-                and not rec.approve2
-                and rec.approval_l2_id
-                and rec.approval_l2_id.user_id.id == current_user.id
+                    rec.state == 'approved_l1'
+                    and rec.approve1
+                    and not rec.approve2
+                    and rec.approval_l2_id
+                    and rec.approval_l2_id.user_id.id == current_user.id
             )
             rec.can_approve_l2 = can_approve
 
@@ -427,11 +428,11 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_validate = (
-                rec.state == 'approved'
-                and rec.approve1
-                and rec.approve2
-                and rec.validatorhrd_id
-                and rec.validatorhrd_id.user_id.id == current_user.id
+                    rec.state == 'approved'
+                    and rec.approve1
+                    and rec.approve2
+                    and rec.validatorhrd_id
+                    and rec.validatorhrd_id.user_id.id == current_user.id
             )
             rec.can_validation = can_validate
 
@@ -458,12 +459,12 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                rec.state == 'approved_l2'
-                and rec.approval_l1_id
-                and rec.approve1
-                and rec.approval_l2_id
-                and rec.approve2
-                and rec.approval_l1_id.user_id.id == current_user.id
+                    rec.state == 'approved_l2'
+                    and rec.approval_l1_id
+                    and rec.approve1
+                    and rec.approval_l2_id
+                    and rec.approve2
+                    and rec.approval_l1_id.user_id.id == current_user.id
             )
             rec.can_verified = can_approve
 
@@ -480,12 +481,12 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                rec.state == 'verified'
-                and rec.approval_l1_id
-                and rec.approve1
-                and rec.approval_l2_id
-                and rec.approve2
-                and rec.approverhrd_id.user_id.id == current_user.id
+                    rec.state == 'verified'
+                    and rec.approval_l1_id
+                    and rec.approve1
+                    and rec.approval_l2_id
+                    and rec.approve2
+                    and rec.approverhrd_id.user_id.id == current_user.id
             )
             rec.can_approve_hrd = can_approve
 
@@ -536,6 +537,7 @@ class HREmpOvertimeRequest(models.Model):
 
                          WHERE eb.id = %s; \
                          """
+
     # ========================================
     # Helper Method: Checking constrain request day payment at same day
     # ========================================
@@ -1090,7 +1092,7 @@ class HREmpOvertimeRequestEmployee(models.Model):
         for line in self:
             if line.plann_date_from and line.periode_from and line.periode_to and \
                     (
-                        line.plann_date_from < line.periode_from or line.plann_date_from > line.periode_to) and not line.day_payment:
+                            line.plann_date_from < line.periode_from or line.plann_date_from > line.periode_to) and not line.day_payment:
                 msg = "Tanggal SPL (%s) harus berada di antara Tanggal OT Dari (%s) dan Tanggal OT Hingga (%s)." % (
                     line.plann_date_from, line.periode_from, line.periode_to
                 )
