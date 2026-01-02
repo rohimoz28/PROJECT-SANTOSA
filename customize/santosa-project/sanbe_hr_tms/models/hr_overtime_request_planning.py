@@ -256,25 +256,32 @@ class HREmpOvertimeRequest(models.Model):
 
     @api.onchange('branch_id')
     def _onchange_branch_id(self):
-        """Set approval_dept dan domain untuk approverhrd_id berdasarkan branch_id"""
+        """Set approval_dept berdasarkan branch_id"""
+        # 1. Pastikan branch_id ada
         if not self.branch_id:
             self.approval_dept = False
             return
 
         param = self.env['ir.config_parameter'].sudo().get_param('SPLHRD')
+        
         if param:
-            department_ids = [int(x.strip())
-                              for x in param.split(',') if x.strip().isdigit()]
+            # Membersihkan string input dan merubahnya menjadi list of integers
+            department_ids = [int(x.strip()) for x in param.split(',') if x.strip().isdigit()]
+            
+            # Cari departemen berdasarkan ID tersebut
+            approval_depts = self.env['sanhrms.department'].search(
+                [('id', 'in', department_ids)], limit=1)
+            
+            if approval_depts:
+                # PERBAIKAN: Langsung masukkan ke field, JANGAN di return
+                self.approval_dept = approval_depts.id
+            else:
+                # Opsional: Berikan peringatan jika tidak ditemukan
+                self.approval_dept = False
+                # Jika ingin memunculkan popup error saat onchange (hati-hati, bisa mengganggu UX)
+                return {'warning': {'title': "Warning", 'message': "Approval HRD doesn't set"}}
         else:
-            department_ids = []
-
-        approval_depts = self.env['sanhrms.department'].search(
-            [('id', 'in', department_ids)], limit=1)
-
-        if approval_depts:
-            self.approval_dept = approval_depts.id
-        else:
-            raise UserError("Approval HRD doesn't set")
+            self.approval_dept = False
 
     approval_l1_id = fields.Many2one(
         comodel_name='hr.employee',
