@@ -109,7 +109,7 @@ class HRWorkingDays(models.Model):
     is_ot_automatic = fields.Boolean(
         string='OT Otomatis',
         required=False)
-    total_working_hours = fields.Float('Total Working Hours',)
+    total_working_hours = fields.Float('Total Working Hours', default=0.0)
     total_half_hours = fields.Float(
         'Total Working Hours Half Hours', default=0.0)
 
@@ -119,15 +119,22 @@ class HRWorkingDays(models.Model):
             if rec.type_hari == 'fhday':
                 rec.total_half_hours = 0.0
 
-    @api.constrains("total_half_hours", "total_working_hours")
+    @api.constrains("total_half_hours", "total_working_hours", "type_hari")
     def _check_total_half_hours(self):
         for rec in self:
+            if not rec.type_hari:
+                raise ValidationError(
+                    _("Please Select Employee Working Hours Type"))
             if rec.total_half_hours and rec.total_half_hours < 0.0:
                 raise ValidationError(
-                    _("Total Working Half Hours must be greater than 0.0"))
-            if rec.total_working_hours and rec.total_working_hours < 0.0:
+                    _("Total jam kerja setengah hari tidak boleh di bawah 0 jam"))
+            if rec.total_working_hours and rec.total_working_hours <= 1.0:
                 raise ValidationError(
-                    _("Total Working Hours must be greater than 0.0"))
+                    _("Total jam kerja tidak boleh di bawah 1 jam"))
+            if rec.type_hari == 'fhday':
+                if rec.total_half_hours < 1.0 or rec.total_working_hours < 1.0:
+                    raise ValidationError(
+                        _("Total jam kerja dan jam kerja setengah hari tidak boleh kurang dari 1 jam"))
 
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)
