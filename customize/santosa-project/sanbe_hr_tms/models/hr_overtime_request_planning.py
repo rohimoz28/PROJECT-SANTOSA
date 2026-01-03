@@ -282,9 +282,11 @@ class HREmpOvertimeRequest(models.Model):
 
             # Parse nilai parameter menjadi list integer
             try:
-                department_ids = [int(x.strip()) for x in param.split(',') if x.strip().isdigit()]
+                department_ids = [int(x.strip())
+                                  for x in param.split(',') if x.strip().isdigit()]
             except ValueError:
-                _logger.warning(f"Format SPLHRD parameter tidak valid: {param}")
+                _logger.warning(
+                    f"Format SPLHRD parameter tidak valid: {param}")
                 rec.splhrd_department_ids = [(5, 0, 0)]
                 continue
 
@@ -308,7 +310,8 @@ class HREmpOvertimeRequest(models.Model):
         """
         for rec in self:
             # Ambil nilai dari ir_config_parameter
-            param = self.env['ir.config_parameter'].sudo().get_param('SPLHRD Validator')
+            param = self.env['ir.config_parameter'].sudo(
+            ).get_param('SPLHRD Validator')
 
             if not param:
                 rec.splhrd_validator_ids = [(5, 0, 0)]  # Kosongkan
@@ -317,9 +320,11 @@ class HREmpOvertimeRequest(models.Model):
 
             # Parse nilai parameter menjadi list integer
             try:
-                employee_ids = [int(x.strip()) for x in param.split(',') if x.strip().isdigit()]
+                employee_ids = [int(x.strip())
+                                for x in param.split(',') if x.strip().isdigit()]
             except ValueError:
-                _logger.warning(f"Format SPLHRD parameter tidak valid: {param}")
+                _logger.warning(
+                    f"Format SPLHRD parameter tidak valid: {param}")
                 rec.splhrd_validator_ids = [(5, 0, 0)]
                 continue
 
@@ -332,9 +337,9 @@ class HREmpOvertimeRequest(models.Model):
                 [('id', 'in', employee_ids)]
             )
 
-            print(">>>>>>>>>>>>>>>")
-            print("Employees: ", employees)
-            print(">>>>>>>>>>>>>>>")
+            # print(">>>>>>>>>>>>>>>")
+            # print("Employees: ", employees)
+            # print(">>>>>>>>>>>>>>>")
 
             # Set ke field Many2many
             rec.splhrd_validator_ids = [(6, 0, employees.ids)]
@@ -420,10 +425,10 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                    rec.state == 'draft'
-                    and not rec.approve1
-                    and rec.approval_l1_id
-                    and rec.approval_l1_id.user_id.id == current_user.id
+                rec.state == 'draft'
+                and not rec.approve1
+                and rec.approval_l1_id
+                and rec.approval_l1_id.user_id.id == current_user.id
             )
             rec.can_approve_l1 = can_approve
 
@@ -439,11 +444,11 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                    rec.state == 'approved_l1'
-                    and rec.approve1
-                    and not rec.approve2
-                    and rec.approval_l2_id
-                    and rec.approval_l2_id.user_id.id == current_user.id
+                rec.state == 'approved_l1'
+                and rec.approve1
+                and not rec.approve2
+                and rec.approval_l2_id
+                and rec.approval_l2_id.user_id.id == current_user.id
             )
             rec.can_approve_l2 = can_approve
 
@@ -459,11 +464,11 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_validate = (
-                    rec.state == 'approved'
-                    and rec.approve1
-                    and rec.approve2
-                    and rec.validatorhrd_id
-                    and rec.validatorhrd_id.user_id.id == current_user.id
+                rec.state == 'approved'
+                and rec.approve1
+                and rec.approve2
+                and rec.validatorhrd_id
+                and rec.validatorhrd_id.user_id.id == current_user.id
             )
             rec.can_validation = can_validate
 
@@ -490,12 +495,12 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                    rec.state == 'approved_l2'
-                    and rec.approval_l1_id
-                    and rec.approve1
-                    and rec.approval_l2_id
-                    and rec.approve2
-                    and rec.approval_l1_id.user_id.id == current_user.id
+                rec.state == 'approved_l2'
+                and rec.approval_l1_id
+                and rec.approve1
+                and rec.approval_l2_id
+                and rec.approve2
+                and rec.approval_l1_id.user_id.id == current_user.id
             )
             rec.can_verified = can_approve
 
@@ -512,12 +517,12 @@ class HREmpOvertimeRequest(models.Model):
 
         for rec in self:
             can_approve = (
-                    rec.state == 'verified'
-                    and rec.approval_l1_id
-                    and rec.approve1
-                    and rec.approval_l2_id
-                    and rec.approve2
-                    and rec.approverhrd_id.user_id.id == current_user.id
+                rec.state == 'verified'
+                and rec.approval_l1_id
+                and rec.approve1
+                and rec.approval_l2_id
+                and rec.approve2
+                and rec.approverhrd_id.user_id.id == current_user.id
             )
             rec.can_approve_hrd = can_approve
 

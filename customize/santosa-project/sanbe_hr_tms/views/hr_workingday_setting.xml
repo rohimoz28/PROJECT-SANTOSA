@@ -46,8 +46,24 @@
                         </group>
                         <group>
                             <group>
-                                <field name="branch_ids" invisible="1"/>
-                                <field name="available_for" widget="many2many_tags"/>
+                                <field name="available_for" widget="many2many_tags" force_save="1" options="{'no_edit': True, 'no_create': True, 'no_open': True}" />
+                            </group>
+                            <group>
+                                <field name="branch_ids" invisible="1"/>  
+                            </group>
+                            <group>  
+                                <field name="total_working_hours" string="Total Jam Kerja Full Day" required="1" widget="easy_timepicker"/>
+                                <label for="working_day_from" string="Full Day From"/>
+                                <div for="working_day_from" class="o_row">
+                                    <field name="working_day_from" required="1" placeholder="Start Days"/> -
+                                    <field name="working_day_to" required="1" placeholder="End Days"/>
+                                </div>
+                                <label for="fullday_from"  string="Hours From"/>
+                                <div for="fullday_from" class="o_row">
+                                    <field name="fullday_from" widget="easy_timepicker" required="1" placeholder="Start Hours"/> -
+                                    <field name="fullday_to" widget="easy_timepicker" required="1" placeholder="End Hours"/>
+                                </div>
+                                <field name="delay_allow"/>
                                 <!--label for="isavailabel" string="Aveilable For"/>
                                 <field name="isavailabel" invisible="1"/>
                                 <div class="mr8 oe_inline">
@@ -65,35 +81,18 @@
                                     <label for="cwc"/>
                                 </div-->
                             </group>
-                        </group>
-
-                        <group col="2">
-                            <group>
-                                <field name="working_day_from" required="1"/>
-                            </group>
-                            <group>
-                                <field name="working_day_to" required="1"/>
-                            </group>
-                            <group>
-                                <field name="working_half_from" required="0" invisible="type_hari == 'fday'" />
-                            </group>
-                            <group>
-                                <field name="working_half_to" required="0" invisible="type_hari == 'fday'" />
-                            </group>
-                            <group>
-                                <field name="fullday_from" widget="easy_timepicker" required="1" />
-                            </group>
-                            <group>
-                                <field name="fullday_to" widget="easy_timepicker" required="1" />
-                            </group>
-                            <group>
-                                <field name="halfday_from" widget="easy_timepicker" invisible="type_hari == 'fday'" />
-                            </group>
-                            <group>
-                                <field name="halfday_to" widget="easy_timepicker" invisible="type_hari == 'fday'" />
-                            </group>
-                            <group>
-                                <field name="delay_allow"/>
+                            <group col="2">
+                                <field name="total_half_hours" string="Total Jam Kerja Half Day" required="type_hari == 'fhday'" invisible="type_hari == 'fday'" widget="easy_timepicker"/>
+                                <label for="working_half_from" string="Half Day From" invisible="type_hari == 'fday'"/>
+                                <div for="working_half_from" class="o_row" invisible="type_hari == 'fday'">
+                                    <field name="working_half_from" required="0" invisible="type_hari == 'fday'" placeholder="Start Days"/> -
+                                    <field name="working_half_to" required="0" invisible="type_hari == 'fday'" placeholder="End Days"/>
+                                </div>
+                                <label for="halfday_from" string ="Hours Half Day From" invisible="type_hari == 'fday'"/>
+                                <div for="halfday_from" class="o_row" invisible="type_hari == 'fday'">
+                                    <field name="halfday_from" widget="easy_timepicker" invisible="type_hari == 'fday'" placeholder="Start Hours"/>  -
+                                    <field name="halfday_to" widget="easy_timepicker" invisible="type_hari == 'fday'" placeholder="End Hours"/>
+                                </div>
                             </group>
                         </group>
                         <group invisible="1">
