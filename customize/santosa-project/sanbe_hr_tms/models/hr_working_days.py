@@ -128,6 +128,9 @@ class HRWorkingDays(models.Model):
             if rec.total_half_hours and rec.total_half_hours < 0.0:
                 raise ValidationError(
                     _("Total jam kerja setengah hari tidak boleh di bawah 0 jam"))
+            if not rec.total_working_hours:
+                raise ValidationError(
+                    _("Total jam kerja tidak boleh kosong"))
             if rec.total_working_hours and rec.total_working_hours <= 1.0:
                 raise ValidationError(
                     _("Total jam kerja tidak boleh di bawah 1 jam"))
