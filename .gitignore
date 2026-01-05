@@ -48,6 +48,6 @@ conf/santosa-project/development/
 conf/santosa-project/development/pg-data/
 conf/santosa-project/pg-data/
 conf/santosa-project/production/.env
-
+conf/santosa-project/staging/.env
 .vscode/
 *.env

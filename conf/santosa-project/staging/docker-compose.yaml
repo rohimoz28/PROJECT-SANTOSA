@@ -17,7 +17,7 @@ services:
       - stg_santosa_project_network
 
   stg-postgres-santosa:
-    image: postgres:15
+    image: postgres:16
     container_name: stg-postgres-santosa
     ports:
       - "5434:5432"
