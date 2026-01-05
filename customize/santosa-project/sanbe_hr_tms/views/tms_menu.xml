@@ -267,6 +267,13 @@
                 action="action_sb_docter_scheduling"
                 groups="module_staff_scheduling_docter,module_spv_scheduling_docter,module_mgr_scheduling_docter"
         />
+        <menuitem 
+                id="menu_sb_group_shift_action" 
+                name="Master Group Shift" 
+                parent="sanbe_hr_tms.hr_menu_tms_setting"
+                sequence="62"
+                action="action_sb_group_shift"
+                groups="sanbe_hr_tms.group_shift_master_data_staff,sanbe_hr_tms.group_shift_master_data_hrd"/>
         <menuitem
                 id="menu_sb_leave_allocation"
                 name="Leave Allocation"

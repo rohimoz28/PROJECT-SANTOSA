@@ -332,9 +332,9 @@ class HREmpOvertimeRequest(models.Model):
                 [('id', 'in', employee_ids)]
             )
 
-            print(">>>>>>>>>>>>>>>")
-            print("Employees: ", employees)
-            print(">>>>>>>>>>>>>>>")
+            # print(">>>>>>>>>>>>>>>")
+            # print("Employees: ", employees)
+            # print(">>>>>>>>>>>>>>>")
 
             # Set ke field Many2many
             rec.splhrd_validator_ids = [(6, 0, employees.ids)]
