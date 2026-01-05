@@ -512,10 +512,10 @@ class HrAttendance(models.Model):
                             tin = alldata.time_in
                         
                         if alldata.employee_id.attende_premie == True:
-                            print('--------------------')
-                            print(tin)
-                            print(tout)
-                            print(wd.id)
+                            # print('--------------------')
+                            # print(tin)
+                            # print(tout)
+                            # print(wd.id)
                             sql = """
                                 select qty from hr_allowance_list hal 
                                 where hal.workingday_id={wdid} and hal.code ='ashf'
@@ -525,9 +525,9 @@ class HrAttendance(models.Model):
                             self.env.cr.execute(sql)
                             allow_att = self.env.cr.fetchone()
                             #allow_att = wd.allowance_ids.filtered(lambda p: p.code == 'ashf' and p.time_from >= tin and p.time_to <= tout)
-                            print(allow_att)
+                            # print(allow_att)
                             #print(allow_att[0])
-                            print('--------------------')
+                            # print('--------------------')
                             ##for allow in wd.allowance_ids.filtered(lambda p: p.code == 'ashf'):
                             ##asfrom1 = datetime.strptime(str(alldata.ubahjam(allow.time_from)).replace(' ', ''), '%H:%M:%S')
                             ##asfrom1 = alldata.ubahjam(allow.time_from)

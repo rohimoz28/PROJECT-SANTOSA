@@ -393,7 +393,7 @@ class AccountMove(models.Model):
 
     def button_create_invoice_lines(self):
         am = self.env['account.move'].search([('status_sinkronisasi', '=', 'Proses Pembentukan AR Harian')])
-        print(am, "ini yang mau dieksekusi")
+        # print(am, "ini yang mau dieksekusi")
         for record in am:
             nilai = self.env['account.move.line'].search([('move_id', '=', record.id)])
             codenya = None
@@ -429,7 +429,7 @@ class AccountMove(models.Model):
                     })
                     seen_dates.add(populate_date)
             tambahan = [item for item in tambahan if item['populate_date'] is not None]
-            print(tambahan, "ini nilai yang disisipkan")
+            # print(tambahan, "ini nilai yang disisipkan")
             mbaru = self.env['account.move.line'].create(tambahan)
             record.line_ids += mbaru
             if record.is_not_first_calculate == False:
@@ -438,39 +438,40 @@ class AccountMove(models.Model):
                 record.status_sinkronisasi = 'Selesai'
 
     def penyesuaian_kembali(self):
-        print("jalan awal")
+        # print("jalan awal")
         am = self.env['account.move'].search([('status_sinkronisasi', '=', 'Selesai')])
-        print(am, "ini record am untuk penyesuaian kembali")
+        # print(am, "ini record am untuk penyesuaian kembali")
         for record in am:
-            print("fungsi penyesuaian kembali berjalan")
+            # print("fungsi penyesuaian kembali berjalan")
 
             move_lines = self.env['account.move.line'].search([('need_to_calculate', '=', True)])
-            print(move_lines, "ini yang akan harus disesuaikan lagi")
-            print(move_lines.move_id, "in move_id yang akan harus disesuaikan lagi")
+            # print(move_lines, "ini yang akan harus disesuaikan lagi")
+            # print(move_lines.move_id, "in move_id yang akan harus disesuaikan lagi")
             if move_lines:
                 hapus_ar = self.env['account.move.line'].search([('move_id', '=', move_lines.move_id.id),('product_id', '=', False)])
-                print(hapus_ar, "ini ar yang harus dihapus")
-                print("ini ada yang harus disesuaikan")
+                # print(hapus_ar, "ini ar yang harus dihapus")
+                # print("ini ada yang harus disesuaikan")
                 deleted_rows = hapus_ar.sudo().unlink()
-                print(f"Jumlah baris yang dihapus: {deleted_rows}")
+                # print(f"Jumlah baris yang dihapus: {deleted_rows}")
                 move_lines.need_to_calculate = False
                 move_lines.move_id.is_not_first_calculate = True
                 move_lines.move_id.status_sinkronisasi = 'Proses Pembentukan AR Harian'
             else:
-                print("ga ada yang harus disesuaikan")
+                pass
+                # print("ga ada yang harus disesuaikan")
 
     def delete_ar_bawaan(self):
-        print("jalan awal")
+        # print("jalan awal")
         am = self.env['account.move'].search([('status_sinkronisasi', '=', 'Proses Penyesuaian AR')])
         for record in am:
-            print("fungsi delete AR bawaan jalan")
+            # print("fungsi delete AR bawaan jalan")
 
             move_lines = self.env['account.move.line'].search([('populate_date', '=', False),('debit', '!=', 0),('move_id', '=', record.id)])
-            print(move_lines, "ini yang akan dihapus")
+            # print(move_lines, "ini yang akan dihapus")
 
             deleted_rows = move_lines.sudo().unlink()
 
-            print(f"Jumlah baris yang dihapus: {deleted_rows}")
+            # print(f"Jumlah baris yang dihapus: {deleted_rows}")
             record.status_sinkronisasi = 'Selesai'
 
     @contextmanager

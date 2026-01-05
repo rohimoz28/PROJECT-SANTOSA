@@ -56,7 +56,7 @@
                 <field name="name"
                        filter_domain="['|',
                        ('name', 'ilike', self), 
-                       ('code', 'ilike', self)\]"
+                       ('code', 'ilike', self)]"
                        string="Search Group Shift"/>
                 <field name="name" string="Deskripsi"/>
                 <field name="code" string="Kode"/>

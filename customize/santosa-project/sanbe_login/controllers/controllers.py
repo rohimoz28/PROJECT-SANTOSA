@@ -180,11 +180,11 @@ class HomeFace(Home):
         if background == 'gradient':
             bg_src = f"background-image:linear-gradient(45deg, {color_1}, {color_2}, {color_3});"
         values['bg_src'] = bg_src
-        print('style ', style)
+        # print('style ', style)
         if style == 'default' or style is False:
             response = request.render('web.login', values)
         elif style == 'left':
-            print('ini left')
+            # print('ini left')
             response = request.render('sanbe_login.left_login_template', values)
         elif style == 'right':
             response = request.render('sanbe_login.right_login_template', values)

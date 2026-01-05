@@ -184,7 +184,7 @@ class AccountMoveLine(models.Model):
                 line.account_receivable_total = 0.0
 
     def _prepare_create_values(self, vals_list):
-        print(vals_list, "iniii _prepare_create_values")
+        # print(vals_list, "iniii _prepare_create_values")
         result_vals_list = super()._prepare_create_values(vals_list)
 
         return result_vals_list
@@ -224,8 +224,8 @@ class AccountMoveLine(models.Model):
     def update_account_id(self):
         am = self.env['account.move.line'].search([])
         for record in am:
-            print(record.product_id.categ_id.property_account_income_categ_id.id, "ini akun bener nya")
-            print(record.account_id.id, "ini akun salah nya")
+            # print(record.product_id.categ_id.property_account_income_categ_id.id, "ini akun bener nya")
+            # print(record.account_id.id, "ini akun salah nya")
             record.account_id = record.product_id.categ_id.property_account_income_categ_id.id
 
     @api.constrains('account_id', 'display_type')

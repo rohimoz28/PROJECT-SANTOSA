@@ -23,11 +23,11 @@ class SbGroupShift(models.Model):
     )
 
     _sql_constraints = [
-        (
-            'unique_name',
-            'UNIQUE(name)',
-            'Another entry with the same name already exists.'
-        ),
+        # (
+        #     'unique_name',
+        #     'UNIQUE(name)',
+        #     'Another entry with the same name already exists.'
+        # ),
         (
             'unique_code',
             'UNIQUE(code)',
