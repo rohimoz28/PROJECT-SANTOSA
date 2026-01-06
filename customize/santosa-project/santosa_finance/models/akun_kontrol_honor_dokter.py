@@ -33,7 +33,7 @@ class Akun_kontrol_honor_dokter(models.Model):
         self.ensure_one()  # Ensure this method is called on a single record
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         target_url = f"{base_url}/web#id={self.invoice_id.id}&model=account.move&view_type=form"
-        print(target_url)
+        # print(target_url)
         if self.account_move_id:
             return {
                 'type': 'ir.actions.act_url',

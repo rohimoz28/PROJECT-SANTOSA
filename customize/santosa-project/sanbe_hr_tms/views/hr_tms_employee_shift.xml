@@ -160,10 +160,26 @@
         </field>
     </record>
 
+       <record id="view_hr_employee_shift_pivot" model="ir.ui.view">
+       <field name="name">hr.employee.shift.pivot</field>
+       <field name="model">sb.employee.shift</field>
+       <field name="arch" type="xml">
+              <pivot string="Analisis Shift Karyawan" sample="1">
+                     <field name="directorate_id" type="row"/>
+                     <field name="hrms_department_id" type="row"/>
+                     <field name="division_id" type="row"/>
+                     <field name="period_text" type="row"/>
+                     <field name="work_unit_ids" type="row"/>
+                     <field name="employee_id" type="row"/>
+                     <field name="state" type="col"/>              
+              </pivot>
+       </field>
+       </record>
+
     <record id="action_hr_employee_shift" model="ir.actions.act_window">
         <field name="name">Data Shift Karyawan</field>
         <field name="res_model">sb.employee.shift</field>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">tree,pivot</field>
         <field name="domain">[]</field>
         <field name="context">{
             'search_default_group_periode': 1,

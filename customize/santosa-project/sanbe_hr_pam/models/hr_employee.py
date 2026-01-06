@@ -147,7 +147,7 @@ class HrEmployee(models.Model):
     
     @api.depends('job_status')
     def _get_domain_emp_status_id(self):
-        print("kedua")
+        # print("kedua")
         for record in self:
             if record.job_status == 'contract':
                 return [('id', '=', 1)]

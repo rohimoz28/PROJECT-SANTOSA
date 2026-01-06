@@ -215,7 +215,7 @@ class CashBank(models.Model):
                         'account_move_id': rec.move_id.id if rec.move_id else False,
                         'currency_id': rec.currency_id.id if rec.currency_id else False,
                     }
-                    print(tracking_vals)
+                    # print(tracking_vals)
                     self.env['santosa_finance.transaction_tracking'].sudo().create(tracking_vals)
                 rec.move_id.action_post()
                 

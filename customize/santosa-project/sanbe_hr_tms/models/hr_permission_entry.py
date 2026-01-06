@@ -215,9 +215,9 @@ class HRPermissionEntry(models.Model):
     @api.onchange('approved1','approved2','approved3')
     def set_approved_status(self):
         for allrec in self:
-            print('param 1 ',(allrec.approved1 == True and allrec.approved2 == True))
-            print('param 2 ',(allrec.approved1 == True and allrec.approved3 == True))
-            print('param 3 ',(allrec.approved2 == True and allrec.approved3 == True))
+            # print('param 1 ',(allrec.approved1 == True and allrec.approved2 == True))
+            # print('param 2 ',(allrec.approved1 == True and allrec.approved3 == True))
+            # print('param 3 ',(allrec.approved2 == True and allrec.approved3 == True))
             if (allrec.approved1 == True and allrec.approved2 == True) or \
                 (allrec.approved1 == True and allrec.approved3 == True) or \
                 (allrec.approved2 == True and allrec.approved3 == True):

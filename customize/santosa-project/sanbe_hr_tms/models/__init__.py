@@ -43,3 +43,4 @@ from . import account_analytic
 from . import hr_tms_employee_shift
 from . import sb_route_master
 from . import sb_docter_schedule
+from . import sb_group_shift
