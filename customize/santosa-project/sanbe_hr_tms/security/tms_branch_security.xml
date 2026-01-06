@@ -287,6 +287,19 @@
             <field name="perm_unlink" eval="True"/>
         </record>
 
+        <!-- Mapping Employee Rule -->
+        <record id="hr_employee_mapping_shift_hrd" model="ir.rule">
+            <field name="name">HR Mapping Employee shift</field>
+            <field name="model_id" ref="sanbe_hr_tms.model_sb_mapping_employee_shift"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|', ('branch_id', '=', False), ('branch_id', '=', user.branch_id.id)]</field>
+            <field name="groups" eval="[(4, ref('sanbe_hr_tms.group_shift_mapping_employee_staff'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
         <!-- Staff Master data shift -->
         <record id="hr_employee_shift_master_data_staff" model="ir.rule">
             <field name="name">HR Employee shift Staff</field>
@@ -295,7 +308,7 @@
             <field name="domain_force">[]</field>
             <field name="groups" eval="[(4, ref('sanbe_hr_tms.group_shift_master_data_staff'))]"/>
             <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
+            <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="False"/>
         </record>

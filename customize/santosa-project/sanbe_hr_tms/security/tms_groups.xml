@@ -556,6 +556,19 @@
             <field name="category_id" ref="sanbe_hr_tms.module_tms_setting_shift"/>
         </record>
 
+        <!-- TMS Sifting employee -->
+        <record id="cat_tms_setting_mapping_employee_shift" model="ir.module.category">
+            <field name="name">Mapping Employee Shift</field>
+            <field name="parent_id" ref="sanbe_hr_tms.module_category_time_management_system"/>
+            <field name="description">Access Right for mastering map employee shifting</field>
+        </record>
+
+        <record model="res.groups" id="group_shift_mapping_employee_staff">
+            <field name="name">Staff</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="category_id" ref="sanbe_hr_tms.cat_tms_setting_mapping_employee_shift"/>
+        </record>
+
         <!-- <record model="res.groups" id="group_shift_manager"> -->
         <!--     <field name="name">Manager</field> -->
         <!--     <field name="implied_ids" eval="[(4, ref('sanbe_hr_tms.group_shift_hrd'))]"/> -->
