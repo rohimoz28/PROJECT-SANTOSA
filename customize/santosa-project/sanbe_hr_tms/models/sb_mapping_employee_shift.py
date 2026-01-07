@@ -112,7 +112,7 @@ class SbMappingEmployeeShift(models.Model):
         readonly=True,
         tracking=True
     )
-    seciality = fields.Many2one(
+    speciality = fields.Many2one(
         'hr.profesion.special',
         'Kategori Khusus',
         related='employee_id.seciality',
@@ -131,8 +131,8 @@ class SbMappingEmployeeShift(models.Model):
                 rec.profesion = rec.medic.code
             if rec.nurse:
                 rec.profesion = rec.nurse.code
-            if rec.seciality:
-                rec.profesion = rec.seciality.code
+            if rec.speciality:
+                rec.profesion = rec.speciality.code
 
     shift_id = fields.Many2one(
         'sb.group.shift',

@@ -39,7 +39,7 @@
                             <field name="shift_id" required="1" options="{'no_create': True, 'no_open': False}" string="Group Shift"/>
                             <field name="medic" invisible="1"/>
                             <field name="nurse" invisible="1"/>
-                            <field name="seciality" invisible="1"/>
+                            <field name="speciality" invisible="1"/>
                             <field name="profesion" string='Profesi' readonly="1"/>
                         </group>
                         <group>
