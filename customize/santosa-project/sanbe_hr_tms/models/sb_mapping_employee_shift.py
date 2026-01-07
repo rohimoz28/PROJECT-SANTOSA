@@ -123,7 +123,7 @@ class SbMappingEmployeeShift(models.Model):
         'Profesi', compute="_compute_profesion", store=True)
 
     @api.onchange("employee_id")
-    @api.depends('nurse', 'medic', 'seciality')
+    @api.depends('nurse', 'medic', 'speciality')
     def _compute_profesion(self):
         for rec in self:
             rec.profesion = False
