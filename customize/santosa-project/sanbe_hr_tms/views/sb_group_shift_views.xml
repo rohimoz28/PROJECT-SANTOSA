@@ -12,6 +12,9 @@
                 <field name="code" string="Kode"/>
                 <field name="name" string="Deskripsi"/>
                 <field name="active" string="Aktif" widget="boolean_toggle"/>
+                <field name="create_date" string="Tanggal Create" optional="show"/>
+                <field name="create_uid" string="User Create" optional="hide"/>
+                <field name="write_uid" string="User Ubah" optional="show"/>
             </tree>
         </field>
     </record>
@@ -37,11 +40,10 @@
                             </group>
                         </group>
                     </div>
-                    <!-- <group>
-                        <group>
-                            <field name="active" widget="boolean_toggle"/>
-                        </group>
-                    </group> -->
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="message_ids"/>
+                    </div>
                 </sheet>
             </form>
         </field>
