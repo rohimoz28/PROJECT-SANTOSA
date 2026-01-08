@@ -10,7 +10,8 @@ _logger = logging.getLogger(__name__)
 class SbGroupShift(models.Model):
     _name = 'sb.group.shift'
     _description = 'Master Group Shift'
-    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin', 'utm.mixin']
+    _inherit = ['portal.mixin', 'mail.thread',
+                'mail.activity.mixin', 'utm.mixin']
     _order = 'active desc, code asc'
 
     code = fields.Char('Code',
@@ -21,6 +22,10 @@ class SbGroupShift(models.Model):
                        default="New", help=" Description for master group shifting",)
     active = fields.Boolean(
         string='Active', default=True
+    )
+    list_employee_ids = fields.One2many(
+        'sb.mapping_employee.shift',
+        'shift_id',
     )
 
     _sql_constraints = [
@@ -35,3 +40,11 @@ class SbGroupShift(models.Model):
             'Another entry with the same code already exists.'
         ),
     ]
+
+    @api.depends('name', 'code')
+    def _compute_display_name(self):
+        for shift_group in self:
+            name = shift_group.name
+            if shift_group.code:
+                name = '[' + shift_group.code + '] ' + shift_group.name
+            shift_group.display_name = name

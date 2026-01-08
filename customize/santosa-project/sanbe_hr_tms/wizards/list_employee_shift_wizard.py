@@ -157,7 +157,8 @@ class HrCariEmployeeShift(models.TransientModel):
         """
         Build domain to filter employees based on selected fields.
         """
-        domain = [('state', '=', 'approved'), ('emp_status_id', '!=', False), ('wd_type', '=', 'shift')]
+        domain = [('state', '=', 'approved'), ('emp_status_id',
+                                               '!=', False), ('wd_type', '=', 'shift')]
         if self.branch_id:
             domain.append(('branch_id', '=', self.branch_id.id))
         if self.hrms_department_id:
@@ -179,6 +180,14 @@ class HrCariEmployeeShift(models.TransientModel):
                 if len(employees) < 1:
                     raise UserError('Employee Not Found')
                 for emp in employees:
+                    mapping_shift_id = self.env['sb.mapping_employee.shift'].sudo().search(
+                        [('employee_id', '=', emp.id), ('active', '=', True)])
+                    group_shift_val = False
+                    if mapping_shift_id:
+                        shift_code = mapping_shift_id.shift_id.name or ''
+                        profesi = mapping_shift_id.profesion or ''
+                        if shift_code or profesi:
+                            group_shift_val = f"{shift_code} - {profesi}"
                     self.env['wiz.employee.shift.detail'].create({
                         'cari_id': self.id,
                         'employee_id': emp.id,
@@ -188,7 +197,9 @@ class HrCariEmployeeShift(models.TransientModel):
                         'division_id': emp.division_id.id,
                         'department_id': emp.department_id.id,
                         'job_id': emp.job_id.id,
-                        'is_selected': False
+                        'is_selected': False,
+                        'group_shift_id': mapping_shift_id.id or False,
+                        'group_shift': group_shift_val or False,
                     })
                 return {
                     'type': 'ir.actions.act_window',
@@ -246,6 +257,8 @@ class HrCariEmployeeShift(models.TransientModel):
                         'periode_id': line.periode_id.id,
                         'period_text': line.period_text,
                         'employee_id': line_employee.employee_id.id,
+                        'profesion': line_employee.profesion,
+                        'group_shift': line_employee.group_shift,
                     })
                 return {
                     'type': 'ir.actions.act_window',
@@ -324,6 +337,79 @@ class HrCariEmployeeShiftDetails(models.TransientModel):
     job_id = fields.Many2one(
         'hr.job', string='Job Position', related='employee_id.job_id', index=True)
     is_selected = fields.Boolean('Select', default=False)
+
+    nurse = fields.Many2one(
+        'hr.profesion.nurse',
+        string='Profesi Perawat',
+        compute="_compute_nurse",
+        readonly=True,
+        tracking=True,
+        store=False,
+    )
+    medic = fields.Many2one(
+        'hr.profesion.medic',
+        'Profesi Medis',
+        compute="_compute_medic",
+        readonly=True,
+        tracking=True,
+        store=False,
+    )
+    speciality = fields.Many2one(
+        'hr.profesion.special',
+        'Kategori Khusus',
+        compute="_compute_speciality",
+        readonly=True,
+        tracking=True,
+        store=False,
+    )
+    profesion = fields.Char(
+        'Profesi', compute="_compute_profesion", store=True)
+    group_shift_id = fields.Many2one(
+        'sb.mapping_employee.shift', string="Group Shift", store=True)
+    group_shift = fields.Char(string="Group Shift",
+                              compute='_compute_group_shift', store=True)
+
+    @api.depends('employee_id')
+    def _compute_nurse(self):
+        for rec in self:
+            if rec.employee_id:
+                rec.nurse = rec.employee_id.nurse
+                if not rec.profesion:
+                    rec.profesion = rec.nurse.code
+
+    @api.depends('employee_id')
+    def _compute_medic(self):
+        for rec in self:
+            if rec.employee_id:
+                rec.medic = rec.employee_id.medic
+                if not rec.profesion:
+                    rec.profesion = rec.medic.code
+
+    @api.depends('employee_id')
+    def _compute_speciality(self):
+        for rec in self:
+            if rec.employee_id:
+                rec.speciality = rec.employee_id.seciality
+                if not rec.profesion:
+                    rec.profesion = rec.speciality.code
+
+    @api.depends("employee_id", "speciality", "medic", "nurse")
+    def _compute_profesion(self):
+        for rec in self:
+            if rec.employee_id:
+                if rec.speciality:
+                    rec.profesion = rec.speciality.code
+                elif rec.medic:
+                    rec.profesion = rec.medic.code
+                elif rec.nurse:
+                    rec.profesion = rec.nurse.code
+
+    @api.depends("employee_id", "group_shift_id", "profesion")
+    def _compute_group_shift(self):
+        for rec in self:
+            if rec.employee_id:
+                if rec.group_shift_id and rec.profesion:
+                    rec.group_shift = f"{rec.group_shift_id.shift_id.code} - {rec.group_shift_id.profesion}" or False
 
     def btn_select_all(self):
         dt_emp = self.env['hr.employeedepartment.details'].sudo().search(

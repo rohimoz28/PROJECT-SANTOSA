@@ -9,7 +9,8 @@ _logger = logging.getLogger(__name__)
 class SbMappingEmployeeShift(models.Model):
     _name = 'sb.mapping_employee.shift'
     _description = 'Employee Shift Mapping'
-    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin', 'utm.mixin']
+    _inherit = ['portal.mixin', 'mail.thread',
+                'mail.activity.mixin', 'utm.mixin']
     _order = 'id desc'
 
     name = fields.Char(
@@ -128,16 +129,18 @@ class SbMappingEmployeeShift(models.Model):
     def _compute_profesion(self):
         for rec in self:
             rec.profesion = False
-            if rec.medic:
-                rec.profesion = rec.medic.code
-            if rec.nurse:
-                rec.profesion = rec.nurse.code
-            if rec.speciality:
-                rec.profesion = rec.speciality.code
+            if rec.employee_id:
+                if rec.medic:
+                    rec.profesion = rec.medic.code
+                if rec.nurse:
+                    rec.profesion = rec.nurse.code
+                if rec.speciality:
+                    rec.profesion = rec.speciality.code
 
     shift_id = fields.Many2one(
         'sb.group.shift',
         string='Shift Group',
+        store=True,
         required=True,
         tracking=True
     )
@@ -174,3 +177,19 @@ class SbMappingEmployeeShift(models.Model):
                 vals['name'] = employee_name
 
         return super(SbMappingEmployeeShift, self).create(vals_list)
+
+    def write(self, vals):
+        # Jika employee_id diubah, kita perlu membersihkan referensi di employee lama
+        if 'employee_id' in vals:
+            for rec in self:
+                if rec.employee_id:
+                    rec.employee_id.group_shift_ids = False
+        
+        res = super(SbMappingEmployeeShift, self).write(vals)
+        
+        # Update employee baru (atau tetap) dengan ID mapping ini
+        if 'employee_id' in vals or 'active' in vals:
+            for rec in self:
+                if rec.employee_id:
+                    rec.employee_id.group_shift_ids = rec.id if rec.active else False
+        return res

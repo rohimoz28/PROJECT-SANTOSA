@@ -4,7 +4,7 @@
         <field name="name">hr.employee.shift.tree</field>
         <field name="model">sb.employee.shift</field>
         <field name="arch" type="xml">
-            <tree string="Employee Shifts" create="false" editable="bottom" limit="180" class="o_horizontal_shift">
+            <tree string="Employee Shifts" create="false" editable="bottom" limit="180" class="o_horizontal_shift" default_order="periode_id desc, directorate_id asc, hrms_department_id asc, division_id asc, profesion asc, jabatan asc, state asc, employee_id asc">
                 <header>
                     <!-- <button name="action_mass_review" type="object" string="Send to Approved" groups="sanbe_hr_tms.group_shift_staff,sanbe_hr_tms.group_shift_hrd"/> -->
                     <button name="action_mass_approve" type="object" string="Mass Approved"
@@ -14,6 +14,8 @@
                 <field name="period_text" options="{'no_open': True}" string="Periode" readonly="1" optional='show'/>
                 <field name="employee_id" options="{'no_open': True}" readonly="1" optional='show'/>
                 <field name="nik" readonly="1" optional='show'/>
+                <field name="group_shift" readonly="1" optional='show'/>
+                <field name="profesion" readonly="1" optional='hide'/>
                 <field name="work_unit_ids" string="Work Unit" optional='hide' widget="many2many_tags"/>
                 <field name="branch_id" options="{'no_open': True}" readonly="1" column_invisible="1"/>
                 <field name="area_id" options="{'no_open': True}" readonly="1" column_invisible="1"/>
@@ -84,6 +86,7 @@
                        options="{'no_open': True,'no_create':True,'no_edit':True}" optional='show'/>
                 <field name="date_20" string="20" class="shift_highlight_group_b" readonly="state != 'draft'"
                        options="{'no_open': True,'no_create':True,'no_edit':True}" optional='show'/>
+                <field name="total_working_hours" string="Total Jam Kerja" readonly="1" widget="easy_timepicker" />
                 <field name="state" widget="badge" decoration-success="state == 'approved'"
                        decoration-info="state == 'review'" decoration-danger="state == 'reject'"/>
                 <field name="reason" string="Keterangan" optional='show'/>                                        <!-- Reason set to draft Value from wizard -->
@@ -124,18 +127,22 @@
         <field name="arch" type="xml">
             <search string="Cari Shift Karyawan">
                 <field name="employee_id"
-                       filter_domain="['|', '|', '|', '|', '|', '|',
+                       filter_domain="['|', '|', '|', '|', '|', '|', '|',
                        ('employee_id.name', 'ilike', self), 
                        ('employee_id.work_unit', 'ilike', self),
                        ('employee_id.employee_id', 'ilike', self), 
                        ('division_id.name', 'ilike', self), 
                        ('nik', 'ilike', self), 
                        ('period_text', 'ilike', self),
+                       ('group_shift', 'ilike', self),
+                       ('profesion', 'ilike', self),
                        ('jabatan', 'ilike', self)]"
                        string="Karyawan/NIK/Periode"/>
                 <field name="nik" operator="ilike"/>
                 <field name="periode_id"/>
                 <field name="branch_id"/>
+                <field name="profesion"/>
+                <field name="group_shift"/>
                 <field name="directorate_id" string="Direktorat"/>
                 <field name="hrms_department_id" string="Departemen"/>
                 <field name="division_id" string="Divisi"/>
@@ -153,6 +160,8 @@
                     <filter string="Direktorat" name="group_directorat" context="{'group_by':'directorate_id'}"/>
                     <filter string="Departemen" name="group_department" context="{'group_by':'hrms_department_id'}"/>
                     <filter string="Divisi" name="group_division" context="{'group_by':'division_id'}"/>
+                    <filter string="Profesi" name="group_profesion" context="{'group_by':'profesion'}"/>
+                    <filter string="Shift" name="group_group_shift" context="{'group_by':'group_shift'}"/>
                     <filter string="Work Unit" name="group_work_unit_ids" context="{'group_by':'work_unit_ids'}"/>
                     <filter string="Status" name="group_status" context="{'group_by':'state'}"/>
                 </group>
@@ -161,19 +170,25 @@
     </record>
 
        <record id="view_hr_employee_shift_pivot" model="ir.ui.view">
-       <field name="name">hr.employee.shift.pivot</field>
-       <field name="model">sb.employee.shift</field>
-       <field name="arch" type="xml">
-              <pivot string="Analisis Shift Karyawan" sample="1">
-                     <field name="directorate_id" type="row"/>
-                     <field name="hrms_department_id" type="row"/>
-                     <field name="division_id" type="row"/>
-                     <field name="period_text" type="row"/>
-                     <field name="work_unit_ids" type="row"/>
-                     <field name="employee_id" type="row"/>
-                     <field name="state" type="col"/>              
-              </pivot>
-       </field>
+              <field name="name">hr.employee.shift.pivot</field>
+              <field name="model">sb.employee.shift</field>
+              <field name="arch" type="xml">
+                     <pivot string="Analisis Shift Karyawan" sample="1">
+                            <field name="period_text" type="row"/>
+                            <field name="directorate_id" type="row"/>
+                            <field name="hrms_department_id" type="row"/>
+                            <field name="division_id" type="row"/>
+                            <field name="profesion" type="row"/>
+                            <field name="group_shift" type="row"/>
+                            <field name="state" type="row"/> 
+                            <field name="employee_id" type="row"/> 
+                            <field name="period_text" type="col"/>
+                            <field name="profesion" type="col"/>
+                            <field name="group_shift" type="col"/>
+                            <field name="employee_id" type="col"/>
+                            <field name="total_working_hours" type="measure"/>            
+                     </pivot>
+              </field>
        </record>
 
     <record id="action_hr_employee_shift" model="ir.actions.act_window">
@@ -185,10 +200,10 @@
             'search_default_group_periode': 1,
             'search_default_group_department': 1,
             'search_default_group_division': 1,
+            'search_default_group_profesion': 1,
             'search_default_group_work_unit_ids': 1,
             'search_default_group_status': 1,
-            'group_by': 'period_text',
-            'order': 'periode_id, directorate_id, hrms_department_id, division_id, jabatan, employee_id, state'}
+            'group_by': 'periode_id','order': 'periode_id desc'}
         </field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

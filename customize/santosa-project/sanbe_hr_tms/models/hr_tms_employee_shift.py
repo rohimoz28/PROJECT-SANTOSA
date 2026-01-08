@@ -103,67 +103,129 @@ class HrTMSEmployeeShift(models.Model):
     is_select = fields.Boolean(default=False)
 
     date_21 = fields.Many2one('hr.working.days', string='21',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_21 = fields.Float(
+    #     '21', related='date_21.total_working_hours', store=False)
     date_22 = fields.Many2one('hr.working.days', string='22',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_22 = fields.Float(
+    #     '22', related='date_22.total_working_hours', store=False)
     date_23 = fields.Many2one('hr.working.days', string='23',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_23 = fields.Float(
+    #     '23', related='date_23.total_working_hours', store=False)
     date_24 = fields.Many2one('hr.working.days', string='24',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_24 = fields.Float(
+    #     '24', related='date_24.total_working_hours', store=False)
     date_25 = fields.Many2one('hr.working.days', string='25',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_25 = fields.Float(
+    #     '25', related='date_25.total_working_hours', store=False)
     date_26 = fields.Many2one('hr.working.days', string='26',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_26 = fields.Float(
+    #     '26', related='date_26.total_working_hours', store=False)
     date_27 = fields.Many2one('hr.working.days', string='27',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_27 = fields.Float(
+    #     '27', related='date_27.total_working_hours', store=False)
     date_28 = fields.Many2one('hr.working.days', string='28',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_28 = fields.Float(
+    #     '28', related='date_28.total_working_hours', store=False)
     date_29 = fields.Many2one('hr.working.days', string='29',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_29 = fields.Float(
+    #     '29', related='date_29.total_working_hours', store=False)
     date_30 = fields.Many2one('hr.working.days', string='30',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_30 = fields.Float(
+    #     '30', related='date_30.total_working_hours', store=False)
     date_31 = fields.Many2one('hr.working.days', string='31',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_31 = fields.Float(
+    #     '01', related='date_31.total_working_hours', store=False)
     date_01 = fields.Many2one('hr.working.days', string='01',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_01 = fields.Float(
+    #     '02', related='date_01.total_working_hours', store=False)
     date_02 = fields.Many2one('hr.working.days', string='02',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_02 = fields.Float(
+    #     '02', related='date_02.total_working_hours', store=False)
     date_03 = fields.Many2one('hr.working.days', string='03',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_03 = fields.Float(
+    #     '03', related='date_03.total_working_hours', store=False)
     date_04 = fields.Many2one('hr.working.days', string='04',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_04 = fields.Float(
+    #     '04', related='date_04.total_working_hours', store=False)
     date_05 = fields.Many2one('hr.working.days', string='05',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_05 = fields.Float(
+    #     '05', related='date_05.total_working_hours', store=False)
     date_06 = fields.Many2one('hr.working.days', string='06',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_06 = fields.Float(
+    #     '06', related='date_06.total_working_hours', store=False)
     date_07 = fields.Many2one('hr.working.days', string='07',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_07 = fields.Float(
+    #     '07', related='date_07.total_working_hours', store=False)
     date_08 = fields.Many2one('hr.working.days', string='08',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_08 = fields.Float(
+    #     '08', related='date_08.total_working_hours', store=False)
     date_09 = fields.Many2one('hr.working.days', string='09',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_09 = fields.Float(
+    #     '09', related='date_09.total_working_hours', store=False)
     date_10 = fields.Many2one('hr.working.days', string='10',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_10 = fields.Float(
+    #     '10', related='date_10.total_working_hours', store=False)
     date_11 = fields.Many2one('hr.working.days', string='11',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_11 = fields.Float(
+    #     '11', related='date_11.total_working_hours', store=False)
     date_12 = fields.Many2one('hr.working.days', string='12',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_12 = fields.Float(
+    #     '12', related='date_12.total_working_hours', store=False)
     date_13 = fields.Many2one('hr.working.days', string='13',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_13 = fields.Float(
+    #     '13', related='date_13.total_working_hours', store=False)
     date_14 = fields.Many2one('hr.working.days', string='14',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_14 = fields.Float(
+    #     '14', related='date_14.total_working_hours', store=False)
     date_15 = fields.Many2one('hr.working.days', string='15',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_15 = fields.Float(
+    #     '15', related='date_15.total_working_hours', store=False)
     date_16 = fields.Many2one('hr.working.days', string='16',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_16 = fields.Float(
+    #     '16', related='date_16.total_working_hours', store=False)
     date_17 = fields.Many2one('hr.working.days', string='17',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_17 = fields.Float(
+    #     '17', related='date_17.total_working_hours', store=False)
     date_18 = fields.Many2one('hr.working.days', string='18',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_18 = fields.Float(
+    #     '18', related='date_18.total_working_hours', store=False)
     date_19 = fields.Many2one('hr.working.days', string='19',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_19 = fields.Float(
+    #     '19', related='date_19.total_working_hours', store=False)
     date_20 = fields.Many2one('hr.working.days', string='20',
-                              domain="['|',('available_for','in',branch_id),('available_for','=',False)]")
+                              domain="['|',('available_for','in',branch_id),('available_for','=',False),('type_hari','!=','fhday')]")
+    # hours_20 = fields.Float(
+    #     '20', related='date_20.total_working_hours', store=False)
 
     active = fields.Boolean(default=True, string='Active')
     state = fields.Selection(
@@ -180,6 +242,45 @@ class HrTMSEmployeeShift(models.Model):
                        compute='_compute_display_name', store=True)
     reason = fields.Char(
         string='Reason', help='Reason for setting the record to draft.')
+
+    profesion = fields.Char(
+        'Profesi',
+        index=True,
+        store=True,
+        help='Profesion of Employee.')
+
+    group_shift = fields.Char(string="Group Shift", store=True)
+    total_working_hours = fields.Float(
+        'Total Working Hours', store=True,
+        compute='_compute_total_working_hours',
+        help='Total working hours in the shift period.')
+
+    @api.depends(
+        'date_21', 'date_22', 'date_23', 'date_24', 'date_25', 'date_26', 'date_27', 'date_28', 'date_29', 'date_30', 'date_31',
+        'date_01', 'date_02', 'date_03', 'date_04', 'date_05', 'date_06', 'date_07', 'date_08', 'date_09', 'date_10',
+        'date_11', 'date_12', 'date_13', 'date_14', 'date_15', 'date_16', 'date_17', 'date_18', 'date_19', 'date_20'
+    )
+    def _compute_total_working_hours(self):
+        # List semua field tanggal yang ada di form
+        date_fields = [
+            'date_21', 'date_22', 'date_23', 'date_24', 'date_25', 'date_26', 'date_27', 'date_28', 'date_29', 'date_30', 'date_31',
+            'date_01', 'date_02', 'date_03', 'date_04', 'date_05', 'date_06', 'date_07', 'date_08', 'date_09', 'date_10',
+            'date_11', 'date_12', 'date_13', 'date_14', 'date_15', 'date_16', 'date_17', 'date_18', 'date_19', 'date_20'
+        ]
+
+        for rec in self:
+            total_hours = 0.0
+            for field in date_fields:
+                working_day = rec[field]
+                if working_day:
+                    duration = working_day.total_working_hours
+                    if duration > 0:
+                        total_hours += duration
+
+            rec.total_working_hours = total_hours
+
+    shift_id = fields.Many2one(
+        'sb.group.shift', string='Group Shift', index=True,)
 
     # work_unit_ids = fields.Many2many(
     #     'mst.group.unit.pelayanan',  string='Work Unit',  compute='_compute_work_unit_ids', store=True)
