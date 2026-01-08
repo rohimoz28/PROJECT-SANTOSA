@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- View sb.group.shift View Tree -->
+    <record id="view_sb_group_shift_tree" model="ir.ui.view">
+        <field name="name">view.sb.group.shift.tree</field>
+        <field name="model">sb.group.shift</field>
+        <field name="arch" type="xml">
+            <tree duplicate="0" import="0" 
+                decoration-muted="not active"
+                sample="1" default_order="active desc">
+                <field name="code" string="Kode"/>
+                <field name="name" string="Deskripsi"/>
+                <field name="active" string="Aktif" widget="boolean_toggle"/>
+                <field name="create_date" string="Tanggal Create" optional="show"/>
+                <field name="create_uid" string="User Create" optional="hide"/>
+                <field name="write_uid" string="User Ubah" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- View sb.group.shift form -->
+    <record id="view_sb_group_shift_form" model="ir.ui.view">
+        <field name="name">view.sb.group.shift.form</field>
+        <field name="model">sb.group.shift</field>
+        <field name="arch" type="xml">
+            <form string="Sb Group Shift" duplicate="0">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Deskripsi"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Morning Shift"/>
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="code" string="Kode" placeholder="ABC"/>
+                            </group>
+                            <group>
+                                <field name="active" string="Aktif" widget="boolean_toggle"/>
+                            </group>
+                        </group>
+                    </div>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="message_ids"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- View sb.group.shift search -->
+    <record id="view_sb_group_shift_search" model="ir.ui.view">
+        <field name="name">view.sb.group.shift.search</field>
+        <field name="model">sb.group.shift</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"
+                       filter_domain="['|',
+                       ('name', 'ilike', self), 
+                       ('code', 'ilike', self)]"
+                       string="Search Group Shift"/>
+                <field name="name" string="Deskripsi"/>
+                <field name="code" string="Kode"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <group expand="1" string="Group By">
+                    <filter string="Name" name="group_by_name" context="{'group_by':'name'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action sb.group.shift -->
+    <record id="action_sb_group_shift" model="ir.actions.act_window">
+        <field name="name">Master Group Shift</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sb.group.shift</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{'active_test': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Group Shift!
+            </p>
+        </field>
+    </record>
+
+</odoo>

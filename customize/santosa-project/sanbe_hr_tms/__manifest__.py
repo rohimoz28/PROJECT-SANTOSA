@@ -77,6 +77,8 @@
         'views/data_upload_attendance.xml',
         'views/hr_tms_overtime_Setting.xml',
         'views/hr_overtime_request_planning.xml',
+        'views/sb_group_shift_views.xml',
+        'views/sb_mapping_employee_shift_views.xml',
         'views/tms_menu.xml',
         'report/report_kehadiran_templates.xml',
         'report/report_kehadiran_html.xml',

@@ -218,9 +218,9 @@ class HRTMSEntrySummary(models.Model):
 
     @api.depends('periode_id','date_from','date_to')
     def _compute_concate(self):
-        print("MULAI CONCATE")
+        # print("MULAI CONCATE")
         for record in self:
-            print(record.periode_id.name + str(record.date_from) + str(record.date_to), "ini yang baru")
+            # print(record.periode_id.name + str(record.date_from) + str(record.date_to), "ini yang baru")
             record.periode_from_to = record.periode_id.name + " | " + str(record.date_from) + " | " + str(record.date_to)
     
     @api.depends('employee_id.allowance_ot')
@@ -239,7 +239,8 @@ class HRTMSEntrySummary(models.Model):
             record.night_shift = record.employee_id.allowance_night_shift
     
     def btn_export_to_excel(self):
-        print('ieu')
+        pass
+        # print('ieu')
 
     @api.depends('tmsentry_details_ids')
     def _task_progress_approval(self):

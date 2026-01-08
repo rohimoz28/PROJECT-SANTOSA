@@ -10,7 +10,7 @@ class OrgChart(http.Controller):
 
 	@http.route('/orgchart/update', methods=['POST'], csrf=False)
 	def update_org_chart(self, child, last_parent, new_parent):
-		print('update data')
+		# print('update data')
 		if new_parent:
 			# print('child ', child)
 			# print('new parent ',new_parent)

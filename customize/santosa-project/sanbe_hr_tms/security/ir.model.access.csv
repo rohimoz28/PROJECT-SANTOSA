@@ -108,3 +108,8 @@ access_value_group,sanbe_hr_tms.value.group,model_value_group,base.group_user,1,
 access_stg_transform_absent,access.stg.transform.absent,model_stg_transform_absent,base.group_user,1,1,1,1
 access_st_master_leave,access.st.master.leave,model_st_master_leave,base.group_user,1,1,1,1
 access_wiz_hr_set_draft_manager,wiz_hr_set_draft_manager,model_wiz_hr_set_draft,,1,1,1,1
+access_sb_group_shift_manager,sb_group_shift_manager,model_sb_group_shift,sanbe_hr_tms.group_shift_master_data_hrd,1,1,1,1
+access_sb_group_shift_staff,sb_group_shift_staff,model_sb_group_shift,sanbe_hr_tms.group_shift_master_data_staff,1,1,1,0
+access_sb_group_shift_user,sb_group_shift_user,model_sb_group_shift,base.group_user,1,0,0,0
+access_sb_mapping_employee_shift_manager,sb_mapping_employee_shift_manager,model_sb_mapping_employee_shift,group_shift_mapping_employee_staff,1,1,1,1
+access_sb_mapping_employee_shift_user,sb_mapping_employee_shift_user,model_sb_mapping_employee_shift,,1,0,0,0

@@ -35,7 +35,7 @@ class ExportExcelTms(models.TransientModel):
         if self.periode_id:
             # Ambil branch_id dari periode_id
             self.branch_id = self.periode_id.branch_id.id
-            print(self.branch_id.id)
+            # print(self.branch_id.id)
             # Ambil daftar department_id berdasarkan branch_id
             department_ids = self.env['hr.department'].search([
                 ('branch_id', '=', self.branch_id.id)

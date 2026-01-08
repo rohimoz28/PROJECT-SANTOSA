@@ -364,13 +364,13 @@ class HRTMSSyncMachine(models.TransientModel):
                         if hsl.get('jam_masuk') and hsl.get('jam_keluar'):
                             att_status = 'attendee'
                         if hsl.get('jam_masuk') is not None:
-                            print('++++++++++++++++++')
-                            print('jam masuk',str(hsl.get('jam_masuk')))
+                            # print('++++++++++++++++++')
+                            # print('jam masuk',str(hsl.get('jam_masuk')))
                             test = self._getwaktu3(str(hsl.get('jam_masuk')))
-                            print('jam masuk konversi',test)
+                            # print('jam masuk konversi',test)
                             test2 = self.ubahjam(test)
-                            print('konversi diubah lg ke waktu',test2)
-                            print('++++++++++++++++++')
+                            # print('konversi diubah lg ke waktu',test2)
+                            # print('++++++++++++++++++')
                         if mycaritms:
                             if hsl.get('jam_masuk') is not None or hsl.get('jam_keluar') is not None:
                                 mycaritms.write({
