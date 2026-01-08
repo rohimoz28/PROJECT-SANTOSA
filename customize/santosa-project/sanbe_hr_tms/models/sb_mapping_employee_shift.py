@@ -9,6 +9,7 @@ _logger = logging.getLogger(__name__)
 class SbMappingEmployeeShift(models.Model):
     _name = 'sb.mapping_employee.shift'
     _description = 'Employee Shift Mapping'
+    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin', 'utm.mixin']
     _order = 'id desc'
 
     name = fields.Char(

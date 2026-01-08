@@ -10,6 +10,7 @@ _logger = logging.getLogger(__name__)
 class SbGroupShift(models.Model):
     _name = 'sb.group.shift'
     _description = 'Master Group Shift'
+    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin', 'utm.mixin']
     _order = 'active desc, code asc'
 
     code = fields.Char('Code',
