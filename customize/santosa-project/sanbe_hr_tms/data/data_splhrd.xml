@@ -4,7 +4,7 @@
         <record id="list_hr_spl" model="ir.config_parameter">
             <!-- <field name="key">hr.overtime.planning</field> -->
             <field name="key">SPLHRD</field>
-            <field name="value">100,200,400,500,97, 174, 235</field>
+            <field name="value">100,200,400,500,97, 174, 235,112929</field>
         </record>
         <record id="list_hr_spl_validator" model="ir.config_parameter">
             <!-- <field name="key">hr.overtime.planning</field> -->
