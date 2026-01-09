@@ -27,6 +27,8 @@ class HrEmployee(models.Model):
         'hr.employee', compute='get_coach_id', string="hr_employee coach id", store=True)
     # child_ids = fields.Many2many(
     #     'hr.employee', 'emp_parent_id', string="Bawahan")
+    group_shift_id = fields.Many2one(
+        'sb.mapping_employee.shift', string="Group Shift", store=True)
 
     @api.depends("parent_id")
     def get_parent_id(self):

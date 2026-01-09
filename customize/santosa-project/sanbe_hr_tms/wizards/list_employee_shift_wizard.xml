@@ -36,6 +36,9 @@
                                                 <field name="directorate_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" string = "Direktorat" readonly="1"/>
                                                 <field name="hrms_department_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" string = "Departemen" readonly="1"/>
                                                 <field name="division_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" string = "Divisi" readonly="1" />
+                                                <field name="profesion" string = "Profesi" column_invisible="1" readonly="1" />
+                                                <field name="group_shift_id" string = "Shift" column_invisible="1" readonly="1"/>
+                                                <field name="group_shift" string = "Shift" readonly="1"/>
                                                 <field name="department_id" column_invisible="1"/>
                                                 <field name="nik" readonly="1"/>
                                                 <field name="job_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" string = "Jabatan" readonly="1"/>
