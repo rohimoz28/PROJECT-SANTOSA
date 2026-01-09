@@ -186,8 +186,8 @@ class HrCariEmployeeShift(models.TransientModel):
                     if mapping_shift_id:
                         shift_code = mapping_shift_id.shift_id.name or ''
                         profesi = mapping_shift_id.profesion or ''
-                        if shift_code or profesi:
-                            group_shift_val = f"{shift_code} - {profesi}"
+                        if shift_code:
+                            group_shift_val = f"{shift_code}"
                     self.env['wiz.employee.shift.detail'].create({
                         'cari_id': self.id,
                         'employee_id': emp.id,
@@ -409,7 +409,7 @@ class HrCariEmployeeShiftDetails(models.TransientModel):
         for rec in self:
             if rec.employee_id:
                 if rec.group_shift_id and rec.profesion:
-                    rec.group_shift = f"{rec.group_shift_id.shift_id.code} - {rec.group_shift_id.profesion}" or False
+                    rec.group_shift = f"{rec.group_shift_id.shift_id.name}" or False
 
     def btn_select_all(self):
         dt_emp = self.env['hr.employeedepartment.details'].sudo().search(

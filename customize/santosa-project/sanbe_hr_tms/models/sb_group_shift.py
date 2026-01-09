@@ -41,10 +41,10 @@ class SbGroupShift(models.Model):
         ),
     ]
 
-    @api.depends('name', 'code')
-    def _compute_display_name(self):
-        for shift_group in self:
-            name = shift_group.name
-            if shift_group.code:
-                name = '[' + shift_group.code + '] ' + shift_group.name
-            shift_group.display_name = name
+    # @api.depends('name', 'code')
+    # def _compute_display_name(self):
+    #     for shift_group in self:
+    #         name = shift_group.name
+    #         if shift_group.code:
+    #             name = '[' + shift_group.code + '] ' + shift_group.name
+    #         shift_group.display_name = name

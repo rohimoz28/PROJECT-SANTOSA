@@ -15,7 +15,8 @@ TMS_ENTRY_STATE = [
 class HrTMSEmployeeShift(models.Model):
     _name = "sb.employee.shift"
     _description = 'Employee Shift Management'
-    _order = "periode_id desc, directorate_id asc, hrms_department_id asc, division_id asc, jabatan asc"
+    # _order = "periode_id desc, directorate_id asc, hrms_department_id asc, division_id asc, jabatan asc"
+    # _order = "periode_id desc"
 
     def _get_running_periode(self):
         """Mendapatkan periode 'running' yang aktif untuk Branch pengguna saat ini."""

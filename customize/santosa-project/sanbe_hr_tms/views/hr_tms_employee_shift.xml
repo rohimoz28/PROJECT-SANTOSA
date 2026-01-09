@@ -4,7 +4,7 @@
         <field name="name">hr.employee.shift.tree</field>
         <field name="model">sb.employee.shift</field>
         <field name="arch" type="xml">
-            <tree string="Employee Shifts" create="false" editable="bottom" limit="180" class="o_horizontal_shift" default_order="periode_id desc, directorate_id asc, hrms_department_id asc, division_id asc, profesion asc, jabatan asc, state asc, employee_id asc">
+            <tree string="Employee Shifts" create="false" editable="bottom" limit="180" class="o_horizontal_shift" default_order="periode_id asc">
                 <header>
                     <!-- <button name="action_mass_review" type="object" string="Send to Approved" groups="sanbe_hr_tms.group_shift_staff,sanbe_hr_tms.group_shift_hrd"/> -->
                     <button name="action_mass_approve" type="object" string="Mass Approved"
@@ -14,8 +14,8 @@
                 <field name="period_text" options="{'no_open': True}" string="Periode" readonly="1" optional='show'/>
                 <field name="employee_id" options="{'no_open': True}" readonly="1" optional='show'/>
                 <field name="nik" readonly="1" optional='show'/>
+                <field name="profesion" readonly="1" optional='show'/>
                 <field name="group_shift" readonly="1" optional='show'/>
-                <field name="profesion" readonly="1" optional='hide'/>
                 <field name="work_unit_ids" string="Work Unit" optional='hide' widget="many2many_tags"/>
                 <field name="branch_id" options="{'no_open': True}" readonly="1" column_invisible="1"/>
                 <field name="area_id" options="{'no_open': True}" readonly="1" column_invisible="1"/>
@@ -202,8 +202,7 @@
             'search_default_group_division': 1,
             'search_default_group_profesion': 1,
             'search_default_group_work_unit_ids': 1,
-            'search_default_group_status': 1,
-            'group_by': 'periode_id','order': 'periode_id desc'}
+            'search_default_group_status': 1,'group_by': 'periode_id',}
         </field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
