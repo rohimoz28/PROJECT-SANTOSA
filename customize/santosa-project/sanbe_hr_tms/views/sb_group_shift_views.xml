@@ -12,9 +12,10 @@
                 <field name="code" string="Kode"/>
                 <field name="name" string="Deskripsi"/>
                 <field name="active" string="Aktif" widget="boolean_toggle"/>
-                <field name="create_date" string="Tanggal Create" optional="show"/>
+                <field name="create_date" string="Tanggal Create"/>
                 <field name="create_uid" string="User Create" optional="hide"/>
-                <field name="write_uid" string="User Ubah" optional="show"/>
+                <field name="write_uid" string="Write User"/>
+                <field name="list_employee_ids" optional="hide" widget="many2many_tags"/>
             </tree>
         </field>
     </record>
@@ -31,15 +32,16 @@
                         <h1>
                             <field name="name" placeholder="e.g. Morning Shift"/>
                         </h1>
-                        <group>
-                            <group>
-                                <field name="code" string="Kode" placeholder="ABC"/>
-                            </group>
-                            <group>
-                                <field name="active" string="Aktif" widget="boolean_toggle"/>
-                            </group>
-                        </group>
                     </div>
+                    <group>
+                        <group>
+                            <field name="code" string="Kode" placeholder="ABC"/>
+                            <field name="list_employee_ids" options="{'no_open': True,'no_create':True,'no_edit':True}" readonly="True" invisible="1" widget="many2many_tags"/>
+                        </group>
+                        <group>
+                            <field name="active" string="Aktif" widget="boolean_toggle"/>
+                        </group>
+                    </group>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" groups="base.group_user"/>
                         <field name="message_ids"/>
