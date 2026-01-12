@@ -38,7 +38,9 @@ class SbMappingEmployeeShift(models.Model):
         related='employee_id.name',
         string='Employee Name',
         index=True,
-        readonly=True
+        readonly=True,
+        domain=[('wd_type', '=', 'shift')]
+
     )
     branch_id = fields.Many2one(
         'res.branch',  # Pastikan nama model branch Anda benar, biasanya res.branch
@@ -184,9 +186,9 @@ class SbMappingEmployeeShift(models.Model):
             for rec in self:
                 if rec.employee_id:
                     rec.employee_id.group_shift_ids = False
-        
+
         res = super(SbMappingEmployeeShift, self).write(vals)
-        
+
         # Update employee baru (atau tetap) dengan ID mapping ini
         if 'employee_id' in vals or 'active' in vals:
             for rec in self:

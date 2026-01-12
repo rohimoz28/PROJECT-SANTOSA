@@ -34,7 +34,7 @@
                     <field name="area_id" invisible="1"/>
                     <div class="oe_title">
                         <h1>
-                            <field name="employee_id" required="1" placeholder="Employee Name" options="{'no_create': True, 'no_open': False}"/>
+                            <field name="employee_id" required="1" placeholder="Employee Name" options="{'no_create': True, 'no_open': False}" domain="[('wd_type', '=', 'shift')]"/>
                         </h1>
                     </div>
                     <group>
