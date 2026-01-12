@@ -83,11 +83,14 @@
                             </group>
                             <group col="2">
                                 <field name="total_half_hours" string="Total Jam Kerja Half Day" required="type_hari == 'fhday'" invisible="type_hari == 'fday'" widget="easy_timepicker"/>
-                                <label for="working_half_from" string="Half Day From" invisible="type_hari == 'fday'"/>
+                                <field name="working_half_from" required="type_hari == 'fhday'" string="Day of Half Day" invisible="type_hari == 'fday'" placeholder="Start Days"/>
+                                <!-- di hide karena half day biasanya hanya 1 hari -->
+                                <!-- <label for="working_half_from" string="Half Day From" invisible="type_hari == 'fday'"/>
                                 <div for="working_half_from" class="o_row" invisible="type_hari == 'fday'">
                                     <field name="working_half_from" required="type_hari == 'fhday'" invisible="type_hari == 'fday'" placeholder="Start Days"/> to
                                     <field name="working_half_to" required="type_hari == 'fhday'" invisible="type_hari == 'fday'" placeholder="End Days"/>
-                                </div>
+                                </div> -->
+
                                 <label for="halfday_from" string ="Hours Half Day From" invisible="type_hari == 'fday'"/>
                                 <div for="halfday_from" class="o_row" invisible="type_hari == 'fday'">
                                     <field name="halfday_from" required="type_hari == 'fhday'" widget="float_time" invisible="type_hari == 'fday'" placeholder="Start Hours"/>  to

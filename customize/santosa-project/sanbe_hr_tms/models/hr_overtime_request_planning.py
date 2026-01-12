@@ -161,6 +161,14 @@ class HREmpOvertimeRequest(models.Model):
                                      domain="['|',('branch_id','=',branch_id),('branch_id','=',False)]", store=True)
     periode_from = fields.Date(
         'Perintah Lembur Dari', default=fields.Date.today)
+
+    # @api.onchange('periode_from')
+    # def _onchange_periode_from(self):
+    #     for rec in self:
+    #         rec.periode_to = rec.periode_from
+    #         for line in rec.hr_ot_planning_ids:
+    #             line.plann_date_from = rec.periode_from
+
     used_at = fields.Date(
         'Digunakan Pada', default=fields.Date.today)
     job_id = fields.Many2one('hr.job', string='Jabatan',
@@ -264,6 +272,22 @@ class HREmpOvertimeRequest(models.Model):
     can_validation = fields.Boolean(string='Can Validate HRD',
                                     compute='_compute_can_validation',
                                     help='Check if current user can approve as HRD')
+
+    wd_tmssumary_id = fields.Many2one('hr.working.days',
+                                      string='WD TMS Summary',
+                                      store=True,
+                                      compute='_compute_wd_tmssumary_id',
+                                      help='Working Day TMS Summary Reference')
+
+    @api.depends('employee_id', 'periode_from')
+    def _compute_wd_tmssumary_id(self):
+        for rec in self:
+            if rec.employee_id and rec.periode_from:
+                work_sch = self.env['sb.tms.tmsentry.details'].search(
+                    [('employee_id', '=', rec.employee_id.id), ('details_date', '=', rec.periode_from)], limit=1)
+                rec.wd_tmssumary_id = work_sch.workingday_id.id if work_sch else False
+            else:
+                rec.wd_tmssumary_id = False
 
     @api.depends('branch_id')
     def _compute_splhrd_department_ids(self):
@@ -678,9 +702,14 @@ class HREmpOvertimeRequest(models.Model):
         DITAMBAHAKAN PRINT UNTUK DEBUGGING LOGIKA PENGURANGAN (Day Payment).
         """
         for record in self:
-            if not record.hr_ot_planning_ids:
-                raise UserError(
-                    "Tidak dapat menyetujui permintaan lembur tanpa data karyawan.")
+            if not record.day_payment:
+                if not record.hr_ot_planning_ids:
+                    raise UserError(
+                        "Tidak dapat menyetujui permintaan lembur tanpa data karyawan.")
+            else:
+                if not record.hr_ot_planning_ids:
+                    raise UserError(
+                        "Tidak dapat memproses Day Payment tanpa data karyawan")
             if record.day_payment and record.total_hours < 7:
                 raise UserError(
                     "Day Payment hanya bisa di-approve apabila total jam = 7 jam")
@@ -737,6 +766,10 @@ class HREmpOvertimeRequest(models.Model):
                             if not line.plann_date_from:
                                 raise UserError(
                                     "Tidak dapat menyetujui permintaan lembur jika rencana tgl OT kosong.")
+            else:
+                if not rec.hr_ot_planning_ids:
+                    raise UserError(
+                        "Tidak dapat memproses Day Payment tanpa data karyawan")
             rec.approve2 = True
             rec.state = 'approved_l2'
 
@@ -860,32 +893,24 @@ class HREmpOvertimeRequest(models.Model):
                 raise ValidationError(
                     _("You cannot delete this record as it has related detail records.")
                 )
+        # ================================================================================
         return super().unlink()
-
-    # ================================================================================
     # Helper Method: Get data from OT detail to day payment detail
     # ================================================================================
 
     def _compute_ot_detail_lines(self):
         for dp in self:
-            line_commands = [(5, 0, 0)]
-            if not dp.day_payment and dp.employee_id:
-                line_commands.append((0, 0, {
-                    'planning_id': dp.id,
-                    'branch_id': dp.branch_id.id,
-                    'area_id': dp.area_id.id,
-                    'department_id': dp.department_id.id,
-                    'employee_id': dp.employee_id.id,
-                    'directorate_id': dp.directorate_id.id,
-                    'hrms_department_id': dp.hrms_department_id.id,
-                    'division_id': dp.division_id.id,
-                    'plann_date_from': dp.periode_from,
-                    'plann_date_to': dp.periode_from,
-                    'ot_type': 'regular',
-                    'is_select': False,
-                }))
-            elif dp.day_payment and dp.employee_id:
+            # Skip jika data wajib belum ada
+            if not dp.employee_id or not dp.periode_from:
+                continue
 
+            # Command (5, 0, 0) artinya menghapus semua line yang ada (Clear)
+            line_commands = [(5, 0, 0)]
+
+            # ---------------------------------------------------------
+            # CASE A: Day Payment (Mengambil dari HR Overtime Employees)
+            # ---------------------------------------------------------
+            if dp.day_payment:
                 ot_details = self.env['hr.overtime.employees'].search([
                     ('planning_id.employee_id', '=', dp.employee_id.id),
                     ('planning_id.day_payment', '=', False),
@@ -895,7 +920,6 @@ class HREmpOvertimeRequest(models.Model):
                 ])
 
                 for ot in ot_details:
-                    spl_employee_id = ot.id
                     line_commands.append((0, 0, {
                         'planning_id': dp.id,
                         'branch_id': ot.branch_id.id,
@@ -905,7 +929,7 @@ class HREmpOvertimeRequest(models.Model):
                         'directorate_id': ot.directorate_id.id,
                         'hrms_department_id': ot.hrms_department_id.id,
                         'division_id': ot.division_id.id,
-                        'spl_employee_id': spl_employee_id,
+                        'spl_employee_id': ot.id,
                         'realization_date': ot.realization_date,
                         'realization_time_from': ot.realization_time_from,
                         'realization_time_to': ot.realization_time_to,
@@ -926,6 +950,37 @@ class HREmpOvertimeRequest(models.Model):
                         'is_select': False,
                     }))
 
+            # ---------------------------------------------------------
+            # CASE B: Bukan Day Payment (Regular Planning)
+            # ---------------------------------------------------------
+            else:
+                # Cek apakah ada jadwal kerja (TMS Entry)
+                existing_ot = self.env['sb.tms.tmsentry.details'].search_count([
+                    ('employee_id', '=', dp.employee_id.id),
+                    ('details_date', '=', dp.periode_from),
+                ])
+
+                # Tentukan tipe OT: Jika tidak ada jadwal = dp, jika ada = regular
+                ot_type = 'regular' if existing_ot > 0 else 'dp'
+
+                line_commands.append((0, 0, {
+                    'planning_id': dp.id,
+                    'branch_id': dp.branch_id.id,
+                    'area_id': dp.area_id.id,
+                    'department_id': dp.department_id.id,
+                    'ot_plann_from': 0.0,
+                    'ot_plann_to': 0.0,
+                    'employee_id': dp.employee_id.id,
+                    'directorate_id': dp.directorate_id.id,
+                    'hrms_department_id': dp.hrms_department_id.id,
+                    'division_id': dp.division_id.id,
+                    'plann_date_from': dp.periode_from,
+                    'plann_date_to': dp.periode_from,
+                    'ot_type': ot_type,
+                    'is_select': False,
+                }))
+
+            # Update One2many field
             dp.hr_ot_planning_ids = line_commands
 
     @api.onchange('employee_id')
@@ -1017,17 +1072,19 @@ class HREmpOvertimeRequestEmployee(models.Model):
                              default=fields.Date.today)
     day_payment = fields.Boolean(
         'Day Payment', related='planning_id.day_payment', store=True)
-    plann_date_from = fields.Date('Tanggal SPL')
-    plann_date_to = fields.Date('Jam SPL Dari')
+    plann_date_from = fields.Date(
+        'Tanggal SPL', related='planning_id.periode_from')
+    plann_date_to = fields.Date(
+        'Tanggal SPL hingga', related='planning_id.periode_from')
     ot_plann_from = fields.Float('Jam SPL dari', digits=(4, 1))
     ot_plann_to = fields.Float('Jam SPL Hingga', digits=(4, 1))
-    approve_time_from = fields.Float('OT App From')
-    approve_time_to = fields.Float('OT App To')
+    approve_time_from = fields.Float('OT App From', digits=(4, 1))
+    approve_time_to = fields.Float('OT App To', digits=(4, 1))
     realization_date = fields.Date('Realization Date')
-    realization_time_from = fields.Float('Jam Hadir Dari')
-    realization_time_to = fields.Float('Jam Hadir Hingga')
-    verify_time_from = fields.Float('Verifkasi Jam Dari')
-    verify_time_to = fields.Float('Verifkasi Jam Hingga')
+    realization_time_from = fields.Float('Jam Hadir Dari', digits=(4, 1))
+    realization_time_to = fields.Float('Jam Hadir Hingga', digits=(4, 1))
+    verify_time_from = fields.Float('Verifkasi Jam Dari', digits=(4, 1))
+    verify_time_to = fields.Float('Verifkasi Jam Hingga', digits=(4, 1))
 
     # def counting_hours(self, start, end):
     #     """Calculate the number of hours between two times, considering overnight shifts."""
@@ -1070,6 +1127,65 @@ class HREmpOvertimeRequestEmployee(models.Model):
     planning_req_name = fields.Char(
         string='Planning Request Name', required=False)
 
+    #  Mapping pengajuan lembur dengan jadwal kerja (TMS Entry)
+    #  temukan working days yang disetting berdasarkan employee_id dan dan plann_date_from
+    #  jika di temukan sesuaikan dengan type SPL dan ketentuan jam yang berlaku
+
+    wd_tmssumary_id = fields.Many2one('hr.working.days',
+                                      string='WD TMS Summary',
+                                      store=True, related="planning_id.wd_tmssumary_id",)
+    fullday_from = fields.Float(
+        'Hours From', related='wd_tmssumary_id.fullday_from', store=False)
+    fullday_to = fields.Float(
+        'Hours To', related='wd_tmssumary_id.fullday_to', store=False)
+    halfday_from = fields.Float(
+        'Hours Half Day From', related='wd_tmssumary_id.halfday_from', store=False)
+    halfday_to = fields.Float(
+        'Hours Half Day To', related='wd_tmssumary_id.halfday_to', store=False)
+
+    @api.constrains("employee_id", "plann_date_from", "day_payment")
+    def _check_duplicate_planning_date(self):
+        for rec in self:
+            if rec.employee_id and rec.plann_date_from and not rec.day_payment:
+                exsisting_record = self.env['hr.overtime.employees'].search([
+                    ('employee_id', '=', rec.employee_id.id),
+                    ('plann_date_from', '=', rec.plann_date_from),
+                    ('id', '!=', rec.id)])
+                if len(exsisting_record) > 0:
+                    for line_ot in exsisting_record:
+                        if line_ot.ot_plann_from < rec.ot_plann_to and line_ot.ot_plann_to > rec.ot_plann_from:
+                            raise UserError(
+                                f"Karyawan {rec.employee_id.name} sudah memiliki rencana lembur pada tanggal {rec.plann_date_from} pada SPL {line_ot.planning_id.name}. ")
+
+    @api.constrains(
+        "employee_id", "ot_type", "wd_tmssumary_id",
+        "ot_plann_from", "ot_plann_to", "fullday_from",
+        "fullday_to", "halfday_from", "halfday_to",
+        "day_payment", "planning_id.periode_from")
+    def _check_ot_type_with_working_days(self):
+        cutoff_date = fields.Date.to_date('2026-01-12')
+        for rec in self:
+            if rec.employee_id:
+                if not rec.day_payment:
+                    record_date = rec.create_date.date() if rec.create_date else fields.Date.today()
+                    if record_date > cutoff_date:
+                        if rec.ot_type == 'regular' and rec.wd_tmssumary_id:
+                            type_hari = rec.wd_tmssumary_id.type_hari
+                            day_half_day = rec.wd_tmssumary_id.working_half_from.lower()
+                            current_day_name = rec.planning_id.periode_from.strftime(
+                                '%A')
+                            if current_day_name == day_half_day and type_hari == 'fhday':
+                                if rec.ot_plann_from < (rec.halfday_to-0.05) and rec.ot_plann_to > (rec.halfday_from+0.05):
+                                    raise UserError(
+                                        "Waktu lembur tidak valid. Masih dalam jadwal kerja.")
+                            else:
+                                if rec.ot_plann_from < rec.fullday_to and rec.ot_plann_to > rec.fullday_from:
+                                    raise UserError(
+                                        "Waktu lembur tidak valid. Masih dalam jadwal kerja.")
+                        elif rec.ot_type == 'regular' and not rec.wd_tmssumary_id.id:
+                            raise UserError(
+                                f"Karyawan {rec.employee_id.name} tidak memiliki Jadwal Kerja")
+
     @api.depends('state', 'adv_total_ot')
     def assign_val_tor_resudual_ot(self):
         for rec in self:
@@ -1089,7 +1205,7 @@ class HREmpOvertimeRequestEmployee(models.Model):
 
             if not (0.0 <= record.ot_plann_from <= 24.0 and
                     0.0 <= record.ot_plann_to <= 24.0):
-                raise UserError("Waktu harus dalam rentang 0.0 hingga 25.0.")
+                raise UserError("Waktu harus dalam rentang 0.0 hingga 24.0.")
             # if record.ot_plann_from >= record.ot_plann_to:
             #     raise UserError(
             #         "Jam SPL 'dari' harus lebih awal dari jam SPL 'Hingga'.")
@@ -1097,16 +1213,30 @@ class HREmpOvertimeRequestEmployee(models.Model):
             #     raise UserError(
             #         "Jam SPL melebihi batas maksimal jam lembur karyawan.")
 
-    @api.constrains('plann_date_from', 'periode_to', 'periode_from')
-    def _check_validation_date(self):
-        for line in self:
-            if line.plann_date_from and line.periode_from and line.periode_to and \
-                    (
-                        line.plann_date_from < line.periode_from or line.plann_date_from > line.periode_to) and not line.day_payment:
-                msg = "Tanggal SPL (%s) harus berada di antara Tanggal OT Dari (%s) dan Tanggal OT Hingga (%s)." % (
-                    line.plann_date_from, line.periode_from, line.periode_to
-                )
-                raise UserError(msg)
+    # @api.constrains('plann_date_from', 'periode_to', 'periode_from')
+    # def _check_validation_date(self):
+    #     for line in self:
+    #         if line.plann_date_from and line.periode_from and line.periode_to and \
+    #                 (
+    #                     line.plann_date_from < line.periode_from or line.plann_date_from > line.periode_to) and not line.day_payment:
+    #             msg = "Tanggal SPL (%s) harus berada di antara Tanggal OT Dari (%s) dan Tanggal OT Hingga (%s)." % (
+    #                 line.plann_date_from, line.periode_from, line.periode_to
+    #             )
+    #             raise UserError(msg)
+
+    @api.constrains('ot_plann_from', 'ot_plann_to', 'work_plann', 'output_plann')
+    def _check_time_spl(self):
+        for rec in self:
+            if rec.work_plann == False:
+                raise UserError("Rencana SPL tidak boleh kosong")
+            if rec.output_plann == False:
+                raise UserError("Output SPL tidak boleh kosong")
+            if rec.ot_plann_to - rec.ot_plann_from == 0:
+                raise UserError("Jam SPL tidak boleh kosong")
+            else:
+                if rec.ot_plann_from >= rec.ot_plann_to:
+                    raise UserError(
+                        "Jam SPL 'dari' harus lebih awal dari jam SPL 'Hingga'.")
 
     @api.model_create_multi
     def create(self, vals_list):

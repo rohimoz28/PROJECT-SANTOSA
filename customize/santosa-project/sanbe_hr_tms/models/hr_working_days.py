@@ -66,6 +66,16 @@ class HRWorkingDays(models.Model):
                                         ('4', 'Thursday'),
                                         ('5', 'Friday'),
                                         ('6', 'Saturday')], string='Half Day To')
+
+    @api.onchange('working_half_from')
+    def _onchange_working_half_from(self):
+        for rec in self:
+            rec.working_half_to = rec.working_half_from
+            if rec.working_half_from and rec.working_half_to:
+                if int(rec.working_half_from) > int(rec.working_half_to):
+                    raise ValidationError(
+                        _("Half Day From must be less than or equal to Half Day To"))
+
     isbasic_wd = fields.Boolean('Basic WD', default=False)
     fullday_from = fields.Float('Hours From')
     fullday_to = fields.Float('Hours To')
