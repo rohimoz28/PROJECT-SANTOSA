@@ -304,7 +304,8 @@ class HREmpOvertimeRequest(models.Model):
 
             # Cari department records
             departments = self.env['hr.employee'].sudo().search(
-                [('id', 'in', department_ids), ('branch_id', '=', rec.branch_id.id)]
+                [('id', 'in', department_ids),
+                 ('branch_id', '=', self.env.user.branch_id.id)]
             )
 
             # Set ke field Many2many
@@ -379,7 +380,8 @@ class HREmpOvertimeRequest(models.Model):
 
             # Cari department records
             employees = self.env['hr.employee'].sudo().search(
-                [('id', 'in', employee_ids)]
+                [('id', 'in', employee_ids),
+                 ('branch_id', '=', self.env.user.branch_id.id)]
             )
 
             # print(">>>>>>>>>>>>>>>")
