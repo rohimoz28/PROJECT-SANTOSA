@@ -45,7 +45,8 @@
                             <field name="can_approve_hrd" invisible="1"/>
                             <field name="can_verified" invisible="1"/>
                             <field name="can_validation" invisible="1"/>
-                            <field name="splhrd_department_ids" invisible="1"/>
+                            <!-- <field name="splhrd_department_ids" invisible="1"/> -->
+                            <field name="splhrd_employee_ids" invisible="1"/>
                             <field name="splhrd_validator_ids" invisible="1"/>
                             <field name="area_id"
                                    options="{'no_create': True,'no_quick_create': True, 'no_create_edit': True}"
