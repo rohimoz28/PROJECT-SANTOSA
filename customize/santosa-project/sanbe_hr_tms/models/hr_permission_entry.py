@@ -165,7 +165,6 @@ class HRPermissionEntry(models.Model):
             if not leave_alloc or leave_alloc.leave_remaining < time_days:
                 raise ValidationError('Employee Has No Leave Allocation.\nPlease choose Leave Type: Unpaid Leave.')
 
-
     @api.model_create_multi
     def create(self, vals_list):
         
