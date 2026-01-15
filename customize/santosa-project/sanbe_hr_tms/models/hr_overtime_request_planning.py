@@ -208,14 +208,22 @@ class HREmpOvertimeRequest(models.Model):
     approverhrd_id = fields.Many2one(
         'hr.employee',
         string='Approval by HRD',
-        domain="[('branch_id','=',branch_id),('hrms_department_id','=',splhrd_department_ids), ('user_id','!=', False)]",
+        domain="[('branch_id','=',branch_id),('id','in',splhrd_employee_ids), ('user_id','!=', False)]",
         store=True, index=True
     )
 
-    splhrd_department_ids = fields.Many2many(
-        'sanhrms.department',
+    # splhrd_department_ids = fields.Many2many(
+    #     'sanhrms.department',
+    #     string='SPLHRD',
+    #     compute='_compute_splhrd_department_ids',
+    #     store=True
+    # )
+
+    splhrd_employee_ids = fields.Many2many(
+        'hr.employee',
+        'hr_overtime_planning_employee_rel',  # Nama tabel unik
         string='SPLHRD',
-        compute='_compute_splhrd_department_ids',
+        compute='_compute_splhrd_employee_ids',
         store=True
     )
 
@@ -290,7 +298,7 @@ class HREmpOvertimeRequest(models.Model):
                 rec.wd_tmssumary_id = False
 
     @api.depends('branch_id')
-    def _compute_splhrd_department_ids(self):
+    def _compute_splhrd_employee_ids(self):
         """
         Compute department IDs dari SPLHRD parameter
         Digunakan sebagai domain untuk field approverhrd_id
@@ -300,7 +308,7 @@ class HREmpOvertimeRequest(models.Model):
             param = self.env['ir.config_parameter'].sudo().get_param('SPLHRD')
 
             if not param:
-                rec.splhrd_department_ids = [(5, 0, 0)]  # Kosongkan
+                rec.splhrd_employee_ids = [(5, 0, 0)]  # Kosongkan
                 _logger.warning("SPLHRD parameter tidak ditemukan")
                 continue
 
@@ -311,20 +319,58 @@ class HREmpOvertimeRequest(models.Model):
             except ValueError:
                 _logger.warning(
                     f"Format SPLHRD parameter tidak valid: {param}")
-                rec.splhrd_department_ids = [(5, 0, 0)]
+                rec.splhrd_employee_ids = [(5, 0, 0)]
                 continue
 
             if not department_ids:
-                rec.splhrd_department_ids = [(5, 0, 0)]
+                rec.splhrd_employee_ids = [(5, 0, 0)]
                 continue
 
             # Cari department records
-            departments = self.env['sanhrms.department'].sudo().search(
-                [('id', 'in', department_ids)]
+            departments = self.env['hr.employee'].sudo().search(
+                [('id', 'in', department_ids),
+                 ('branch_id', '=', self.env.user.branch_id.id)]
             )
 
             # Set ke field Many2many
-            rec.splhrd_department_ids = [(6, 0, departments.ids)]
+            rec.splhrd_employee_ids = [(6, 0, departments.ids)]
+
+    # @api.depends('branch_id')
+    # def _compute_splhrd_department_ids(self):
+    #     """
+    #     Compute department IDs dari SPLHRD parameter
+    #     Digunakan sebagai domain untuk field approverhrd_id
+    #     """
+    #     for rec in self:
+    #         # Ambil nilai dari ir_config_parameter
+    #         param = self.env['ir.config_parameter'].sudo().get_param('SPLHRD')
+
+    #         if not param:
+    #             rec.splhrd_department_ids = [(5, 0, 0)]  # Kosongkan
+    #             _logger.warning("SPLHRD parameter tidak ditemukan")
+    #             continue
+
+    #         # Parse nilai parameter menjadi list integer
+    #         try:
+    #             department_ids = [int(x.strip())
+    #                               for x in param.split(',') if x.strip().isdigit()]
+    #         except ValueError:
+    #             _logger.warning(
+    #                 f"Format SPLHRD parameter tidak valid: {param}")
+    #             rec.splhrd_department_ids = [(5, 0, 0)]
+    #             continue
+
+    #         if not department_ids:
+    #             rec.splhrd_department_ids = [(5, 0, 0)]
+    #             continue
+
+    #         # Cari department records
+    #         departments = self.env['sanhrms.department'].sudo().search(
+    #             [('id', 'in', department_ids)]
+    #         )
+
+    #         # Set ke field Many2many
+    #         rec.splhrd_department_ids = [(6, 0, departments.ids)]
 
     @api.depends('branch_id')
     def _compute_splhrd_validator_ids(self):
@@ -358,7 +404,8 @@ class HREmpOvertimeRequest(models.Model):
 
             # Cari department records
             employees = self.env['hr.employee'].sudo().search(
-                [('id', 'in', employee_ids)]
+                [('id', 'in', employee_ids),
+                 ('branch_id', '=', self.env.user.branch_id.id)]
             )
 
             # print(">>>>>>>>>>>>>>>")
