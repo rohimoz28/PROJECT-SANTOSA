@@ -96,6 +96,7 @@
         'db/generate_ot_request.sql',
         'db/temporary_table.sql',
         'db/functions.sql',
+        'db/generate-permission.sql',
     ],
     'assets': {
         'web.assets_backend': [

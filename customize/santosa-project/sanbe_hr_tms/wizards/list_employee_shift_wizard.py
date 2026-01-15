@@ -37,7 +37,8 @@ class HrCariEmployeeShift(models.TransientModel):
     division_id = fields.Many2one('sanhrms.division', string='Divisi', store=True,
                                   default=lambda self: self.env.user.employee_id.division_id.id)
     hrms_department_id = fields.Many2one('sanhrms.department', string='Departemen',
-                                         store=True, default=lambda self: self.env.user.employee_id.hrms_department_id.id)
+                                         store=True,
+                                         default=lambda self: self.env.user.employee_id.hrms_department_id.id)
     directorate_id = fields.Many2one('sanhrms.directorate', string='Direktorat',
                                      store=True, default=lambda self: self.env.user.employee_id.directorate_id.id)
     files_name = fields.Char(string='File Upload', store=True)
@@ -125,7 +126,7 @@ class HrCariEmployeeShift(models.TransientModel):
                 ('state', '=', 'draft'),
             ]
         else:
-            domain = [('state', '=', 'draft'),]
+            domain = [('state', '=', 'draft'), ]
         return {'domain': {'empgroup_id': domain}}
 
     def _get_running_periode(self):
@@ -163,7 +164,7 @@ class HrCariEmployeeShift(models.TransientModel):
             domain.append(('branch_id', '=', self.branch_id.id))
         if self.hrms_department_id:
             domain.append(('hrms_department_id', '=',
-                          self.hrms_department_id.id))
+                           self.hrms_department_id.id))
         if self.directorate_id:
             domain.append(('directorate_id', '=', self.directorate_id.id))
         if self.division_id:
@@ -274,8 +275,22 @@ class HrCariEmployeeShift(models.TransientModel):
                         self.env.cr.execute(
                             "select generate_shift_empgroup(%s, %s)", (line.periode_id.id, line.empgroup_id.id))
                         self.env.cr.commit()
-                        _logger.info("Stored procedure executed successfully for period: %s to Group Employee %s",
-                                     line.periode_id.name, line.empgroup_id.name)
+                        _logger.info(
+                            "Stored procedure: generate_shift_empgroup executed successfully for period: %s to Group Employee %s",
+                            line.periode_id.name, line.empgroup_id.name)
+                    except Exception as e:
+                        _logger.error(
+                            "Error calling stored procedure: %s", str(e))
+                        raise UserError(
+                            "Error executing the function: %s" % str(e))
+
+                    try:
+                        self.env.cr.execute(
+                            "select generate_cuti_permission(%s, %s)", (line.periode_id.id, line.branch_id.id))
+                        self.env.cr.commit()
+                        _logger.info(
+                            "Stored procedure: generate_cuti_permission executed successfully for period: %s",
+                            line.periode_id.name, line.branch_id.name)
                     except Exception as e:
                         _logger.error(
                             "Error calling stored procedure: %s", str(e))
@@ -284,7 +299,8 @@ class HrCariEmployeeShift(models.TransientModel):
             else:
                 pass
 
-    @api.depends('periode_id.open_periode_from', 'periode_id.open_periode_to', 'periode_id.name', 'periode_id.branch_id')
+    @api.depends('periode_id.open_periode_from', 'periode_id.open_periode_to', 'periode_id.name',
+                 'periode_id.branch_id')
     def _compute_period_text(self):
         """Menghitung teks periode."""
         for rec in self:
