@@ -9,21 +9,23 @@
 import pdb
 
 from odoo import fields, models, api, _, Command
-from odoo.exceptions import ValidationError,UserError
+from odoo.exceptions import ValidationError, UserError
 from odoo.osv import expression
 import pytz
-from datetime import timedelta, datetime, time,date
+from datetime import timedelta, datetime, time, date
 import dateutil.parser
 import holidays
 from datetime import datetime
+
 date_format = "%Y-%m-%d"
-from odoo.exceptions import AccessError, MissingError, UserError,RedirectWarning
+from odoo.exceptions import AccessError, MissingError, UserError, RedirectWarning
 import requests
 import logging
 
 _logger = logging.getLogger(__name__)
 
-chari = {'0':6,'1':0,'2':1,'3':2,'4':3,'5':4,'6':5}
+chari = {'0': 6, '1': 0, '2': 1, '3': 2, '4': 3, '5': 4, '6': 5}
+
 
 class HRTmsOpenClose(models.Model):
     _name = "hr.opening.closing"
@@ -36,10 +38,10 @@ class HRTmsOpenClose(models.Model):
         for allrecs in self:
             databranch = []
             for allrec in allrecs.area_id.branch_id:
-                mybranch = self.env['res.branch'].search([('name','=', allrec.name)], limit=1)
+                mybranch = self.env['res.branch'].search([('name', '=', allrec.name)], limit=1)
                 databranch.append(mybranch.id)
-            allbranch = self.env['res.branch'].sudo().search([('id','in', databranch)])
-            allrecs.branch_ids=[Command.set(allbranch.ids)]
+            allbranch = self.env['res.branch'].sudo().search([('id', 'in', databranch)])
+            allrecs.branch_ids = [Command.set(allbranch.ids)]
 
     # @api.depends('branch_id')
     # def _isi_semua_branch(self):
@@ -49,15 +51,16 @@ class HRTmsOpenClose(models.Model):
     #         record.branch_ids = branch.id
 
     name = fields.Char('Period Name')
-    area_id = fields.Many2one('res.territory',string='Area', index=True,store=True )
+    area_id = fields.Many2one('res.territory', string='Area', index=True, store=True)
     branch_ids = fields.Many2many('res.branch', 'res_branch_rel', string='AllBranch', compute='_isi_semua_branch',
                                   store=False)
-    branch_id = fields.Many2one('res.branch',string='Business Unit',index=True,domain="[('id','in',branch_ids)]",store=True)
-    open_periode_from = fields.Date('Opening Periode From',store=True)
-    open_periode_to = fields.Date('Opening Periode To',store=True)
+    branch_id = fields.Many2one('res.branch', string='Business Unit', index=True, domain="[('id','in',branch_ids)]",
+                                store=True)
+    open_periode_from = fields.Date('Opening Periode From', store=True)
+    open_periode_to = fields.Date('Opening Periode To', store=True)
     close_periode_from = fields.Date('Closing Periode From')
     close_periode_to = fields.Date('Closing Periode To')
-    isopen = fields.Boolean('Is Open',default=False)
+    isopen = fields.Boolean('Is Open', default=False)
     state_process = fields.Selection(
         [
             ('draft', 'Draft'),
@@ -69,22 +72,22 @@ class HRTmsOpenClose(models.Model):
         String='Process State',
         tracking=True)
 
-    def kumpulhari(self,wd1,wd2):
+    def kumpulhari(self, wd1, wd2):
         listhr = []
         wda = wd1
         wdb = wd2
         while wda != wdb:
             listhr.append(chari[str(wda)])
             wda += 1
-            if wda == 7 : wda = 0
+            if wda == 7: wda = 0
         listhr.append(chari[str(wdb)])
         return listhr
-    
+
     @api.model_create_multi
     def create(self, values):
         for vals in values:
             if ('branch_id' in vals) and ('open_periode_from' in vals):
-                
+
                 open_periode_to = datetime.strptime(str(vals['open_periode_to']), "%Y-%m-%d")
                 today = datetime.today()
 
@@ -98,8 +101,7 @@ class HRTmsOpenClose(models.Model):
                 if not ((open_periode_to.month == current_month and open_periode_to.year == current_year) or
                         (open_periode_to.month == next_month and open_periode_to.year == next_month_year)):
                     raise UserError(_('Tanggal "Open Periode To" hanya boleh di bulan ini atau bulan depan.'))
-                
-                
+
                 br = self.env['res.branch'].sudo().search([('id', '=', vals['branch_id'])])
                 date_obj = datetime.strptime(str(vals['open_periode_to']), "%Y-%m-%d")
                 vals['name'] = date_obj.strftime("%B %Y") + ' | ' + br['name']
@@ -120,25 +122,26 @@ class HRTmsOpenClose(models.Model):
                 if check2:
                     raise UserError('A record with the same branch and running state already exsist')
             else:
-                raise UserError('Branch or Open Periode From Not Selected')# --- Cek Periode Running (Logic Wizard) ---
+                raise UserError(
+                    'Branch or Open Periode From Not Selected')  # --- Cek Periode Running (Logic Wizard) ---
             existing_record = self.env['hr.opening.closing'].sudo().search([
-                ('area_id', '=', vals.get('area_id')), 
-                ('branch_id', '=', vals['branch_id']), 
+                ('area_id', '=', vals.get('area_id')),
+                ('branch_id', '=', vals['branch_id']),
                 ('state_process', '=', 'running')
             ], limit=1)
-            
+
             if existing_record:
                 existing_draft_record = self.env['hr.opening.closing'].sudo().search([
-                    ('area_id', '=', vals.get('area_id')), 
-                    ('branch_id', '=', vals['branch_id']), 
+                    ('area_id', '=', vals.get('area_id')),
+                    ('branch_id', '=', vals['branch_id']),
                     ('state_process', '=', 'draft')
                 ])
-                if len(existing_draft_record)>=1:
+                if len(existing_draft_record) >= 1:
                     raise UserError(_('Allowed just 1 Running and 1 Draft Periode'))
-            res =  super(HRTmsOpenClose, self).create(vals)
+            res = super(HRTmsOpenClose, self).create(vals)
             return res
 
-    #def init(self):
+    # def init(self):
     #    dat = self.env['hr.opening.closing'].sudo().search([])
     #    for rec in dat:
     #        if rec.branch_id and rec.open_periode_from and rec.open_periode_to:
@@ -166,7 +169,8 @@ class HRTmsOpenClose(models.Model):
         recompute_tms = self.env['hr.tmsentry.summary'].sudo().search([])
         for record in recompute_tms:
             # print(record.periode_id.name + str(record.date_from) + str(record.date_to), "ini yang baru")
-            record.periode_from_to = record.periode_id.name + " | " + str(record.date_from) + " | " + str(record.date_to)
+            record.periode_from_to = record.periode_id.name + " | " + str(record.date_from) + " | " + str(
+                record.date_to)
 
     def action_reproses(self):
         for data in self:
@@ -191,7 +195,7 @@ class HRTmsOpenClose(models.Model):
 
             data.isopen = True
             data.state_process = "running"
-        
+
         self.compute_concate()
 
     def recompute_tms_summary(self):
@@ -209,7 +213,7 @@ class HRTmsOpenClose(models.Model):
             ])
 
             employee_dict = {emp.id: emp for emp in hr_employee_data}
-            
+
             for tsd in tms_summary_data:
                 employee = employee_dict.get(tsd.employee_id.id)
                 if employee:
@@ -224,110 +228,49 @@ class HRTmsOpenClose(models.Model):
                     "The 'Periode From' and 'Periode To' fields are required. Please enter values for both fields."
                 )
 
-            period_id = data.id
-            area_id = data.area_id
-            branch_id = data.branch_id
-
             body = _('Process Period: %s' % self.state_process)
             data.message_post(body=body)
-
-            ''' validasi : Seluruh employee group yg sesuai area & branch nya sama dengan
-            area & branch dari proses open period yg sedang dijalankan,
-            harus sudah berstatus approve '''
-            employee_group = self.env['hr.empgroup'].sudo().search([
-                ('area_id', '=', area_id.id),
-                ('branch_id', '=', branch_id.id),
-                ('state', '!=', 'approved')
-            ])
-
-            if len(employee_group) > 1:
-                raise UserError('Ensure all employee groups have been approved.')
-
-            existing_record = self.search([('branch_id', '=', branch_id.id), ('state_process', '=', 'running'),('id','!=',data.id)])
-            if existing_record:
-                raise UserError('A record with the same branch and running state already exists.')
-
-            # try:
-            #     self.env.cr.execute("CALL calculate_tms(%s, %s, %s)", (period_id, area_id.id, branch_id.id))
-            #     self.env.cr.commit()
-            #     _logger.info("Stored procedure executed successfully for period_id: %s", period_id)
-            # except Exception as e:
-            #     _logger.error("Error calling stored procedure: %s", str(e))
-            #     raise UserError("Error executing the function: %s" % str(e))
 
             data.isopen = True
             data.state_process = "running"
 
     def action_closing_periode(self):
-        for data in self:
-            
-            # permintaan dari pa Gilang untuk menonaktifkan validasi dan proses closing kecuali update status
-            # karena prosesnya disamakan dengan proses yang ada di ERP sanbe (27 Sept 2025)
-            
-            # summary = self.env['hr.tmsentry.summary'].search([('periode_id','=',data.id)])
-            # # import pdb
-            # # pdb.set_trace()
-            # for record in summary:
-            #     record.write({'state': 'done'})
-            #     attendances = self.env['sb.tms.tmsentry.details'].search([('tmsentry_id','=',record.id)])
-            #     for attn in attendances:
-            #         attn.write({'status': 'done'})
-            #     permissions = self.env['hr.permission.entry'].search([('periode_id','=',record.periode_id.id)])
-            #     for perm in permissions:
-            #         # perm.write({'permission_status': 'done'})
-            #         perm.write({'permission_status': 'close'})
-            #     overtime = self.env['hr.overtime.planning'].search([('periode_id','=',data.id)])
-            #     for ot in overtime:
-            #         ot.write({'state': 'done'})
+        """
+        Logic:
+        - Memastikan periode sebelumnya (lebih awal) harus close terlebih dahulu
+        - Jika ada periode dengan open_periode_from lebih awal dari record saat ini
+          yang masih berstatus running, validasi gagal
+        """
+        for record in self:
+            area_id = record.area_id
+            branch_id = record.branch_id
 
-            data.write({'state_process': 'done', 'isopen': 'false'})
-            data.write({'isopen': 0})
+            previous_running_period = self.env['hr.opening.closing'].sudo().search([
+                ('area_id', '=', area_id.id),
+                ('branch_id', '=', branch_id.id),
+                ('isopen', '=', True),
+                ('open_periode_from', '<', record.open_periode_from),
+                ('state_process', '=', 'running'),
+                ('id', '!=', record.id)
+            ], order='open_periode_from DESC', limit=1)
 
-            # search_permission = self.env['hr.permission.entry'].sudo().search([
-            #     ('permission_date_from', '>=', data.open_periode_from),
-            #     ('permission_date_To', '<=', data.open_periode_to),
-            #     ('branch_id', '=', data.branch_id.id),
-            #     ('area_id', '=', data.area_id.id),
-            #     ('permission_status', '=', 'approved')
-            # ])
-            #
-            # # Update status di permission entry = close (done)
-            # search_permission.write({'permission_status': 'done'})
+            _logger = logging.getLogger(__name__)
+            _logger.info(f"Successfully close hr_opening_closing for record {record.id}")
+
+            if previous_running_period:
+                raise ValidationError(
+                    "Periode sebelumnya harus ditutup terlebih dahulu, sebelum Anda menutup periode ini")
+
+            record.write({'state_process': 'done', 'isopen': 'false'})
 
     def transfer_payroll(self):
         pass
-        
-        # for data in self:
-        #     searchpermission = self.env['hr.permission.entry'].sudo().search([
-        #         ('permission_date_from', '>=', data.open_periode_from),
-        #         ('permission_date_To', '<=', data.open_periode_to),
-        #         ('branch_id', '=', data.branch_id.id),
-        #         ('area_id', '=', data.area_id.id)
-        #     ])
-
-        #     for permission in searchpermission:
-        #         permission.permission_status = 'done'
-
-        # for alldata in self:
-        #     # if not alldata.close_periode_from or not alldata.close_periode_to:
-        #     #     raise UserError("Please Input Periode From And To First")
-        #     carisummary = self.env['hr.tmsentry.summary'].sudo().search([
-        #         ('date_from', '=', alldata.open_periode_from),
-        #         ('date_to', '<=', alldata.open_periode_to),
-        #         ('branch_id', '=', alldata.branch_id.id)
-        #     ])
-        #     for allsummary in carisummary:
-        #         if allsummary.state != 'transfer_payroll':
-        #             raise UserError('The Closing process cannot be carried out because there still transaction that have not been transffered to payroll')
-        #         else:
-        #             allsummary.write({'state': 'done'})
-        #     return
 
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)
-        
+
         if view_type in ('tree', 'form'):
-            group_name = self.env['res.groups'].search([('name','in',['User TMS','HRD CA'])])
+            group_name = self.env['res.groups'].search([('name', 'in', ['User TMS', 'HRD CA'])])
             cekgroup = self.env.user.id in group_name.users.ids
             if cekgroup:
                 for node in arch.xpath("//field"):
