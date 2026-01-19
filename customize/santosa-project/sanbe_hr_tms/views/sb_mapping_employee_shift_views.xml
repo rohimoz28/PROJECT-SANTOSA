@@ -77,17 +77,20 @@
         <field name="model">sb.mapping_employee.shift</field>
         <field name="arch" type="xml">
             <search string="Search Mapping">
-                <field name="name" filter_domain="['|','|','|',('profesion','ilike',self)('shift_id.name', 'ilike', self), ('name', 'ilike', self), ('nik', 'ilike', self)]"/>
+                <field name="name" string="Name"
+                    filter_domain="['|', '|', '|', ('name', 'ilike', self), ('nik', 'ilike', self), ('shift_id.name', 'ilike', self), ('profesion', 'ilike', self)]"/>
+                
                 <field name="employee_id"/>
                 <field name="shift_id"/>
-                <field name="branch_id"/>
                 <field name="profesion"/>
+                
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                
                 <group expand="0" string="Group By">
                     <filter string="Shift Group" name="group_by_shift" context="{'group_by': 'shift_id'}"/>
                     <filter string="Employee" name="group_by_employee" context="{'group_by': 'employee_id'}"/>
-                    <filter string="Branch" name="group_by_branch" context="{'group_by': 'branch_id'}"/>
+                    <filter string="Profession" name="group_by_profesion" context="{'group_by': 'profesion'}"/>
                 </group>
             </search>
         </field>
