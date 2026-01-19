@@ -213,7 +213,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='journal_id']" position="after">
                     <field name="medic" string="Profesi Medis"/>
-                    <field name="nurse" string="Profesi Perawat"/>
+                    <field name="nurse" string="L. Kompetensi"/>
                     <field name="seciality" string="Kategori Khusus"/>
                 </xpath>
             </field>

@@ -13,7 +13,7 @@
                 <field name="work_unit_ids" optional="hide" widget="many2many_tags"/>
                 <field name="nik" optional="show"/>
                 <field name="employee_id" optional="show"/>
-                <field name="profesion" optional="show"/>
+                <field name="profesion" string="L. Kompetensi" optional="show"/>
                 <field name="jabatan" optional="hide"/>
                 <field name="shift_id" string="Group Shift"/>
                 <field name="active" widget="boolean_toggle" optional="hide"/>
@@ -41,9 +41,9 @@
                         <group>
                             <field name="shift_id" required="1" options="{'no_create': True, 'no_open': False}" string="Group Shift"/>
                             <field name="medic" invisible="1"/>
-                            <field name="nurse" invisible="1"/>
+                            <field name="nurse" string="L. Kompetensi" invisible="1"/>
                             <field name="speciality" invisible="1"/>
-                            <field name="profesion" string='Profesi' readonly="1"/>
+                            <field name="profesion" string="L. Kompetensi" readonly="1"/>
                         </group>
                         <group>
                             <field name="active" widget="boolean_toggle"/>
@@ -81,7 +81,7 @@
                 <field name="employee_id"/>
                 <field name="shift_id"/>
                 <field name="branch_id"/>
-                <field name="profesion"/>
+                <field name="profesion" string="L. Kompetensi"/>
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 <group expand="0" string="Group By">
