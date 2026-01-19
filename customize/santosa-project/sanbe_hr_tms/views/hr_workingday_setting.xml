@@ -153,10 +153,10 @@
                     <field name="area_id" readonly="1" column_invisible="1"/>
                     <field name="code" optional="show" readonly="1"/>
                     <field name="deskripsi" readonly="1"/>
-                    <field name="fullday_from" readonly="1"/>
-                    <field name="fullday_to" readonly="1"/>
-                    <field name="halfday_from" readonly="1"/>
-                    <field name="halfday_to" readonly="1"/>
+                    <field name="fullday_from" readonly="1" widget="float_time" />
+                    <field name="fullday_to" readonly="1" widget="float_time" />
+                    <field name="halfday_from" readonly="1" widget="float_time" />
+                    <field name="halfday_to" readonly="1" widget="float_time" />
                     <field name="available_for" widget="many2many_tags" optional="hide" readonly="1"/>
                 </tree>
             </field>
