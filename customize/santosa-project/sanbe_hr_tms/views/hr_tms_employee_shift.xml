@@ -14,7 +14,7 @@
                 <field name="period_text" options="{'no_open': True}" string="Periode" readonly="1" optional='show'/>
                 <field name="employee_id" options="{'no_open': True}" readonly="1" optional='show'/>
                 <field name="nik" readonly="1" optional='show'/>
-                <field name="profesion" readonly="1" optional='show'/>
+                <field name="profesion" string="L. Kompetensi" readonly="1" optional='show'/>
                 <field name="group_shift" readonly="1" optional='show'/>
                 <field name="work_unit_ids" string="Work Unit" optional='hide' widget="many2many_tags"/>
                 <field name="branch_id" options="{'no_open': True}" readonly="1" column_invisible="1"/>
