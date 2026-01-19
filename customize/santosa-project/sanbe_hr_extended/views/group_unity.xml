@@ -133,7 +133,7 @@
                                         <field name="name"/>
                                         <field name="work_phone" class="o_force_ltr" optional="show"/>
                                         <field name="medic"/>
-                                        <field name="nurse"/>
+                                        <field name="nurse" string="L. Kompetensi"/>
                                         <field name="seciality"/>
                                     </tree>
                                 </field>

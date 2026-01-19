@@ -74,7 +74,7 @@
                 <xpath expr="//field[@name='coach_id']" position="after">
                     <field name="coor_unit_id" options="{'no_create': True,'no_create_edit': True}" readonly="(state !='draft')" context="{'display_nik_name': True}"/>
                     <field name="medic" options="{'no_create': True,'no_create_edit': True}"   readonly="(state !='draft')" />
-                    <field name="nurse" options="{'no_create': True,'no_create_edit': True}"   readonly="(state !='draft')" />
+                    <field name="nurse" string="L. Kompetensi" options="{'no_create': True,'no_create_edit': True}"   readonly="(state !='draft')" />
                     <field name="seciality" options="{'no_create': True,'no_create_edit': True}"   readonly="(state !='draft')" />
                 </xpath>
                 <xpath expr="//field[@name='work_email']" position="attributes">
