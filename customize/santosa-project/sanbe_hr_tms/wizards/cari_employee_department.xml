@@ -36,7 +36,7 @@
                                         <field name="plann_date_to" widget="date" invisible="1"/>
                                     </div>
                                     <field name="default_ot_hours" invisible="modelname != 'hr.overtime.planning'"/>
-                                    <field name="ot_plann_from" widget="easy_timepicker" invisible="modelname != 'hr.overtime.planning'"/>
+                                    <field name="ot_plann_from" widget="easy_timepicker" invisible="modelname != 'hr.overtime.planning'" />
                                     <field name="ot_plann_to" widget="easy_timepicker" invisible="modelname != 'hr.overtime.planning'"/>
                                     <field name="approve_time_from" widget="easy_timepicker" invisible="1"/>
                                     <field name="approve_time_to" widget="easy_timepicker" invisible="1"/>
