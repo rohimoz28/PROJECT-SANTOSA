@@ -1,0 +1,52 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+package "Master Data" {
+    entity "hr.employee" as emp {
+        * id : integer
+        --
+        name : char
+        nik : char
+    }
+
+    entity "hr.working.days" as wd {
+        * id : integer
+        --
+        code : char (S1/S2/S3/OFF)
+        name : char
+    }
+}
+
+package "Transactional Scheduling" {
+    entity "sb.schedule.header" as sh {
+        * id : integer
+        --
+        name : char
+        periode_id : many2one
+        department_id : many2one
+        state : selection
+    }
+
+    entity "sb.schedule.line" as sl {
+        * id : integer
+        --
+        header_id : many2one
+        employee_id : many2one
+        date : date
+        working_day_id : many2one
+    }
+}
+
+emp ||--o{ sl : "assigned_to"
+sh ||--o{ sl : "contains"
+wd ||--o{ sl : "selected_as"
+
+note right of sl
+  Model ini memungkinkan:
+  1. Tanggal 1: S2
+  2. Tanggal 2: OFF
+  3. Tanggal 3: S1
+  Tanpa pola rotasi otomatis.
+end note
+
+@enduml

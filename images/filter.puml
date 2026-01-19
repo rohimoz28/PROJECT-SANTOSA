@@ -1,0 +1,14 @@
+@startuml
+entity "Jadwal Header" as sh {
+    + periode_id (Filter Bulan)
+    + department_id (Filter Unit)
+}
+
+entity "Jadwal Lines" as sl {
+    + date (Filter Tanggal Spesifik)
+    + working_day_id (Filter Jenis Shift)
+    + employee_id (Filter Orang)
+}
+
+sh ||--o{ sl
+@enduml
