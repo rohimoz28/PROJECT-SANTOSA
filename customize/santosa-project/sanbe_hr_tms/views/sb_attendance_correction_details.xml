@@ -7,17 +7,20 @@
             <field name="model">sb.attendance.corrections</field>
             <field name="inherit_id" ref="sanbe_hr_tms.sb_attendance_corrections_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//notebook/page[@name='sb_attendance_correction_details_id']" position="inside">
+                <!-- <xpath expr="//notebook/page[@name='sb_attendance_correction_details_id']" position="inside">
                     <field name="attn_correction_detail_ids">
                         <tree editable="bottom" create="0" delete="0" edit="0">
-                            <field name="period_id" string="Period"/>
-                            <field name="area_id" string="Area"/>
-                            <field name="branch_id" string="Branch"/>
+                            <field name="period_id" string="Period" optional='hide'/>
+                            <field name="area_id" string="Area" optional='hide'/>
+                            <field name="branch_id" string="Branch" optional='hide'/>
+                            <field name="directorate_id" options="{'no_create': True,'no_create_edit': True}" string = "Direktorat" optional='hide'/>
+                            <field name="hrms_department_id" options="{'no_create': True,'no_create_edit': True}"  string = "Departemen" required='1' optional='hide'/>
+                            <field name="division_id" options="{'no_create': True,'no_create_edit': True}" string = "Divisi" required='1' optional='hide'/>
+                            <field name="employee_id" string="Karyawan"/>
                             <field name="nik" string="NIK"/>
-                            <field name="name" string="Name"/>
-                            <field name="department_id" string="Department"/>
+                            <field name="name" string="Name" column_invisible="1"/>
                             <field name="job_id" string="Job Position"/>
-                            <field name="wdcode" string="WD Code"/>
+                            <field name="wdcode" string="WD Code" optional='hide'/>
                             <field name="empgroup_id" string="Emp Group"/>
                             <field name="tgl_time_in" string="Tgl Time in"/>
                             <field name="time_in" string="Time in" widget="float_time"/>
@@ -25,6 +28,84 @@
                             <field name="tgl_time_out" string="Tgl Time out"/>
                             <field name="time_out" string="Time out" widget="float_time"/>
                             <field name="edited_time_out" string="Edited Time out" widget="float_time"/>
+                        </tree>
+                    </field>
+                </xpath>
+
+                <xpath expr="//notebook/page[@name='sb_attendance_not_match']" position="inside">
+                    <field name="attn_loss_detail_ids">
+                        <tree editable="bottom" create="0" delete="0" edit="0">
+                            <field name="details_date" string="Tanggal"/>
+                            <field name="period_id" string="Period" optional='hide'/>
+                            <field name="area_id" string="Area" optional='hide'/>
+                            <field name="branch_id" string="Branch" optional='hide'/>
+                            <field name="directorate_id" options="{'no_create': True,'no_create_edit': True}" string = "Direktorat" optional='hide'/>
+                            <field name="hrms_department_id" options="{'no_create': True,'no_create_edit': True}"  string = "Departemen" optional='hide'/>
+                            <field name="division_id" options="{'no_create': True,'no_create_edit': True}" string = "Divisi" optional='hide'/>
+                            <field name="employee_id" string="Karyawan"/>
+                            <field name="nik" string="NIK"/>
+                            <field name="name" string="Name" column_invisible="1"/>
+                            <field name="job_id" string="Job Position"/>
+                            <field name="wdcode" string="WD Code" optional='hide'/>
+                            <field name="empgroup_id" string="Emp Group"/>
+                            <field name="schedule_time_in" string="Schedule Time In" widget="float_time"/>
+                            <field name="time_in" string="Actual Time In" widget="float_time"/>
+                            <field name="schedule_time_out" string="Schedule Time Out" widget="float_time"/>
+                            <field name="time_out" string="Actual Time Out" widget="float_time"/>
+                            <field name="positive_delay" string="Delay" widget="float_time"/>
+                            <field name="remark" string="Remark" column_invisible="1"/>
+                            <field name="state" string="Edited Time out"/>
+                        </tree>
+                    </field>
+                </xpath> -->
+                <xpath expr="//notebook/page[@name='sb_attendance_correction_details_id']" position="inside">
+                    <field name="attn_correction_detail_ids" readonly="1">
+                        <tree create="0" delete="0" edit="0">
+                            <field name="period_id" optional="hide"/>
+                            <field name="area_id" optional="hide"/>
+                            <field name="branch_id" optional="hide"/>
+                            <field name="directorate_id" string="Direktorat" options="{'no_open': True, 'no_create': True}" optional="hide"/>
+                            <field name="hrms_department_id" string="Departemen" options="{'no_open': True, 'no_create': True}" optional="hide"/>
+                            <field name="division_id"  string="Divisi" options="{'no_open': True, 'no_create': True}" optional="hide"/>
+                            <field name="employee_id" column_invisible="1"/>
+                            <field name="nik"/>
+                            <field name="name"/>
+                            <!-- <field name="name" column_invisible="1"/> -->
+                            <field name="job_id" string="Jabatan" />
+                            <field name="wdcode"/>
+                            <field name="empgroup_id" column_invisible="1"/>
+                            <field name="tgl_time_in"/>
+                            <field name="time_in" widget="float_time"/>
+                            <field name="edited_time_in" widget="float_time"/>
+                            <field name="tgl_time_out"/>
+                            <field name="time_out" widget="float_time"/>
+                            <field name="edited_time_out" widget="float_time"/>
+                        </tree>
+                    </field>
+                </xpath>
+
+                <xpath expr="//notebook/page[@name='sb_attendance_not_match']" position="inside">
+                    <field name="attn_loss_detail_ids" readonly="1">
+                        <tree create="0" delete="0" edit="0">
+                            <field name="details_date"/>
+                            <field name="period_id" optional="hide"/>
+                            <field name="area_id" optional="hide"/>
+                            <field name="branch_id" optional="hide"/>
+                            <field name="directorate_id" string="Direktorat" options="{'no_open': True, 'no_create': True}" optional="hide"/>
+                            <field name="hrms_department_id" string="Departemen" options="{'no_open': True, 'no_create': True}" optional="hide"/>
+                            <field name="division_id"  string="Divisi" options="{'no_open': True, 'no_create': True}" optional="hide"/>
+                            <field name="employee_id" column_invisible="1"/>
+                            <field name="nik"/>
+                            <field name="name"/>
+                            <field name="job_id" string="Jabatan" />
+                            <field name="wdcode" optional="hide"/>
+                            <field name="schedule_time_in" widget="float_time"/>
+                            <field name="time_in" widget="float_time"/>
+                            <field name="schedule_time_out" widget="float_time"/>
+                            <field name="time_out" widget="float_time"/>
+                            <field name="positive_delay" widget="float_time"/>
+                            <field name="remark" column_invisible="1"/>
+                            <field name="state"/>
                         </tree>
                     </field>
                 </xpath>
