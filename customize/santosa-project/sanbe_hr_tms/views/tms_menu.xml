@@ -160,8 +160,8 @@
 
         <menuitem
                 id="menu_sb_attendance_corrections"
-                name="Koreksi Absen"
-                sequence="12"
+                name="Absensi Tidak Lengkap dan Koreksi"
+                sequence="9"
                 parent="sanbe_hr_tms.hr_menu_tabel_monitoring"
                 action="action_sb_attendance_corrections"
                 groups="module_sub_category_koreksi_absen_manager,module_sub_category_koreksi_absen_supervisor"
@@ -178,21 +178,21 @@
 
         <menuitem
                 id="menu_sb_overtime_attendance"
-                name="Request vs Realization"
+                name="SPL vs Realization"
                 sequence="14"
                 parent="sanbe_hr_tms.hr_menu_tabel_monitoring"
                 action="action_sb_overtime_attendance"
                 groups="module_sub_category_request_vs_realization_manager,module_sub_category_request_vs_realization_supervisor"
         />
 
-        <menuitem
+        <!-- <menuitem
                 id="menu_sb_overtime_bundling"
                 name="Overtime Bundling"
                 sequence="15"
                 parent="sanbe_hr_tms.hr_menu_tabel_monitoring"
                 action="action_sb_overtime_bundling"
                 groups="module_sub_category_request_vs_realization_manager,module_sub_category_request_vs_realization_supervisor"
-        />
+        /> -->
         <!-- END UPLOAD -->
 
         <!-- SETTING -->

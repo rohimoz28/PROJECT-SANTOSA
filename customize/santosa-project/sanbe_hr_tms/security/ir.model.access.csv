@@ -49,6 +49,7 @@ access_data_upload_attendance,access.data.upload.attendance,model_data_upload_at
 
 access_sb_incomplete_attendances,access.sb.incomplete.attendances,model_sb_incomplete_attendances,base.group_user,1,1,1,1
 access_sb_incomplete_attendance_details,access.sb.incomplete.attendance.details,model_sb_incomplete_attendance_details,base.group_user,1,1,1,1
+access_sb_loss_attendance_details,access.sb.loss.attendance.details,model_sb_loss_attendance_details,base.group_user,1,1,1,1
 
 access_sb_attendance_corrections,access.sb.attendance.corrections,model_sb_attendance_corrections,base.group_user,1,1,1,1
 access_sb_attendance_correction_details,access.sb.attendance.correction.details,model_sb_attendance_correction_details,base.group_user,1,1,1,1

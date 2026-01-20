@@ -78,7 +78,16 @@
             <field name="global" eval="True"/>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="domain_force">
-                [('branch_id', 'in', branch_ids)]
+                [('branch_id','=',user.branch_id.id)]
+            </field>
+        </record>
+
+        <record id="hr_tms_attendance_corrections_branch_view" model="ir.rule">
+            <field name="name">TMS Attendance Correction</field>
+            <field name="model_id" ref="model_sb_attendance_corrections"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">
+                []
             </field>
         </record>
 
