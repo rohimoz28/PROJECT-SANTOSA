@@ -129,22 +129,22 @@ class SBLossAttndancenDetails(models.Model):
         copy=True,
         index=True
     )
-    empgroup_id = fields.Many2one(
-        comodel_name='hr.empgroup', string='Emp Group', required=False)
+    # empgroup_id = fields.Many2one(
+    #     comodel_name='hr.empgroup', string='Emp Group', required=False)
 
-    tgl_time_in = fields.Date(
-        string='Tgl Time in',
-        required=False)
-    tgl_time_out = fields.Date(
-        string='Tgl Time out',
-        required=False)
+    # tgl_time_in = fields.Date(
+    #     string='Tgl Time in',
+    #     required=False)
+    # tgl_time_out = fields.Date(
+    #     string='Tgl Time out',
+    #     required=False)
 
-    edited_time_in = fields.Float(
-        string='Edited Time in',
-        required=False)
-    edited_time_out = fields.Float(
-        string='Edited Time Out',
-        required=False)
+    # edited_time_in = fields.Float(
+    #     string='Edited Time in',
+    #     required=False)
+    # edited_time_out = fields.Float(
+    #     string='Edited Time Out',
+    #     required=False)
     details_date = fields.Date(
         string='Tanggal',
         required=False)
