@@ -327,6 +327,34 @@ class HrTMSEmployeeShift(models.Model):
                            'review_date': datetime.today()
                            })
 
+    def action_successful(self, notif_message):
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                    'type': 'success',
+                    'title': _("Success Process"),
+                    'message': notif_message or 'data berhasil dikirim ke HRD',
+                    'next': {
+                        'type': 'ir.actions.act_window_close'
+                    },
+            }
+        }
+
+    def action_failed(self, notif_message):
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                    'type': 'failure',
+                    'title': _("Failed Process"),
+                    'message': notif_message or 'data gagal diproses',
+                    'next': {
+                        'type': 'ir.actions.act_window_close'
+                    },
+            }
+        }
+
     def action_approve(self):
         """Mengubah status menjadi Approved."""
         for rec in self:
@@ -355,7 +383,6 @@ class HrTMSEmployeeShift(models.Model):
                 raise UserError(
                     _("View hr_tmsentry_summary_shift tidak ditemukan.")
                 )
-
             return {
                 'type': 'ir.actions.act_window',
                 'name': 'hr.tmsentry.summary',
@@ -366,8 +393,8 @@ class HrTMSEmployeeShift(models.Model):
                 'target': 'new',
                 'context': {'create': False, 'delete': False, 'edit': False},
             }
-
         return True
+
     # def action_reject(self):
     #     """Mengubah status menjadi Reject."""
     #     for rec in self:
@@ -395,30 +422,69 @@ class HrTMSEmployeeShift(models.Model):
                 #            'approved_date': False,
                 #            'review_by': False,
                 #            'review_date': False})
-
         # return True
 
     def action_delete(self):
         for record in self:
             record.unlink()
 
+    # def action_mass_review(self):
+    #     current_branch_id = self.env.user.branch_id.id
+    #     # approve per branch jika diperlukan
+    #     valid_records = self.filtered(
+    #         lambda r: r.branch_id.id == current_branch_id)
+    #     if valid_records:
+    #         invalid_state = valid_records.filtered(
+    #             lambda r: r.state != 'draft')
+    #         if invalid_state:
+    #             names = ', '.join(invalid_state.mapped('display_name'))
+    #             raise UserError(
+    #                 f'Tidak bisa approve, beberapa record tidak dalam state Submit: {names}')
+    #         valid_records.write({
+    #             'state': 'review',
+    #             'review_by': self.env.user.id,
+    #             'review_date': datetime.today()
+    #         })
+
     def action_mass_review(self):
         current_branch_id = self.env.user.branch_id.id
-        # approve per branch jika diperlukan
-        valid_records = self.filtered(
+        all_selected = self.filtered(
             lambda r: r.branch_id.id == current_branch_id)
-        if valid_records:
-            invalid_state = valid_records.filtered(
-                lambda r: r.state != 'draft')
-            if invalid_state:
-                names = ', '.join(invalid_state.mapped('display_name'))
-                raise UserError(
-                    f'Tidak bisa approve, beberapa record tidak dalam state Submit: {names}')
-            valid_records.write({
+        if not all_selected:
+            return self.action_failed("Tidak ada data yang ditemukan untuk Cabang Anda.")
+        already_review = all_selected.filtered(lambda r: r.state == 'review')
+        draft_records = all_selected.filtered(lambda r: r.state == 'draft')
+        date_fields = [f'date_{str(i).zfill(2)}' for i in range(1, 32)]
+        draft_empty = draft_records.filtered(
+            lambda r: not any(r[field] for field in date_fields)
+        )
+        ready_to_process = draft_records - draft_empty
+        full_message = ""
+        if ready_to_process:
+            ready_to_process.write({
                 'state': 'review',
                 'review_by': self.env.user.id,
                 'review_date': datetime.today()
             })
+        message_lines = []
+        if ready_to_process or (already_review or draft_empty):
+            if ready_to_process:
+                header = "Proses Kirim ke HRD selesai."
+                message_lines.append(
+                    f"• {len(ready_to_process)} data berhasil dikirim ke HRD")
+            else:
+                header = "Tidak ada data yang dapat dikirim ke HRD."
+            if already_review:
+                message_lines.append(
+                    f"• {len(already_review)} data dilewati karena sudah berada di state Review HRD")
+            if draft_empty:
+                message_lines.append(
+                    f"• {len(draft_empty)} data gagal diproses karena WD Code belum diisi")
+            full_message = f"{header}\n" + "\n".join(message_lines)
+        if ready_to_process:
+            return self.action_successful(full_message)
+        else:
+            return self.action_failed(full_message)
 
     def action_mass_approve(self):
         """ 
