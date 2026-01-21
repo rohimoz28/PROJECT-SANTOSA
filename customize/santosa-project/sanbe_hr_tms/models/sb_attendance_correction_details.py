@@ -126,8 +126,16 @@ class SBLossAttndancenDetails(models.Model):
         'hr.working.days',
         string='WD Code',
         related="employee_id.workingdays_id",
-        copy=True, 
-        store=True, 
+        copy=True,
+        store=True,
+        index=True
+    )
+    workingday_id = fields.Many2one(
+        'hr.working.days',
+        string='WD Code',
+        related="employee_id.workingdays_id",
+        copy=True,
+        store=True,
         index=True
     )
     # empgroup_id = fields.Many2one(
