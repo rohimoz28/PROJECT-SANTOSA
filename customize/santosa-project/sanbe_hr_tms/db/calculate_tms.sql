@@ -2405,7 +2405,7 @@ begin
                   ON hts.id = sttd.tmsentry_id
              JOIN hr_employee he
                   ON hts.employee_id = he.id
-    WHERE hts.periode_id = periode
+    WHERE hts.periode_id = period
       AND hts.area_id = l_area
       AND hts.branch_id = branch
       AND (
