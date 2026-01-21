@@ -1,3 +1,5 @@
+DROP TRIGGER IF EXISTS trg_sync_group_shift ON sb_mapping_employee_shift;
+
 CREATE OR REPLACE FUNCTION fn_sync_group_shift()
 RETURNS trigger
 LANGUAGE plpgsql
