@@ -106,7 +106,7 @@ class SBLossAttndancenDetails(models.Model):
     directorate_id = fields.Many2one(
         'sanhrms.directorate', string='Direktorat', store=True, related="employee_id.directorate_id", readonly="state =='done'")
     job_id = fields.Many2one(
-        'hr.job', related="employee_id.job_id", string='Job Position')
+        'hr.job', related="employee_id.job_id", string='Job Position', store=True)
     wdcode = fields.Many2one(
         'hr.working.days',
         string='WD Code',
