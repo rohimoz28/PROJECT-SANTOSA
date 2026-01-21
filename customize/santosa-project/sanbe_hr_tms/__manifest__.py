@@ -97,6 +97,7 @@
         'db/temporary_table.sql',
         'db/functions.sql',
         'db/generate-permission.sql',
+        'db/sync_group_shift.sql',
     ],
     'assets': {
         'web.assets_backend': [
