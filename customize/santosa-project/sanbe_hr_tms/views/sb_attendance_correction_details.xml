@@ -85,7 +85,8 @@
                 </xpath>
 
                 <xpath expr="//notebook/page[@name='sb_attendance_not_match']" position="inside">
-                    <field name="attn_loss_detail_ids" readonly="1">
+                    <field name="attn_loss_detail_ids" readonly="1" 
+                    domain="[('attendance_status', '!=', 'Atendee')]">
                         <tree create="0" delete="0" edit="0">
                             <field name="details_date"/>
                             <field name="period_id" optional="hide"/>
@@ -103,9 +104,11 @@
                             <field name="time_in" widget="float_time"/>
                             <field name="schedule_time_out" widget="float_time"/>
                             <field name="time_out" widget="float_time"/>
-                            <field name="positive_delay" widget="float_time"/>
+                            <field name="delay_minutes" widget="float_time"/>
+                            <field name="positive_delay" widget="float_time"  column_invisible="1"/>
                             <field name="remark" column_invisible="1"/>
-                            <field name="state"/>
+                            <field name="attendance_status"/>
+                            <field name="state" column_invisible="1"/>
                         </tree>
                     </field>
                 </xpath>
