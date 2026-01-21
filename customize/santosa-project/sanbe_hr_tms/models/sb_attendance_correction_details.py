@@ -138,6 +138,7 @@ class SBLossAttndancenDetails(models.Model):
         store=True,
         index=True
     )
+
     # empgroup_id = fields.Many2one(
     #     comodel_name='hr.empgroup', string='Emp Group', required=False)
 
@@ -172,6 +173,9 @@ class SBLossAttndancenDetails(models.Model):
     positive_delay = fields.Float(
         string='Positive Delay',
         required=False)
+    delay_minutes = fields.Float(
+        string='Delay',
+        required=False)
     remark = fields.Char(string='Remark', required=False)
     state = fields.Selection(
         selection=TMS_ENTRY_STATE,
@@ -180,3 +184,4 @@ class SBLossAttndancenDetails(models.Model):
         tracking=3,
         store=True,
         default='draft')
+    attendance_status = fields.Char(store=True, string='Attendance Status')
