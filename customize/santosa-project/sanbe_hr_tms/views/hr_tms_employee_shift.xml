@@ -130,7 +130,7 @@
         <field name="arch" type="xml">
             <search string="Cari Shift Karyawan">
                 <field name="employee_id"
-                       filter_domain="['|', '|', '|', '|', '|', '|', '|',
+                       filter_domain="['|', '|', '|', '|', '|', '|', '|', '|',
                        ('employee_id.name', 'ilike', self), 
                        ('employee_id.work_unit', 'ilike', self),
                        ('employee_id.employee_id', 'ilike', self), 
@@ -181,7 +181,7 @@
                             <field name="directorate_id" type="row"/>
                             <field name="hrms_department_id" type="row"/>
                             <field name="division_id" type="row"/>
-                            <field name="profesion" type="row"/>
+                            <field name="profesion" type="row" string="L. Kompetensi" />
                             <field name="group_shift" type="row"/>
                             <field name="state" type="row"/> 
                             <field name="employee_id" type="row"/> 
