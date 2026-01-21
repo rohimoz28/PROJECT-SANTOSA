@@ -1249,7 +1249,7 @@ begin
          list_jam_istirahat AS (select hts.branch_id,
                                        hts.periode_id,
                                        hts.employee_id,
-                                       sttd.id                                                                  as sttd_id,
+                                       sttd.id                                                              as sttd_id,
                                        sttd.date_in,
                                        sttd.date_out,
                                        sttd.time_in,
@@ -1258,15 +1258,15 @@ begin
                                        ot.start_ot,
                                        ot.end_ot,
                                        ot.minutes_left,
-                                       sttd.date_in + (ot.start_ot || ' hour')::interval                        as datetime_in,
+                                       sttd.date_in + (ot.start_ot || ' hour')::interval                    as datetime_in,
                                        case
                                            when ot.end_ot < ot.start_ot
                                                then (sttd.date_out + interval '1 day') + (ot.end_ot || ' hour')::interval
                                            else sttd.date_out + (ot.end_ot || ' hour')::interval
-                                           end                                                                  as datetime_out,
+                                           end                                                              as datetime_out,
                                        extract(hour from ot.start_ot) + extract(minute from ot.start_ot) /
-                                                                        60.0                                    as start_ot_num,
-                                       extract(hour from ot.end_ot) + extract(minute from ot.end_ot) / 60.0     as end_ot_num
+                                                                        60.0                                as start_ot_num,
+                                       extract(hour from ot.end_ot) + extract(minute from ot.end_ot) / 60.0 as end_ot_num
                                 from hr_tmsentry_summary hts
                                          join sb_tms_tmsentry_details sttd on
                                     hts.id = sttd.tmsentry_id
@@ -1544,7 +1544,7 @@ begin
          list_jam_istirahat AS (select hts.branch_id,
                                        hts.periode_id,
                                        hts.employee_id,
-                                       sttd.id                                                                  as sttd_id,
+                                       sttd.id                                                              as sttd_id,
                                        sttd.date_in,
                                        sttd.date_out,
                                        sttd.time_in,
@@ -1556,16 +1556,16 @@ begin
                                        ori,
                                        ss.max_ot,
                                        ss.max_ot_month,
-                                       sttd.date_in + (ot.start_ot || ' hour')::interval                        as datetime_in,
+                                       sttd.date_in + (ot.start_ot || ' hour')::interval                    as datetime_in,
                                        case
                                            when ot.end_ot < ot.start_ot
                                                then (sttd.date_out + interval '1 day') + (ot.end_ot || ' hour')::interval
                                            else sttd.date_out + (ot.end_ot || ' hour')::interval
-                                           end                                                                  as datetime_out,
+                                           end                                                              as datetime_out,
                                        extract(hour from ot.start_ot) + extract(minute from ot.start_ot) /
-                                                                        60.0                                    as start_ot_num,
-                                       extract(hour from ot.end_ot) + extract(minute from ot.end_ot) / 60.0     as end_ot_num,
-                                       ss.id                                                                       ov_id
+                                                                        60.0                                as start_ot_num,
+                                       extract(hour from ot.end_ot) + extract(minute from ot.end_ot) / 60.0 as end_ot_num,
+                                       ss.id                                                                   ov_id
                                 from hr_tmsentry_summary hts
                                          join sb_tms_tmsentry_details sttd on
                                     hts.id = sttd.tmsentry_id
@@ -2268,29 +2268,29 @@ begin
                          hts.division_id,
                          hts.hrms_department_id,
                          hts.directorate_id,
-                         hts.id                                                                    AS hts_id,
-                         sum(case when type = 'W' then 1 else 0 end)                               AS total_workingday,
+                         hts.id                                                                 AS hts_id,
+                         sum(case when type = 'W' then 1 else 0 end)                            AS total_workingday,
                          COUNT(CASE
-                                   WHEN sttd.status_attendance = 'Attendee' THEN 1 END)            AS total_attendee,
-                         COUNT(CASE WHEN sttd.status_attendance = 'Absent' THEN 1 END)             AS total_absent,
-                         sum(case when sttd.status_attendance = 'Sick Leave' then 1 else 0 end)    as total_sick,
+                                   WHEN sttd.status_attendance = 'Attendee' THEN 1 END)         AS total_attendee,
+                         COUNT(CASE WHEN sttd.status_attendance = 'Absent' THEN 1 END)          AS total_absent,
+                         sum(case when sttd.status_attendance = 'Sick Leave' then 1 else 0 end) as total_sick,
                          SUM(CASE
                                  WHEN sttd.status_attendance = 'Full Day Leave' THEN 1
                                  WHEN sttd.status_attendance = 'Half Day Leave' THEN 0.5
                                  ELSE 0
-                             END)                                                                  AS total_leave,
+                             END)                                                               AS total_leave,
                          SUM(COALESCE(sttd.delay_level2, 0)) +
-                         SUM(COALESCE(sttd.delay_level1, 0))                                       AS total_times_delayed,
-                         SUM(sttd.delay)                                                           as delay_total,
-                         SUM(sttd.aot1)                                                            AS aot1,
-                         SUM(sttd.aot2)                                                            AS aot2,
-                         SUM(sttd.aot3)                                                            AS aot3,
-                         SUM(sttd.aot4)                                                            AS aot4,
-                         SUM(sttd.premi_attendee)                                                  AS total_premi_attendee,
-                         SUM(sttd.night_shift2)                                                    AS total_night_shift2,
-                         SUM(sttd.transport)                                                       AS total_transport,
-                         SUM(sttd.meal)                                                            AS total_meal,
-                         SUM(sttd.night_shift)                                                     AS total_night_shift
+                         SUM(COALESCE(sttd.delay_level1, 0))                                    AS total_times_delayed,
+                         SUM(sttd.delay)                                                        as delay_total,
+                         SUM(sttd.aot1)                                                         AS aot1,
+                         SUM(sttd.aot2)                                                         AS aot2,
+                         SUM(sttd.aot3)                                                         AS aot3,
+                         SUM(sttd.aot4)                                                         AS aot4,
+                         SUM(sttd.premi_attendee)                                               AS total_premi_attendee,
+                         SUM(sttd.night_shift2)                                                 AS total_night_shift2,
+                         SUM(sttd.transport)                                                    AS total_transport,
+                         SUM(sttd.meal)                                                         AS total_meal,
+                         SUM(sttd.night_shift)                                                  AS total_night_shift
                   FROM hr_tmsentry_summary hts
                            JOIN sb_tms_tmsentry_details sttd ON hts.id = sttd.tmsentry_id
                            JOIN hr_employee he ON hts.employee_id = he.id
@@ -2368,6 +2368,52 @@ begin
     from bb
     group by bb.periode_id, bb.area_id, bb.branch_id, bb.department_id, bb.division_id, bb.hrms_department_id,
              bb.directorate_id;
+
+    -----------------------------------------------------------------------------------------------------------------
+    --- master koreksi absensi
+    --- detail koreksi absensi
+    --- insert sb_loss_attendance (21/01/2025) teguh
+    -----------------------------------------------------------------------------------------------------------------
+    --- ini query nya
+
+    INSERT INTO sb_loss_attendance_details (division_id,
+                                            nik,
+                                            employee_id,
+                                            job_id,
+                                            details_date,
+                                            workingday_id,
+                                            schedule_time_in,
+                                            time_in,
+                                            schedule_time_out,
+                                            time_out,
+                                            delay_minutes,
+                                            attendance_status)
+    SELECT he.division_id,
+           he.nik,
+           he.id                                         AS employee_id,
+           he.job_id,
+           sttd.details_date,
+           sttd.workingday_id,
+           sttd.schedule_time_in,
+           COALESCE(sttd.edited_time_in, sttd.time_in)   AS time_in,
+           sttd.schedule_time_out,
+           COALESCE(sttd.edited_time_out, sttd.time_out) AS time_out,
+           sttd.delay                                    AS delay_minutes,
+           sttd.status_attendance
+    FROM hr_tmsentry_summary hts
+             JOIN sb_tms_tmsentry_details sttd
+                  ON hts.id = sttd.tmsentry_id
+             JOIN hr_employee he
+                  ON hts.employee_id = he.id
+    WHERE hts.periode_id = periode
+      AND hts.area_id = l_area
+      AND hts.branch_id = branch
+      AND (
+        sttd.delay > 30
+            OR lower(sttd.status_attendance) IN ('absent', 'alpha 1/2')
+        );
+
+    --------------------------------------------------- end sb_loss_attendance ----------------------------------------------------
 
     -- detail incomplete attendance
     delete
@@ -2488,7 +2534,8 @@ begin
                                                           empgroup_id,
                                                           nik, name, remark, tgl_time_in, tgl_time_out, time_in,
                                                           edited_time_in,
-                                                          time_out, edited_time_out, delay)
+                                                          time_out, edited_time_out, delay,
+                                                          employee_id) -- tambahan baru permintaan mas kris (20-1-2026)
     with aa as (select hts.periode_id,
                        hts.area_id,
                        he.branch_id,
@@ -2508,7 +2555,8 @@ begin
                        sttd.edited_time_in,
                        sttd.time_out,
                        sttd.edited_time_out,
-                       sttd.delay
+                       sttd.delay,
+                       he.id
                 from hr_tmsentry_summary hts
                          join sb_tms_tmsentry_details sttd on hts.id = sttd.tmsentry_id
                          join hr_employee he on hts.employee_id = he.id
