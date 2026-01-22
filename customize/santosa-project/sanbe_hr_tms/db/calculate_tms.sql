@@ -9,6 +9,7 @@ begin
     ALTER TABLE hr_tmsentry_summary
         DISABLE TRIGGER ALL;
 
+
 --	   delete temp_hr_tmsentry_summary
     DELETE FROM temp_hr_tmsentry_summary;
 
@@ -2327,6 +2328,7 @@ begin
 
     DELETE FROM sb_attendance_corrections WHERE period_id = period and area_id = l_area and branch_id = branch;
     DELETE FROM sb_attendance_correction_details WHERE period_id = period and area_id = l_area and branch_id = branch;
+    DELETE FROM sb_loss_attendance_details WHERE period_id = period and area_id = l_area and branch_id = branch;
 
     -- master incomplete attendance
     insert into sb_incomplete_attendances as sia (period_id, area_id, branch_id, department_id, division_id,
@@ -2369,90 +2371,6 @@ begin
     group by bb.periode_id, bb.area_id, bb.branch_id, bb.department_id, bb.division_id, bb.hrms_department_id,
              bb.directorate_id;
 
-    -----------------------------------------------------------------------------------------------------------------
-    --- master koreksi absensi
-    --- detail koreksi absensi
-    --- insert sb_loss_attendance (21/01/2025) teguh
-    -----------------------------------------------------------------------------------------------------------------
-    --- ini query nya
-
-    INSERT INTO sb_loss_attendance_details (attn_correction_id,
-                                            period_id,
-                                            area_id,
-                                            branch_id,
---                                             department_id,
-                                            division_id,
-                                            hrms_department_id,
-                                            directorate_id,
-                                            job_id,
-                                            workingday_id,
-                                            create_uid,
-                                            write_uid,
-                                            nik,
-                                            name,
-                                            employee_id,
-                                            attendance_status,
-                                            details_date,
-                                            create_date,
-                                            write_date,
-                                            schedule_time_in,
-                                            schedule_time_out,
-                                            time_in,
-                                            time_out,
-                                            positive_delay,
-                                            delay_minutes)
-
-    SELECT sacd.attn_correction_id,
-           hts.periode_id                                AS period_id,
-           hts.area_id,
-           hts.branch_id,
---            NULL                                          AS department_id,
-           hts.division_id,
-           hts.hrms_department_id,
-           hts.directorate_id,
-           he.job_id,
-           sttd.workingday_id,
-           hts.create_uid,
-           hts.write_uid,
-           he.nik,
-           he.name,
-           he.id::int                                    AS employee_id,
-           CASE
-               WHEN sttd.delay > 30 THEN 'late_30'
-               WHEN lower(sttd.status_attendance) = 'alpha 1/2' THEN 'half_absent'
-               WHEN lower(sttd.status_attendance) = 'absent' THEN 'absent'
-               ELSE NULL
-               END                                       AS attendance_status,
-           sttd.details_date,
-           hts.create_date,
-           hts.write_date,
-           sttd.schedule_time_in,
-           sttd.schedule_time_out,
-           COALESCE(sttd.edited_time_in, sttd.time_in)   AS time_in,
-           COALESCE(sttd.edited_time_out, sttd.time_out) AS time_out,
-           sttd.delay                                    AS positive_delay,
-           sttd.delay                                    AS delay_minutes
-
-    FROM hr_tmsentry_summary hts
-             JOIN sb_tms_tmsentry_details sttd
-                  ON hts.id = sttd.tmsentry_id
-             JOIN hr_employee he
-                  ON hts.employee_id = he.id
-             JOIN sb_attendance_correction_details sacd
---                   ON hts.periode_id = sacd.period_id
-                  ON hts.periode_id = period
-                      AND sacd.employee_id = hts.employee_id
-                      AND sacd.attn_correction_id IS NOT NULL
-
-    WHERE hts.periode_id = period
-      AND hts.area_id = l_area
-      AND hts.branch_id = branch
-      AND (
-        sttd.delay > 30
-            OR lower(sttd.status_attendance) IN ('absent', 'alpha 1/2')
-        );
-
-    --------------------------------------------------- end sb_loss_attendance ----------------------------------------------------
 
     -- detail incomplete attendance
     delete
@@ -2613,6 +2531,93 @@ begin
     where soa.periode_id = period
       and soa.area_id = l_area
       and soa.branch_id = branch;
+
+
+    -----------------------------------------------------------------------------------------------------------------
+    --- master koreksi absensi
+    --- detail koreksi absensi
+    --- insert sb_loss_attendance (21/01/2025) teguh
+    -----------------------------------------------------------------------------------------------------------------
+    --- ini query nya
+
+    INSERT INTO sb_loss_attendance_details (attn_correction_id,
+                                            period_id,
+                                            area_id,
+                                            branch_id,
+                                            division_id,
+                                            hrms_department_id,
+                                            directorate_id,
+                                            job_id,
+                                            workingday_id,
+                                            create_uid,
+                                            write_uid,
+                                            nik,
+                                            name,
+                                            employee_id,
+                                            attendance_status,
+                                            details_date,
+                                            create_date,
+                                            write_date,
+                                            schedule_time_in,
+                                            schedule_time_out,
+                                            time_in,
+                                            time_out,
+                                            positive_delay,
+                                            delay_minutes)
+
+    SELECT sac.id                                           attn_correction_id,
+           hts.periode_id                                AS period_id,
+           hts.area_id,
+           hts.branch_id,
+           hts.division_id,
+           hts.hrms_department_id,
+           hts.directorate_id,
+           he.job_id,
+           sttd.workingday_id,
+           hts.create_uid,
+           hts.write_uid,
+           he.nik,
+           he.name,
+           he.id::int                                    AS employee_id,
+           CASE
+               WHEN sttd.delay > 30 THEN 'late_30'
+               WHEN lower(sttd.status_attendance) = 'alpha 1/2' THEN 'half_absent'
+               WHEN lower(sttd.status_attendance) = 'absent' THEN 'absent'
+               ELSE NULL
+               END                                       AS attendance_status,
+           sttd.details_date,
+           hts.create_date,
+           hts.write_date,
+           sttd.schedule_time_in,
+           sttd.schedule_time_out,
+           COALESCE(sttd.edited_time_in, sttd.time_in)   AS time_in,
+           COALESCE(sttd.edited_time_out, sttd.time_out) AS time_out,
+           sttd.delay                                    AS positive_delay,
+           sttd.delay                                    AS delay_minutes
+
+    FROM hr_tmsentry_summary hts
+             JOIN sb_tms_tmsentry_details sttd
+                  ON hts.id = sttd.tmsentry_id
+             JOIN hr_employee he
+                  ON hts.employee_id = he.id
+             join sb_attendance_corrections sac
+                  on hts.periode_id = period and he.branch_id = branch --add by kris
+                      and sac.directorate_id = hts.directorate_id
+                      and sac.period_id = period
+                      and sac.hrms_department_id = hts.hrms_department_id
+                      and sac.division_id = hts.division_id
+
+    WHERE hts.periode_id = period
+      AND hts.area_id = l_area
+      AND hts.branch_id = branch
+      AND (
+        sttd.delay > 30
+            OR lower(sttd.status_attendance) IN ('absent', 'alpha 1/2')
+        );
+
+
+    --------------------------------------------------- end sb_loss_attendance ----------------------------------------------------
+
 
     insert into sb_overtime_attendance as soa ( area_id, branch_id, department_id, division_id,
                                                 hrms_department_id, directorate_id, periode_id, no_request
