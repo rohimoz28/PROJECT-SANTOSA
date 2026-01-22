@@ -17,82 +17,43 @@ class SBAttndanceCorrectionDetails(models.Model):
         comodel_name='sb.attendance.corrections',
         string='Attendance Correction',
         required=False)
-    period_id = fields.Integer(
-        string='Period_id',
-        required=False)
-    area_id = fields.Integer(
-        string='Area_id',
-        required=False)
-    branch_id = fields.Integer(
-        string='Branch_id',
-        required=False)
+    period_id = fields.Many2one(
+        'hr.opening.closing', string='Periode', store=True, index=True)
+    area_id = fields.Many2one(
+        'res.territory', string='Area', index=True)
+    branch_id = fields.Many2one(
+        'res.branch', string='Business Unit', index=True)
     nik = fields.Char(
-        string='Nik',
+        string='NIK',
+        store=True,
         required=False)
     name = fields.Char(
         string='Name',
+        store=True,
         required=False)
-    employee_id = fields.Integer(
-        string='Employee_id',
-        required=False)
-    # period_id = fields.Many2one(
-    #     'hr.opening.closing', string='Periode', related='attn_correction_id.period_id', store=True, index=True)
-    # area_id = fields.Many2one(
-    #     'res.territory', related="employee_id.area", string='Area', index=True)
-    # branch_id = fields.Many2one(
-    #     'res.branch', string='Business Unit', related="employee_id.branch_id", index=True)
-    # nik = fields.Char(
-    #     string='NIK',
-    #     related='employee_id.nik',
-    #     store=True,
-    #     required=False)
-    # name = fields.Char(
-    #     string='Name',
-    #     related='employee_id.name',
-    #     store=True,
-    #     required=False)
-    # employee_id = fields.Many2one(
-    #     'hr.employee', string='Employee', store=True, readonly="state =='done'")
-    department_id = fields.Integer(
-        string='Department_id',
-        required=False)
-    division_id = fields.Integer(
-        string='Division_id',
-        required=False)
-    # department_id = fields.Many2one(
-    #     'hr.department', related="employee_id.department_id", string='Sub Department')
-    # division_id = fields.Many2one(
-    #     'sanhrms.division', string='Divisi', store=True, related="employee_id.division_id", readonly="state =='done'")
-    hrms_department_id = fields.Integer(
-        string='Hrms_department_id',
-        required=False)
-    # hrms_department_id = fields.Many2one(
-    #     'sanhrms.department', string='Departemen', store=True, related="employee_id.hrms_department_id",
-    #     readonly="state =='done'")
-    directorate_id = fields.Integer(
-        string='Directorate_id',
-        required=False)
-    # directorate_id = fields.Many2one(
-    #     'sanhrms.directorate', string='Direktorat', store=True, related="employee_id.directorate_id",
-    #     readonly="state =='done'")
-    job_id = fields.Integer(
-        string='Job_id',
-        required=False)
-    # job_id = fields.Many2one(
-    #     'hr.job', related="employee_id.job_id", string='Job Position')
+    employee_id = fields.Many2one(
+        'hr.employee', string='Employee', store=True, readonly="state =='done'")
+    department_id = fields.Many2one(
+        'hr.department', string='Sub Department')
+    division_id = fields.Many2one(
+        'sanhrms.division', string='Divisi', store=True, readonly="state =='done'")
+    hrms_department_id = fields.Many2one(
+        'sanhrms.department', string='Departemen', store=True,
+        readonly="state =='done'")
+    directorate_id = fields.Many2one(
+        'sanhrms.directorate', string='Direktorat', store=True,
+        readonly="state =='done'")
+    job_id = fields.Many2one(
+        'hr.job', string='Job Position')
     workingday_id = fields.Integer(
         string='Workingday_id',
         required=False)
-    # wdcode = fields.Many2one(
-    #     'hr.working.days',
-    #     string='WD Code',
-    #     related="employee_id.workingdays_id",
-    #     copy=True,
-    #     index=True
-    # )
-    wdcode = fields.Integer(
-        string='Wdcode',
-        required=False)
+    wdcode = fields.Many2one(
+        'hr.working.days',
+        string='WD Code',
+        copy=True,
+        index=True
+    )
     tgl_time_in = fields.Date(
         string='Tgl Time in',
         required=False)
