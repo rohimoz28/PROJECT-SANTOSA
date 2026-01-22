@@ -2439,7 +2439,8 @@ begin
              JOIN hr_employee he
                   ON hts.employee_id = he.id
              JOIN sb_attendance_correction_details sacd
-                  ON hts.periode_id = sacd.period_id
+--                   ON hts.periode_id = sacd.period_id
+                  ON hts.periode_id = period
                       AND sacd.employee_id = hts.employee_id
                       AND sacd.attn_correction_id IS NOT NULL
 
