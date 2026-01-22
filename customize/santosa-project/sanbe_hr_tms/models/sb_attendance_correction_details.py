@@ -97,9 +97,9 @@ class SBLossAttndancenDetails(models.Model):
     period_id = fields.Many2one(
         'hr.opening.closing', string='Periode', related='attn_correction_id.period_id', store=True, index=True)
     area_id = fields.Many2one(
-        'res.territory', related="employee_id.area", string='Area', index=True)
+        'res.territory', related="attn_correction_id.area", string='Area', store=True, index=True)
     branch_id = fields.Many2one(
-        'res.branch', string='Business Unit', related="employee_id.branch_id", index=True)
+        'res.branch', string='Business Unit', related="attn_correction_id.branch_id", store=True, index=True)
     nik = fields.Char(
         string='NIK',
         related='employee_id.nik',
@@ -115,11 +115,11 @@ class SBLossAttndancenDetails(models.Model):
     department_id = fields.Many2one(
         'hr.department', related="employee_id.department_id", string='Sub Department')
     division_id = fields.Many2one(
-        'sanhrms.division', string='Divisi', store=True, related="employee_id.division_id", readonly="state =='done'")
+        'sanhrms.division', string='Divisi', store=True, related="attn_correction_id.division_id", readonly="state =='done'")
     hrms_department_id = fields.Many2one(
-        'sanhrms.department', string='Departemen', store=True, related="employee_id.hrms_department_id", readonly="state =='done'")
+        'sanhrms.department', string='Departemen', store=True, related="attn_correction_id.hrms_department_id", readonly="state =='done'")
     directorate_id = fields.Many2one(
-        'sanhrms.directorate', string='Direktorat', store=True, related="employee_id.directorate_id", readonly="state =='done'")
+        'sanhrms.directorate', string='Direktorat', store=True, related="attn_correction_id.directorate_id", readonly="state =='done'")
     job_id = fields.Many2one(
         'hr.job', related="employee_id.job_id", string='Job Position', store=True)
     wdcode = fields.Many2one(
