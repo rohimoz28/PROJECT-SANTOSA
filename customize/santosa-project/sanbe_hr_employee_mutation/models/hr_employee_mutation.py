@@ -12,38 +12,51 @@ class HrEmployeeMutation(models.Model):
     _description = 'HR Employee Mutation'
     _order = 'create_date desc'
 
-
     name = fields.Char(
         string="Transaction Number",
         required=True, copy=False, readonly=False,
         index='trigram',
         default=lambda self: _('New'))
     letter_no = fields.Char('Reference Number')
-    branch_ids = fields.Many2many('res.branch', 'res_branch_rel', string='AllBranch', compute='_isi_semua_branch', store=False)
+    branch_ids = fields.Many2many('res.branch', 'res_branch_rel',
+                                  string='AllBranch', compute='_isi_semua_branch', store=False)
     idpeg = fields.Char('Employee ID')
     employee_ids = fields.Many2many('hr.employee.view', 'res_employee_id_rel', string='Semua nama karyawan',
-                                   compute='_isi_emps', store=False, tracking=True)
+                                    compute='_isi_emps', store=False, tracking=True)
     employee_id = fields.Many2one('hr.employee.view', string='Nama Karyawan',
                                   index=True, domain="[('id', 'in', employee_ids)]")
     emp_id = fields.Char(string='ID Karyawan', tracking=True)
     nik = fields.Char(string='NIK', tracking=True)
     nik_lama = fields.Char('NIK Lama', store=True)
     area = fields.Many2one('res.territory', string='Area', tracking=True)
-    alldepartment = fields.Many2many('hr.department', 'hr_department_rel', string='All Department',  store=False)                
-    branch_id = fields.Many2one('res.branch', string='unit Bisnis', domain="[('id','in',branch_ids)]", tracking=True)     
-    directorate_id = fields.Many2one('sanhrms.directorate', string='Direktorat', tracking=True)
-    division_id = fields.Many2one('sanhrms.division', string='Divisi', tracking=True)
+    alldepartment = fields.Many2many(
+        'hr.department', 'hr_department_rel', string='All Department',  store=False)
+    branch_id = fields.Many2one(
+        'res.branch', string='unit Bisnis', domain="[('id','in',branch_ids)]", tracking=True)
+    directorate_id = fields.Many2one(
+        'sanhrms.directorate', string='Direktorat', tracking=True)
+    division_id = fields.Many2one(
+        'sanhrms.division', string='Divisi', tracking=True)
     job_id = fields.Many2one('hr.job', string='Jabatan', tracking=True)
-    employee_group1s = fields.Many2one('emp.group', string='Employee P Group', tracking=True)
+    employee_group1s = fields.Many2one(
+        'emp.group', string='Employee P Group', tracking=True)
     work_unit = fields.Char(string='Unit Kerja')
-    work_unit_id = fields.Many2one('hr.work.unit', string='Work Unit', tracking=True)
-    parent_id = fields.Many2one('parent.hr.employee', string='Atasan Langsung', tracking=True)
-    parent_nik = fields.Char(related='parent_id.nik', string='NIK Atasan', tracking=True)
-    medic = fields.Many2one('hr.profesion.medic', string='Profesi Medis', tracking=True)
-    nurse = fields.Many2one('hr.profesion.nurse', string='Profesi Perawat', tracking=True)
-    speciality = fields.Many2one('hr.profesion.special', string='Kategori Khusus',tracking=True)
-    hrms_department_id = fields.Many2one('sanhrms.department', string='Departemen', tracking=True)
-    employee_levels = fields.Many2one('employee.level', string='Employee Level', tracking=True)
+    work_unit_id = fields.Many2one(
+        'hr.work.unit', string='Work Unit', tracking=True)
+    parent_id = fields.Many2one(
+        'parent.hr.employee', string='Atasan Langsung', tracking=True)
+    parent_nik = fields.Char(related='parent_id.nik',
+                             string='NIK Atasan', tracking=True)
+    medic = fields.Many2one('hr.profesion.medic',
+                            string='Profesi Medis', tracking=True)
+    nurse = fields.Many2one('hr.profesion.nurse',
+                            string='Profesi Perawat', tracking=True)
+    speciality = fields.Many2one(
+        'hr.profesion.special', string='Kategori Khusus', tracking=True)
+    hrms_department_id = fields.Many2one(
+        'sanhrms.department', string='Departemen', tracking=True)
+    employee_levels = fields.Many2one(
+        'employee.level', string='Employee Level', tracking=True)
     state = fields.Selection(selection=[('draft', "Draft"),
                                         # ('intransfer', "In Transfer"),
                                         # ('accept', "Accept"),
@@ -57,23 +70,24 @@ class HrEmployeeMutation(models.Model):
                                           ('inactive', 'Inactive'),
                                           ('approved', 'Approved'),
                                           ('hold', 'Hold')],
-                                          string='HR Employee State', related="employee_id.state")
+                                         string='HR Employee State', related="employee_id.state")
     job_status = fields.Selection([('permanent', 'Karyawan Tetap (PKWTT)'),
                                    ('contract', 'Karyawan Kontrak (PKWT)'),
                                    ('partner_doctor', 'Dokter Mitra'),
                                    ('visitor', 'Visitor'),
                                    ], default='contract', tracking=True, related="employee_id.job_status", string='Status Hubungan Kerja')
-    emp_status = fields.Selection(related='employee_id.emp_status', string='Status Karyawan', store=True)
+    emp_status = fields.Selection(
+        related='employee_id.emp_status', string='Status Karyawan', store=True)
     emp_status_to_corr = fields.Selection([('probation', 'Probation'),
                                           ('confirmed', 'Confirmed'),
-                                          ], string='Employment Status', compute='_compute_emp_status', store=True,
-                                         tracking=True)
+                                           ], string='Employment Status', compute='_compute_emp_status', store=True,
+                                          tracking=True)
     emp_status_other = fields.Selection(selection=[('', ''),
-                                                   ('confirmed', 'Confirmed')], 
+                                                   ('confirmed', 'Confirmed')],
                                         string='Status Karyawan', store=True)
     emp_status_actv = fields.Selection(selection=[('', ''),
                                                   ('probation', 'Probation'),
-                                                  ('confirmed', 'Confirmed')], 
+                                                  ('confirmed', 'Confirmed')],
                                        string='Status Karyawan', store=True)
     # employee_group1 = fields.Selection(selection=[('Group1', 'Group 1 - Harian(pak Deni)'),
     #                                               ('Group2', 'Group 2 - bulanan pabrik(bu Felisca)'),
@@ -93,34 +107,51 @@ class HrEmployeeMutation(models.Model):
                                      ('corr', 'Correction')], string='Service Type')
     service_date = fields.Date('Transaction Date', default=fields.Date.today())
     service_status = fields.Char('Mutation Status')
-    service_nik = fields.Char('NIK', default=lambda self:self.employee_id.nik)
-    service_nik_lama = fields.Char('Previous NIK', default=lambda self:self.employee_id.nik)
-    service_birthday = fields.Date('Tanggal lahir', default=lambda self:self.employee_id.birthday)
+    service_nik = fields.Char('NIK', default=lambda self: self.employee_id.nik)
+    service_nik_lama = fields.Char(
+        'Previous NIK', default=lambda self: self.employee_id.nik)
+    service_birthday = fields.Date(
+        'Tanggal lahir', default=lambda self: self.employee_id.birthday)
     service_employee_id = fields.Char('Employee ID', default='New')
-    service_no_npwp = fields.Char('Nomor NPWP', default=lambda self:self.employee_id.no_npwp)
-    service_no_ktp = fields.Char('Nomor KTP', default=lambda self:self.employee_id.no_ktp)
-    service_area = fields.Many2one('res.territory', string='Area', tracking=True)
+    service_no_npwp = fields.Char(
+        'Nomor NPWP', default=lambda self: self.employee_id.no_npwp)
+    service_no_ktp = fields.Char(
+        'Nomor KTP', default=lambda self: self.employee_id.no_ktp)
+    service_area = fields.Many2one(
+        'res.territory', string='Area', tracking=True)
     service_bisnisunit = fields.Many2one('res.branch', string='Unit Bisnis')
-    service_directorate_id = fields.Many2one('sanhrms.directorate',string='Direktorat')
-    service_departmentid = fields.Many2one('sanhrms.department', string='Departemen')
-    service_division_id = fields.Many2one('sanhrms.division',string='Divisi')
-    service_jobtitle = fields.Many2one('hr.job.view', string='Jabatan', index=True)
-    service_parent_id = fields.Many2one('parent.hr.employee', string='Atasan Langsung', tracking=True)
-    service_employee_group1s = fields.Many2one('emp.group', string='Employee P Group', default=lambda self:self.employee_id.employee_group1s.id)
-    service_medic = fields.Many2one('hr.profesion.medic','Profesi Medis', default=lambda self:self.employee_id.medic.id)
-    service_nurse = fields.Many2one('hr.profesion.nurse','Profesi Perawat', default=lambda self:self.employee_id.nurse.id)
-    service_speciality = fields.Many2one('hr.profesion.special','Kategori Khusus', default=lambda self:self.employee_id.seciality.id)
-    service_identification = fields.Char(string='Nomor Kartu Keluarga', default=lambda self:self.employee_id.identification_id)
+    service_directorate_id = fields.Many2one(
+        'sanhrms.directorate', string='Direktorat')
+    service_departmentid = fields.Many2one(
+        'sanhrms.department', string='Departemen')
+    service_division_id = fields.Many2one('sanhrms.division', string='Divisi')
+    service_jobtitle = fields.Many2one(
+        'hr.job.view', string='Jabatan', index=True)
+    service_parent_id = fields.Many2one(
+        'parent.hr.employee', string='Atasan Langsung', tracking=True)
+    service_employee_group1s = fields.Many2one(
+        'emp.group', string='Employee P Group', default=lambda self: self.employee_id.employee_group1s.id)
+    service_medic = fields.Many2one(
+        'hr.profesion.medic', 'Profesi Medis', default=lambda self: self.employee_id.medic.id)
+    service_nurse = fields.Many2one(
+        'hr.profesion.nurse', 'Profesi Perawat', default=lambda self: self.employee_id.nurse.id)
+    service_speciality = fields.Many2one(
+        'hr.profesion.special', 'Kategori Khusus', default=lambda self: self.employee_id.seciality.id)
+    service_identification = fields.Char(
+        string='Nomor Kartu Keluarga', default=lambda self: self.employee_id.identification_id)
     service_jobstatus = fields.Selection([('', ''),
                                           ('permanent', 'Karyawan Tetap (PKWTT)'),
                                           ('contract', 'Karyawan Kontrak (PKWT)'),
                                           ('partner_doctor', 'Dokter Mitra'),
                                           ('visitor', 'Visitor')], string='Status Hubungan Kerja')
-    service_job_status_id = fields.Many2one('sanhrms.job.status', string='Status Pekerjaan', default=lambda self:self.employee_id.job_status)
-    service_job_status_type = fields.Selection(store=True, default=lambda self:self.employee_id.job_status, related='service_job_status_id.type')
+    service_job_status_id = fields.Many2one(
+        'sanhrms.job.status', string='Status Pekerjaan', default=lambda self: self.employee_id.job_status)
+    service_job_status_type = fields.Selection(
+        store=True, default=lambda self: self.employee_id.job_status, related='service_job_status_id.type')
     service_employementstatus = fields.Selection([('probation', 'Probation'),
                                                   ('confirmed', 'Confirmed'),
-                                                  ('end_contract', 'End Of Contract'),
+                                                  ('end_contract',
+                                                   'End Of Contract'),
                                                   ('resigned', 'Resigned'),
                                                   ('retired', 'Retired'),
                                                   ('terminated', 'Terminated')],
@@ -138,25 +169,38 @@ class HrEmployeeMutation(models.Model):
     service_name = fields.Char('Nama Karyawan')
     service_previous_name = fields.Char('Nama Karyawan Lama')
     remarks = fields.Text('Remarks')
-    image = fields.Many2many('ir.attachment', string='Image', help="You may attach files to with this")
-    service_employee_levels = fields.Many2one('employee.level', string='Employee Level', default=lambda self:self.employee_id.employee_levels.id)
+    service_replace_position = fields.Many2one(
+        'hr.employee', string='Posisi yang Digantikan', help="employee position to be replaced",
+        domain=[('state', 'in', ('approved', 'inactive'))]
+    )
+    image = fields.Many2many(
+        'ir.attachment', string='Image', help="You may attach files to with this")
+    service_employee_levels = fields.Many2one(
+        'employee.level', string='Employee Level', default=lambda self: self.employee_id.employee_levels.id)
     join_date = fields.Date('Join Date')
     marital = fields.Selection([('', ''),
                                 ('single', 'Belum Menikah'),
                                 ('married', 'Menikah'),
                                 ('seperate', 'Berpisah')], string='Status Perkawinan')
-    contract_no = fields.Many2one('hr.contract', related='employee_id.contract_id', readonly=False)
-    contract_from = fields.Date('Contract Date From', related='employee_id.contract_datefrom', readonly=False)
-    contract_to = fields.Date('Contract Date To', related='employee_id.contract_dateto', readonly=False)
-    company_id = fields.Many2one('res.company', required=True, readonly=True, default=lambda self: self.env.company)
-    service_work_unit = fields.Char(string='Unit Kerja', compute='_compute_work_unit', store=True)
-    service_work_unit_id = fields.Many2one('hr.work.unit', string='Posisi Unit Kerja', tracking=True)
+    contract_no = fields.Many2one(
+        'hr.contract', related='employee_id.contract_id', readonly=False)
+    contract_from = fields.Date(
+        'Contract Date From', related='employee_id.contract_datefrom', readonly=False)
+    contract_to = fields.Date(
+        'Contract Date To', related='employee_id.contract_dateto', readonly=False)
+    company_id = fields.Many2one(
+        'res.company', required=True, readonly=True, default=lambda self: self.env.company)
+    service_work_unit = fields.Char(
+        string='Unit Kerja', compute='_compute_work_unit', store=True)
+    service_work_unit_id = fields.Many2one(
+        'hr.work.unit', string='Posisi Unit Kerja', tracking=True)
     service_work_unit_ids = fields.Many2many(comodel_name='mst.group.unit.pelayanan',
                                              relation='service_mutation_work_unit_rel',
                                              column1='mutation_id',
                                              column2='work_unit_id',
                                              string='Unit Kerja')
-    service_coach_id = fields.Many2one('parent.hr.employee', string='Atasan Unit Kerja', tracking=True)
+    service_coach_id = fields.Many2one(
+        'parent.hr.employee', string='Atasan Unit Kerja', tracking=True)
     service_employee_category = fields.Selection(
         selection=[
             ('nakes', 'Nakes'),
@@ -167,7 +211,8 @@ class HrEmployeeMutation(models.Model):
         ],
         string='Kategori',
     )
-    service_substitute_id = fields.Many2one('hr.employee.view', string='Posisi Pengganti', tracking=True)
+    service_substitute_id = fields.Many2one(
+        'hr.employee.view', string='Posisi Pengganti', tracking=True)
 
     @api.depends('service_work_unit_ids', 'service_work_unit_ids.name')
     def _compute_work_unit(self):
@@ -185,12 +230,12 @@ class HrEmployeeMutation(models.Model):
                 [('state', '=', 'approved'), ('active', '=', True), ('branch_id', '=', user.branch_id.id)])
             allrecs.employee_ids = [Command.set(allemps.ids)]
 
-
     @api.depends('hrms_department_id')
     def _find_department_id(self):
         for line in self:
             if line.hrms_department_id:
-                Department = self.env['sanhrms.department'].search([('name', 'ilike', line.division_id.name)], limit=1)
+                Department = self.env['sanhrms.department'].search(
+                    [('name', 'ilike', line.division_id.name)], limit=1)
                 if Department:
                     line.hrms_department_id = Department.id
                 else:
@@ -206,9 +251,11 @@ class HrEmployeeMutation(models.Model):
         for allrecs in self:
             databranch = []
             for allrec in allrecs.service_area.branch_id:
-                mybranch = self.env['res.branch'].search([('name', '=', allrec.name)], limit=1)
+                mybranch = self.env['res.branch'].search(
+                    [('name', '=', allrec.name)], limit=1)
                 databranch.append(mybranch.id)
-            allbranch = self.env['res.branch'].sudo().search([('id', 'in', databranch)])
+            allbranch = self.env['res.branch'].sudo().search(
+                [('id', 'in', databranch)])
             allrecs.branch_ids = [Command.set(allbranch.ids)]
 
     def unlink(self):
@@ -242,21 +289,24 @@ class HrEmployeeMutation(models.Model):
 
         if self.job_status == 'contract' and self.hr_employee_state == 'approved':
             if self.contract_to and self.contract_to < today:
-                raise ValidationError('Mutasi tidak dapat diproses karena kontrak karyawan telah berakhir.')
+                raise ValidationError(
+                    'Mutasi tidak dapat diproses karena kontrak karyawan telah berakhir.')
 
         if self.service_area.id != self.employee_id.area_id.id:
             employee.write({'area': self.service_area.id})
-        
+
         if self.service_bisnisunit and self.service_bisnisunit.id != self.employee_id.branch_id.id:
             employee.write({'branch_id': self.service_bisnisunit.id})
         elif not self.service_bisnisunit:
-            raise UserError("Unit Bisnis (branch_id) wajib diisi sebelum approval.")
+            raise UserError(
+                "Unit Bisnis (branch_id) wajib diisi sebelum approval.")
 
         if self.service_directorate_id != self.employee_id.directorate_id.id:
             employee.write({'directorate_id': self.service_directorate_id.id})
 
         if self.service_departmentid.id != self.employee_id.hrms_department_id.id:
-            employee.write({'hrms_department_id': self.service_departmentid.id})
+            employee.write(
+                {'hrms_department_id': self.service_departmentid.id})
 
         if self.service_division_id.id != self.employee_id.division_id.id:
             employee.write({'division_id': self.service_division_id.id})
@@ -334,23 +384,24 @@ class HrEmployeeMutation(models.Model):
         if self.service_speciality != self.employee_id.seciality:
             employee.write({'seciality': self.service_speciality})
 
-        if self.service_birthday !=  self.employee_id.birthday:
+        if self.service_birthday != self.employee_id.birthday:
             employee.write({'birthday': self.service_birthday})
-            
+
         employee.write({'state': 'approved'})
 
         if self.service_substitute_id:
             try:
-                self.env.cr.execute("CALL updateIntermediate(%s, %s)", (self.employee_id.id, self.service_substitute_id.id))
+                self.env.cr.execute("CALL updateIntermediate(%s, %s)",
+                                    (self.employee_id.id, self.service_substitute_id.id))
                 self.env.cr.commit()
-                _logger.info("Stored procedure executed successfully for employee: %s", self.employee_id.name)
+                _logger.info(
+                    "Stored procedure executed successfully for employee: %s", self.employee_id.name)
             except Exception as e:
                 _logger.error("Error calling stored procedure: %s", str(e))
                 raise UserError("Error executing the function: %s" % str(e))
 
         return self.write({'state': 'approved',
                            'service_status': 'Approved'})
-
 
     @api.onchange('employee_id', 'service_type')
     def _onchange_employee_id_and_service_type(self):
@@ -363,7 +414,8 @@ class HrEmployeeMutation(models.Model):
             #         f"Silahkan buat kontrak baru terlebih dahulu untuk karyawan tersebut."
             #     )
             # header
-            employee = self.env['hr.employee'].sudo().search([('id', '=', record.employee_id.id)], limit=1)
+            employee = self.env['hr.employee'].sudo().search(
+                [('id', '=', record.employee_id.id)], limit=1)
 
             if not employee:
                 continue
@@ -385,20 +437,23 @@ class HrEmployeeMutation(models.Model):
             record.nurse = employee.nurse
             record.speciality = employee.seciality
             record.employee_levels = employee.employee_levels.id
-            record.service_work_unit_ids = [(6, 0, employee.work_unit_ids.ids)]  # sama dengan [Command.set(employee.work_unit_ids.ids)]
+            # sama dengan [Command.set(employee.work_unit_ids.ids)]
+            record.service_work_unit_ids = [(6, 0, employee.work_unit_ids.ids)]
 
             # detail
             record.join_date = employee.join_date
             record.marital = employee.marital
-            
+
             if record.service_type in ['conf']:
                 record.join_date = employee.join_date
                 record.service_birthday = employee.birthday
                 record.marital = employee.marital
                 record.service_employee_levels = employee.employee_levels.id
                 record.service_identification = employee.identification_id
-                record.service_nik = str(str(employee.nik).replace("('", '')).replace("')", "")
-                record.service_nik_lama = str(str(employee.nik_lama).replace("('", '')).replace("')", "")
+                record.service_nik = str(
+                    str(employee.nik).replace("('", '')).replace("')", "")
+                record.service_nik_lama = str(
+                    str(employee.nik_lama).replace("('", '')).replace("')", "")
                 record.service_no_npwp = employee.no_npwp
                 record.service_no_ktp = employee.no_ktp
                 record.service_employee_group1s = employee.employee_group1s.id
@@ -428,8 +483,10 @@ class HrEmployeeMutation(models.Model):
                 record.marital = employee.marital
                 record.service_employee_levels = employee.employee_levels.id
                 record.service_identification = employee.identification_id
-                record.service_nik = str(str(employee.nik).replace("('", '')).replace("')", "")
-                record.service_nik_lama = str(str(employee.nik_lama).replace("('", '')).replace("')", "")
+                record.service_nik = str(
+                    str(employee.nik).replace("('", '')).replace("')", "")
+                record.service_nik_lama = str(
+                    str(employee.nik_lama).replace("('", '')).replace("')", "")
                 record.service_no_npwp = employee.no_npwp
                 record.service_no_ktp = employee.no_ktp
                 record.service_employee_group1s = employee.employee_group1s.id
@@ -452,15 +509,27 @@ class HrEmployeeMutation(models.Model):
                 record.emp_status_other = employee.emp_status
                 record.service_employementstatus = record.emp_status_other
                 record.service_status = 'Draft'
-            
+                if record.service_type == 'rota' and record.service_replace_position:
+                    try:
+                        self.env.cr.execute("CALL sp_employee_rotation(%s, %s)",
+                                            (record.service_replace_position.id, record.employee_id.id))
+                        self.env.cr.commit()
+                        _logger.info(
+                            "Stored procedure executed successfully for rotation Employee: %s", self.employee_id.name)
+                    except Exception as e:
+                        _logger.error(
+                            "Error calling stored procedure: %s", str(e))
+
             elif record.service_type in ['muta']:
                 record.join_date = employee.join_date
                 record.service_birthday = employee.birthday
                 record.marital = employee.marital
                 record.service_employee_levels = employee.employee_levels.id
                 record.service_identification = employee.identification_id
-                record.service_nik = str(str(employee.nik).replace("('", '')).replace("')", "")
-                record.service_nik_lama = str(str(employee.nik_lama).replace("('", '')).replace("')", "")
+                record.service_nik = str(
+                    str(employee.nik).replace("('", '')).replace("')", "")
+                record.service_nik_lama = str(
+                    str(employee.nik_lama).replace("('", '')).replace("')", "")
                 record.service_no_npwp = employee.no_npwp
                 record.service_no_ktp = employee.no_ktp
                 record.service_employee_group1s = employee.employee_group1s.id
@@ -490,8 +559,10 @@ class HrEmployeeMutation(models.Model):
                 record.marital = employee.marital
                 record.service_employee_levels = employee.employee_levels.id
                 record.service_identification = employee.identification_id
-                record.service_nik = str(str(employee.nik).replace("('", '')).replace("')", "")
-                record.service_nik_lama = str(str(employee.nik_lama).replace("('", '')).replace("')", "")
+                record.service_nik = str(
+                    str(employee.nik).replace("('", '')).replace("')", "")
+                record.service_nik_lama = str(
+                    str(employee.nik_lama).replace("('", '')).replace("')", "")
                 record.service_no_npwp = employee.no_npwp
                 record.service_no_ktp = employee.no_ktp
                 record.service_employee_group1s = employee.employee_group1s.id
@@ -514,15 +585,17 @@ class HrEmployeeMutation(models.Model):
                 record.emp_status_actv = 'confirmed'
                 record.service_employementstatus = record.emp_status_actv
                 record.service_status = 'Draft'
-        
+
             elif record.service_type in ['corr']:
                 record.join_date = employee.join_date
                 record.service_birthday = employee.birthday
                 record.marital = employee.marital
                 record.service_employee_levels = employee.employee_levels.id
                 record.service_identification = employee.identification_id
-                record.service_nik = str(str(employee.nik).replace("('", '')).replace("')", "")
-                record.service_nik_lama = str(str(employee.nik_lama).replace("('", '')).replace("')", "")
+                record.service_nik = str(
+                    str(employee.nik).replace("('", '')).replace("')", "")
+                record.service_nik_lama = str(
+                    str(employee.nik_lama).replace("('", '')).replace("')", "")
                 record.service_no_npwp = employee.no_npwp
                 record.service_no_ktp = employee.no_ktp
                 record.service_employee_group1s = employee.employee_group1s.id
@@ -544,8 +617,7 @@ class HrEmployeeMutation(models.Model):
                 record.service_coach_id = employee.coach_id.id
                 record.emp_status_to_corr = 'confirmed'
                 record.service_employementstatus = record.emp_status_to_corr
-                record.service_status = 'Draft'        
-
+                record.service_status = 'Draft'
 
     # def button_intransfer(self):
     #     self.write({'state': 'intransfer'})
@@ -554,11 +626,10 @@ class HrEmployeeMutation(models.Model):
     # def button_accept(self):
     #     self.write({'state': 'accept'})
     #     return True
-    
+
     def print_fkpm_action_button(self):
         """ Print report FKPM """
         return self.env.ref('sanbe_hr_employee_mutation.fkpm_report').report_action(self)
-
 
     def pencarian_data(self):
         return
@@ -570,9 +641,11 @@ class HrEmployeeMutation(models.Model):
                 record.service_employementstatus = self.emp_status_to_corr
                 new_emp_status_id = self.env['hr.emp.status'].sudo().search(
                     [('emp_status', '=', self.emp_status_to_corr), ('status', '=', False)])
-                employee = self.env['hr.employee'].sudo().search([('id', '=', self.employee_id.id)], limit=1)
+                employee = self.env['hr.employee'].sudo().search(
+                    [('id', '=', self.employee_id.id)], limit=1)
                 if new_emp_status_id:
-                    employee.sudo().write({'emp_status_id': new_emp_status_id.id})
+                    employee.sudo().write(
+                        {'emp_status_id': new_emp_status_id.id})
 
     @api.depends('emp_status_actv', 'emp_status_other', 'service_type')
     def _compute_emp_status(self):
@@ -589,14 +662,16 @@ class HrEmployeeMutation(models.Model):
                 'hr.employee.mutations') or _('New')
         res = super(HrEmployeeMutation, self).create(vals)
         for allres in res:
-            employee = self.env['hr.employee'].sudo().browse(allres.employee_id.id)
+            employee = self.env['hr.employee'].sudo().browse(
+                allres.employee_id.id)
             # employee.write({'state': 'hold'})
         return res
 
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)
         if view_type in ('tree', 'form'):
-            group_name = self.env['res.groups'].search([('name', '=', 'HRD CA')])
+            group_name = self.env['res.groups'].search(
+                [('name', '=', 'HRD CA')])
             cekgroup = self.env.user.id in group_name.users.ids
             if cekgroup:
                 for node in arch.xpath("//field"):
@@ -614,4 +689,3 @@ class HrEmployee(models.Model):
     def get_all_ids(self):
         myhr = self.env['hr.employee'].sudo().search([])
         return myhr.ids
-
