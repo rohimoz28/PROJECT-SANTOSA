@@ -2523,7 +2523,11 @@ begin
                   and hts.branch_id = branch)
     select sac.id, aa.*
     from aa
-             join sb_attendance_corrections sac on aa.department_id = sac.department_id;
+             join sb_attendance_corrections sac
+                  on aa.hrms_department_id = sac.hrms_department_id and sac.branch_id = aa.branch_id and
+                     sac.division_id = aa.division_id and sac.hrms_department_id = aa.hrms_department_id
+                      and aa.directorate_id = sac.directorate_id;
+    -- tambah filter (2312026) teguh
 
     -- monitoring - request vs realization
     delete
