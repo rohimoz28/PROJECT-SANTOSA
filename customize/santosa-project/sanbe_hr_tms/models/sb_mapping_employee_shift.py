@@ -2,6 +2,8 @@
 import logging
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
+import pytz
+from datetime import timedelta, datetime, time, date
 
 _logger = logging.getLogger(__name__)
 
@@ -148,7 +150,8 @@ class SbMappingEmployeeShift(models.Model):
     )
     active = fields.Boolean(
         string='Active',
-        default=True
+        default=True,
+        tracking=True
     )
 
     _sql_constraints = [
@@ -180,18 +183,85 @@ class SbMappingEmployeeShift(models.Model):
 
         return super(SbMappingEmployeeShift, self).create(vals_list)
 
+    @api.onchange("active", "shift_id", "employee_id")
+    def _change_shift_group(self):
+        """
+        Memberikan feedback instan pada UI dan memperbarui data shift 
+        pada periode yang sedang berjalan jika statusnya masih Draft.
+        """
+        if not self.employee_id:
+            return
+
+        user_branch_id = self.env.user.branch_id.id
+        periode_id = self.env['hr.opening.closing'].search([
+            ('state_process', '=', 'running'),
+            ('branch_id', '=', user_branch_id)
+        ], order='id desc', limit=1)
+        if periode_id:
+            # data_shifts = self.env['sb.employee.shift'].search([
+            #     ('periode_id', '=', periode_id.id),
+            #     ('employee_id', '=', self.employee_id.id),
+            #     ('state', '=', 'draft')
+            # ])
+            data_shifts = self.env['sb.employee.shift'].search([
+                ('periode_id', '=', periode_id.id),
+                ('employee_id', '=', self.employee_id.id),
+            ])
+
+            if data_shifts:
+                for shift in data_shifts:
+                    if self.active:
+                        shift.group_shift = self.shift_id.name
+                    else:
+                        shift.group_shift = False
+            # else:
+            #     raise UserError(
+            #         f"Tidak ditemukan data shift 'Draft' untuk employee {self.employee_id.name}")
+        else:
+            raise UserError(
+                f"Tidak ditemukan periode Running untuk branch {user_branch_id}")
+
     def write(self, vals):
-        # Jika employee_id diubah, kita perlu membersihkan referensi di employee lama
-        if 'employee_id' in vals:
-            for rec in self:
-                if rec.employee_id:
-                    rec.employee_id.group_shift_ids = False
-
         res = super(SbMappingEmployeeShift, self).write(vals)
-
-        # Update employee baru (atau tetap) dengan ID mapping ini
-        if 'employee_id' in vals or 'active' in vals:
-            for rec in self:
-                if rec.employee_id:
-                    rec.employee_id.group_shift_ids = rec.id if rec.active else False
+        user_branch_id = self.env.user.branch_id.id
+        for rec in self:
+            periode_id = self.env['hr.opening.closing'].search([
+                ('state_process', '=', 'running'),
+                ('branch_id', '=', user_branch_id)
+            ], order='id desc', limit=1)
+            if periode_id:
+                shifts = self.env['sb.employee.shift'].search([
+                    ('periode_id', '=', periode_id.id),
+                    ('employee_id', '=', rec.employee_id.id),
+                    # ('state', '=', 'draft'),
+                ])
+                if shifts:
+                    if rec.active:
+                        shifts.write({'group_shift': rec.shift_id.name})
+                    else:
+                        shifts.write({'group_shift': False})
+            else:
+                raise UserError(
+                    f"Tidak ditemukan periode Running untuk branch {user_branch_id}")
         return res
+
+    def unlink(self):
+        """
+        Saat record mapping dihapus, hapus juga referensi group_shift 
+        pada transaksi shift yang masih berstatus 'draft'.
+        """
+        for rec in self:
+            user_branch_id = self.env.user.branch_id.id
+            periode_id = self.env['hr.opening.closing'].search([
+                ('state_process', '=', 'running'),
+                ('branch_id', '=', user_branch_id)
+            ], order='id desc', limit=1)
+            if periode_id:
+                shifts = self.env['sb.employee.shift'].search([
+                    ('periode_id', '=', periode_id.id),
+                    ('employee_id', '=', rec.employee_id.id),
+                ])
+                if shifts:
+                    shifts.write({'group_shift': False})
+
+        return super(SbMappingEmployeeShift, self).unlink()
