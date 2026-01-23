@@ -20,7 +20,7 @@
                             <field name="hrms_department_id" string="Department"/>
                             <field name="division_id" string="Division"/>
                             <field name="job_id" string="Job Position"/>
-                            <field name="wdcode" string="WD Code"/>
+                            <!-- <field name="wdcode" string="WD Code"/> -->
                             <field name="empgroup_id" string="Emp Group"/>
                             <field name="details_date" string="Date"/>
                             <field name="date_timein" string="Tgl Time in"/>

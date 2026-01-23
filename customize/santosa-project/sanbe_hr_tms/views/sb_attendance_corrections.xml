@@ -14,10 +14,17 @@
                                 <field name="branch_id" readonly="1"/>
                                 <field name="area_id" readonly="1"/>
                             </group>
+                            <group>
+                                <field name="directorate_id" string="Direktorat"/>
+                                <field name="hrms_department_id" string="Departemen"/>
+                                <field name="division_id" string="Divisi"/>
+                            </group>
                         </group>
                         <notebook>
-                            <page name="sb_attendance_correction_details_id" string="Attendance Correction Details">
+                            <page name="sb_attendance_correction_details_id" string="koreksi Kehadiran">
                                 <!-- override by view sb_incomplete_attendance_details -->
+                            </page>
+                            <page name="sb_attendance_not_match" string="Absensi Tidak Lengkap / Match">
                             </page>
                         </notebook>
                     </sheet>
@@ -34,9 +41,9 @@
                     <field name="area_id"/>
                     <field name="branch_id"/>
                     <field name="department_id" column_invisible="1"/>
-                    <field name="directorate_id" string="Directorat"/>
-                    <field name="hrms_department_id" string="Department"/>
-                    <field name="division_id" string="Division"/>
+                    <field name="directorate_id" string="Direktorat"/>
+                    <field name="hrms_department_id" string="Departemen"/>
+                    <field name="division_id" string="Divisi"/>
                 </tree>
             </field>
         </record>
@@ -51,11 +58,11 @@
                     <!-- <field name="nik" string="NIK"/> -->
                     <filter string="Business Unit" name="branch_id"
                             context="{'group_by':'branch_id'}"/>
-                    <filter string="Directorat" name="directorate_id"
+                    <filter string="Direktorat" name="directorate_id"
                             context="{'group_by':'directorate_id'}"/>
-                    <filter string="Department" name="hrms_department_id"
+                    <filter string="Departemen" name="hrms_department_id"
                             context="{'group_by':'hrms_department_id'}"/>
-                    <filter string="Division" name="division_id"
+                    <filter string="Divisi" name="division_id"
                             context="{'group_by':'division_id'}"/>
                     <!-- <filter string="Employee" name="employee_id" -->
                     <!--         context="{'group_by':'employee_id'}"/> -->
@@ -64,7 +71,7 @@
         </record>
 
         <record id="action_sb_attendance_corrections" model="ir.actions.act_window">
-            <field name="name">Incomplete Attendance</field>
+            <field name="name">Absensi Tidak Lengkap dan Koreksi</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sb.attendance.corrections</field>
             <!-- <field name="view_type">form</field> -->
