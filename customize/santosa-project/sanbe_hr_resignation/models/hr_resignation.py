@@ -285,7 +285,7 @@ class HrResignation(models.Model):
         for alldata in self:
             alldata.trans_status = 'confirm'
         return res
-    
+
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)
         if view_type in ('tree', 'form'):

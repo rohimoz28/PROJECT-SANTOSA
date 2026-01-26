@@ -95,6 +95,7 @@
         'db/generate_shift_empgroup_detail.sql',
         'db/generate_ot_request.sql',
         'db/temporary_table.sql',
+        'db/sp_employee_rotation.sql',
         'db/functions.sql',
         'db/generate-permission.sql',
         'db/sync_group_shift.sql',

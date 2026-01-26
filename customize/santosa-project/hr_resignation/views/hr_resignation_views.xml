@@ -34,7 +34,8 @@
                             name="action_cancel_resignation"
                             invisible="state != 'draft'"/>
                     <button string="Approve" type="object"
-                            groups="hr.group_hr_user"
+                            groups="hr.group_hr_user" 
+                            class="oe_highlight"
                             name="action_approve_resignation"
                             invisible="state != 'confirm'"/>
                     <button string="Reject" type="object"
