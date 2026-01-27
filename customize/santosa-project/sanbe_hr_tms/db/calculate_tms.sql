@@ -2433,25 +2433,20 @@ begin
       and aa.type = 'W';
 
     -- master koreksi absensi
-    insert into sb_attendance_corrections as sac (period_id, branch_id, area_id, department_id, division_id,
+    insert into sb_attendance_corrections as sac (period_id, branch_id, area_id, division_id,
                                                   hrms_department_id, directorate_id)
     select hts.periode_id,
-           he.branch_id,
+           hts.branch_id,
            hts.area_id,
-           he.department_id,
            hts.division_id,
            hts.hrms_department_id,
            hts.directorate_id
     from hr_tmsentry_summary hts
              join sb_tms_tmsentry_details sttd on hts.id = sttd.tmsentry_id
-             join hr_employee he on hts.employee_id = he.id
-    where sttd.is_edited is true
-      and hts.periode_id = period
-      and hts.area_id = l_area
+    where hts.periode_id = period
       and hts.branch_id = branch
-    group by hts.periode_id, he.branch_id, hts.area_id, he.department_id, hts.division_id, hts.hrms_department_id,
+    group by hts.periode_id, hts.branch_id, hts.area_id, hts.division_id, hts.hrms_department_id,
              hts.directorate_id;
-
     -- monitoring kehadiran
     delete
     from sb_employee_attendance sea
@@ -2515,7 +2510,8 @@ begin
                        sttd.delay,
                        he.id
                 from hr_tmsentry_summary hts
-                         join sb_tms_tmsentry_details sttd on hts.id = sttd.tmsentry_id
+                         join sb_tms_tmsentry_details sttd
+                              on hts.id = sttd.tmsentry_id and sttd.details_date <= current_date
                          join hr_employee he on hts.employee_id = he.id
                 where sttd.is_edited is true
                   and hts.periode_id = period
@@ -2530,11 +2526,6 @@ begin
     -- tambah filter (2312026) teguh
 
     -- monitoring - request vs realization
-    delete
-    from sb_overtime_attendance soa
-    where soa.periode_id = period
-      and soa.area_id = l_area
-      and soa.branch_id = branch;
 
 
     -----------------------------------------------------------------------------------------------------------------
@@ -2543,6 +2534,7 @@ begin
     --- insert sb_loss_attendance (21/01/2025) teguh
     -----------------------------------------------------------------------------------------------------------------
     --- ini query nya
+
 
     INSERT INTO sb_loss_attendance_details (attn_correction_id,
                                             period_id,
@@ -2598,10 +2590,9 @@ begin
            COALESCE(sttd.edited_time_out, sttd.time_out) AS time_out,
            sttd.delay                                    AS positive_delay,
            sttd.delay                                    AS delay_minutes
-
     FROM hr_tmsentry_summary hts
              JOIN sb_tms_tmsentry_details sttd
-                  ON hts.id = sttd.tmsentry_id
+                  ON hts.id = sttd.tmsentry_id and sttd.details_date <= current_date
              JOIN hr_employee he
                   ON hts.employee_id = he.id
              join sb_attendance_corrections sac
@@ -2610,7 +2601,6 @@ begin
                       and sac.period_id = period
                       and sac.hrms_department_id = hts.hrms_department_id
                       and sac.division_id = hts.division_id
-
     WHERE hts.periode_id = period
       AND hts.area_id = l_area
       AND hts.branch_id = branch
@@ -2621,6 +2611,13 @@ begin
 
 
     --------------------------------------------------- end sb_loss_attendance ----------------------------------------------------
+
+
+    delete
+    from sb_overtime_attendance soa
+    where soa.periode_id = period
+      --   and soa.area_id = l_area
+      and soa.branch_id = branch;
 
 
     insert into sb_overtime_attendance as soa ( area_id, branch_id, department_id, division_id,
@@ -2653,6 +2650,17 @@ begin
     where hts.periode_id = period
       and hts.area_id = l_area
       and hts.branch_id = branch;
+
+    DELETE
+    FROM sb_attendance_corrections c
+    WHERE NOT EXISTS (SELECT 1
+                      FROM sb_attendance_correction_details d
+                      WHERE d.attn_correction_id = c.id
+                      union all
+                      SELECT 1
+                      FROM sb_loss_attendance_details d
+                      WHERE d.attn_correction_id = c.id);
+
 
 END;
 $procedure$
