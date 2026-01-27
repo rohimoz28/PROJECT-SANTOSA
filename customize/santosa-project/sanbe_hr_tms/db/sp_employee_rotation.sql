@@ -1,10 +1,8 @@
-CREATE OR REPLACE FUNCTION public.sp_employee_rotation(
-    IN p_mutasi_id integer,
-    IN p_digantikan_id integer, 
-    IN p_pengganti_id integer 
-)
-RETURNS boolean
-LANGUAGE plpgsql
+-- DROP FUNCTION public.sp_employee_rotation(int4, int4, int4);
+
+CREATE OR REPLACE FUNCTION public.sp_employee_rotation(p_mutasi_id integer, p_digantikan_id integer, p_pengganti_id integer)
+ RETURNS boolean
+ LANGUAGE plpgsql
 AS $function$
 DECLARE
     v_updated_count INT := 0;
@@ -28,43 +26,49 @@ BEGIN
             service_type,
             start_date,
             end_date,
+			model_name,
             area,
             bisnis_unit,
-            department_id,
-            division_id,
+            directorate_id,
+         hrms_department_id,
+         division_id,
             parent_id,
             nik,
             job_title,
             job_status,
             emp_status,
             employee_group1s,
-            trx_number
+            trx_number,
+			employee_id
         )
         SELECT
             hem.service_type,
             hem.service_date,
             hem.service_end,
+            'hr.employee.mutations' model_name,
             he.area,
             he.branch_id,
-            he.department_id,
+            he.directorate_id,
+            he.hrms_department_id,
             he.division_id,
             p_mutasi_id,
             he.nik,
-            hj.name ->>'en_US',
+            hj.name->>'en_US',
             he.job_status,
             he.emp_status_id,
             he.employee_group1s,
-            hem.name
+            hem.name,
+			he.id employee_id
         FROM updated_emp ue
-        JOIN hr_employee he ON he.id = p_mutasi_id
-        Join hr_job hj on hj.id=he.id
-        JOIN LATERAL (
+        JOIN hr_employee he ON he.id = ue.id
+        join hr_job hj on hj.id=he.job_id
+        JOIN (
             SELECT *
             FROM hr_employee_mutations
             WHERE employee_id = p_mutasi_id
             ORDER BY id DESC
             LIMIT 1
-        ) hem ON TRUE;
+        ) hem ON he.parent_id=hem.employee_id;
 
         GET DIAGNOSTICS v_updated_count = ROW_COUNT;
         RETURN v_updated_count > 0;
@@ -109,9 +113,11 @@ BEGIN
             service_type,
             start_date,
             end_date,
+			model_name,
             area,
             bisnis_unit,
-            department_id,
+            directorate_id,
+            hrms_department_id,
             division_id,
             parent_id,
             nik,
@@ -119,33 +125,37 @@ BEGIN
             job_status,
             emp_status,
             employee_group1s,
-            trx_number
+            trx_number,
+			employee_id
         )
         SELECT
             hem.service_type,
             hem.service_date,
             hem.service_end,
+            'hr.employee.mutations' model_name,
             he.area,
             he.branch_id,
-            he.department_id,
+            he.directorate_id,
+            he.hrms_department_id,
             he.division_id,
             p_pengganti_id,
             ue.nik,
-            hj.name ->>'en_US',
+            hj.name->>'en_US',
             ue.job_status,
             ue.emp_status_id,
             ue.employee_group1s,
-            hem.name
+            hem.name,
+			he.id employee_id
         FROM updated_step1 ue
-        JOIN hr_employee he ON he.id = p_pengganti_id
+        JOIN hr_employee he ON he.id = ue.id
         join hr_job hj on hj.id=he.job_id
-        JOIN LATERAL (
+        JOIN  (
             SELECT *
             FROM hr_employee_mutations
             WHERE employee_id = p_pengganti_id
             ORDER BY id DESC
             LIMIT 1
-        ) hem ON TRUE;
+        ) hem ON he.parent_id=hem.employee_id;
 
         GET DIAGNOSTICS v_rowcount = ROW_COUNT;
         v_updated_count := v_updated_count + v_rowcount;
@@ -164,9 +174,11 @@ BEGIN
             service_type,
             start_date,
             end_date,
+			model_name,
             area,
             bisnis_unit,
-            department_id,
+            directorate_id,
+            hrms_department_id,
             division_id,
             parent_id,
             nik,
@@ -174,33 +186,37 @@ BEGIN
             job_status,
             emp_status,
             employee_group1s,
-            trx_number
+            trx_number,
+			employee_id
         )
         SELECT
             hem.service_type,
             hem.service_date,
             hem.service_end,
+            'hr.employee.mutations' model_name,
             he.area,
             he.branch_id,
-            he.department_id,
+            he.directorate_id,
+            he.hrms_department_id,
             he.division_id,
             p_mutasi_id,
             he.nik,
-            hj.name ->>'en_US',
+            hj.name->>'en_US',
             he.job_status,
             he.emp_status_id,
             he.employee_group1s,
-            hem.name
+            hem.name,
+            he.id employee_id
         FROM updated_step2 u2
-        JOIN hr_employee he ON he.id = p_mutasi_id
+        JOIN hr_employee he ON he.id = u2.id
         join hr_job hj on hj.id=he.job_id
-        JOIN LATERAL (
+        JOIN  (
             SELECT *
             FROM hr_employee_mutations
             WHERE employee_id = p_mutasi_id
             ORDER BY id DESC
             LIMIT 1
-        ) hem ON TRUE;
+        ) hem ON he.parent_id=hem.employee_id;
 
         GET DIAGNOSTICS v_rowcount = ROW_COUNT;
         v_updated_count := v_updated_count + v_rowcount;
@@ -212,4 +228,5 @@ EXCEPTION WHEN OTHERS THEN
     RAISE NOTICE 'Update gagal: %', SQLERRM;
     RETURN FALSE;
 END;
-$function$;
+$function$
+;
