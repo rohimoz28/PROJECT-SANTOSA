@@ -215,3 +215,4 @@ class SBLossAttndancenDetails(models.Model):
         tracking=True,
         store=True,
         default='draft')
+    attendance_status = fields.Char(store=True, string='Attendance Status')
