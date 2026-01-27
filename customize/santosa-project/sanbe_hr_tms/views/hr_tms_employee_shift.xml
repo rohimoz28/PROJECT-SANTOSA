@@ -8,7 +8,10 @@
                 <header>
                     <!-- <button name="action_mass_review" type="object" string="Send to Approved" groups="sanbe_hr_tms.group_shift_staff,sanbe_hr_tms.group_shift_hrd"/> -->
                     <button name="action_mass_approve" type="object" string="Mass Approved"
-                            groups="sanbe_hr_tms.group_shift_hrd"/>
+                            groups="sanbe_hr_tms.group_shift_hrd" class="oe_highlight"/>
+                     
+                     <button name="action_mass_review" type="object" string="Krim ke HRD"
+                             groups="sanbe_hr_tms.group_shift_staff,sanbe_hr_tms.group_shift_hrd" class="oe_highlight"/>
                 </header>
                 <field name="periode_id" options="{'no_open': True}" readonly="1" column_invisible="1"/>
                 <field name="period_text" options="{'no_open': True}" string="Periode" readonly="1" optional='show'/>
@@ -127,7 +130,7 @@
         <field name="arch" type="xml">
             <search string="Cari Shift Karyawan">
                 <field name="employee_id"
-                       filter_domain="['|', '|', '|', '|', '|', '|', '|',
+                       filter_domain="['|', '|', '|', '|', '|', '|', '|', '|',
                        ('employee_id.name', 'ilike', self), 
                        ('employee_id.work_unit', 'ilike', self),
                        ('employee_id.employee_id', 'ilike', self), 
@@ -139,12 +142,12 @@
                        ('jabatan', 'ilike', self)]"
                        string="Karyawan/NIK/Periode"/>
                 <field name="nik" operator="ilike"/>
-                <field name="periode_id"/>
-                <field name="branch_id"/>
-                <field name="profesion"/>
+                <field name="periode_id" string="Periode"/>
+                <field name="branch_id"  string="Bisnis Unit" />
+                <field name="profesion" string="L. Kompetensi" />
                 <field name="group_shift"/>
                 <field name="directorate_id" string="Direktorat"/>
-                <field name="hrms_department_id" string="Departemen"/>
+                <field name="hrms_department_id" string="Departemen" />
                 <field name="division_id" string="Divisi"/>
                 <field name="work_unit_ids" string="Work Unit"/>
                 <field name="state" string="Status"/>
@@ -155,7 +158,7 @@
                 <filter string="Dibuat oleh Saya" name="filter_by_creator" domain="[('create_uid', '=', uid)]"/>
                 <filter string="Work Unit" name="filter_by_work_unit_ids" domain="[('work_unit_ids', '!=', False)]"/>
                 <group expand="0" string="Kelompokkan Berdasarkan">
-                    <filter string="Periode" name="group_periode" context="{'group_by':'period_text'}"/>
+                    <filter string="Periode" name="group_periode" context="{'group_by':'periode_id', 'order':'periode_id desc, id desc'}"/>
                     <filter string="Unit Bisnis" name="group_branch" context="{'group_by':'branch_id'}"/>
                     <filter string="Direktorat" name="group_directorat" context="{'group_by':'directorate_id'}"/>
                     <filter string="Departemen" name="group_department" context="{'group_by':'hrms_department_id'}"/>
@@ -178,7 +181,7 @@
                             <field name="directorate_id" type="row"/>
                             <field name="hrms_department_id" type="row"/>
                             <field name="division_id" type="row"/>
-                            <field name="profesion" type="row"/>
+                            <field name="profesion" type="row" string="L. Kompetensi" />
                             <field name="group_shift" type="row"/>
                             <field name="state" type="row"/> 
                             <field name="employee_id" type="row"/> 
