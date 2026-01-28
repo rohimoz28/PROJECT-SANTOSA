@@ -389,8 +389,8 @@ class HrEmployeeMutation(models.Model):
 
         employee.write({'state': 'approved'})
         if self.service_type == 'rota' and self.service_substitute_id and self.service_replace_position:
-            print("select sp_employee_rotation(%s, %s, %s)" % (self.employee_id.id,
-                  self.service_replace_position.id, self.service_substitute_id.id))
+            # print("select sp_employee_rotation(%s, %s, %s)" % (self.employee_id.id,
+            #       self.service_replace_position.id, self.service_substitute_id.id))
             try:
                 self.env.cr.execute("select sp_employee_rotation(%s, %s, %s)",
                                     (self.employee_id.id, self.service_replace_position.id, self.service_substitute_id.id))
@@ -403,8 +403,8 @@ class HrEmployeeMutation(models.Model):
                 raise UserError(
                     "Error executing the rotation function: %s" % str(e))
         elif self.service_type == 'rota' and self.service_replace_position and not self.service_substitute_id:
-            print("select sp_employee_rotation(%s, %s, %s)" % (self.employee_id.id,
-                  self.service_replace_position.id, self.service_substitute_id.id))
+            # print("select sp_employee_rotation(%s, %s, %s)" % (self.employee_id.id,
+            #       self.service_replace_position.id, self.service_substitute_id.id))
             try:
                 self.env.cr.execute("select sp_employee_rotation(%s, %s, %s)",
                                     (self.employee_id.id, self.service_replace_position.id, None))
