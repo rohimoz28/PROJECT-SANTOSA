@@ -233,7 +233,8 @@
                                        readonly="state in ['approved']" invisible="service_type not in ['corr']"
                                        required="service_type in ['corr']" placeholder="Wajib diisi"/>
                                 <field name="service_substitute_id"
-                                       options="{'no_create': True,'no_create_edit': True}"/>
+                                       readonly="state in ['approved']" options="{'no_create': True,'no_create_edit': True, 'no_open': True}" 
+                                       domain="[('id', 'not in', [employee_id])]"/>
                                 <field name="service_job_status_type" readonly="1" force_save="1" invisible="1"/>
                                 <field name="service_empgroup1" readonly="state in ['approved']" invisible="1"
                                        force_save="1"/>

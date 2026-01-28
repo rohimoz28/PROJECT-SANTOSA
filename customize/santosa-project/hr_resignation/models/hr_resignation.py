@@ -31,7 +31,7 @@ RESIGNATION_TYPE = [('resigned', 'Normal Resignation'),
 RESIGNATION_TYPES = [
     ('RESG', 'Resign'),
     ('TERM', 'Terminate'),
-    ('EOCT', ' End Of Contract'),
+    ('EOCT', 'End Of Contract'),
     ('RETR', 'Retired'),
     ('TFTG', 'Transfer To Group'),
     ('PSAW', 'Pass Away'),

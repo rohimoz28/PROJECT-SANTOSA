@@ -280,12 +280,23 @@ class HrResignation(models.Model):
         for resignation in self:
             return True
 
+    def action_approve_resignation(self):
+        res = super(HrResignation, self).action_approve_resignation()
+        log_id = self.env['hr.employment.log'].sudo().search([('model_name', '=', 'hr.resignation'), ('employee_id', '=', self.employee_id.id), ('model_id', '=', self.id)],
+                                                             limit=1, order='id desc').id
+        if log_id:
+            query = """UPDATE hr_employment_log SET end_date = '%s'::date,area = %s, directorate_id = %s, hrms_department_id = %s, division_id =%s, parent_id = %s WHERE id = %s"""
+            self.env.cr.execute(query % (self.expected_revealing_date, self.area.id, self.directorate_id.id,
+                                self.hrms_department_id.id, self.division_id.id, self.parent_id.id, log_id))
+            self.env.cr.commit()
+        return res
+
     def action_confirm_resignation(self):
         res = super(HrResignation, self).action_confirm_resignation()
         for alldata in self:
             alldata.trans_status = 'confirm'
         return res
-    
+
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)
         if view_type in ('tree', 'form'):

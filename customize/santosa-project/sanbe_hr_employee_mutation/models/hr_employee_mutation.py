@@ -170,7 +170,7 @@ class HrEmployeeMutation(models.Model):
     service_previous_name = fields.Char('Nama Karyawan Lama')
     remarks = fields.Text('Remarks')
     service_replace_position = fields.Many2one(
-        'hr.employee', string='Posisi yang Digantikan', help="employee position to be replaced",
+        'hr.employee.view', string='Posisi yang Digantikan', help="employee position to be replaced",
         domain=[('state', 'in', ('approved', 'inactive'))]
     )
     image = fields.Many2many(
@@ -388,8 +388,44 @@ class HrEmployeeMutation(models.Model):
             employee.write({'birthday': self.service_birthday})
 
         employee.write({'state': 'approved'})
-
-        if self.service_substitute_id:
+        if self.service_type == 'rota' and self.service_substitute_id and self.service_replace_position:
+            
+            _logger.info(
+                "Executing sp_employee_rotation(employee=%s, position=%s, substitute=%s)",
+                self.employee_id.id,
+                self.service_replace_position.id,
+                self.service_substitute_id.id,
+            )
+            try:
+                self.env.cr.execute("select sp_employee_rotation(%s, %s, %s)",
+                                    (self.employee_id.id, self.service_replace_position.id, self.service_substitute_id.id))
+                self.env.cr.commit()
+                _logger.info(
+                    "Stored procedure executed successfully for employee rotation: %s", self.employee_id.name)
+            except Exception as e:
+                _logger.error(
+                    "Error calling stored procedure for rotation: %s", str(e))
+                raise UserError(
+                    "Error executing the rotation function: %s" % str(e))
+        elif self.service_type == 'rota' and self.service_replace_position and not self.service_substitute_id:
+             _logger.info(
+                "Executing sp_employee_rotation(employee=%s, position=%s, substitute=%s)",
+                self.employee_id.id,
+                self.service_replace_position.id,
+                None,
+            )
+            try:
+                self.env.cr.execute("select sp_employee_rotation(%s, %s, %s)",
+                                    (self.employee_id.id, self.service_replace_position.id, None))
+                self.env.cr.commit()
+                _logger.info(
+                    "Stored procedure executed successfully for employee rotation: %s", self.employee_id.name)
+            except Exception as e:
+                _logger.error(
+                    "Error calling stored procedure for rotation: %s", str(e))
+                raise UserError(
+                    "Error executing the rotation function: %s" % str(e))
+        elif self.service_substitute_id:
             try:
                 self.env.cr.execute("CALL updateIntermediate(%s, %s)",
                                     (self.employee_id.id, self.service_substitute_id.id))
@@ -399,7 +435,6 @@ class HrEmployeeMutation(models.Model):
             except Exception as e:
                 _logger.error("Error calling stored procedure: %s", str(e))
                 raise UserError("Error executing the function: %s" % str(e))
-
         return self.write({'state': 'approved',
                            'service_status': 'Approved'})
 
@@ -509,17 +544,6 @@ class HrEmployeeMutation(models.Model):
                 record.emp_status_other = employee.emp_status
                 record.service_employementstatus = record.emp_status_other
                 record.service_status = 'Draft'
-                if record.service_type == 'rota' and record.service_replace_position:
-                    try:
-                        self.env.cr.execute("CALL sp_employee_rotation(%s, %s)",
-                                            (record.service_replace_position.id, record.employee_id.id))
-                        self.env.cr.commit()
-                        _logger.info(
-                            "Stored procedure executed successfully for rotation Employee: %s", self.employee_id.name)
-                    except Exception as e:
-                        _logger.error(
-                            "Error calling stored procedure: %s", str(e))
-
             elif record.service_type in ['muta']:
                 record.join_date = employee.join_date
                 record.service_birthday = employee.birthday
