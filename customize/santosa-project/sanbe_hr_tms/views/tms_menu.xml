@@ -442,6 +442,8 @@
         <!-- /> -->
 
         <!-- set opening and closing period -->
-
+        <record id="menu_sb_incomplete_attendances" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+        </record>
     </data>
 </odoo>

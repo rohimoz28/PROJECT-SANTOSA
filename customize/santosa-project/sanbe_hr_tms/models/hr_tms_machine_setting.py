@@ -60,6 +60,27 @@ class HRTmsMachineDetails(models.Model):
     nik = fields.Char('NIK', compute='_compute_nik', store=True)
     job_id = fields.Many2one('hr.job',string='Job Position',compute='_compute_job_id',store=True,index=True)
     department_id = fields.Many2one('hr.department',string='Sub Department',compute='_compute_department_id',store=True,index=True)
+
+    division_id = fields.Many2one(
+        comodel_name='sanhrms.division',
+        string='Division',
+        related='employee_id.division_id',
+        required=False,
+        ondelete='restrict')
+
+    hrms_department_id = fields.Many2one(
+        comodel_name='sanhrms.department',
+        string='Department',
+        related='employee_id.hrms_department_id',
+        required=False,
+        ondelete='restrict')
+
+    directorate_id = fields.Many2one(
+        comodel_name='sanhrms.directorate',
+        string='Directorate',
+        related='employee_id.directorate_id',
+        required=False,
+        ondelete='restrict')
     branch_id = fields.Many2one('res.branch',string='Branch',compute='_compute_branch_id',store=True,index=True)
     @api.model_create_multi
     def create(self, vals_list):
