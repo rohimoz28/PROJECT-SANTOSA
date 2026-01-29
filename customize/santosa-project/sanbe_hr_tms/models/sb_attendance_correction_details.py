@@ -69,6 +69,10 @@ class SBAttndanceCorrectionDetails(models.Model):
         tracking=3,
         store=True,
         default='draft')
+    employee_id = fields.Many2one(
+        comodel_name='hr.employee',
+        string='Employee',
+        required=False)
 
 
 class SBLossAttndancenDetails(models.Model):
