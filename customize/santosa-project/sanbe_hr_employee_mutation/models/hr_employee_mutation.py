@@ -388,8 +388,8 @@ class HrEmployeeMutation(models.Model):
             employee.write({'birthday': self.service_birthday})
 
         employee.write({'state': 'approved'})
+
         if self.service_type == 'rota' and self.service_substitute_id and self.service_replace_position:
-            
             _logger.info(
                 "Executing sp_employee_rotation(employee=%s, position=%s, substitute=%s)",
                 self.employee_id.id,
@@ -407,8 +407,9 @@ class HrEmployeeMutation(models.Model):
                     "Error calling stored procedure for rotation: %s", str(e))
                 raise UserError(
                     "Error executing the rotation function: %s" % str(e))
+
         elif self.service_type == 'rota' and self.service_replace_position and not self.service_substitute_id:
-             _logger.info(
+            _logger.info(
                 "Executing sp_employee_rotation(employee=%s, position=%s, substitute=%s)",
                 self.employee_id.id,
                 self.service_replace_position.id,
@@ -425,6 +426,7 @@ class HrEmployeeMutation(models.Model):
                     "Error calling stored procedure for rotation: %s", str(e))
                 raise UserError(
                     "Error executing the rotation function: %s" % str(e))
+
         elif self.service_substitute_id:
             try:
                 self.env.cr.execute("CALL updateIntermediate(%s, %s)",
@@ -435,8 +437,8 @@ class HrEmployeeMutation(models.Model):
             except Exception as e:
                 _logger.error("Error calling stored procedure: %s", str(e))
                 raise UserError("Error executing the function: %s" % str(e))
-        return self.write({'state': 'approved',
-                           'service_status': 'Approved'})
+
+        return self.write({'state': 'approved', 'service_status': 'Approved'})
 
     @api.onchange('employee_id', 'service_type')
     def _onchange_employee_id_and_service_type(self):
