@@ -73,6 +73,10 @@ class SBAttndanceCorrectionDetails(models.Model):
         comodel_name='hr.employee',
         string='Employee',
         required=False)
+    delay_minutes = fields.Float(
+        string='Delay Minutes',
+        required=False,
+        help='Delay time in minutes')
 
 
 class SBLossAttndancenDetails(models.Model):
@@ -161,3 +165,7 @@ class SBLossAttndancenDetails(models.Model):
         store=True,
         default='draft')
     attendance_status = fields.Char(store=True, string='Attendance Status')
+    delay_minutes = fields.Float(
+        string='Delay Minutes',
+        required=False,
+        help='Delay time in minutes')
